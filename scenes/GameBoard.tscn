@@ -1,0 +1,73 @@
+[gd_scene load_steps=9 format=3 uid="uid://cno0jw8hq6h1i"]
+
+[ext_resource type="Material" uid="uid://blnb4hc720ayf" path="res://graphics/GroundMat.tres" id="1_3pkq8"]
+[ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/PlayerBody.tres" id="1_lf4g6"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_qh8li"]
+[ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/Sawblade.tres" id="2_sjcjr"]
+[ext_resource type="Script" path="res://scripts/camera_3d.gd" id="5_l5xbb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xrxe3"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fise2"]
+radius = 0.747153
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8aoxu"]
+
+[node name="GameBoard" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000710726, 1.19209e-07, -0.00693196)
+top_level = true
+
+[node name="Player" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0545669, -1.04646, 0.019738)
+script = ExtResource("1_qh8li")
+
+[node name="Body" type="Node3D" parent="Player"]
+
+[node name="Bottom" type="CSGBox3D" parent="Player/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.133, 0)
+material_override = ExtResource("1_lf4g6")
+size = Vector3(1, 0.15, 1)
+material = ExtResource("1_lf4g6")
+
+[node name="RigidBody" type="RigidBody3D" parent="Player/Body/Bottom"]
+
+[node name="CollisionShape" type="CollisionShape3D" parent="Player/Body/Bottom/RigidBody"]
+shape = SubResource("BoxShape3D_xrxe3")
+
+[node name="Top" type="CSGBox3D" parent="Player/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3159, 0)
+material_override = ExtResource("1_lf4g6")
+size = Vector3(1, 0.15, 1)
+
+[node name="RigidBody" type="RigidBody3D" parent="Player/Body/Top"]
+
+[node name="CollisionShape" type="CollisionShape3D" parent="Player/Body/Top/RigidBody"]
+shape = SubResource("BoxShape3D_xrxe3")
+
+[node name="Sawblade" type="CSGCylinder3D" parent="Player/Body"]
+transform = Transform3D(12.7105, 0, 0, 0, 0.21444, 0, 0, 0, 12.7105, 0, 1.2285, 0)
+material_override = ExtResource("2_sjcjr")
+radius = 0.075
+height = 0.1
+sides = 32
+
+[node name="RigidBody" type="RigidBody3D" parent="Player/Body/Sawblade"]
+
+[node name="CollisionShape" type="CollisionShape3D" parent="Player/Body/Sawblade/RigidBody"]
+shape = SubResource("CylinderShape3D_fise2")
+
+[node name="Ground" type="CSGBox3D" parent="."]
+transform = Transform3D(76, 0, 0, 0, 0.076, 0, 0, 0, 76, 0, 0, 0)
+material_override = ExtResource("1_3pkq8")
+
+[node name="StaticBody" type="StaticBody3D" parent="Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody"]
+shape = SubResource("BoxShape3D_8aoxu")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.604794, 0.796382, 0, -0.796382, 0.604794, -2.58875, 47.1188, -0.186724)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+script = ExtResource("5_l5xbb")
+cameraOffset = Vector3(0, 2.8, 3.1)

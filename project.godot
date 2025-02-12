@@ -11,5 +11,10 @@ config_version=5
 [application]
 
 config/name="Untitled Battlebot Game"
+run/main_scene="res://scenes/GameBoard.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
+
+[physics]
+
+3d/physics_engine="JoltPhysics3D"
