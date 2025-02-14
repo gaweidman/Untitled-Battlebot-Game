@@ -1,33 +1,19 @@
 extends Node3D
 
-@export var speed: int;
+@export var maxSpeed: int;
 
-var sawblade;
 var body;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	sawblade = get_node("Body/Sawblade");
 	body = get_node("Body");
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	# makes the sawblade rotate
-	sawblade.rotation_degrees = Vector3(0, Time.get_ticks_msec()%360, 0);
-	
-	# this is the direction the player wants to move
-	var movementVector = get_movement_vector();
-		
-	var horizSpeed = movementVector.x * speed;
-	var vertSpeed = movementVector.y * speed
+	pass
 
-	# up (forward in 3D) is positive, so we multiply the vertical speed by the forward vector and not the backward vector.
-	# we WOULD do the same for moving horizontal, but left is positive in godot
-	body.linear_velocity += horizSpeed * Vector3.LEFT + vertSpeed * Vector3.FORWARD
-	
-	body.linear_velocity.x = clamp(body.linear_velocity.x, -speed, speed)
-	body.linear_velocity.z = clamp(body.linear_velocity.z, -speed, speed)
-	
+# gets the direction the player is trying to go
 func get_movement_vector():
 	var movementVector = Vector2(0, 0);
 	if Input.is_action_pressed("MoveLeft"):
@@ -46,33 +32,76 @@ func get_movement_vector():
 	
 # custom physics handling for player movement. regular movement feels flat and boring.
 func _physics_process(state):
+	if should_accelerate_horizontal():
+		accelerate_horizontal();
+	elif should_decelerate_horizontal():
+		decelerate_horizontal();
+		
+	if should_accelerate_vertical():
+		accelerate_vertical();
+	elif should_decelerate_vertical():
+		decelerate_vertical();
+		
+	clamp_speed();
+		
+# check if we should accelerate on the horizontal axis. effectively checks if the
+# player is trying to move horizontally
+func should_accelerate_horizontal():
+	var movementVector = get_movement_vector();
+	return movementVector.x != 0
+	
+# check if we should accelerate on the horizontal axis. effectively checks if the player is trying to move horizontally
+func should_accelerate_vertical():
+	var movementVector = get_movement_vector();
+	return movementVector.y != 0
+	
+func accelerate_horizontal():
 	var movementVector = get_movement_vector();
 	
-	# if the speed on the x axis isn't 0 but the player isn't inputting movement on that axis
-	# basically, if we need to decelerate on the x axis.
-	if movementVector.x == 0 && body.linear_velocity.x != 0:
-		var direction = get_sign(body.linear_velocity.x);
-		body.linear_velocity.x += GameState.DECELERATION * (direction * -1);
-		
-		# if the velocity, when being decelerated, passes zero and starts going the
-		# other direction, we set it to zero.
-		var newDirection = get_sign(body.linear_velocity.x)
-		if newDirection != 0 && newDirection != direction:
-			body.linear_velocity.x = 0;
+	# we WOULD multiply by the right vector, but left is positive in godot weirdly
+	body.linear_velocity += movementVector.x * GameState.ACCELERATION * Vector3.LEFT
 	
-	# if the speed on the z axis isn't 0 but the player isn't inputting movement on that axis
-	# basically, if we need to decelerate on the z axis.
-	if movementVector.y == 0 && body.linear_velocity.z != 0:
-		var direction = get_sign(body.linear_velocity.z);
-		body.linear_velocity.z += GameState.DECELERATION * (direction * -1);
+func accelerate_vertical():
+	var movementVector = get_movement_vector();
+	
+	# up (forward in 3D) is positive, so we multiply the vertical speed by the forward vector and not the backward vector.
+	body.linear_velocity += movementVector.y * GameState.ACCELERATION * Vector3.FORWARD;
 		
-		# if the velocity, when being decelerated, passes zero and starts going the
-		# other direction, we set it to zero.
-		var newDirection = get_sign(body.linear_velocity.z)
-		if newDirection != 0 && newDirection != direction:
-			body.linear_velocity.z = 0;
-			
-	print(body.linear_velocity)
+# check if we need to decelerate on the horizontal access
+func should_decelerate_horizontal():
+	var movementVector = get_movement_vector();
+	return !should_accelerate_horizontal() && body.linear_velocity.x != 0
+
+# check if we need to decelerate on the vertical axis
+func should_decelerate_vertical():
+	return !should_accelerate_vertical() && body.linear_velocity.z != 0
+
+# do the horizontal deceleration
+func decelerate_horizontal():
+	var direction = get_sign(body.linear_velocity.x);
+	body.linear_velocity.x += GameState.DECELERATION * (direction * -1);
+	
+	# if the velocity, when being decelerated, passes zero and starts going the
+	# other direction, we set it to zero.
+	var newDirection = get_sign(body.linear_velocity.x)
+	if newDirection != 0 && newDirection != direction:
+		body.linear_velocity.x = 0;
+
+# do the vertical deceleration
+func decelerate_vertical():
+	var direction = get_sign(body.linear_velocity.z);
+	body.linear_velocity.z += GameState.DECELERATION * (direction * -1);
+	
+	# if the velocity, when being decelerated, passes zero and starts going the
+	# other direction, we set it to zero.
+	var newDirection = get_sign(body.linear_velocity.z)
+	if newDirection != 0 && newDirection != direction:
+		body.linear_velocity.z = 0;
+		
+# make sure the player's speed doesn't go over its max speed
+func clamp_speed():
+	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed)
+	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed)
 
 # if a given number is positive, returns 1. if it's negative, returns -1. if it's
 # 0, returns 0.
