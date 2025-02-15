@@ -4,22 +4,19 @@
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="1_lf4g6"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_qh8li"]
 [ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="2_sjcjr"]
-[ext_resource type="Script" path="res://scripts/sawblade.gd" id="3_qwmti"]
+[ext_resource type="Script" path="res://scenes/sawblade.gd" id="4_n5ee6"]
 [ext_resource type="Script" path="res://scripts/ground.gd" id="5_8ilhm"]
 [ext_resource type="Script" path="res://scripts/camera_3d.gd" id="5_l5xbb"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
-size = Vector3(1, 0.333479, 1)
-
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_fise2"]
-height = 0.021
-radius = 0.95
+radius = 0.747153
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_7d3ix"]
-size = Vector3(76, 5, 76)
+[sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
+size = Vector3(1, 0.32, 1)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_o7nae"]
-size = Vector3(6, 6, 6)
+[sub_resource type="BoxShape3D" id="BoxShape3D_8aoxu"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_axtjh"]
 
 [node name="GameBoard" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000710726, 1.19209e-07, -0.00693196)
@@ -27,12 +24,9 @@ top_level = true
 
 [node name="Player" type="Node3D" parent="."]
 script = ExtResource("1_qh8li")
-maxSpeed = 20
+maxSpeed = 10
 
 [node name="Body" type="RigidBody3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.343473, 4.94323)
-axis_lock_angular_y = true
-mass = 1500.0
 custom_integrator = true
 
 [node name="Bottom" type="CSGBox3D" parent="Player/Body"]
@@ -46,44 +40,31 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.269, 0)
 material_override = ExtResource("1_lf4g6")
 size = Vector3(1, 0.15, 1)
 
-[node name="CollisionShape" type="CollisionShape3D" parent="Player/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.179051, 0)
-shape = SubResource("BoxShape3D_odmbc")
+[node name="Sawblade" type="CSGCylinder3D" parent="Player/Body"]
+transform = Transform3D(12.7105, 0, 0, 0, 0.21444, 0, 0, 0, 12.7105, 0, 0, 0)
+material_override = ExtResource("2_sjcjr")
+radius = 0.075
+height = 0.1
+script = ExtResource("4_n5ee6")
 
-[node name="Sawblade" type="RigidBody3D" parent="Player/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.179466, 0)
-collision_priority = 3.0
-mass = 500.0
-custom_integrator = true
-script = ExtResource("3_qwmti")
+[node name="RigidBody" type="RigidBody3D" parent="Player/Body/Sawblade"]
 
-[node name="CollisionShape" type="CollisionShape3D" parent="Player/Body/Sawblade"]
+[node name="CollisionShape" type="CollisionShape3D" parent="Player/Body/Sawblade/RigidBody"]
 shape = SubResource("CylinderShape3D_fise2")
 
-[node name="Mesh" type="CSGCylinder3D" parent="Player/Body/Sawblade"]
-material_override = ExtResource("2_sjcjr")
-radius = 0.95
-height = 0.021
-sides = 32
-
-[node name="HingeJoint3D" type="HingeJoint3D" parent="Player/Body"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
-node_a = NodePath("..")
-node_b = NodePath("../Sawblade")
-motor/enable = true
-motor/target_velocity = 18.8496
-motor/max_impulse = 1024.0
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.182477, 0)
+shape = SubResource("BoxShape3D_odmbc")
 
 [node name="Ground" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.20693, 0)
+transform = Transform3D(76, 0, 0, 0, 0.076, 0, 0, 0, 76, 0, 0, 0)
 material_override = ExtResource("1_3pkq8")
-size = Vector3(76, 5, 76)
 script = ExtResource("5_8ilhm")
 
 [node name="StaticBody" type="StaticBody3D" parent="Ground"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody"]
-shape = SubResource("BoxShape3D_7d3ix")
+shape = SubResource("BoxShape3D_8aoxu")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.604794, 0.796382, 0, -0.796382, 0.604794, -2.58875, 47.1188, -0.186724)
@@ -94,11 +75,9 @@ fov = 90.0
 script = ExtResource("5_l5xbb")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17296, 2.92733, 15.9326)
-size = Vector3(6, 6, 6)
+transform = Transform3D(5.99848, 0, 0, 0, 5.99848, 0, 0, 0, 5.99848, -0.17296, 3.08473, 15.9326)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="CSGBox3D"]
-collision_priority = 0.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CSGBox3D/StaticBody3D"]
-shape = SubResource("BoxShape3D_o7nae")
+shape = SubResource("BoxShape3D_axtjh")

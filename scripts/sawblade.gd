@@ -1,4 +1,4 @@
-extends CSGCylinder3D
+extends RigidBody3D
 
 @export var speed: float;
 
@@ -13,8 +13,6 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta):
 	pass
-	#if angular_velocity.x != speed:
-		#angular_velocity.x = Vector(99, 0, 0)
 		
 func _integrate_physics(state):
 	if state.get_angular_velocity().x != speed:

@@ -1,7 +1,13 @@
 extends Node
 
-var DECELERATION = 0.5;
-var ACCELERATION = 7;
+# How quickly the player comes to a stop
+var DECELERATION = 70;
+
+# How quickly the player speeds up
+var ACCELERATION = 120;
+
+# the acceleration of gravity
+var GRAVITY = 9.81
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
