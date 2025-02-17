@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bgmu5jtpwbpn7"]
-
-[ext_resource type="Script" path="res://scripts/projectile_launcher.gd" id="1_uhbbv"]
-
-[node name="ProjectileLauncher" type="Node3D"]
-script = ExtResource("1_uhbbv")
-magazineMax = null

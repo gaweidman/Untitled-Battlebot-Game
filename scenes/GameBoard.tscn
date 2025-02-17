@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=13 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Material" uid="uid://blnb4hc720ayf" path="res://graphics/materials/GroundMat.tres" id="1_3pkq8"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="1_lf4g6"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_qh8li"]
 [ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="2_sjcjr"]
 [ext_resource type="Script" path="res://scripts/sawblade.gd" id="3_qwmti"]
+[ext_resource type="PackedScene" uid="uid://bgmu5jtpwbpn7" path="res://scenes/ProjectileLauncher.tscn" id="5_8bnlc"]
 [ext_resource type="Script" path="res://scripts/ground.gd" id="5_8ilhm"]
 [ext_resource type="Script" path="res://scripts/camera_3d.gd" id="5_l5xbb"]
 
@@ -73,6 +74,10 @@ node_b = NodePath("../Sawblade")
 motor/enable = true
 motor/target_velocity = 18.8496
 motor/max_impulse = 1024.0
+
+[node name="ProjectileLauncher" parent="Player/Body" node_paths=PackedStringArray("launcher") instance=ExtResource("5_8bnlc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.343473, -4.94323)
+launcher = NodePath("..")
 
 [node name="Ground" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.20693, 0)
