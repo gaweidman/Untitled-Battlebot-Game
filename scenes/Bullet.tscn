@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://clsvb0b2mydc7"]
+
+[ext_resource type="Script" path="res://scripts/bullet.gd" id="1_qx18r"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8grda"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_h2dq1"]
+
+[node name="Bullet" type="Area3D" node_paths=PackedStringArray("lifeTimer", "collision")]
+script = ExtResource("1_qx18r")
+lifeTimer = NodePath("LifeTimer")
+collision = NodePath("CollisionShape3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_8grda")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_h2dq1")
+
+[node name="LifeTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="LifeTimer" to="." method="_on_life_timer_timeout"]
