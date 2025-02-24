@@ -43,7 +43,7 @@ func fireBullet():
 		##This offset can be changed later to be controllable
 		var offset = Vector3(0,1,0)
 		
-		bullet.fire(launcher.position + offset, firingAngle, fireSpeed, bulletLifetime);
+		bullet.fire(player, launcher.position + offset, firingAngle, fireSpeed, bulletLifetime);
 		inputHandler.fireRateTimer = fireRate;
 	pass
 

@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://chfjdkxumme1r" path="res://scenes/player.tscn" id="1_6r12f"]
 [ext_resource type="Script" path="res://scripts/ground.gd" id="5_8ilhm"]
 [ext_resource type="Script" path="res://scripts/camera_3d.gd" id="5_l5xbb"]
-[ext_resource type="PackedScene" path="res://scenes/damage_cube.tscn" id="8_hfgcm"]
+[ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/damage_cube.tscn" id="8_hfgcm"]
 [ext_resource type="Script" path="res://scripts/libraries/sound_manager.gd" id="9_hh74c"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7d3ix"]
