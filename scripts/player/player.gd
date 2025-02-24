@@ -1,13 +1,19 @@
 extends Node3D
 
-@export var maxSpeed: int;
+@export var maxSpeed: float;
+@export var startingHealth: int;
 
 var body;
+var health;
+var maxHealth;
+var player
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	body = get_node("Body");
-	
+	maxHealth = startingHealth;
+	health = startingHealth;
+	player = get_node("root/Player");
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -107,6 +113,18 @@ func clamp_speed():
 	
 func do_gravity(delta):
 	body.linear_velocity.y -= GameState.GRAVITY * delta;
+	
+func take_damage(damage):
+	health -= damage;
+	get_node("../GUI/Health").text = "Health: " + health + "/" + maxHealth;
+	if health <= 0:
+		die();
+		
+func die():
+	queue_free();
+	
+func process_collision():
+	pass
 
 # if a given number is positive, returns 1. if it's negative, returns -1. if it's
 # 0, returns 0.
@@ -115,3 +133,12 @@ func get_sign(num):
 		return 0
 	else:
 		return num/abs(num);
+
+
+func _on_sawblade_body_entered(body: Node) -> void:
+	print("we're here", body)
+
+
+func _on_body_body_entered(collider: Node) -> void:
+	if collider.is_in_group("Damager"):
+		take_damage(1);
