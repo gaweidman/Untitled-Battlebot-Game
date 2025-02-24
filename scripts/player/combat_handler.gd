@@ -1,7 +1,6 @@
 extends Node
 
 #@onready var bulletRef : ;
-#@onready var bulletRef = @preload("res://scenes/Bullet.tscn");
 @export var bulletRef : PackedScene;
 var magazine = [];
 @export var magazineMax := 3;
@@ -20,7 +19,7 @@ var inputHandler;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	inputHandler = GameState.get_player().get_node("input_handler")
+	inputHandler = $InputHandler
 	pass # Replace with function body.
 
 
@@ -43,7 +42,7 @@ func fireBullet():
 		##This offset can be changed later to be controllable
 		var offset = Vector3(0,1,0)
 		
-		bullet.fire(player, launcher.position + offset, firingAngle, fireSpeed, bulletLifetime);
+		bullet.fire($ProjectileLauncher, launcher.position + offset, firingAngle, fireSpeed, bulletLifetime);
 		inputHandler.fireRateTimer = fireRate;
 	pass
 
@@ -75,5 +74,5 @@ func die():
 	print("WE ARE DYING")
 	queue_free();
 	
-func _on_collision():
+func _on_collision(colliderdw):
 	pass
