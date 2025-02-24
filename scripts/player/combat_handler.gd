@@ -11,9 +11,12 @@ var magazine = [];
 
 @export var fireRate := 0.15;
 @export var launcher : Node3D;
+@export var startingHealth: int;
+
+var health;
+var maxHealth;
 
 var inputHandler;
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -60,3 +63,17 @@ func nextBullet():
 			print("not fired?");
 			return bullet;
 	return null;
+
+func take_damage(damage):
+	print("TAKING DAMAGE");
+	health -= damage;
+	get_node("../GUI/Health").text = "Health: " + health + "/" + maxHealth;
+	if health <= 0:
+		die();
+		
+func die():
+	print("WE ARE DYING")
+	queue_free();
+	
+func _on_collision():
+	pass
