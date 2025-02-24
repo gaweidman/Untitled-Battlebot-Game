@@ -4,7 +4,8 @@
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="1_lf4g6"]
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_qh8li"]
 [ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="2_sjcjr"]
-[ext_resource type="Script" path="res://scripts/weapons/sawblade.gd" id="3_qwmti"]
+[ext_resource type="Script" path="res://scripts/sawblade.gd" id="3_qwmti"]
+[ext_resource type="PackedScene" uid="uid://bgmu5jtpwbpn7" path="res://scenes/ProjectileLauncher.tscn" id="5_8bnlc"]
 [ext_resource type="Script" path="res://scripts/ground.gd" id="5_8ilhm"]
 [ext_resource type="Script" path="res://scripts/player/input_handler.gd" id="5_egxm1"]
 [ext_resource type="Script" path="res://scripts/camera_3d.gd" id="5_l5xbb"]
@@ -96,6 +97,9 @@ script = ExtResource("5_egxm1")
 
 [node name="MotionHandler" type="Node" parent="Player"]
 script = ExtResource("6_nerg2")
+[node name="ProjectileLauncher" parent="Player/Body" node_paths=PackedStringArray("launcher") instance=ExtResource("5_8bnlc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.343473, -4.94323)
+launcher = NodePath("..")
 
 [node name="Ground" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.20693, 0)
