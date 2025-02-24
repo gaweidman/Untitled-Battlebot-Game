@@ -6,3 +6,9 @@
 [node name="ProjectileLauncher" type="Node3D"]
 script = ExtResource("1_l4dxr")
 bulletRef = ExtResource("2_1v8ic")
+
+[node name="LeakTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[connection signal="timeout" from="LeakTimer" to="." method="_on_leak_timer_timeout"]

@@ -46,7 +46,7 @@ func clamp_speed():
 	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed)
 	
 func do_gravity(delta):
-	print("GRAVITY ", body)
+	#print("GRAVITY ", body)
 	body.linear_velocity.y -= GameState.GRAVITY * delta;
 	
 func take_damage(damage):

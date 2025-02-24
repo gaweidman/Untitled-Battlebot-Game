@@ -12,12 +12,12 @@ var magazine = [];
 @export var fireRateTimer := 0.0;
 @export var fireRate := 0.15;
 @export var launcher : Node3D;
-
+var leakTimer : Timer;
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	leakTimer = $LeakTimer;
 	pass # Replace with function body.
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -48,8 +48,10 @@ func fireBullet():
 		##This offset can be changed later to be controllable
 		var offset = Vector3(0,1,0)
 		
-		bullet.fire(launcher.position + offset, firingAngle, fireSpeed, bulletLifetime);
+		bullet.fire(self, launcher.position + offset, firingAngle, fireSpeed, bulletLifetime);
 		fireRateTimer = fireRate;
+	
+	leakTimer.start();
 	pass
 
 func recountMagazine() -> int:
@@ -68,3 +70,18 @@ func nextBullet():
 			print("not fired?");
 			return bullet;
 	return null;
+
+func leakPrevention():
+	##Deletes the entire magazine 
+	for bullet in magazine:
+		if is_instance_valid(bullet):
+			bullet.leak();
+	magazine.clear();
+
+func _on_leak_timer_timeout():
+	leakPrevention();
+	pass;
+
+func _exit_tree():
+	leakPrevention();
+	pass;

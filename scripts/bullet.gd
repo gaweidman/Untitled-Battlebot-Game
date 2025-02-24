@@ -10,6 +10,9 @@ var lifetime := 1.0;
 @export var collision : CollisionShape3D;
 var initPosition = position;
 var positionAppend := Vector3.ZERO;
+var launcher : ProjectileLauncher;
+
+var leaking := false;
 
 func _ready():
 	die();
@@ -21,7 +24,8 @@ func _process(delta):
 		position = initPosition + positionAppend;
 	pass
 
-func fire(_initPosition : Vector3, _direction := Vector3(1,0,0), _fireSpeed := 30.0, _lifetime := 1.0):
+func fire(_launcher : ProjectileLauncher ,_initPosition : Vector3, _direction := Vector3(1,0,0), _fireSpeed := 30.0, _lifetime := 1.0):
+	launcher = _launcher;
 	speed = _fireSpeed;
 	dir = _direction;
 	lifetime = _lifetime;
@@ -40,6 +44,8 @@ func die():
 	fired = false;
 	collision.disabled = true;
 	hide();
+	if leaking:
+		queue_free();
 	pass
 
 func _on_life_timer_timeout():
@@ -49,3 +55,6 @@ func _on_life_timer_timeout():
 func _on_body_entered(body):
 	die();
 	pass # Replace with function body.
+
+func leak():
+	leaking = true;
