@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=15 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Material" uid="uid://blnb4hc720ayf" path="res://graphics/materials/GroundMat.tres" id="1_3pkq8"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="1_lf4g6"]
@@ -7,8 +7,11 @@
 [ext_resource type="Script" path="res://scripts/sawblade.gd" id="3_qwmti"]
 [ext_resource type="PackedScene" uid="uid://bgmu5jtpwbpn7" path="res://scenes/ProjectileLauncher.tscn" id="5_8bnlc"]
 [ext_resource type="Script" path="res://scripts/ground.gd" id="5_8ilhm"]
+[ext_resource type="Script" path="res://scripts/player/input_handler.gd" id="5_egxm1"]
 [ext_resource type="Script" path="res://scripts/camera_3d.gd" id="5_l5xbb"]
+[ext_resource type="Script" path="res://scripts/player/motion_handler.gd" id="6_nerg2"]
 [ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/damage_cube.tscn" id="8_hfgcm"]
+[ext_resource type="Script" path="res://scripts/libraries/sound_manager.gd" id="9_hh74c"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -53,7 +56,7 @@ size = Vector3(1, 0.15, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.179051, 0)
 shape = SubResource("BoxShape3D_odmbc")
 
-[node name="Sawblade" type="RigidBody3D" parent="Player/Body" groups=["Damager", "Player Part"]]
+[node name="Weapon" type="RigidBody3D" parent="Player/Body" groups=["Damager", "Player Part"]]
 transform = Transform3D(0.999993, 0.00324984, 0.00205345, -0.00324838, 0.999994, -0.000714875, -0.00205576, 0.000708211, 0.999998, 0, 0.179466, 0)
 collision_priority = 3.0
 mass = 25.0
@@ -62,10 +65,10 @@ contact_monitor = true
 max_contacts_reported = 10
 script = ExtResource("3_qwmti")
 
-[node name="CollisionShape" type="CollisionShape3D" parent="Player/Body/Sawblade"]
+[node name="CollisionShape" type="CollisionShape3D" parent="Player/Body/Weapon"]
 shape = SubResource("CylinderShape3D_fise2")
 
-[node name="Mesh" type="CSGCylinder3D" parent="Player/Body/Sawblade"]
+[node name="Mesh" type="CSGCylinder3D" parent="Player/Body/Weapon"]
 material_override = ExtResource("2_sjcjr")
 radius = 0.95
 height = 0.021
@@ -74,11 +77,26 @@ sides = 32
 [node name="HingeJoint3D" type="HingeJoint3D" parent="Player/Body"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 node_a = NodePath("..")
-node_b = NodePath("../Sawblade")
+node_b = NodePath("../Weapon")
 motor/enable = true
 motor/target_velocity = 18.8496
 motor/max_impulse = 1024.0
 
+[node name="_AudioStreamPlayers" type="Node3D" parent="Player"]
+
+[node name="Collision" type="AudioStreamPlayer3D" parent="Player/_AudioStreamPlayers"]
+
+[node name="Movement" type="AudioStreamPlayer3D" parent="Player/_AudioStreamPlayers"]
+
+[node name="Ambient" type="AudioStreamPlayer3D" parent="Player/_AudioStreamPlayers"]
+
+[node name="Weapon" type="AudioStreamPlayer3D" parent="Player/_AudioStreamPlayers"]
+
+[node name="InputHandler" type="Node" parent="Player"]
+script = ExtResource("5_egxm1")
+
+[node name="MotionHandler" type="Node" parent="Player"]
+script = ExtResource("6_nerg2")
 [node name="ProjectileLauncher" parent="Player/Body" node_paths=PackedStringArray("launcher") instance=ExtResource("5_8bnlc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.343473, -4.94323)
 launcher = NodePath("..")
@@ -125,5 +143,8 @@ text = "HEALTH: 3/3"
 [node name="Damage Cube" parent="." instance=ExtResource("8_hfgcm")]
 transform = Transform3D(5.50889, 0, 0, 0, 5.50889, 0, 0, 0, 5.50889, -0.107573, 3.4556, 13.798)
 
+[node name="SoundManager" type="Node" parent="."]
+script = ExtResource("9_hh74c")
+
 [connection signal="body_entered" from="Player/Body" to="Player" method="_on_body_body_entered"]
-[connection signal="body_entered" from="Player/Body/Sawblade" to="Player" method="_on_sawblade_body_entered"]
+[connection signal="body_entered" from="Player/Body/Weapon" to="Player" method="_on_sawblade_body_entered"]

@@ -1,4 +1,4 @@
-extends Node3D
+extends MakesNoise;
 
 @export var maxSpeed: float;
 @export var startingHealth: int;
@@ -6,14 +6,13 @@ extends Node3D
 var body;
 var health;
 var maxHealth;
-var player
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	body = get_node("Body");
+	body = $Body;
+	print("BODY ", body)
 	maxHealth = startingHealth;
 	health = startingHealth;
-	player = get_node("root/Player");
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -37,75 +36,10 @@ func get_movement_vector():
 	return movementVector
 	
 # custom physics handling for player movement. regular movement feels flat and boring.
-func _physics_process(delta):
-	if should_accelerate_horizontal():
-		accelerate_horizontal(delta);
-	elif should_decelerate_horizontal():
-		decelerate_horizontal(delta);
-		
-	if should_accelerate_vertical():
-		accelerate_vertical(delta);
-	elif should_decelerate_vertical():
-		decelerate_vertical(delta);
-		
+func _physics_process(delta):	
 	do_gravity(delta);
 		
 	clamp_speed();
-		
-# check if we should accelerate on the horizontal axis. effectively checks if the
-# player is trying to move horizontally
-func should_accelerate_horizontal():
-	var movementVector = get_movement_vector();
-	return movementVector.x != 0
-	
-# check if we should accelerate on the horizontal axis. effectively checks if the player is trying to move horizontally
-func should_accelerate_vertical():
-	var movementVector = get_movement_vector();
-	return movementVector.y != 0
-	
-func accelerate_horizontal(delta):
-	var movementVector = get_movement_vector();
-	
-	# we WOULD multiply by the right vector, but left is positive in godot weirdly
-	body.linear_velocity += movementVector.x * GameState.ACCELERATION * Vector3.LEFT * delta
-	
-func accelerate_vertical(delta):
-	var movementVector = get_movement_vector();
-	
-	# up (forward in 3D) is positive, so we multiply the vertical speed by the forward vector and not the backward vector.
-	body.linear_velocity += movementVector.y * GameState.ACCELERATION * Vector3.FORWARD * delta;
-		
-# check if we need to decelerate on the horizontal access
-func should_decelerate_horizontal():
-	var movementVector = get_movement_vector();
-	return !should_accelerate_horizontal() && body.linear_velocity.x != 0
-
-# check if we need to decelerate on the vertical axis
-func should_decelerate_vertical():
-	return !should_accelerate_vertical() && body.linear_velocity.z != 0
-
-# do the horizontal deceleration
-func decelerate_horizontal(delta):
-	var direction = get_sign(body.linear_velocity.x);
-	body.linear_velocity.x += GameState.DECELERATION * (direction * -1) * delta;
-	
-	# if the velocity, when being decelerated, passes zero and starts going the
-	# other direction, we set it to zero.
-	var newDirection = get_sign(body.linear_velocity.x)
-	if newDirection != 0 && newDirection != direction:
-		body.linear_velocity.x = 0;
-
-# do the vertical deceleration
-func decelerate_vertical(delta):
-	var direction = get_sign(body.linear_velocity.z);
-	body.linear_velocity.z += GameState.DECELERATION * (direction * -1) * delta;
-	
-	# if the velocity, when being decelerated, passes zero and starts going the
-	# other direction, we set it to zero.
-	var newDirection = get_sign(body.linear_velocity.z)
-	if newDirection != 0 && newDirection != direction:
-		body.linear_velocity.z = 0;
-		
 # make sure the player's speed doesn't go over its max speed
 func clamp_speed():
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed)
