@@ -3,19 +3,19 @@ extends MakesNoise;
 @export var maxSpeed: float;
 @export var startingHealth: int;
 
-var body;
+var body; 
 var health;
 var maxHealth;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	body = $Body;
-	print("BODY ", body)
+	body = get_node("Body");
+	print("BODY ASDFSFA", body);
 	maxHealth = startingHealth;
 	health = startingHealth;
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 # gets the direction the player is trying to go
@@ -37,24 +37,27 @@ func get_movement_vector():
 	
 # custom physics handling for player movement. regular movement feels flat and boring.
 func _physics_process(delta):	
-	do_gravity(delta);
-		
-	clamp_speed();
+	if is_node_ready():
+		do_gravity(delta);
+		clamp_speed();
 # make sure the player's speed doesn't go over its max speed
 func clamp_speed():
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed)
 	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed)
 	
 func do_gravity(delta):
+	print("GRAVITY ", body)
 	body.linear_velocity.y -= GameState.GRAVITY * delta;
 	
 func take_damage(damage):
+	print("TAKING DAMAGE")
 	health -= damage;
 	get_node("../GUI/Health").text = "Health: " + health + "/" + maxHealth;
 	if health <= 0:
 		die();
 		
 func die():
+	print("WE ARE DYING")
 	queue_free();
 	
 func process_collision():
@@ -69,10 +72,10 @@ func get_sign(num):
 		return num/abs(num);
 
 
-func _on_sawblade_body_entered(body: Node) -> void:
-	print("we're here", body)
-
+func _on_sawblade_body_entered(otherBody: Node) -> void:
+	print("we're here", otherBody)
 
 func _on_body_body_entered(collider: Node) -> void:
+	print("COLLISIONIN BODY BODY ENTERED")
 	if collider.is_in_group("Damager"):
 		take_damage(1);

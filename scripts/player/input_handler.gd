@@ -1,9 +1,9 @@
 extends Node
-
+var player;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	player = GameState.get_player();
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -29,9 +29,8 @@ func _physics_process(delta):
 	process_movement(movementVector, delta);
 	
 func process_movement(movementVector, delta):
-	Player.body.linear_velocity += Vector3(
-		movementVector.x * GameState.PLAYER_ACCELERATION * delta, 
+	player.body.linear_velocity += Vector3(
+		movementVector.x * GameState.PLAYER_ACCELERATION * delta * -1, 
 		0, 
-		movementVector.z * GameState.PLAYER_ACCELERATION * delta
+		movementVector.y * GameState.PLAYER_ACCELERATION * delta * -1
 	);
-	

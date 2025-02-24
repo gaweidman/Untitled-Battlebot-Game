@@ -1,4 +1,4 @@
-extends Node
+extends Node;
 
 # List of all hooks:
 # Attack
@@ -24,36 +24,36 @@ var body;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	body.
-
+	body = $Player.Body
+	pass;
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	pass;
 
 func default_OnFireProjectile():
-	pass # todo
+	pass; # todo
 	
 func default_OnMeleeWeaponHit():
-	pass
+	pass;
 	
 func default_OnMeleeWeaponSwing():
-	pass
+	pass;
 	
 func default_OnMovementInput():
 	GameState.HandleMovement();
 	
 func default_OnHitWall():
-	pass
+	pass;
 	
 func default_OnHitCombatant():
-	pass
+	pass;
 	
 func default_PassiveItemTick():
-	pass
+	pass;
 	
 func default_OnUseShield():
-	pass
+	pass;
 	
 func default_OnDropEntity():
 	pass
