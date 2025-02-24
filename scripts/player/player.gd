@@ -17,37 +17,6 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	pass
-
-# gets the direction the player is trying to go
-func get_movement_vector():
-	var movementVector = Vector2(0, 0);
-	if Input.is_action_pressed("MoveLeft"):
-		movementVector += Vector2.LEFT;
-		
-	if Input.is_action_pressed("MoveRight"):
-		movementVector += Vector2.RIGHT;
-		
-	if Input.is_action_pressed("MoveUp"):
-		movementVector += Vector2.UP;
-		
-	if Input.is_action_pressed("MoveDown"):
-		movementVector += Vector2.DOWN;
-		
-	return movementVector
-	
-# custom physics handling for player movement. regular movement feels flat and boring.
-func _physics_process(delta):	
-	if is_node_ready():
-		do_gravity(delta);
-		clamp_speed();
-# make sure the player's speed doesn't go over its max speed
-func clamp_speed():
-	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed)
-	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed)
-	
-func do_gravity(delta):
-	print("GRAVITY ", body)
-	body.linear_velocity.y -= GameState.GRAVITY * delta;
 	
 func take_damage(damage):
 	print("TAKING DAMAGE")
