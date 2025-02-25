@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://d4jbxw2a6r0jk"
+path="res://.godot/imported/ArenaBasicUVRedoTwo.obj-2d3e3a452cfedc26e198771577bfa836.mesh"
+
+[deps]
+
+files=["res://.godot/imported/ArenaBasicUVRedoTwo.obj-2d3e3a452cfedc26e198771577bfa836.mesh"]
+
+source_file="res://graphics/BlenderModels/Models/ArenaBasicUVRedoTwo.obj"
+dest_files=["res://.godot/imported/ArenaBasicUVRedoTwo.obj-2d3e3a452cfedc26e198771577bfa836.mesh", "res://.godot/imported/ArenaBasicUVRedoTwo.obj-2d3e3a452cfedc26e198771577bfa836.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

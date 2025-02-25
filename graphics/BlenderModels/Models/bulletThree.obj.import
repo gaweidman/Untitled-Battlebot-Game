@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://b00850afjpnj6"
+path="res://.godot/imported/bulletThree.obj-bbbb3a631d980d4437f4783c6dcba67c.mesh"
+
+[deps]
+
+files=["res://.godot/imported/bulletThree.obj-bbbb3a631d980d4437f4783c6dcba67c.mesh"]
+
+source_file="res://graphics/BlenderModels/Models/bulletThree.obj"
+dest_files=["res://.godot/imported/bulletThree.obj-bbbb3a631d980d4437f4783c6dcba67c.mesh", "res://.godot/imported/bulletThree.obj-bbbb3a631d980d4437f4783c6dcba67c.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false
