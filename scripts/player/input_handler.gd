@@ -29,7 +29,7 @@ func process_movement(movementVector, delta):
 	);
 	
 func get_movement_vector():
-	var movementVector = Vector2(0, 0)
+	var movementVector = Vector2.ZERO
 		
 	if Input.is_action_pressed("MoveLeft"):
 		movementVector += Vector2.LEFT;

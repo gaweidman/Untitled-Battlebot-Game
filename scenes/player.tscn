@@ -91,6 +91,7 @@ fireRateTimer = 3.0
 
 [node name="MotionHandler" type="Node" parent="."]
 script = ExtResource("7_bdmj6")
+maxSpeed = 13.0
 
 [node name="ProjectileLauncher" parent="." node_paths=PackedStringArray("launcher") instance=ExtResource("9_4wl2u")]
 launcher = NodePath(".")
