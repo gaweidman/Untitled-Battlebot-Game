@@ -1,7 +1,6 @@
 extends Node
 var player;
 var combatHandler;
-@export var fireRateTimer := 0.0;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -16,10 +15,9 @@ func _process(delta: float) -> void:
 func _physics_process(delta):
 	process_movement(get_movement_vector(), delta);
 	
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && can_fire():
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && combatHandler.can_fire():
+		print("HI")
 		combatHandler.fireBullet();
-		
-	fireRateTimer -= delta;
 	
 func process_movement(movementVector, delta):
 	player.body.linear_velocity += Vector3(
@@ -45,6 +43,14 @@ func get_movement_vector():
 		
 	return movementVector;
 
-func can_fire():
-	return fireRateTimer <= 0
-		##Temp condition, can be changed later
+
+func mouseProjectionRotation(positionNode : Node3D):
+	var viewport = get_viewport();
+	var camera = viewport.get_camera_3d();
+	
+	var mousePos = viewport.get_mouse_position();
+	var mousePos3 = camera.project_position(mousePos, 0);
+	var mouseProject = camera.project_position(mousePos, camera.position.y) - positionNode.global_position;
+	
+	var mouseProjectNormalized = Vector3(mouseProject.x, 0, mouseProject.z).normalized()
+	return mouseProjectNormalized;

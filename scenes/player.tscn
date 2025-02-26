@@ -1,14 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=10 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
 [ext_resource type="Script" path="res://scripts/weapons/sawblade.gd" id="3_6t621"]
 [ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="4_nnr5b"]
-[ext_resource type="PackedScene" uid="uid://clsvb0b2mydc7" path="res://scenes/Bullet.tscn" id="6_5swfy"]
-[ext_resource type="Script" path="res://scripts/player/combat_handler.gd" id="6_h42sx"]
+[ext_resource type="PackedScene" uid="uid://dqn5vwvgp6ddp" path="res://scenes/combat_handler.tscn" id="5_8qfif"]
 [ext_resource type="Script" path="res://scripts/player/input_handler.gd" id="6_ui0xh"]
 [ext_resource type="Script" path="res://scripts/player/motion_handler.gd" id="7_bdmj6"]
-[ext_resource type="PackedScene" uid="uid://bgmu5jtpwbpn7" path="res://scenes/ProjectileLauncher.tscn" id="9_4wl2u"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -80,21 +78,15 @@ motor/max_impulse = 1024.0
 
 [node name="Weapon" type="AudioStreamPlayer3D" parent="_AudioStreamPlayers"]
 
-[node name="CombatHandler" type="Node" parent="." node_paths=PackedStringArray("launcher")]
-script = ExtResource("6_h42sx")
-bulletRef = ExtResource("6_5swfy")
-launcher = NodePath("../ProjectileLauncher")
+[node name="CombatHandler" parent="." node_paths=PackedStringArray("positionNode") instance=ExtResource("5_8qfif")]
+positionNode = NodePath("../Body")
 
 [node name="InputHandler" type="Node" parent="."]
 script = ExtResource("6_ui0xh")
-fireRateTimer = 3.0
 
 [node name="MotionHandler" type="Node" parent="."]
 script = ExtResource("7_bdmj6")
 maxSpeed = 13.0
-
-[node name="ProjectileLauncher" parent="." node_paths=PackedStringArray("launcher") instance=ExtResource("9_4wl2u")]
-launcher = NodePath(".")
 
 [connection signal="body_entered" from="Body" to="." method="_on_body_body_entered"]
 [connection signal="body_entered" from="Body/Weapon" to="." method="_on_sawblade_body_entered"]

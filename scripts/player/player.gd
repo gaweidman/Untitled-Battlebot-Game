@@ -16,7 +16,7 @@ func _process(_delta: float) -> void:
 # 0, returns 0.
 func get_sign(num):
 	if num == 0:
-		return 0
+		return 0;
 	else:
 		return num/abs(num);
 		

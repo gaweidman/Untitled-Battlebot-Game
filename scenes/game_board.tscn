@@ -10,7 +10,7 @@
 [ext_resource type="Script" path="res://scripts/camera_3d.gd" id="5_l5xbb"]
 [ext_resource type="Texture2D" uid="uid://e7ym6j3qhb0c" path="res://graphics/BlenderModels/Textures/ArenaTextures/ArenaBasicUVRedoTwo_DefaultMaterial_Normal.png" id="5_nw87p"]
 [ext_resource type="Texture2D" uid="uid://wae3h6280nv1" path="res://graphics/BlenderModels/Textures/ArenaTextures/ArenaBasicUVRedoTwo_DefaultMaterial_Roughness.png" id="6_ntb7c"]
-[ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/damage_cube.tscn" id="8_hfgcm"]
+[ext_resource type="PackedScene" path="res://scenes/damage_cube.tscn" id="8_hfgcm"]
 [ext_resource type="Script" path="res://scripts/libraries/sound_manager.gd" id="9_hh74c"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aldus"]

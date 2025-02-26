@@ -1,4 +1,6 @@
-extends Node
+extends Node3D
+
+class_name CombatHandler
 
 #@onready var bulletRef : ;
 @export var bulletRef : PackedScene;
@@ -9,25 +11,37 @@ var magazine = [];
 @export var firingAngle := Vector3.BACK;
 
 @export var fireRate := 0.15;
-@export var launcher : Node3D;
+@export var fireRateTimer := 0.0;
+@export var positionNode : Node3D; ##This needs to be the thing with the position on it - in thbis case, the Body node
 @export var startingHealth: int;
 
 var health;
 var maxHealth;
 
 var inputHandler;
+var leakTimer : Timer;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	inputHandler = $InputHandler
+	inputHandler = $"../InputHandler"
+	leakTimer = $LeakTimer;
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
+	if fireRateTimer <= 0:
+		pass
+	else:
+		fireRateTimer -= delta;
 	pass
-	
+
+func can_fire() -> bool: 
+	return fireRateTimer <= 0;
+		##Temp condition, can be changed later
+
 func fireBullet():
+	print("pew");
 	var bullet : Bullet;
 	
 #	##Create new bullets when there are less than there should be
@@ -40,10 +54,13 @@ func fireBullet():
 	
 	if is_instance_valid(bullet):
 		##This offset can be changed later to be controllable
-		var offset = Vector3(0,1,0)
+		var offset = Vector3(0,1,0);
+		firingAngle = inputHandler.mouseProjectionRotation(positionNode);
 		
-		bullet.fire($ProjectileLauncher, launcher.position + offset, firingAngle, fireSpeed, bulletLifetime);
-		inputHandler.fireRateTimer = fireRate;
+		bullet.fire(self, positionNode.position + offset, firingAngle, fireSpeed, bulletLifetime);
+		fireRateTimer = fireRate;
+	
+	leakTimer.start();
 	pass
 
 func recountMagazine() -> int:
@@ -76,3 +93,19 @@ func die():
 	
 func _on_collision(colliderdw):
 	pass
+
+func leakPrevention():
+	print("There's a leek in the boat...")
+	##Deletes the entire magazine 
+	for bullet in magazine:
+		if is_instance_valid(bullet):
+			bullet.leak();
+	magazine.clear();
+
+func _on_leak_timer_timeout():
+	leakPrevention();
+	pass;
+
+func _exit_tree():
+	leakPrevention();
+	pass;
