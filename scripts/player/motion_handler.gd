@@ -1,6 +1,8 @@
-extends Node
+extends Node3D
 var player;
 var body;
+var inputHandler;
+var raycasts;
 
 @export var maxSpeed: float;
 
@@ -8,6 +10,8 @@ var body;
 func _ready() -> void:
 	player = GameState.get_player();
 	body = player.get_node("Body");
+	inputHandler = player.get_node("InputHandler");
+	raycasts = [%Raycast1, %Raycast2, %Raycast3, %Raycast4];
 	pass # Replace with function body.
 
 
@@ -17,13 +21,27 @@ func _process(delta: float) -> void:
 
 # custom physics handling for player movement. regular movement feels flat and boring.
 func _physics_process(delta):	
-	do_gravity(delta);
-	clamp_speed();
+	
+	var downVec = -body.global_transform.basis.y;
+
+	for raycast in raycasts:
+		# if we're not making contact at any of the contact points, we don't do anything, so just return
+		if !raycast.is_colliding():
+			print("NOPT HAPPENING")
+			return
+			
+	
+	var movementVector = inputHandler.get_movement_vector();
+	var forceVector = Vector3.ZERO
+	
+	forceVector += body.global_transform.basis.x * movementVector.x * -GameState.PLAYER_ACCELERATION;
+	forceVector += body.global_transform.basis.z * movementVector.y * -GameState.PLAYER_ACCELERATION;
+	
+	print(movementVector);
+	
+	body.apply_central_force(forceVector);
 		
 # make sure the player's speed doesn't go over its max speed
 func clamp_speed():
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);
 	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed);
-	
-func do_gravity(delta):
-	body.linear_velocity.y -= GameState.GRAVITY * delta;

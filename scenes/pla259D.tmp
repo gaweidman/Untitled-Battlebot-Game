@@ -43,24 +43,12 @@ size = Vector3(0.75, 0.02, 0.09)
 material = ExtResource("4_qq3wf")
 
 [node name="ContactPoint1" type="Node3D" parent="Body/Bottom/TreadL"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, -0.02, 0)
 
-[node name="Raycast1" type="RayCast3D" parent="Body/Bottom/TreadL/ContactPoint1"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
-
 [node name="ContactPoint2" type="Node3D" parent="Body/Bottom/TreadL"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, -0.02, 0)
-
-[node name="Raycast2" type="RayCast3D" parent="Body/Bottom/TreadL/ContactPoint2"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, -0.02, 0)
 
 [node name="TreadR" type="CSGBox3D" parent="Body/Bottom"]
 transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, -0.08, 0.25)
@@ -68,24 +56,12 @@ size = Vector3(0.75, 0.02, 0.09)
 material = ExtResource("4_qq3wf")
 
 [node name="ContactPoint3" type="Node3D" parent="Body/Bottom/TreadR"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, -0.02, 0)
 
-[node name="Raycast3" type="RayCast3D" parent="Body/Bottom/TreadR/ContactPoint3"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
-
 [node name="ContactPoint4" type="Node3D" parent="Body/Bottom/TreadR"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, -0.02, 0)
-
-[node name="Raycast4" type="RayCast3D" parent="Body/Bottom/TreadR/ContactPoint4"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, -0.02, 0)
 
 [node name="Top" type="CSGBox3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.269, 0)

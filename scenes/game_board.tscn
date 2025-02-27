@@ -10,7 +10,7 @@
 [ext_resource type="Script" path="res://scripts/camera_3d.gd" id="5_l5xbb"]
 [ext_resource type="Texture2D" uid="uid://e7ym6j3qhb0c" path="res://graphics/BlenderModels/Textures/ArenaTextures/ArenaBasicUVRedoTwo_DefaultMaterial_Normal.png" id="5_nw87p"]
 [ext_resource type="Texture2D" uid="uid://wae3h6280nv1" path="res://graphics/BlenderModels/Textures/ArenaTextures/ArenaBasicUVRedoTwo_DefaultMaterial_Roughness.png" id="6_ntb7c"]
-[ext_resource type="PackedScene" path="res://scenes/damage_cube.tscn" id="8_hfgcm"]
+[ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/damage_cube.tscn" id="8_hfgcm"]
 [ext_resource type="Script" path="res://scripts/libraries/sound_manager.gd" id="9_hh74c"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aldus"]
@@ -32,10 +32,11 @@ data = PackedVector3Array(-2.0005, 5.0276, -2.0005, -2.0005, 5.0276, -0.0004, -3
 size = Vector3(76, 5, 76)
 
 [node name="GameBoard" type="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000710726, 1.19209e-07, -0.00693196)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000710726, -0.0296808, -0.00693196)
 top_level = true
 
 [node name="Player" parent="." instance=ExtResource("1_6r12f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.605191, 0)
 
 [node name="ArenaBasicUvRedoTwo" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, -1.65146, 31.1449)
@@ -48,7 +49,7 @@ mesh = ExtResource("2_tofuf")
 shape = SubResource("ConcavePolygonShape3D_itmxy")
 
 [node name="Ground" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.20693, -33.9222)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -30.9619, -33.9222)
 material_override = ExtResource("1_3pkq8")
 size = Vector3(76, 5, 76)
 script = ExtResource("5_8ilhm")

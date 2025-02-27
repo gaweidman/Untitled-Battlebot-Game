@@ -62,4 +62,6 @@ TriggerAction={
 [physics]
 
 3d/physics_engine="JoltPhysics3D"
+3d/default_gravity_vector=Vector3(0, -3, 0)
 jolt_3d/collisions/areas_detect_static_bodies=true
+jolt_3d/collisions/report_all_kinematic_contacts=true
