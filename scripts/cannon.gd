@@ -9,7 +9,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _physics_process(delta):
 	var rot = inputHandler.mouseProjectionRotation(posNode)
 	rot = rot.rotated(Vector3(0,1,0), deg_to_rad(90))
 	#print(rot)
