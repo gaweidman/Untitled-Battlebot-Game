@@ -1,13 +1,7 @@
 extends Node
 
-# How quickly the player comes to a stop
-var PLAYER_DECELERATION = 70;
-
 # How quickly the player speeds up
-var PLAYER_ACCELERATION = 120;
-
-# the acceleration of gravity
-var GRAVITY = 9.81
+var PLAYER_ACCELERATION = 5000;
 
 # how fast enemies can go
 var MAX_ENEMY_SPEED = 13
