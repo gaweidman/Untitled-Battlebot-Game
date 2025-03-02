@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=21 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -8,7 +8,15 @@
 [ext_resource type="Material" uid="uid://cbvhbi7cs2id6" path="res://graphics/materials/Treads.tres" id="4_qq3wf"]
 [ext_resource type="PackedScene" uid="uid://dqn5vwvgp6ddp" path="res://scenes/combat_handler.tscn" id="5_8qfif"]
 [ext_resource type="Script" path="res://scripts/player/input_handler.gd" id="6_ui0xh"]
+[ext_resource type="ArrayMesh" uid="uid://yk6x46nqkc77" path="res://graphics/BlenderModels/Models/cannonMapped.obj" id="7_3un1w"]
 [ext_resource type="Script" path="res://scripts/player/motion_handler.gd" id="7_bdmj6"]
+[ext_resource type="Texture2D" uid="uid://d0fapb5hsnykx" path="res://graphics/BlenderModels/Textures/CannonTextures/cannonToPaint_standardSurface1_BaseColor.png" id="8_cr3ny"]
+[ext_resource type="Texture2D" uid="uid://n7o3t1dq1xec" path="res://graphics/BlenderModels/Textures/CannonTextures/cannonToPaint_standardSurface1_Emissive.png" id="9_llv4r"]
+[ext_resource type="Texture2D" uid="uid://5lngjasr5nqx" path="res://graphics/BlenderModels/Textures/CannonTextures/cannonToPaint_standardSurface1_Height.png" id="10_vebpf"]
+[ext_resource type="Texture2D" uid="uid://75dp2f4fwem3" path="res://graphics/BlenderModels/Textures/CannonTextures/cannonToPaint_standardSurface1_Metallic.png" id="11_kfprt"]
+[ext_resource type="Texture2D" uid="uid://b1rgs0irdp14i" path="res://graphics/BlenderModels/Textures/CannonTextures/cannonToPaint_standardSurface1_Normal.png" id="12_4a2xk"]
+[ext_resource type="Texture2D" uid="uid://comunl4wnvmna" path="res://graphics/BlenderModels/Textures/CannonTextures/cannonToPaint_standardSurface1_Roughness.png" id="13_wigit"]
+[ext_resource type="Script" path="res://scripts/cannon.gd" id="14_1byn2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -16,6 +24,18 @@ size = Vector3(1, 0.333479, 1)
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_fise2"]
 height = 0.021
 radius = 0.95
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ajjua"]
+albedo_texture = ExtResource("8_cr3ny")
+metallic = 1.0
+metallic_texture = ExtResource("11_kfprt")
+roughness_texture = ExtResource("13_wigit")
+emission_enabled = true
+emission_texture = ExtResource("9_llv4r")
+normal_enabled = true
+normal_texture = ExtResource("12_4a2xk")
+heightmap_enabled = true
+heightmap_texture = ExtResource("10_vebpf")
 
 [node name="Player" type="Node3D" groups=["Player Part"]]
 script = ExtResource("1_u8q0c")
@@ -121,6 +141,15 @@ node_b = NodePath("../Weapon")
 motor/target_velocity = 18.8496
 motor/max_impulse = 512.0
 
+[node name="Cannon" type="MeshInstance3D" parent="Body" node_paths=PackedStringArray("inputHandler", "posNode")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000182867, 0.085945, -3.8147e-06)
+mesh = ExtResource("7_3un1w")
+skeleton = NodePath("../../CombatHandler")
+surface_material_override/0 = SubResource("StandardMaterial3D_ajjua")
+script = ExtResource("14_1byn2")
+inputHandler = NodePath("../../InputHandler")
+posNode = NodePath("..")
+
 [node name="_AudioStreamPlayers" type="Node3D" parent="."]
 
 [node name="Collision" type="AudioStreamPlayer3D" parent="_AudioStreamPlayers"]
@@ -132,6 +161,7 @@ motor/max_impulse = 512.0
 [node name="Weapon" type="AudioStreamPlayer3D" parent="_AudioStreamPlayers"]
 
 [node name="CombatHandler" parent="." node_paths=PackedStringArray("positionNode") instance=ExtResource("5_8qfif")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.388926, 0)
 positionNode = NodePath("../Body")
 
 [node name="InputHandler" type="Node3D" parent="."]

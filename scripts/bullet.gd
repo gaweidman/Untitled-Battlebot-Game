@@ -59,7 +59,9 @@ func _on_life_timer_timeout():
 	pass # Replace with function body.
 
 func _on_body_entered(body):
-	die();
+	if not ( body.is_in_group("Player Part") ):
+		print(body)
+		die();
 	pass # Replace with function body.
 
 func leak():
