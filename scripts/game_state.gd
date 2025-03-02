@@ -16,3 +16,6 @@ func _process(delta: float) -> void:
 
 func get_player():
 	return get_node("/root/GameBoard/Player");
+	
+func get_hud():
+	return get_node("/root/GameBoard/HUD");
