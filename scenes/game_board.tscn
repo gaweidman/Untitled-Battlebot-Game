@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://b87nwgs0v5u6p" path="res://graphics/BlenderModels/Textures/ArenaFloor/ArenaCutUpFloors_DefaultMaterial_Metallic.png" id="5_nxlb2"]
 [ext_resource type="Texture2D" uid="uid://c58l7wcab2jdy" path="res://graphics/BlenderModels/Textures/ArenaFloor/ArenaCutUpFloors_DefaultMaterial_Normal.png" id="6_ljq1t"]
 [ext_resource type="Texture2D" uid="uid://bmk3pxljrwey4" path="res://graphics/BlenderModels/Textures/ArenaFloor/ArenaCutUpFloors_DefaultMaterial_Roughness.png" id="7_aluah"]
-[ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/damage_cube.tscn" id="8_hfgcm"]
+[ext_resource type="PackedScene" path="res://scenes/damage_cube.tscn" id="8_hfgcm"]
 [ext_resource type="Texture2D" uid="uid://crmqrapoge36o" path="res://graphics/BlenderModels/Textures/ArenaWall/ArenaCutUpWalls_DefaultMaterial_BaseColor.png" id="9_a2fa2"]
 [ext_resource type="Script" path="res://scripts/libraries/sound_manager.gd" id="9_hh74c"]
 [ext_resource type="Texture2D" uid="uid://rpfpgbbhy7ry" path="res://graphics/BlenderModels/Textures/ArenaWall/ArenaCutUpWalls_DefaultMaterial_Emissive.png" id="10_0hg2q"]

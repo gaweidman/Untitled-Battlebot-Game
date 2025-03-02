@@ -26,7 +26,7 @@ func _physics_process(delta):
 
 	for raycast in raycasts:
 		# if we're not making contact at any of the contact points, we don't do anything, so just return
-		if !raycast.is_colliding():
+		if !raycast.is_colliding() && false:
 			print("NOPT HAPPENING")
 			return
 			
@@ -37,7 +37,7 @@ func _physics_process(delta):
 	forceVector += body.global_transform.basis.x * movementVector.x * -GameState.PLAYER_ACCELERATION;
 	forceVector += body.global_transform.basis.z * movementVector.y * -GameState.PLAYER_ACCELERATION;
 	
-	print(movementVector);
+	#print(movementVector);
 	
 	body.apply_central_force(forceVector);
 		
