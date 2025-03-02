@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dg22nekbkpla1"
+path="res://.godot/imported/ArenaCutUpFloors.obj-1cdf1a23a3edc627d8e98c07f10c0cfe.mesh"
+
+[deps]
+
+files=["res://.godot/imported/ArenaCutUpFloors.obj-1cdf1a23a3edc627d8e98c07f10c0cfe.mesh"]
+
+source_file="res://graphics/BlenderModels/Models/ArenaCutUpFloors.obj"
+dest_files=["res://.godot/imported/ArenaCutUpFloors.obj-1cdf1a23a3edc627d8e98c07f10c0cfe.mesh", "res://.godot/imported/ArenaCutUpFloors.obj-1cdf1a23a3edc627d8e98c07f10c0cfe.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

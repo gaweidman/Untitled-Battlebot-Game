@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://yk6x46nqkc77"
+path="res://.godot/imported/cannonMapped.obj-389a7eceecf9742aaac1e7fd396bfdb1.mesh"
+
+[deps]
+
+files=["res://.godot/imported/cannonMapped.obj-389a7eceecf9742aaac1e7fd396bfdb1.mesh"]
+
+source_file="res://graphics/BlenderModels/Models/cannonMapped.obj"
+dest_files=["res://.godot/imported/cannonMapped.obj-389a7eceecf9742aaac1e7fd396bfdb1.mesh", "res://.godot/imported/cannonMapped.obj-389a7eceecf9742aaac1e7fd396bfdb1.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false
