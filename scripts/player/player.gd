@@ -12,6 +12,12 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	pass
 	
+func get_health() -> int:
+	return combatHandler.health;
+	
+func get_ammo() -> int:
+	return combatHandler.magazine.size();
+	
 # if a given number is positive, returns 1. if it's negative, returns -1. if it's
 # 0, returns 0.
 func get_sign(num):
