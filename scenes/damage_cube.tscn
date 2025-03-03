@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cg27jtv73p32u"]
 
-[ext_resource type="Script" path="res://scripts/damage_cube.gd" id="1_pr12y"]
+[ext_resource type="Script" uid="uid://bmu386yn0gvmd" path="res://scripts/damage_cube.gd" id="1_pr12y"]
 [ext_resource type="Material" uid="uid://bsffxyx7mk1ua" path="res://graphics/materials/DemoCube.tres" id="1_tgqhk"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tyu7q"]
