@@ -1,0 +1,43 @@
+[gd_scene load_steps=11 format=3 uid="uid://clsvb0b2mydc7"]
+
+[ext_resource type="Script" path="res://scripts/objects/weapons/bullet.gd" id="1_qx18r"]
+[ext_resource type="ArrayMesh" uid="uid://wv6p1lb5s14l" path="res://graphics/models/bullet1.obj" id="2_r0xnt"]
+[ext_resource type="Texture2D" uid="uid://cm2pk65oop54e" path="res://graphics/images/models/bullet1/bullet1_color.png" id="3_rlje5"]
+[ext_resource type="Texture2D" uid="uid://c524mi8vjxgpi" path="res://graphics/images/models/bullet1/bullet1_emissive.png" id="4_ns8rl"]
+[ext_resource type="Texture2D" uid="uid://0rfk23j20c51" path="res://graphics/images/models/bullet1/bullet1_height.png" id="5_8nw7p"]
+[ext_resource type="Texture2D" uid="uid://7ix3qxrs08gq" path="res://graphics/images/models/bullet1/bullet1_metallic.png" id="6_iltkw"]
+[ext_resource type="Texture2D" uid="uid://dpvafyh24gtlk" path="res://graphics/images/models/bullet1/bullet1_normal.png" id="7_8cxbg"]
+[ext_resource type="Texture2D" uid="uid://bjvb7ym40fve5" path="res://graphics/images/models/bullet1/bullet1_roughness.png" id="8_t5gjc"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8grda"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1g6nv"]
+albedo_texture = ExtResource("3_rlje5")
+metallic = 1.0
+metallic_texture = ExtResource("6_iltkw")
+roughness_texture = ExtResource("8_t5gjc")
+emission_enabled = true
+emission_texture = ExtResource("4_ns8rl")
+normal_enabled = true
+normal_texture = ExtResource("7_8cxbg")
+heightmap_enabled = true
+heightmap_texture = ExtResource("5_8nw7p")
+
+[node name="Bullet" type="Area3D" node_paths=PackedStringArray("lifeTimer", "collision")]
+script = ExtResource("1_qx18r")
+lifeTimer = NodePath("LifeTimer")
+collision = NodePath("CollisionShape3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_8grda")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.301414, 0, 0, 0, 0.301414, 0, 0, 0, 0.301414, 0, 0, 0)
+mesh = ExtResource("2_r0xnt")
+surface_material_override/0 = SubResource("StandardMaterial3D_1g6nv")
+
+[node name="LifeTimer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_shape_entered" from="." to="." method="_on_body_shape_entered"]
+[connection signal="timeout" from="LifeTimer" to="." method="_on_life_timer_timeout"]

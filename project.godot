@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="Untitled Battlebot Game"
-run/main_scene="res://scenes/game_board.tscn"
+run/main_scene="res://scenes/levels/game_board.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-GameState="*res://scripts/game_state.gd"
+GameState="*res://scripts/libraries/game_state.gd"
 Sound="*res://scripts/libraries/sound_manager.gd"
 
 [global_group]

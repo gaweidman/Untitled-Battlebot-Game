@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cg27jtv73p32u"]
+
+[ext_resource type="Script" path="res://scripts/objects/damage_cube.gd" id="1_pr12y"]
+[ext_resource type="Material" uid="uid://bsffxyx7mk1ua" path="res://graphics/materials/DemoCube.tres" id="1_tgqhk"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tyu7q"]
+
+[node name="Damage Cube" type="Node3D"]
+script = ExtResource("1_pr12y")
+
+[node name="Body" type="RigidBody3D" parent="." groups=["Enemy"]]
+mass = 2000.0
+freeze_mode = 1
+contact_monitor = true
+max_contacts_reported = 10
+
+[node name="Mesh" type="CSGBox3D" parent="Body"]
+material_override = ExtResource("1_tgqhk")
+
+[node name="CollisionShape" type="CollisionShape3D" parent="Body"]
+shape = SubResource("BoxShape3D_tyu7q")
+
+[connection signal="body_entered" from="Body" to="." method="_on_body_body_entered"]

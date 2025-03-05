@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bmwkky87k24xs"
-path="res://.godot/imported/Ammo 0.png-f695380b973c45fe1115d21db61642b3.ctex"
+uid="uid://dnw47rx6o7ml8"
+path="res://.godot/imported/blade_height.png-7ccc55b89245e4e13f87eb3ed4d07ee7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/hud/Ammo 0.png"
-dest_files=["res://.godot/imported/Ammo 0.png-f695380b973c45fe1115d21db61642b3.ctex"]
+source_file="res://graphics/images/models/blade/blade_height.png"
+dest_files=["res://.godot/imported/blade_height.png-7ccc55b89245e4e13f87eb3ed4d07ee7.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bmwkky87k24xs"
-path="res://.godot/imported/Ammo 0.png-f695380b973c45fe1115d21db61642b3.ctex"
+uid="uid://cy0mfmnvw2h63"
+path="res://.godot/imported/arena_wall_height.png-0f22c08c44ec06456220d0368fe499c7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/hud/Ammo 0.png"
-dest_files=["res://.godot/imported/Ammo 0.png-f695380b973c45fe1115d21db61642b3.ctex"]
+source_file="res://graphics/images/models/arena_wall/arena_wall_height.png"
+dest_files=["res://.godot/imported/arena_wall_height.png-0f22c08c44ec06456220d0368fe499c7.ctex"]
 
 [params]
 
