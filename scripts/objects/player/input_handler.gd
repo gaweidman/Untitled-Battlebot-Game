@@ -1,4 +1,4 @@
-extends Node
+extends Node3D
 var player;
 var combatHandler;
 
@@ -19,12 +19,9 @@ func _physics_process(delta):
 		print("HI")
 		combatHandler.fireBullet();
 	
+# we apply forces in motion_handler
 func process_movement(movementVector, delta):
-	player.body.linear_velocity += Vector3(
-		movementVector.x * GameState.PLAYER_ACCELERATION * delta * -1, 
-		0, 
-		movementVector.y * GameState.PLAYER_ACCELERATION * delta * -1
-	);
+	pass
 	
 func get_movement_vector():
 	var movementVector = Vector2.ZERO

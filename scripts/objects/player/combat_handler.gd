@@ -15,8 +15,8 @@ var magazine = [];
 @export var positionNode : Node3D; ##This needs to be the thing with the position on it - in thbis case, the Body node
 @export var startingHealth: int;
 
-var health;
-var maxHealth;
+var maxHealth = 3;
+var health = maxHealth;
 
 var inputHandler;
 var leakTimer : Timer;
@@ -61,6 +61,7 @@ func fireBullet():
 		fireRateTimer = fireRate;
 	
 	leakTimer.start();
+	GameState.get_hud().update();
 	pass
 
 func recountMagazine() -> int:
@@ -86,6 +87,8 @@ func take_damage(damage):
 	get_node("../GUI/Health").text = "Health: " + health + "/" + maxHealth;
 	if health <= 0:
 		die();
+		
+	GameState.get_hud().update();
 		
 func die():
 	print("WE ARE DYING")
