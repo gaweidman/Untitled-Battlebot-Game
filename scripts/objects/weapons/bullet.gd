@@ -47,7 +47,7 @@ func rotateTowardVector3(dir : Vector3):
 func die():
 	position = Vector3.ZERO;
 	fired = false;
-	collision.disabled = true;
+	collision.set_deferred("disabled", true);
 	hide();
 	if leaking:
 		print("Bullet leaked :)");

@@ -15,8 +15,10 @@ func _process(delta: float) -> void:
 	pass
 
 func get_player():
-	var ply = get_node("/root/GameBoard/Player")
+	var ply = get_node_or_null("/root/GameBoard/Player")
 	
+	if ply == null:
+		return null;
 	for child in ply.get_children():
 		print(child)
 	return ply;
