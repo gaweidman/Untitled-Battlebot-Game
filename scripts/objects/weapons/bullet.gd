@@ -35,7 +35,7 @@ func fire(_launcher : CombatHandler ,_initPosition : Vector3, _direction := Vect
 	initPosition = _initPosition;
 	position = initPosition;
 	#print(position)
-	collision.disabled = false;
+	collision.set_deferred("disabled", false);
 	rotateTowardVector3(dir);
 	
 	show();
