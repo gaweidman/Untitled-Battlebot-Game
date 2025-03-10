@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://clsvb0b2mydc7"]
 
-[ext_resource type="Script" path="res://scripts/objects/weapons/bullet.gd" id="1_qx18r"]
+[ext_resource type="Script" uid="uid://bujcs1qe34eqy" path="res://scripts/objects/weapons/bullet.gd" id="1_qx18r"]
 [ext_resource type="ArrayMesh" uid="uid://wv6p1lb5s14l" path="res://graphics/models/bullet1.obj" id="2_r0xnt"]
 [ext_resource type="Texture2D" uid="uid://cm2pk65oop54e" path="res://graphics/images/models/bullet1/bullet1_color.png" id="3_rlje5"]
 [ext_resource type="Texture2D" uid="uid://c524mi8vjxgpi" path="res://graphics/images/models/bullet1/bullet1_emissive.png" id="4_ns8rl"]

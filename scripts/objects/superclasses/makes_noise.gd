@@ -1,5 +1,5 @@
 class_name MakesNoise;
-extends Node3D
+extends Node3D;
 
 var STREAM_PLAYERS = {};
 var PLAYER_PARENT;
