@@ -5,6 +5,7 @@ class_name CombatHandler
 #@onready var bulletRef : ;
 @export var bulletRef : PackedScene;
 var magazine = [];
+var magazineCount := 0;
 @export var magazineMax := 3;
 @export var fireSpeed := 30.0;
 @export var bulletLifetime := 1.0;
@@ -71,7 +72,9 @@ func recountMagazine() -> int:
 		if is_instance_valid(bullet):
 			if bullet.fired:
 				count -= 1;
-	return max(count, 0);
+	var finalCount = max(count, 0);
+	magazineCount = finalCount;
+	return finalCount;
 
 func nextBullet():
 	##Checks the magazine for the next non-fired bullet

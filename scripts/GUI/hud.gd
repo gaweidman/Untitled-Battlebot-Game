@@ -16,5 +16,9 @@ func _process(_delta: float) -> void:
 
 func update() -> void:
 	print(GameState.get_player()) #debug print
-	$Health.update(GameState.get_player().get_health());
-	$Ammo.update(GameState.get_player().combatHandler.recountMagazine());
+	var ply = GameState.get_player();
+	print("Player node? ", ply)
+	print(ply.is_node_ready())
+	print(ply.get_script())
+	$Health.update(ply.get_health());
+	$Ammo.update(GameState.get_player().combatHandler.magazineCount);

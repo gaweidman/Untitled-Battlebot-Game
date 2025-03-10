@@ -19,7 +19,7 @@ func get_player():
 	
 	for child in ply.get_children():
 		print(child)
-	return get_node("/root/GameBoard/Player");
+	return ply;
 	
 func get_hud():
 	return get_node("/root/GameBoard/HUD");
