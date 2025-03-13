@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://34s54klu8c0"
-path="res://.godot/imported/PlasticHitThree.wav-1efdf698238ec8abc7ea14c8d2b22752.sample"
+path="res://.godot/imported/PlasticHitThree.wav-96d85122b79efb5898982054292b0f2a.sample"
 
 [deps]
 
-source_file="res://SFX/PlasticHitThree.wav"
-dest_files=["res://.godot/imported/PlasticHitThree.wav-1efdf698238ec8abc7ea14c8d2b22752.sample"]
+source_file="res://sounds/PlasticHitThree.wav"
+dest_files=["res://.godot/imported/PlasticHitThree.wav-96d85122b79efb5898982054292b0f2a.sample"]
 
 [params]
 

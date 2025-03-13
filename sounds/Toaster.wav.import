@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://bq70e6v87vo2i"
-path="res://.godot/imported/Sawblade.wav-603e322e08d00526711e65d7bb16a8fe.sample"
+uid="uid://b3s8file6q5qp"
+path="res://.godot/imported/Toaster.wav-8535de2e1148c39b9f02e9ec1ff56474.sample"
 
 [deps]
 
-source_file="res://SFX/Sawblade.wav"
-dest_files=["res://.godot/imported/Sawblade.wav-603e322e08d00526711e65d7bb16a8fe.sample"]
+source_file="res://sounds/Toaster.wav"
+dest_files=["res://.godot/imported/Toaster.wav-8535de2e1148c39b9f02e9ec1ff56474.sample"]
 
 [params]
 

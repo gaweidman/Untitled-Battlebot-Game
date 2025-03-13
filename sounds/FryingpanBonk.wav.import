@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://8lhe58t83umf"
-path="res://.godot/imported/FryingpanBonk.wav-346c2655f65cad16392b843a46e2f669.sample"
+path="res://.godot/imported/FryingpanBonk.wav-4f0fc8e651fe6c4053db9239aee20dc2.sample"
 
 [deps]
 
-source_file="res://SFX/FryingpanBonk.wav"
-dest_files=["res://.godot/imported/FryingpanBonk.wav-346c2655f65cad16392b843a46e2f669.sample"]
+source_file="res://sounds/FryingpanBonk.wav"
+dest_files=["res://.godot/imported/FryingpanBonk.wav-4f0fc8e651fe6c4053db9239aee20dc2.sample"]
 
 [params]
 

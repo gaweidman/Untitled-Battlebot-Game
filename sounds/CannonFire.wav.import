@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://cdbj440kqawgh"
-path="res://.godot/imported/ClashSound.wav-6557b84a2ed9dd663fd32cb387bf2588.sample"
+uid="uid://b3uqoa341umir"
+path="res://.godot/imported/CannonFire.wav-fbfd763842d27d7200d04a9a7a181cce.sample"
 
 [deps]
 
-source_file="res://SFX/ClashSound.wav"
-dest_files=["res://.godot/imported/ClashSound.wav-6557b84a2ed9dd663fd32cb387bf2588.sample"]
+source_file="res://sounds/CannonFire.wav"
+dest_files=["res://.godot/imported/CannonFire.wav-fbfd763842d27d7200d04a9a7a181cce.sample"]
 
 [params]
 

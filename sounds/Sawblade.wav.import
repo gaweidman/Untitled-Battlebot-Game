@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://cpqyud8so70m1"
-path="res://.godot/imported/MetalClang.wav-5f29ac0a7c34222e0ed8fb2d02eccdb5.sample"
+uid="uid://bq70e6v87vo2i"
+path="res://.godot/imported/Sawblade.wav-335786239a4ae8f2dedeabbe302870db.sample"
 
 [deps]
 
-source_file="res://SFX/MetalClang.wav"
-dest_files=["res://.godot/imported/MetalClang.wav-5f29ac0a7c34222e0ed8fb2d02eccdb5.sample"]
+source_file="res://sounds/Sawblade.wav"
+dest_files=["res://.godot/imported/Sawblade.wav-335786239a4ae8f2dedeabbe302870db.sample"]
 
 [params]
 

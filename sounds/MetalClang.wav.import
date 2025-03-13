@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://cko2xjbbab7pu"
-path="res://.godot/imported/MetalSlam.wav-8a2a3247effe325cd34fa188f7baa72b.sample"
+uid="uid://cpqyud8so70m1"
+path="res://.godot/imported/MetalClang.wav-92f6294e799996aceb21b2f605d12783.sample"
 
 [deps]
 
-source_file="res://SFX/MetalSlam.wav"
-dest_files=["res://.godot/imported/MetalSlam.wav-8a2a3247effe325cd34fa188f7baa72b.sample"]
+source_file="res://sounds/MetalClang.wav"
+dest_files=["res://.godot/imported/MetalClang.wav-92f6294e799996aceb21b2f605d12783.sample"]
 
 [params]
 

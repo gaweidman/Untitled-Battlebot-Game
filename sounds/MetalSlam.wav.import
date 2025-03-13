@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://b3s8file6q5qp"
-path="res://.godot/imported/Toaster.wav-eb5d0e20aaf7a68a3b16e1f0f10b7d61.sample"
+uid="uid://cko2xjbbab7pu"
+path="res://.godot/imported/MetalSlam.wav-c4d4b7ee4a9140f6951938254ce80629.sample"
 
 [deps]
 
-source_file="res://SFX/Toaster.wav"
-dest_files=["res://.godot/imported/Toaster.wav-eb5d0e20aaf7a68a3b16e1f0f10b7d61.sample"]
+source_file="res://sounds/MetalSlam.wav"
+dest_files=["res://.godot/imported/MetalSlam.wav-c4d4b7ee4a9140f6951938254ce80629.sample"]
 
 [params]
 

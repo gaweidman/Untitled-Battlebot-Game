@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://b3uqoa341umir"
-path="res://.godot/imported/CannonFire.wav-ae60d21d9244c050bee92a09da89e5e9.sample"
+uid="uid://i6u3qr3jaif"
+path="res://.godot/imported/MetalClap.wav-b7534dd11d24b91a3c78c7d06015ae40.sample"
 
 [deps]
 
-source_file="res://SFX/CannonFire.wav"
-dest_files=["res://.godot/imported/CannonFire.wav-ae60d21d9244c050bee92a09da89e5e9.sample"]
+source_file="res://sounds/MetalClap.wav"
+dest_files=["res://.godot/imported/MetalClap.wav-b7534dd11d24b91a3c78c7d06015ae40.sample"]
 
 [params]
 

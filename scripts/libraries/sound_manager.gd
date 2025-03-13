@@ -21,25 +21,25 @@ enum {
 # possibly multiple options.
 
 var SOUNDS = {
-	"Collision.Combatant.Metal": ["res://SFX/MetalThud.mp3"],
-	"Collision.Combatant.Plastic": ["res://SFX/SecondPlasticHit.wav"],
-	"Collision.Combatant.Sawblade": ["res://SFX/MetalClang.wav"],
-	"Collision.Combatant.Combatant": ["res://SFX/FryingpanBonk.wav"],
+	"Collision.Combatant.Metal": ["res://sounds/MetalThud.mp3"],
+	"Collision.Combatant.Plastic": ["res://sounds/SecondPlasticHit.wav"],
+	"Collision.Combatant.Sawblade": ["res://sounds/MetalClang.wav"],
+	"Collision.Combatant.Combatant": ["res://sounds/FryingpanBonk.wav"],
 	
-	"Collision.Projectile.Metal": ["res://SFX/FryingpanBonk.wav"],
-	"Collision.Projectile.Plastic": ["res://SFX/PlasticHitSound.mp3"],
-	"Collision.Projectile.Sawblade": ["res://SFX/MetalClap.wav"],
-	"Collision.Projectile.Combatant": ["res://SFX/MetalClap.wav"],
+	"Collision.Projectile.Metal": ["res://sounds/FryingpanBonk.wav"],
+	"Collision.Projectile.Plastic": ["res://sounds/PlasticHitSound.mp3"],
+	"Collision.Projectile.Sawblade": ["res://sounds/MetalClap.wav"],
+	"Collision.Projectile.Combatant": ["res://sounds/MetalClap.wav"],
 	
-	"Collision.Sawblade.Metal": ["res://SFX/MetalClang.wav"],
-	"Collision.Sawblade.Plastic": ["res://SFX/PlasticHitThree.wav"],
-	"Collision.Sawblade.Sawblade": ["res://SFX/ClashSound.wav"], 
+	"Collision.Sawblade.Metal": ["res://sounds/MetalClang.wav"],
+	"Collision.Sawblade.Plastic": ["res://sounds/PlasticHitThree.wav"],
+	"Collision.Sawblade.Sawblade": ["res://sounds/ClashSound.wav"], 
 	
-	"Weapon.Shoot": ["res://SFX/CannonFire.wav"],
-	"Weapon.Sawblade.Drone": ["res://SFX/Sawblade.wav"],
+	"Weapon.Shoot": ["res://sounds/CannonFire.wav"],
+	"Weapon.Sawblade.Drone": ["res://sounds/Sawblade.wav"],
 	
-	"Movement.Drone": ["res://SFX/toyTankTreads.ogg", "res://SFX/toyTankTreads_end.ogg", "res://SFX/toyTankTreads_start.ogg"],
-	"Movement.Dash": ["res://SFX/Toaster.wav"]
+	"Movement.Drone": ["res://sounds/toyTankTreads.ogg", "res://sounds/toyTankTreads_end.ogg", "res://sounds/toyTankTreads_start.ogg"],
+	"Movement.Dash": ["res://sounds/Toaster.wav"]
 }
 
 # Called when the node enters the scene tree for the first time.
