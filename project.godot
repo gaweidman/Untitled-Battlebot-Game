@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="Untitled Battlebot Game"
-run/main_scene="res://scenes/game_board.tscn"
-config/features=PackedStringArray("4.3", "Forward Plus")
+run/main_scene="uid://cno0jw8hq6h1i"
+config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-GameState="*res://scripts/game_state.gd"
+GameState="*res://scripts/libraries/game_state.gd"
 Sound="*res://scripts/libraries/sound_manager.gd"
 
 [global_group]
@@ -62,6 +62,8 @@ TriggerAction={
 [physics]
 
 3d/physics_engine="JoltPhysics3D"
+jolt_physics_3d/simulation/areas_detect_static_bodies=true
+jolt_physics_3d/simulation/generate_all_kinematic_contacts=true
 3d/default_gravity_vector=Vector3(0, -3, 0)
 jolt_3d/collisions/areas_detect_static_bodies=true
 jolt_3d/collisions/report_all_kinematic_contacts=true

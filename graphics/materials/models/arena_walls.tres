@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://b5uawxeiq0ye3"]
+
+[ext_resource type="Texture2D" uid="uid://crmqrapoge36o" path="res://graphics/images/models/arena_wall/arena_wall_color.png" id="1_eks2v"]
+[ext_resource type="Texture2D" path="res://graphics/BlenderModels/Textures/arena_wall/arena.png" id="2_0g857"]
+[ext_resource type="Texture2D" uid="uid://d12n5b6iiqlb4" path="res://graphics/images/models/arena_wall/arena_wall_metallic.png" id="3_hcxr1"]
+[ext_resource type="Texture2D" uid="uid://bhx0hn5lbr5q6" path="res://graphics/images/models/arena_wall/arena_wall_normal.png" id="4_b5gvp"]
+[ext_resource type="Texture2D" uid="uid://c6mmpqqxejvc5" path="res://graphics/images/models/arena_wall/arena_wall_roughness.png" id="5_50hbs"]
+
+[resource]
+albedo_texture = ExtResource("1_eks2v")
+metallic = 1.0
+metallic_texture = ExtResource("3_hcxr1")
+roughness = 0.25
+roughness_texture = ExtResource("5_50hbs")
+emission_enabled = true
+emission_texture = ExtResource("2_0g857")
+normal_enabled = true
+normal_texture = ExtResource("4_b5gvp")

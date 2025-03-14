@@ -21,25 +21,25 @@ enum {
 # possibly multiple options.
 
 var SOUNDS = {
-	"Collision.Combatant.Metal": [],
-	"Collision.Combatant.Plastic": [],
-	"Collision.Combatant.Sawblade": [],
-	"Collision.Combatant.Combatant": [],
+	"Collision.Combatant.Metal": ["res://sounds/MetalThud.mp3"],
+	"Collision.Combatant.Plastic": ["res://sounds/SecondPlasticHit.wav"],
+	"Collision.Combatant.Sawblade": ["res://sounds/MetalClang.wav"],
+	"Collision.Combatant.Combatant": ["res://sounds/FryingpanBonk.wav"],
 	
-	"Collision.Projectile.Metal": [],
-	"Collision.Projectile.Plastic": [],
-	"Collision.Projectile.Sawblade": [],
-	"Collision.Projectile.Combatant": [],
+	"Collision.Projectile.Metal": ["res://sounds/FryingpanBonk.wav"],
+	"Collision.Projectile.Plastic": ["res://sounds/PlasticHitSound.mp3"],
+	"Collision.Projectile.Sawblade": ["res://sounds/MetalClap.wav"],
+	"Collision.Projectile.Combatant": ["res://sounds/MetalClap.wav"],
 	
-	"Collision.Sawblade.Metal": [],
-	"Collision.Sawblade.Plastic": [],
-	"Collision.Sawblade.Sawblade": [], 
+	"Collision.Sawblade.Metal": ["res://sounds/MetalClang.wav"],
+	"Collision.Sawblade.Plastic": ["res://sounds/PlasticHitThree.wav"],
+	"Collision.Sawblade.Sawblade": ["res://sounds/ClashSound.wav"], 
 	
-	"Weapon.Shoot": [],
-	"Weapon.Sawblade.Drone": [],
+	"Weapon.Shoot": ["res://sounds/CannonFire.wav"],
+	"Weapon.Sawblade.Drone": ["res://sounds/Sawblade.wav"],
 	
-	"Movement.Drone": [],
-	"Movement.Dash": []
+	"Movement.Drone": ["res://sounds/toyTankTreads.ogg", "res://sounds/toyTankTreads_end.ogg", "res://sounds/toyTankTreads_start.ogg"],
+	"Movement.Dash": ["res://sounds/Toaster.wav"]
 }
 
 # Called when the node enters the scene tree for the first time.
