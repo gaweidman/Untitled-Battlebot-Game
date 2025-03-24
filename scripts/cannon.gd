@@ -10,7 +10,6 @@ func _ready():
 func _physics_process(delta):
 	var rot = inputHandler.mouseProjectionRotation(posNode)
 	rot = rot.rotated(Vector3(0,1,0), deg_to_rad(90))
-	#print(rot)
 	look_at(global_transform.origin + rot, Vector3.UP)
 	#rotation = 
 	pass

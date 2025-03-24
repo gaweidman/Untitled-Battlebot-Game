@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://bq70e6v87vo2i"
-path="res://.godot/imported/Sawblade.wav-335786239a4ae8f2dedeabbe302870db.sample"
+path="res://.godot/imported/SawbladeDrone01.wav-a195186bd44126103a9db340b8fe62b8.sample"
 
 [deps]
 
-source_file="res://sounds/Sawblade.wav"
-dest_files=["res://.godot/imported/Sawblade.wav-335786239a4ae8f2dedeabbe302870db.sample"]
+source_file="res://sounds/SawbladeDrone01.wav"
+dest_files=["res://.godot/imported/SawbladeDrone01.wav-a195186bd44126103a9db340b8fe62b8.sample"]
 
 [params]
 

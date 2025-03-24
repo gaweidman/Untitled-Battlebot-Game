@@ -16,7 +16,6 @@ func _physics_process(delta):
 	process_movement(get_movement_vector(), delta);
 	
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && combatHandler.can_fire():
-		print("HI")
 		combatHandler.fireBullet();
 	
 # we apply forces in motion_handler

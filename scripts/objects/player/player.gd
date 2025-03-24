@@ -2,11 +2,13 @@ extends MakesNoise;
 
 var body; 
 var combatHandler;
+var motionHandler;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	body = get_node("Body");
 	combatHandler = get_node("CombatHandler");
+	motionHandler = get_node("MotionHandler");
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -28,3 +30,4 @@ func get_sign(num):
 		
 func _on_body_body_entered(collider: Node) -> void:
 	combatHandler._on_collision(collider);
+	motionHandler._on_body_collision(collider)

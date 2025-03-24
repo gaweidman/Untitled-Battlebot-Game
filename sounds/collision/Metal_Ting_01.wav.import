@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://cpqyud8so70m1"
-path="res://.godot/imported/MetalClang.wav-92f6294e799996aceb21b2f605d12783.sample"
+path="res://.godot/imported/Metal_Ting_01.wav-4c7d5545be8826d8b0570777bdb6016c.sample"
 
 [deps]
 
-source_file="res://sounds/MetalClang.wav"
-dest_files=["res://.godot/imported/MetalClang.wav-92f6294e799996aceb21b2f605d12783.sample"]
+source_file="res://sounds/collision/Metal_Ting_01.wav"
+dest_files=["res://.godot/imported/Metal_Ting_01.wav-4c7d5545be8826d8b0570777bdb6016c.sample"]
 
 [params]
 

@@ -19,8 +19,7 @@ func get_player():
 	
 	if ply == null:
 		return null;
-	for child in ply.get_children():
-		print(child)
+		
 	return ply;
 	
 func get_hud():

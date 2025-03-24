@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=14 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -9,12 +9,7 @@
 [ext_resource type="Script" uid="uid://cci5o1ddo6ond" path="res://scripts/objects/player/input_handler.gd" id="6_ui0xh"]
 [ext_resource type="ArrayMesh" uid="uid://yk6x46nqkc77" path="res://graphics/models/cannonMapped.obj" id="7_3un1w"]
 [ext_resource type="Script" uid="uid://des8smcv31abv" path="res://scripts/objects/player/motion_handler.gd" id="7_bdmj6"]
-[ext_resource type="Texture2D" uid="uid://d0fapb5hsnykx" path="res://graphics/images/models/cannon/cannon_color.png" id="8_cr3ny"]
-[ext_resource type="Texture2D" uid="uid://n7o3t1dq1xec" path="res://graphics/images/models/cannon/cannon_emissive.png" id="9_llv4r"]
-[ext_resource type="Texture2D" uid="uid://5lngjasr5nqx" path="res://graphics/images/models/cannon/cannon_height.png" id="10_vebpf"]
-[ext_resource type="Texture2D" uid="uid://75dp2f4fwem3" path="res://graphics/images/models/cannon/cannon_metallic.png" id="11_kfprt"]
-[ext_resource type="Texture2D" uid="uid://b1rgs0irdp14i" path="res://graphics/images/models/cannon/cannon_normal.png" id="12_4a2xk"]
-[ext_resource type="Texture2D" uid="uid://comunl4wnvmna" path="res://graphics/images/models/cannon/cannon_roughness.png" id="13_wigit"]
+[ext_resource type="Material" uid="uid://bjpw8orsijmuk" path="res://graphics/materials/models/cannon.tres" id="7_dqk0i"]
 [ext_resource type="Script" uid="uid://bouqo8y5acdyn" path="res://scripts/cannon.gd" id="14_1byn2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
@@ -24,22 +19,10 @@ size = Vector3(1, 0.333479, 1)
 height = 0.021
 radius = 0.95
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ajjua"]
-albedo_texture = ExtResource("8_cr3ny")
-metallic = 1.0
-metallic_texture = ExtResource("11_kfprt")
-roughness_texture = ExtResource("13_wigit")
-emission_enabled = true
-emission_texture = ExtResource("9_llv4r")
-normal_enabled = true
-normal_texture = ExtResource("12_4a2xk")
-heightmap_enabled = true
-heightmap_texture = ExtResource("10_vebpf")
-
 [node name="Player" type="Node3D" groups=["Player Part"]]
 script = ExtResource("1_u8q0c")
 
-[node name="Body" type="RigidBody3D" parent="." groups=["Damager", "Player Part"]]
+[node name="Body" type="RigidBody3D" parent="." groups=["Combatant Body", "Player Part"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000182867, 0.00276172, 3.8147e-06)
 disable_mode = 2
 axis_lock_angular_y = true
@@ -49,9 +32,10 @@ center_of_mass = Vector3(0, 0.09, 0)
 contact_monitor = true
 max_contacts_reported = 10
 angular_damp_mode = 1
+metadata/material = "metal"
 
 [node name="Bottom" type="CSGBox3D" parent="Body"]
-transform = Transform3D(0.968925, 0, 0, 0, 0.968925, 0, 0, 0, 0.968925, 0, 0.087, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.087, 0)
 material_override = ExtResource("2_slssq")
 size = Vector3(1, 0.15, 1)
 material = ExtResource("2_jy4ju")
@@ -143,7 +127,7 @@ motor/max_impulse = 512.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000182867, 0.085945, -3.8147e-06)
 mesh = ExtResource("7_3un1w")
 skeleton = NodePath("../../CombatHandler")
-surface_material_override/0 = SubResource("StandardMaterial3D_ajjua")
+surface_material_override/0 = ExtResource("7_dqk0i")
 script = ExtResource("14_1byn2")
 inputHandler = NodePath("../../InputHandler")
 posNode = NodePath("..")

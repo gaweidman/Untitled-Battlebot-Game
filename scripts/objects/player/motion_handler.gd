@@ -27,7 +27,6 @@ func _physics_process(delta):
 	for raycast in raycasts:
 		# if we're not making contact at any of the contact points, we don't do anything, so just return
 		if !raycast.is_colliding() && false:
-			print("NOPT HAPPENING")
 			return
 			
 	
@@ -37,11 +36,13 @@ func _physics_process(delta):
 	forceVector += body.global_transform.basis.x * movementVector.x * -GameState.PLAYER_ACCELERATION;
 	forceVector += body.global_transform.basis.z * movementVector.y * -GameState.PLAYER_ACCELERATION;
 	
-	#print(movementVector);
-	
 	body.apply_central_force(forceVector);
 		
 # make sure the player's speed doesn't go over its max speed
 func clamp_speed():
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);
 	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed);
+
+func _on_body_collision(collider: Node):
+	player.play_sound("")
+	Hooks.OnPlayerCollision(collider);

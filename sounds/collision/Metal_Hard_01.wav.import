@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://cko2xjbbab7pu"
-path="res://.godot/imported/MetalSlam.wav-c4d4b7ee4a9140f6951938254ce80629.sample"
+path="res://.godot/imported/Metal_Hard_01.wav-2f518e48b7bffa46dd08fb7db645cc94.sample"
 
 [deps]
 
-source_file="res://sounds/MetalSlam.wav"
-dest_files=["res://.godot/imported/MetalSlam.wav-c4d4b7ee4a9140f6951938254ce80629.sample"]
+source_file="res://sounds/collision/Metal_Hard_01.wav"
+dest_files=["res://.godot/imported/Metal_Hard_01.wav-2f518e48b7bffa46dd08fb7db645cc94.sample"]
 
 [params]
 

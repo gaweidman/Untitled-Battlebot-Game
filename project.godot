@@ -19,12 +19,13 @@ config/icon="res://icon.svg"
 
 GameState="*res://scripts/libraries/game_state.gd"
 Sound="*res://scripts/libraries/sound_manager.gd"
+Hooks="*res://scripts/libraries/hooks.gd"
 
 [global_group]
 
 Damager="Something that, on collision with the player or an NPC, deals damage to them."
-Enemy=""
-"Player Part"=""
+"Combatant Body"="The body of a combatant, including the player."
+World="A part of the world."
 
 [input]
 

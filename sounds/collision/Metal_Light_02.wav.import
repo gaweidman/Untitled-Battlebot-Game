@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://8lhe58t83umf"
-path="res://.godot/imported/FryingpanBonk.wav-4f0fc8e651fe6c4053db9239aee20dc2.sample"
+path="res://.godot/imported/Metal_Light_02.wav-4b2de68429134790b0a99efa22c5be8d.sample"
 
 [deps]
 
-source_file="res://sounds/FryingpanBonk.wav"
-dest_files=["res://.godot/imported/FryingpanBonk.wav-4f0fc8e651fe6c4053db9239aee20dc2.sample"]
+source_file="res://sounds/collision/Metal_Light_02.wav"
+dest_files=["res://.godot/imported/Metal_Light_02.wav-4b2de68429134790b0a99efa22c5be8d.sample"]
 
 [params]
 

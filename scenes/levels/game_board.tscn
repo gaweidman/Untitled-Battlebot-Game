@@ -104,7 +104,7 @@ expand_mode = 1
 script = ExtResource("21_igoyh")
 
 [node name="Damage Cube" parent="." instance=ExtResource("8_hfgcm")]
-transform = Transform3D(5.50889, 0, 0, 0, 5.50889, 0, 0, 0, 5.50889, -0.107573, 3.4556, 13.798)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.557473, 3.4556, 0.696593)
 
 [node name="SoundManager" type="Node" parent="."]
 script = ExtResource("9_hh74c")
