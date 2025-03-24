@@ -1,12 +1,13 @@
 class_name MakesNoise;
 extends Node3D;
 
-var STREAM_PLAYERS = {};
 var PLAYER_PARENT;
+@export var AudioSourceType: Sound.AudioSrc;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	PLAYER_PARENT = $"_AudioStreamPlayers";
+	PLAYER_PARENT = %_AudioStreamPlayers;
+	print("PLAYER PARENT", PLAYER_PARENT)
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -22,18 +23,18 @@ func play_sound(soundID, audioplayer = null):
 		var idSplit = soundID.split(".");
 		match idSplit[0]:
 			"Movement":
-				audioplayer = $Movement;
+				audioplayer = PLAYER_PARENT.get_node("Movement");
 			"Ambient":
-				audioplayer = $Ambient;
+				audioplayer = PLAYER_PARENT.get_node("Ambient");
 			"Weapon":
-				audioplayer = $Weapon;
+				audioplayer = PLAYER_PARENT.get_node("Weapon");
 			"Collision":
 				# there can be multiple collision audioplayers, so we need to
 				# find a free one.
 				for i in range(1, 8):
 					var audioplayerNode;
 					if i == 1:
-						audioplayerNode = $Collision;
+						audioplayerNode = PLAYER_PARENT.get_node("Collision");
 					else:
 						audioplayerNode = get_node("Collision" + str(i));
 						
@@ -52,8 +53,9 @@ func play_sound(soundID, audioplayer = null):
 		if !audioplayer:
 			assert("tried to play sound on nonexistent channel");
 		else:
-			var audioStream = Sound.pick(soundID);
-			audioplayer.play(audioStream);
+			var audioStream = Sound.pick_sound(soundID);
+			audioplayer.set_stream(audioStream);
+			audioplayer.play();
 
 func stop_sound(audioplayer):
 	get_node(audioplayer).stop();

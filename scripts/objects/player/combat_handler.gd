@@ -22,10 +22,13 @@ var health = maxHealth;
 var inputHandler;
 var leakTimer : Timer;
 
+var player;
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	inputHandler = $"../InputHandler"
 	leakTimer = $LeakTimer;
+	player = GameState.get_player();
 	pass # Replace with function body.
 
 
@@ -62,6 +65,7 @@ func fireBullet():
 	
 	leakTimer.start();
 	GameState.get_hud().update();
+	player.play_sound("Weapon.Shoot")
 	pass
 
 func recountMagazine() -> int:

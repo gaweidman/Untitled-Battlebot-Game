@@ -9,6 +9,7 @@ func _ready() -> void:
 	body = get_node("Body");
 	combatHandler = get_node("CombatHandler");
 	motionHandler = get_node("MotionHandler");
+	super._ready();
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -30,4 +31,9 @@ func get_sign(num):
 		
 func _on_body_body_entered(collider: Node) -> void:
 	combatHandler._on_collision(collider);
-	motionHandler._on_body_collision(collider)
+	motionHandler._on_collision(%Body, collider);
+
+
+func _on_sawblade_body_entered(collider: Node) -> void:
+	print()
+	motionHandler._on_collision(%Sawblade, collider);

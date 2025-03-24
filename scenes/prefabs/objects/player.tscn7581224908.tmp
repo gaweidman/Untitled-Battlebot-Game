@@ -21,8 +21,9 @@ radius = 0.95
 
 [node name="Player" type="Node3D" groups=["Player Part"]]
 script = ExtResource("1_u8q0c")
+AudioSourceType = null
 
-[node name="Body" type="RigidBody3D" parent="." groups=["Combatant Body", "Player Part"]]
+[node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Combatant Body", "Metal", "Player Part"]]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000182867, 0.00276172, 3.8147e-06)
 disable_mode = 2
@@ -103,6 +104,7 @@ shape = SubResource("BoxShape3D_odmbc")
 unique_name_in_owner = true
 transform = Transform3D(0.999993, 0.00324984, 0.00205345, -0.00324838, 0.999994, -0.000714875, -0.00205576, 0.000708211, 0.999998, 0, 0.179466, 0)
 collision_priority = 3.0
+mass = 25.0
 custom_integrator = true
 contact_monitor = true
 max_contacts_reported = 10
@@ -133,7 +135,6 @@ inputHandler = NodePath("../../InputHandler")
 posNode = NodePath("..")
 
 [node name="_AudioStreamPlayers" type="Node3D" parent="."]
-unique_name_in_owner = true
 
 [node name="Collision" type="AudioStreamPlayer3D" parent="_AudioStreamPlayers"]
 
