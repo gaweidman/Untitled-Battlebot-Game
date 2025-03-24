@@ -2,6 +2,10 @@ extends Control
 
 class_name Inventory
 
+@export var inputHandler : Node;
+@export var battleBotBody : RigidBody3D;
+
+
 var slots := {
 	## Row 0
 	Vector2i(0,0) : null,
@@ -60,7 +64,7 @@ func is_slot_free(x: int, y: int) -> bool:
 			return true;
 	return false;
 
-func get_modified_part_dimensions(part: Node, modifier: Vector2i):
+func get_modified_part_dimensions(part: Part, modifier: Vector2i):
 	var dimensions = part.dimensions;
 	var coords = [];
 	for index in dimensions:
@@ -69,7 +73,7 @@ func get_modified_part_dimensions(part: Node, modifier: Vector2i):
 	
 	return coords
 
-func add_part(part: Node, invPosition : Vector2i):
+func add_part(part: Part, invPosition : Vector2i):
 	var coordsToCheck = get_modified_part_dimensions(part, invPosition);
 	
 	if check_coordinate_table_is_free(coordsToCheck):
@@ -81,8 +85,9 @@ func add_part(part: Node, invPosition : Vector2i):
 		pass 
 	pass
 
-func remove_part(part: Node):
+func remove_part(part: Part):
 	var coordsToRemove = get_modified_part_dimensions(part, part.invPosition);
+	part.invPosition = Vector2i(0,0);
 	
 	for coord : Vector2i in coordsToRemove:
 		clear_slot_at(coord.x, coord.y);
@@ -98,6 +103,27 @@ func check_coordinate_table_is_free(coords:Array):
 			return false
 	return true
 
-func set_slot_at(x: int, y: int, part: Node):
+func set_slot_at(x: int, y: int, part: Part):
 	if is_slot_free(x, y):
 		var index = Vector2i(x, y);
+
+#########################
+
+func _ready():
+	test_add_stuff()
+
+func _process(delta):
+	if battleBotBody == null:
+		test_add_stuff()
+		push_error("hi")
+
+func test_add_stuff():
+	
+	var ply = GameState.get_player();
+	#print(ply)
+	if ply:
+		print("exists")
+		if ply.body != null:
+			battleBotBody = ply.body
+		
+	pass

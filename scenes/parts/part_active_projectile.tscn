@@ -1,0 +1,20 @@
+[gd_scene load_steps=6 format=3 uid="uid://bbq103vofw8yu"]
+
+[ext_resource type="PackedScene" uid="uid://n5li36gn6xf7" path="res://scenes/parts/part_active.tscn" id="1_63hqi"]
+[ext_resource type="Script" uid="uid://bgw5ipq5kadtt" path="res://scripts/GUI/parts/part_active_projectile.gd" id="2_wu5mq"]
+[ext_resource type="PackedScene" uid="uid://clsvb0b2mydc7" path="res://scenes/prefabs/objects/bullet.tscn" id="3_eppgx"]
+[ext_resource type="ArrayMesh" uid="uid://yk6x46nqkc77" path="res://graphics/models/cannonMapped.obj" id="4_vi2dv"]
+[ext_resource type="Material" uid="uid://bjpw8orsijmuk" path="res://graphics/materials/models/cannon.tres" id="5_vi2dv"]
+
+[node name="PartActiveProjectile" instance=ExtResource("1_63hqi")]
+script = ExtResource("2_wu5mq")
+bulletRef = ExtResource("3_eppgx")
+magazineMax = 3
+fireSpeed = 30.0
+bulletLifetime = 1.0
+firingAngle = Vector3(0, 0, 1)
+fireRate = 0.15
+fireRateTimer = 0.0
+startingHealth = 0
+model = ExtResource("4_vi2dv")
+modelMaterial = ExtResource("5_vi2dv")
