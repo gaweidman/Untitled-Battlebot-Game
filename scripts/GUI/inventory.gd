@@ -86,6 +86,9 @@ func remove_part(part: Node):
 	
 	for coord : Vector2i in coordsToRemove:
 		clear_slot_at(coord.x, coord.y);
+	
+	while listOfPieces.find(part) != -1:
+		listOfPieces.remove_at(listOfPieces.find(part));
 
 func check_coordinate_table_is_free(coords:Array):
 	for index in coords:
