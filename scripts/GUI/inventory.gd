@@ -2,9 +2,11 @@ extends Control
 
 class_name Inventory
 
-@export var inputHandler : Node;
+@export var inputHandler : InputHandler;
 @export var battleBotBody : RigidBody3D;
 
+var activePart1 : PartActive;
+var activePart2 : PartActive;
 
 var slots := {
 	## Row 0
@@ -81,6 +83,9 @@ func add_part(part: Part, invPosition : Vector2i):
 			set_slot_at(index.x, index.y, part);
 		listOfPieces.append(part);
 		part.invPosition = invPosition;
+		part.inventoryNode = self;
+		if part is PartActive:
+			part.positionNode = battleBotBody;
 	else:
 		pass 
 	pass
@@ -88,6 +93,8 @@ func add_part(part: Part, invPosition : Vector2i):
 func remove_part(part: Part):
 	var coordsToRemove = get_modified_part_dimensions(part, part.invPosition);
 	part.invPosition = Vector2i(0,0);
+	if part is PartActive:
+		part.positionNode = null;
 	
 	for coord : Vector2i in coordsToRemove:
 		clear_slot_at(coord.x, coord.y);
@@ -113,9 +120,15 @@ func _ready():
 	test_add_stuff()
 
 func _process(delta):
+	if inputHandler == null:
+		inputHandler = GameState.get_input_handler()
 	if battleBotBody == null:
 		test_add_stuff()
 		push_error("hi")
+
+func _physics_process(delta):
+	if battleBotBody != null:
+		pass
 
 func test_add_stuff():
 	
@@ -125,5 +138,9 @@ func test_add_stuff():
 		print("exists")
 		if ply.body != null:
 			battleBotBody = ply.body
-		
+	
+		var partScene = load("res://scenes/parts/part_active_projectile.tscn");
+		var part = partScene.instantiate();
+		add_child(part);
+		add_part(part, Vector2i(0,0));
 	pass

@@ -6,7 +6,7 @@
 [ext_resource type="ArrayMesh" uid="uid://yk6x46nqkc77" path="res://graphics/models/cannonMapped.obj" id="4_3mubo"]
 [ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="4_s81pm"]
 
-[node name="PartActiveProjectile" node_paths=PackedStringArray("meshNode") instance=ExtResource("1_n3dox")]
+[node name="PartActive" node_paths=PackedStringArray("meshNode") instance=ExtResource("1_n3dox")]
 script = ExtResource("2_qken1")
 meshNode = NodePath("MeshInstance3D")
 model = ExtResource("3_qken1")

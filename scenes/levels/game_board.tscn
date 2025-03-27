@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=28 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Material" uid="uid://blnb4hc720ayf" path="res://graphics/materials/GroundMat.tres" id="1_3pkq8"]
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
@@ -20,7 +20,6 @@
 [ext_resource type="Script" uid="uid://6rlmlcy2eex2" path="res://scripts/GUI/hud.gd" id="18_wbopo"]
 [ext_resource type="Script" uid="uid://dweefn74rktyo" path="res://scripts/GUI/health.gd" id="19_2w6wh"]
 [ext_resource type="PackedScene" uid="uid://xdsrynmkfb2p" path="res://scenes/inventory.tscn" id="20_mlcvp"]
-[ext_resource type="PackedScene" uid="uid://bbq103vofw8yu" path="res://scenes/parts/part_active_projectile.tscn" id="21_4eh01"]
 [ext_resource type="Script" uid="uid://dkgxmw2glbi2x" path="res://scripts/GUI/ammo.gd" id="21_igoyh"]
 [ext_resource type="Texture2D" uid="uid://bmwkky87k24xs" path="res://graphics/images/HUD/Ammo 0.png" id="21_xp7sy"]
 
@@ -137,9 +136,6 @@ script = ExtResource("21_igoyh")
 
 [node name="Inventory" parent="HUD" instance=ExtResource("20_mlcvp")]
 layout_mode = 1
-
-[node name="PartActiveProjectile" parent="HUD/Inventory" instance=ExtResource("21_4eh01")]
-invSprite = null
 
 [node name="Damage Cube" parent="." instance=ExtResource("8_hfgcm")]
 transform = Transform3D(5.50889, 0, 0, 0, 5.50889, 0, 0, 0, 5.50889, -0.107573, 3.4556, 13.798)

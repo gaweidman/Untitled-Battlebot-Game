@@ -1,4 +1,7 @@
 extends Node3D
+
+class_name InputHandler;
+
 var player;
 var combatHandler;
 

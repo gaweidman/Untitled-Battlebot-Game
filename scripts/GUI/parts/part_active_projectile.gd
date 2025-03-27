@@ -13,7 +13,6 @@ var magazineCount := 0;
 
 @export var fireRate := 0.15;
 @export var fireRateTimer := 0.0;
-@export var positionNode : Node3D; ##This needs to be the thing with the position on it - in thbis case, the Body node
 @export var startingHealth: int;
 
 var maxHealth = 3;
