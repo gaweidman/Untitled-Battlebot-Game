@@ -10,7 +10,7 @@ var lifetime := 1.0;
 @export var collision : CollisionShape3D;
 var initPosition = position;
 var positionAppend := Vector3.ZERO;
-var launcher : CombatHandler;
+var launcher : PartActive;
 
 var leaking := false;
 

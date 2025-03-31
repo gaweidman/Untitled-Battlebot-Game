@@ -18,8 +18,8 @@ func _process(delta: float) -> void:
 func _physics_process(delta):
 	process_movement(get_movement_vector(), delta);
 	
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && combatHandler.can_fire():
-		combatHandler.fireBullet();
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && combatHandler.can_fire(0):
+		combatHandler.use_active(0);
 	
 # we apply forces in motion_handler
 func process_movement(movementVector, delta):

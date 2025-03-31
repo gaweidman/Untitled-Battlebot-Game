@@ -6,9 +6,14 @@ class_name PartActive
 @export var model : Mesh;
 @export var modelMaterial : StandardMaterial3D;
 @export var modelOffset = Vector3i(0,0,0);
-@export var energyCost = 0;
+@export var energyCost = 1;
 @export var positionNode : Node3D; ##This needs to be the thing with the position on it - in thbis case, the Body node
 @export var looksAtMouse := true;
+var combatHandler : CombatHandler;
+var inputHandler : InputHandler;
+
+@export var fireRate := 0.15;
+@export var fireRateTimer := 0.0;
 
 func _ready():
 	super();
@@ -16,15 +21,30 @@ func _ready():
 	meshNode.set_deferred("surface_material_override/0", modelMaterial)
 
 func _activate():
+	if can_fire():
+		if combatHandler:
+			combatHandler.energy -= energyCost;
+		else:
+			return
+	else:
+		return
 	##Get Inventory's energy total and subtract energyCost from it
 	pass
 
+func _set_fire_rate_timer():
+	fireRateTimer = fireRate;
+
 func _physics_process(delta):
 	if looksAtMouse: _rotate_to_look_at_mouse(delta)
-	#if positionNode != null:
-		#meshNode.position = positionNode.position;
-	#meshNode.position += Vector3(0,0,1)
-	print("AAA")
+	
+	if fireRateTimer <= 0:
+		pass
+	else:
+		fireRateTimer -= delta;
+
+func can_fire() -> bool: 
+	return fireRateTimer <= 0;
+		##Temp condition, can be changed later
 
 func _process(delta):
 	#print("why.")
@@ -35,6 +55,10 @@ func _process(delta):
 		#meshNode.position = positionNode.position;
 	else:
 		print('null')
+	if ! is_instance_valid(combatHandler):
+		combatHandler = GameState.get_combat_handler();
+	if ! is_instance_valid(inputHandler):
+		inputHandler = GameState.get_input_handler();
 
 func _rotate_to_look_at_mouse(delta):
 	var rot = InputHandler.mouseProjectionRotation(positionNode);

@@ -2,88 +2,49 @@ extends Node3D
 
 class_name CombatHandler
 
-#@onready var bulletRef : ;
-@export var bulletRef : PackedScene;
-var magazine = [];
-var magazineCount := 0;
-@export var magazineMax := 3;
-@export var fireSpeed := 30.0;
-@export var bulletLifetime := 1.0;
-@export var firingAngle := Vector3.BACK;
-
-@export var fireRate := 0.15;
-@export var fireRateTimer := 0.0;
-@export var positionNode : Node3D; ##This needs to be the thing with the position on it - in thbis case, the Body node
-@export var startingHealth: int;
-
 var maxHealth = 3;
 var health = maxHealth;
+var maxEnergy = 3.0;
+var energy = maxEnergy;
+var energyRefreshRate := 2;
 
-var inputHandler;
-var leakTimer : Timer;
+var activeParts = { 0 : null, 1: null}
+
+var inputHandler : InputHandler;
+var inventory : Inventory;
 
 var player;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	inputHandler = $"../InputHandler"
-	leakTimer = $LeakTimer;
 	player = GameState.get_player();
 	pass # Replace with function body.
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
-	if fireRateTimer <= 0:
-		pass
-	else:
-		fireRateTimer -= delta;
+	##Adds energy over time up to the max but not below 0
+	energy = max(0, min(energy + (delta * energyRefreshRate), maxEnergy))
 	pass
 
-func can_fire() -> bool: 
-	return fireRateTimer <= 0;
-		##Temp condition, can be changed later
+func can_fire(index) -> bool: 
+	if health <= 0:
+		return false;
+	var part = get_active_part(index);
+	if part:
+		return (floor(energy) >= part.energyCost) && part.can_fire();
+	return false;
 
-func fireBullet():
-	var bullet : Bullet;
-	
-#	##Create new bullets when there are less than there should be
-	if magazine.size() < magazineMax:
-		bullet = bulletRef.instantiate();
-		get_node("/root/GameBoard").add_child(bullet);
-		magazine.append(bullet);
-	
-	bullet = nextBullet();
-	
-	if is_instance_valid(bullet):
-		##This offset can be changed later to be controllable
-		var offset = Vector3(0,1,0);
-		firingAngle = inputHandler.mouseProjectionRotation(positionNode);
-		
-		bullet.fire(self, positionNode.position + offset, firingAngle, fireSpeed, bulletLifetime);
-		fireRateTimer = fireRate;
-	
-	leakTimer.start();
-	GameState.get_hud().update();
-	player.play_sound("Weapon.Shoot")
+func use_active(index):
+	var part := get_active_part(index);
+	if part:
+		part._activate();
 	pass
 
-func recountMagazine() -> int:
-	##Checks the magazine for the amount of available bullets in there
-	var count = magazineMax;
-	for bullet in magazine:
-		if is_instance_valid(bullet):
-			if bullet.fired:
-				count -= 1;
-	var finalCount = max(count, 0);
-	magazineCount = finalCount;
-	return finalCount;
-
-func nextBullet():
-	##Checks the magazine for the next non-fired bullet
-	for bullet in magazine:
-		if is_instance_valid(bullet) && (not bullet.fired):
-			return bullet;
+func get_active_part(index) -> PartActive:
+	if index in activeParts:
+		if activeParts[index] is PartActive:
+			return activeParts[index];
 	return null;
 
 func take_damage(damage):
@@ -96,21 +57,9 @@ func take_damage(damage):
 		
 func die():
 	queue_free();
-	
+
 func _on_collision(colliderdw):
 	pass
 
-func leakPrevention():
-	##Deletes the entire magazine 
-	for bullet in magazine:
-		if is_instance_valid(bullet):
-			bullet.leak();
-	magazine.clear();
-
-func _on_leak_timer_timeout():
-	leakPrevention();
-	pass;
-
 func _exit_tree():
-	leakPrevention();
 	pass;
