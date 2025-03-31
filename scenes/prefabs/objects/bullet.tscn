@@ -23,7 +23,7 @@ normal_texture = ExtResource("7_8cxbg")
 heightmap_enabled = true
 heightmap_texture = ExtResource("5_8nw7p")
 
-[node name="Bullet" type="Area3D" node_paths=PackedStringArray("lifeTimer", "collision")]
+[node name="Bullet" type="Area3D" node_paths=PackedStringArray("lifeTimer", "collision") groups=["Metal", "Projectile"]]
 script = ExtResource("1_qx18r")
 lifeTimer = NodePath("LifeTimer")
 collision = NodePath("CollisionShape3D")

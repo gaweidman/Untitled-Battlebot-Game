@@ -31,7 +31,6 @@ func _physics_process(delta):
 	for raycast in raycasts:
 		# if we're not making contact at any of the contact points, we don't do anything, so just return
 		if !raycast.is_colliding() && false:
-			print("NOPT HAPPENING")
 			return
 			
 	
@@ -55,3 +54,10 @@ func _physics_process(delta):
 func clamp_speed():
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);
 	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed);
+
+func _on_collision(playerComponent: Node, collider: Node):
+	# if we've assigned a material to it, it can make a sound on collision, so this is how we check
+	# whether or not this collision can play a sound
+	if (collider.is_in_group("Concrete") || collider.is_in_group("Metal") || collider.is_in_group("Plastic")) && (playerComponent.is_in_group("Concrete") || playerComponent.is_in_group("Metal") || playerComponent.is_in_group("Plastic")):
+		player.play_sound(Sound.get_proper_sound(collider, playerComponent))
+	Hooks.OnPlayerCollision(collider);

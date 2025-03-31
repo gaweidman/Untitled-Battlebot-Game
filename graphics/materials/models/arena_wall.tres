@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://b5uawxeiq0ye3"]
+
+[ext_resource type="Texture2D" uid="uid://dfftdrl2lvajo" path="res://graphics/images/models/arena_wall/arena_wall_color.tga" id="1_eks2v"]
+[ext_resource type="Texture2D" uid="uid://c7icjdiocuydc" path="res://graphics/images/models/arena_wall/arena_wall_height.tga" id="2_0g857"]
+[ext_resource type="Texture2D" uid="uid://c5g1uysgls85e" path="res://graphics/images/models/arena_wall/arena_wall_metalness.tga" id="3_hcxr1"]
+[ext_resource type="Texture2D" uid="uid://d0u3sgoxsnubj" path="res://graphics/images/models/arena_wall/arena_wall_normal.tga" id="4_b5gvp"]
+[ext_resource type="Texture2D" uid="uid://cclkkf2iitw0t" path="res://graphics/images/models/arena_wall/arena_wall_roughness.tga" id="5_50hbs"]
+
+[resource]
+albedo_texture = ExtResource("1_eks2v")
+metallic = 1.0
+metallic_texture = ExtResource("3_hcxr1")
+roughness = 0.25
+roughness_texture = ExtResource("5_50hbs")
+emission_texture = ExtResource("2_0g857")
+normal_enabled = true
+normal_texture = ExtResource("4_b5gvp")
+heightmap_scale = 1.0

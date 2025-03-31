@@ -26,7 +26,8 @@ radius = 0.611008
 [node name="Player" type="Node3D" groups=["Player Part"]]
 script = ExtResource("1_u8q0c")
 
-[node name="Body" type="RigidBody3D" parent="." groups=["Damager", "Player Part"]]
+[node name="Body" type="RigidBody3D" parent="." groups=["Combatant Body", "Player Part"]]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000182867, 0.00276172, 3.8147e-06)
 disable_mode = 2
 axis_lock_angular_x = true
@@ -108,20 +109,20 @@ visible = false
 shape = SubResource("BoxShape3D_odmbc")
 disabled = true
 
-[node name="Weapon" type="RigidBody3D" parent="Body" groups=["Damager", "Player Part"]]
+[node name="Sawblade" type="RigidBody3D" parent="Body" groups=["Damager", "MeleeWeapon", "Metal", "Player Part"]]
+unique_name_in_owner = true
 transform = Transform3D(0.999993, 0.00324984, 0.00205345, -0.00324838, 0.999994, -0.000714875, -0.00205576, 0.000708211, 0.999998, 0, 0.179466, 0)
 visible = false
 collision_priority = 3.0
-mass = 25.0
 custom_integrator = true
 contact_monitor = true
 max_contacts_reported = 10
 
-[node name="CollisionShape" type="CollisionShape3D" parent="Body/Weapon"]
+[node name="CollisionShape" type="CollisionShape3D" parent="Body/Sawblade"]
 shape = SubResource("CylinderShape3D_fise2")
 disabled = true
 
-[node name="Mesh" type="CSGCylinder3D" parent="Body/Weapon"]
+[node name="Mesh" type="CSGCylinder3D" parent="Body/Sawblade"]
 material_override = ExtResource("4_nnr5b")
 radius = 0.95
 height = 0.021
@@ -130,7 +131,7 @@ sides = 32
 [node name="HingeJoint3D" type="HingeJoint3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 node_a = NodePath("..")
-node_b = NodePath("../Weapon")
+node_b = NodePath("../Sawblade")
 motor/target_velocity = 18.8496
 motor/max_impulse = 512.0
 
@@ -153,6 +154,7 @@ mesh = ExtResource("9_nsk11")
 shape = SubResource("SphereShape3D_hnom0")
 
 [node name="_AudioStreamPlayers" type="Node3D" parent="."]
+unique_name_in_owner = true
 
 [node name="Collision" type="AudioStreamPlayer3D" parent="_AudioStreamPlayers"]
 
@@ -174,4 +176,4 @@ script = ExtResource("7_bdmj6")
 maxSpeed = 13.0
 
 [connection signal="body_entered" from="Body" to="." method="_on_body_body_entered"]
-[connection signal="body_entered" from="Body/Weapon" to="." method="_on_sawblade_body_entered"]
+[connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]

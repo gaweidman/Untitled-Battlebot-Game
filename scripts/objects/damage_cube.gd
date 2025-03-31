@@ -18,7 +18,5 @@ func take_damage(amount):
 		queue_free();
 
 func _on_body_body_entered(collider: Node) -> void:
-	print(collider.get_owner());
 	if collider.is_in_group("Damager") && collider.is_in_group("Player Part"):
-		print("TEST TEST TEST")
 		take_damage(1)
