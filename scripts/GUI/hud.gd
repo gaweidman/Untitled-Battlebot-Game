@@ -17,4 +17,4 @@ func _process(_delta: float) -> void:
 func update() -> void:
 	var ply = GameState.get_player();
 	$Health.update(ply.get_health());
-	$Ammo.update(ply.get_ammo());
+	$Ammo.update(GameState.get_player().combatHandler.magazineCount);

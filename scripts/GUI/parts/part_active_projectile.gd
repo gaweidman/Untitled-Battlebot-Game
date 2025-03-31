@@ -11,13 +11,21 @@ var magazineCount := 0;
 @export var bulletLifetime := 1.0;
 @export var firingAngle := Vector3.BACK;
 
+@export var fireRate := 0.15;
+@export var fireRateTimer := 0.0;
+@export var startingHealth: int;
+
+var maxHealth = 3;
+var health = maxHealth;
+
+var inputHandler;
 var leakTimer : Timer;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	super();
 	#inputHandler = $"../InputHandler"
-	leakTimer = $LeakTimer;
+	#leakTimer = $LeakTimer;
 	pass # Replace with function body.
 
 func _activate():
@@ -29,7 +37,15 @@ func _activate():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
 	super(delta);
+	if fireRateTimer <= 0:
+		pass
+	else:
+		fireRateTimer -= delta;
 	pass
+
+func can_fire() -> bool: 
+	return fireRateTimer <= 0;
+		##Temp condition, can be changed later
 
 func fireBullet():
 	print("pew");
@@ -49,7 +65,7 @@ func fireBullet():
 		firingAngle = inputHandler.mouseProjectionRotation(positionNode);
 		
 		bullet.fire(self, positionNode.position + offset, firingAngle, fireSpeed, bulletLifetime);
-		_set_fire_rate_timer();
+		fireRateTimer = fireRate;
 	
 	leakTimer.start();
 	GameState.get_hud().update();
@@ -73,6 +89,22 @@ func nextBullet():
 			print("not fired?");
 			return bullet;
 	return null;
+
+func take_damage(damage):
+	print("TAKING DAMAGE");
+	health -= damage;
+	get_node("../GUI/Health").text = "Health: " + health + "/" + maxHealth;
+	if health <= 0:
+		die();
+		
+	GameState.get_hud().update();
+		
+func die():
+	print("WE ARE DYING")
+	queue_free();
+	
+func _on_collision(colliderdw):
+	pass
 
 func leakPrevention():
 	print("There's a leek in the boat...")
