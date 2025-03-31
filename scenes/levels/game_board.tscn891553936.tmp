@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=18 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena_floor.tres" id="2_4jixe"]
