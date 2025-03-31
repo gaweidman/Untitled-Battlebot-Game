@@ -19,12 +19,18 @@ config/icon="res://icon.svg"
 
 GameState="*res://scripts/libraries/game_state.gd"
 Sound="*res://scripts/libraries/sound_manager.gd"
+Hooks="*res://scripts/libraries/hooks.gd"
 
 [global_group]
 
 Damager="Something that, on collision with the player or an NPC, deals damage to them."
-Enemy=""
-"Player Part"=""
+World="A part of the world."
+Concrete="A material."
+Metal="A material."
+Plastic="A material."
+Combatant="The body of a combatant, including the player."
+MeleeWeapon="A sawblade weapon."
+Projectile=""
 
 [input]
 
@@ -61,9 +67,11 @@ TriggerAction={
 
 [physics]
 
-3d/physics_engine="JoltPhysics3D"
+3d/run_on_separate_thread=true
+3d/physics_engine="Jolt Physics"
 jolt_physics_3d/simulation/areas_detect_static_bodies=true
 jolt_physics_3d/simulation/generate_all_kinematic_contacts=true
 3d/default_gravity_vector=Vector3(0, -3, 0)
+3d/solver/solver_iterations=64
 jolt_3d/collisions/areas_detect_static_bodies=true
 jolt_3d/collisions/report_all_kinematic_contacts=true

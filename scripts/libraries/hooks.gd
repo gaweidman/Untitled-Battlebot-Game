@@ -12,6 +12,7 @@ extends Node;
 # Physics
 #	OnHitWall
 # 	OnHitCombatant
+# 	OnPlayerCollision
 # 
 # Passive
 #	PassiveItemTick
@@ -24,7 +25,6 @@ var body;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	body = $Player.Body
 	pass;
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -57,3 +57,6 @@ func default_OnUseShield():
 	
 func default_OnDropEntity():
 	pass
+	
+func OnPlayerCollision(collider: Node):
+	print("collision detected in hooks");

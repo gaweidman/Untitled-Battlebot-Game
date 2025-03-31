@@ -1,20 +1,18 @@
-[gd_resource type="StandardMaterial3D" load_steps=7 format=3 uid="uid://c6b1ums81prw8"]
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://c6b1ums81prw8"]
 
-[ext_resource type="Texture2D" uid="uid://vehhckj4wqfq" path="res://graphics/images/models/arena_floor/arena_floor_color.png" id="1_q50jj"]
-[ext_resource type="Texture2D" uid="uid://vehhckj4wqfq" path="res://graphics/images/models/arena_floor/arena_floor_color.png" id="2_3mwtt"]
-[ext_resource type="Texture2D" uid="uid://bwtwbgscv5p75" path="res://graphics/images/models/arena_floor/arena_floor_height.png" id="3_tr5ho"]
-[ext_resource type="Texture2D" uid="uid://b87nwgs0v5u6p" path="res://graphics/images/models/arena_floor/arena_floor_metallic.png" id="4_0hyr6"]
-[ext_resource type="Texture2D" uid="uid://c58l7wcab2jdy" path="res://graphics/images/models/arena_floor/arena_floor_normal.png" id="5_gk76w"]
-[ext_resource type="Texture2D" uid="uid://bmk3pxljrwey4" path="res://graphics/images/models/arena_floor/arena_floor_roughness.png" id="6_1ytqy"]
+[ext_resource type="Texture2D" uid="uid://cm74v35sti0wo" path="res://graphics/images/models/arena_floor/arena_floor_color.tga" id="2_3mwtt"]
+[ext_resource type="Texture2D" uid="uid://cxcs6vt2rk18m" path="res://graphics/images/models/arena_floor/arena_floor_height.tga" id="3_tr5ho"]
+[ext_resource type="Texture2D" uid="uid://bum28kswipwqx" path="res://graphics/images/models/arena_floor/arena_floor_metalness.tga" id="4_0hyr6"]
+[ext_resource type="Texture2D" uid="uid://cky6gl7vulel6" path="res://graphics/images/models/arena_floor/arena_floor_normal.tga" id="5_gk76w"]
+[ext_resource type="Texture2D" uid="uid://b63mi077a853g" path="res://graphics/images/models/arena_floor/arena_floor_roughness.tga" id="6_1ytqy"]
 
 [resource]
-albedo_texture = ExtResource("1_q50jj")
+albedo_texture = ExtResource("2_3mwtt")
 metallic = 1.0
 metallic_texture = ExtResource("4_0hyr6")
-roughness = 0.25
 roughness_texture = ExtResource("6_1ytqy")
-emission_enabled = true
 emission_texture = ExtResource("2_3mwtt")
 normal_enabled = true
 normal_texture = ExtResource("5_gk76w")
+heightmap_scale = 1.0
 heightmap_texture = ExtResource("3_tr5ho")

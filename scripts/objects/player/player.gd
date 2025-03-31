@@ -2,14 +2,16 @@ extends MakesNoise;
 
 var body; 
 var combatHandler;
+var motionHandler;
 var _partOffset1 := Vector3(0, 0.086, 0.0);
-
 var _partOffset2 := Vector3(0, 0.172, 0);
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	body = get_node("Body");
 	combatHandler = get_node("CombatHandler");
+	motionHandler = get_node("MotionHandler");
+	super._ready();
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -31,6 +33,12 @@ func get_sign(num):
 		
 func _on_body_body_entered(collider: Node) -> void:
 	combatHandler._on_collision(collider);
+	motionHandler._on_collision(%Body, collider);
+
+
+func _on_sawblade_body_entered(collider: Node) -> void:
+	print()
+	motionHandler._on_collision(%Sawblade, collider);
 
 func _get_part_offset(num):
 	var offset = Vector3(0,0,0);

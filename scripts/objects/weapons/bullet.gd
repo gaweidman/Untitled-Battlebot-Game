@@ -34,7 +34,6 @@ func fire(_launcher : Node ,_initPosition : Vector3, _direction := Vector3(1,0,0
 	positionAppend = Vector3.ZERO;
 	initPosition = _initPosition;
 	position = initPosition;
-	#print(position)
 	collision.set_deferred("disabled", false);
 	rotateTowardVector3(dir);
 	
@@ -50,7 +49,6 @@ func die():
 	collision.set_deferred("disabled", true);
 	hide();
 	if leaking:
-		print("Bullet leaked :)");
 		queue_free();
 	pass
 

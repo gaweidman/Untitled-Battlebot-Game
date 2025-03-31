@@ -22,10 +22,13 @@ var health = maxHealth;
 var inputHandler;
 var leakTimer : Timer;
 
+var player;
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	inputHandler = $"../InputHandler"
 	leakTimer = $LeakTimer;
+	player = GameState.get_player();
 	pass # Replace with function body.
 
 
@@ -42,7 +45,6 @@ func can_fire() -> bool:
 		##Temp condition, can be changed later
 
 func fireBullet():
-	print("pew");
 	var bullet : Bullet;
 	
 #	##Create new bullets when there are less than there should be
@@ -63,6 +65,7 @@ func fireBullet():
 	
 	leakTimer.start();
 	GameState.get_hud().update();
+	player.play_sound("Weapon.Shoot")
 	pass
 
 func recountMagazine() -> int:
@@ -80,12 +83,10 @@ func nextBullet():
 	##Checks the magazine for the next non-fired bullet
 	for bullet in magazine:
 		if is_instance_valid(bullet) && (not bullet.fired):
-			print("not fired?");
 			return bullet;
 	return null;
 
 func take_damage(damage):
-	print("TAKING DAMAGE");
 	health -= damage;
 	get_node("../GUI/Health").text = "Health: " + health + "/" + maxHealth;
 	if health <= 0:
@@ -94,14 +95,12 @@ func take_damage(damage):
 	GameState.get_hud().update();
 		
 func die():
-	print("WE ARE DYING")
 	queue_free();
 	
 func _on_collision(colliderdw):
 	pass
 
 func leakPrevention():
-	print("There's a leek in the boat...")
 	##Deletes the entire magazine 
 	for bullet in magazine:
 		if is_instance_valid(bullet):
