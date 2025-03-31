@@ -101,4 +101,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.557473, 3.4556, 5.3138)
 script = ExtResource("9_hh74c")
 
 [node name="thruster" parent="." instance=ExtResource("15_jhciq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.77226, -0.0612564, 20.9585)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.77226, 1.89045, 6.9509)

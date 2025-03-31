@@ -4,6 +4,7 @@ var body;
 var botBodyMesh;
 var raycasts;
 var aiHandler;
+var nextThrust;
 
 @export var maxSpeed: float;
 
@@ -15,7 +16,8 @@ func _ready() -> void:
 	aiHandler = get_node("../AIHandler");
 	body = thisNpc.get_node("Body");
 	raycasts = [%Raycast1, %Raycast2, %Raycast3, %Raycast4];
-	botBodyMesh = body.get_node("BotBody")
+	botBodyMesh = body.get_node("BotBody");
+	nextThrust = Time.get_ticks_msec() + randi_range(0, 3) * 1000
 	pass # Replace with function body.
 
 
@@ -25,28 +27,26 @@ func _process(delta: float) -> void:
 
 # custom physics handling for player movement. regular movement feels flat and boring.
 func _physics_process(delta):	
-	
-	var downVec = -body.global_transform.basis.y;
-
-	for raycast in raycasts:
-		# if we're not making contact at any of the contact points, we don't do anything, so just return
-		if !raycast.is_colliding() && false:
-			return
-	
-	var movementVector = aiHandler.get_movement_vector();
-	var forceVector = Vector3.ZERO
-	
-	forceVector += body.global_transform.basis.x * movementVector.x * -GameState.PLAYER_ACCELERATION;
-	forceVector += body.global_transform.basis.z * movementVector.y * -GameState.PLAYER_ACCELERATION;
-	
-	body.apply_central_force(forceVector);
-	
-	##Rotating the body mesh towards the movement vector
-	var rotatedMV = movementVector.rotated(deg_to_rad(90));
-	
-	var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
-	
-	look_at_safe(botBodyMesh, rotateVector)
+	if Time.get_ticks_msec() >= nextThrust:
+		print("THRUST")
+		nextThrust += 1000;
+		var downVec = -body.global_transform.basis.y;
+		
+		var movementVector = aiHandler.get_movement_vector();
+		var forceVector = Vector3.ZERO
+		
+		forceVector += body.global_transform.basis.x * movementVector.x * -125000;
+		forceVector += body.global_transform.basis.z * movementVector.y * -125000;
+		
+		body.apply_central_force(forceVector);
+		
+		##Rotating the body mesh towards the movement vector
+		var rotatedMV = movementVector.rotated(deg_to_rad(90));
+		
+		var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
+		
+		look_at_safe(botBodyMesh, rotateVector);
+		clamp_speed()
 
 func look_at_safe(node, target):
 	if node.global_transform.origin.is_equal_approx(target): return;

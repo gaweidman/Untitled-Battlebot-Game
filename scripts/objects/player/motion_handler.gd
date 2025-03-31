@@ -30,8 +30,7 @@ func _process(delta: float) -> void:
 			
 			print(botBodyMesh, " BODY MESH ")
 # custom physics handling for player movement. regular movement feels flat and boring.
-func _physics_process(delta):	
-	#print("WE ARE RUNNING", body.get_node("../Body/BotBody"))
+func _physics_process(delta):
 	if body:
 		var downVec = -body.global_transform.basis.y;
 		
@@ -45,6 +44,8 @@ func _physics_process(delta):
 	
 	var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
 	
+	if !botBodyMesh.global_position.is_equal_approx(rotateVector):
+		botBodyMesh.look_at(rotateVector)
 	look_at_safe(botBodyMesh, rotateVector)
 	
 	for raycast in raycasts:

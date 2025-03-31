@@ -1,16 +1,13 @@
 extends Node3D
-var thisNpc;
 
 func ready():
-	thisNpc = self
-	print(thisNpc)
+	pass
 	
 func get_movement_vector():
-	#print("wE ARE RUNNING LOL ", thisNpc, " ", self);
 	var ply = GameState.get_player();
 	
 	if ply:
-		#var posDiff = ply.get_global_position() - thisNpc.get_global_position()
+		var posDiff = get_parent().get_node("Body").get_global_position() - ply.get_node("Body").get_global_position()
+		posDiff = posDiff.normalized();
 		
-		return Vector2.ZERO;
-		#return posDiff.normalized();
+		return Vector2(posDiff.x, posDiff.z)
