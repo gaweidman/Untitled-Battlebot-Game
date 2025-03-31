@@ -1,15 +1,19 @@
 extends Node3D
 var player;
 var body;
+var botBodyMesh;
 var inputHandler;
 var raycasts;
 
 @export var maxSpeed: float;
 
+var bodyRotationAngle = Vector2(0,0)
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	player = GameState.get_player();
 	body = player.get_node("Body");
+	botBodyMesh = player.get_node("Body/BotBody");
 	inputHandler = player.get_node("InputHandler");
 	raycasts = [%Raycast1, %Raycast2, %Raycast3, %Raycast4];
 	pass # Replace with function body.
@@ -37,10 +41,16 @@ func _physics_process(delta):
 	forceVector += body.global_transform.basis.x * movementVector.x * -GameState.PLAYER_ACCELERATION;
 	forceVector += body.global_transform.basis.z * movementVector.y * -GameState.PLAYER_ACCELERATION;
 	
-	#print(movementVector);
-	
 	body.apply_central_force(forceVector);
-		
+	
+	##Rotating the body mesh towards the movement vector
+	var rotatedMV = movementVector.rotated(deg_to_rad(90));
+	
+	if inputHandler.is_inputting_movement():
+		bodyRotationAngle = lerp(bodyRotationAngle, movementVector.rotated(deg_to_rad(90)), delta * 10)
+	
+	var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
+	botBodyMesh.look_at(rotateVector)
 # make sure the player's speed doesn't go over its max speed
 func clamp_speed():
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);

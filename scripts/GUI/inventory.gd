@@ -126,7 +126,7 @@ func _process(delta):
 		inputHandler = GameState.get_input_handler()
 	if battleBotBody == null:
 		test_add_stuff()
-		push_error("hi")
+		#push_error("hi")
 
 func _physics_process(delta):
 	if battleBotBody != null:
@@ -134,15 +134,22 @@ func _physics_process(delta):
 
 func test_add_stuff():
 	
-	var ply = GameState.get_player();
 	#print(ply)
-	if ply:
-		print("exists")
-		if ply.body != null:
-			battleBotBody = ply.body
-	
+	if assign_player():
 		var partScene = load("res://scenes/parts/part_active_projectile.tscn");
 		var part = partScene.instantiate();
 		add_child(part);
 		add_part(part, Vector2i(0,0));
 	pass
+
+func assign_player(makeNull := false):
+	
+	if makeNull:
+		battleBotBody = null;
+	else:
+		var ply = GameState.get_player();
+		if ply:
+			if ply.body != null:
+				battleBotBody = ply.body
+				return true;
+	return false;

@@ -43,6 +43,20 @@ func get_movement_vector():
 		
 	return movementVector;
 
+func is_inputting_movement():
+	if Input.is_action_pressed("MoveLeft"):
+		return true;
+		
+	if Input.is_action_pressed("MoveRight"):
+		return true;
+		
+	if Input.is_action_pressed("MoveUp"):
+		return true;
+		
+	if Input.is_action_pressed("MoveDown"):
+		return true;
+	
+	return false;
 
 static func mouseProjectionRotation(positionNode : Node3D):
 	var viewport = positionNode.get_viewport();

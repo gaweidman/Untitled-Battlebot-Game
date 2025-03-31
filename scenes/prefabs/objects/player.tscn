@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=16 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -10,6 +10,7 @@
 [ext_resource type="ArrayMesh" uid="uid://yk6x46nqkc77" path="res://graphics/models/cannonMapped.obj" id="7_3un1w"]
 [ext_resource type="Script" uid="uid://des8smcv31abv" path="res://scripts/objects/player/motion_handler.gd" id="7_bdmj6"]
 [ext_resource type="Material" uid="uid://bjpw8orsijmuk" path="res://graphics/materials/models/cannon.tres" id="7_dqk0i"]
+[ext_resource type="ArrayMesh" uid="uid://b81yaluc55jmc" path="res://graphics/models/bot.obj" id="9_nsk11"]
 [ext_resource type="Script" uid="uid://bouqo8y5acdyn" path="res://scripts/cannon.gd" id="14_1byn2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
@@ -19,13 +20,18 @@ size = Vector3(1, 0.333479, 1)
 height = 0.021
 radius = 0.95
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_hnom0"]
+radius = 0.611008
+
 [node name="Player" type="Node3D" groups=["Player Part"]]
 script = ExtResource("1_u8q0c")
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Damager", "Player Part"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000182867, 0.00276172, 3.8147e-06)
 disable_mode = 2
+axis_lock_angular_x = true
 axis_lock_angular_y = true
+axis_lock_angular_z = true
 mass = 100.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, 0.09, 0)
@@ -35,6 +41,7 @@ angular_damp_mode = 1
 
 [node name="Bottom" type="CSGBox3D" parent="Body"]
 transform = Transform3D(0.968925, 0, 0, 0, 0.968925, 0, 0, 0, 0.968925, 0, 0.087, 0)
+visible = false
 material_override = ExtResource("2_slssq")
 size = Vector3(1, 0.15, 1)
 material = ExtResource("2_jy4ju")
@@ -91,15 +98,19 @@ collide_with_areas = true
 
 [node name="Top" type="CSGBox3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.269, 0)
+visible = false
 material_override = ExtResource("2_jy4ju")
 size = Vector3(1, 0.15, 1)
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.179051, 0)
+visible = false
 shape = SubResource("BoxShape3D_odmbc")
+disabled = true
 
 [node name="Weapon" type="RigidBody3D" parent="Body" groups=["Damager", "Player Part"]]
 transform = Transform3D(0.999993, 0.00324984, 0.00205345, -0.00324838, 0.999994, -0.000714875, -0.00205576, 0.000708211, 0.999998, 0, 0.179466, 0)
+visible = false
 collision_priority = 3.0
 mass = 25.0
 custom_integrator = true
@@ -108,6 +119,7 @@ max_contacts_reported = 10
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Body/Weapon"]
 shape = SubResource("CylinderShape3D_fise2")
+disabled = true
 
 [node name="Mesh" type="CSGCylinder3D" parent="Body/Weapon"]
 material_override = ExtResource("4_nnr5b")
@@ -124,12 +136,21 @@ motor/max_impulse = 512.0
 
 [node name="Cannon" type="MeshInstance3D" parent="Body" node_paths=PackedStringArray("inputHandler", "posNode")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000182867, 0.085945, -3.8147e-06)
+visible = false
 mesh = ExtResource("7_3un1w")
 skeleton = NodePath("../../CombatHandler")
 surface_material_override/0 = ExtResource("7_dqk0i")
 script = ExtResource("14_1byn2")
 inputHandler = NodePath("../../InputHandler")
 posNode = NodePath("..")
+
+[node name="BotBody" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 0, -0.263986, 0)
+material_override = ExtResource("2_jy4ju")
+mesh = ExtResource("9_nsk11")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
+shape = SubResource("SphereShape3D_hnom0")
 
 [node name="_AudioStreamPlayers" type="Node3D" parent="."]
 
