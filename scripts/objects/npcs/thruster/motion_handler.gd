@@ -46,7 +46,7 @@ func _physics_process(delta):
 	
 	var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
 	
-	look_at_safe(botBodyMesh, rotateVector);
+	look_at_safe(botBodyMesh, rotateVector)
 
 func look_at_safe(node, target):
 	if node.global_transform.origin.is_equal_approx(target): return;

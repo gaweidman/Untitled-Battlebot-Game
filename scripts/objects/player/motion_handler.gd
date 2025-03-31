@@ -26,12 +26,12 @@ func _process(delta: float) -> void:
 		if player:
 			body = player.get_node("Body");
 			botBodyMesh = body.get_node("BotBody");
-			inputHandler = player.get_node("InputHandler");
+			inputHandler = GameState.get_input_handler();
 			
 			print(botBodyMesh, " BODY MESH ")
 # custom physics handling for player movement. regular movement feels flat and boring.
 func _physics_process(delta):	
-	print("WE ARE RUNNING", body.get_node("../Body/BotBody"))
+	#print("WE ARE RUNNING", body.get_node("../Body/BotBody"))
 	if body:
 		var downVec = -body.global_transform.basis.y;
 		
@@ -39,8 +39,8 @@ func _physics_process(delta):
 	
 	##Rotating the body mesh towards the movement vector
 	var rotatedMV = movementVector.rotated(deg_to_rad(90));
-	
-	if inputHandler.is_inputting_movement():
+	#print(inputHandler.is_inputting_movement())
+	if InputHandler.is_inputting_movement():
 		bodyRotationAngle = lerp(bodyRotationAngle, movementVector.rotated(deg_to_rad(90)), delta * 10)
 	
 	var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
@@ -51,7 +51,7 @@ func _physics_process(delta):
 		# if we're not making contact at any of the contact points, we don't do anything, so just return
 		if !raycast.is_colliding() && false:
 			return
-		
+	
 	var forceVector = Vector3.ZERO
 	forceVector += body.global_transform.basis.x * movementVector.x * -GameState.PLAYER_ACCELERATION;
 	forceVector += body.global_transform.basis.z * movementVector.y * -GameState.PLAYER_ACCELERATION;

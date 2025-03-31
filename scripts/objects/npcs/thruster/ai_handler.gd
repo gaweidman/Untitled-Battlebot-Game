@@ -6,7 +6,7 @@ func ready():
 	print(thisNpc)
 	
 func get_movement_vector():
-	print("wE ARE RUNNING LOL ", thisNpc, " ", self);
+	#print("wE ARE RUNNING LOL ", thisNpc, " ", self);
 	var ply = GameState.get_player();
 	
 	if ply:

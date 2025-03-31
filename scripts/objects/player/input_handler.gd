@@ -42,7 +42,7 @@ func get_movement_vector():
 		
 	return movementVector;
 
-func is_inputting_movement():
+static func is_inputting_movement():
 	if Input.is_action_pressed("MoveLeft"):
 		return true;
 		

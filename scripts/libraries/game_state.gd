@@ -22,6 +22,16 @@ func get_player():
 	
 	return ply;
 
+func get_player_body():
+	var ply = get_player()
+	
+	return ply.get_node_or_null("Body");
+
+func get_player_body_mesh():
+	var bdy = get_player_body()
+	
+	return bdy.get_node_or_null("BotBody");
+
 func get_input_handler():
 	var ply = get_player();
 	

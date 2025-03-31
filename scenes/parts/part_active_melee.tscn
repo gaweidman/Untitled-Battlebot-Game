@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://p8nchh2uegmh"]
+
+[ext_resource type="PackedScene" uid="uid://n5li36gn6xf7" path="res://scenes/parts/part_active.tscn" id="1_xxlqa"]
+[ext_resource type="Script" uid="uid://cc6sda2iomhr1" path="res://scripts/GUI/parts/part_active_melee.gd" id="2_psr1p"]
+[ext_resource type="ArrayMesh" uid="uid://du8e8ijsylohb" path="res://graphics/models/blade.obj" id="3_yl1nc"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_thmrx"]
+height = 0.021
+radius = 0.95
+
+[node name="PartActiveMelee" instance=ExtResource("1_xxlqa")]
+script = ExtResource("2_psr1p")
+modelOffset = Vector3(0, -0.168, 0)
+modelScale = Vector3(0.61, 0.61, 0.61)
+looksAtMouse = false
+rotateWithPlayer = true
+invSprite = null
+
+[node name="MeshInstance3D" parent="." index="2"]
+transform = Transform3D(0.61, 0, 0, 0, 0.61, 0, 0, 0, 0.61, 0, -0.167726, 0)
+mesh = ExtResource("3_yl1nc")
+
+[node name="Weapon" type="RigidBody3D" parent="." index="3"]
+unique_name_in_owner = true
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape" type="CollisionShape3D" parent="Weapon" index="0"]
+shape = SubResource("CylinderShape3D_thmrx")
+
+[connection signal="body_entered" from="Weapon" to="." method="_on_weapon_body_entered"]

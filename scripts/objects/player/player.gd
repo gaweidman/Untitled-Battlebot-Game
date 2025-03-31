@@ -35,11 +35,6 @@ func _on_body_body_entered(collider: Node) -> void:
 	combatHandler._on_collision(collider);
 	motionHandler._on_collision(%Body, collider);
 
-
-func _on_sawblade_body_entered(collider: Node) -> void:
-	print()
-	motionHandler._on_collision(%Sawblade, collider);
-
 func _get_part_offset(num):
 	var offset = Vector3(0,0,0);
 	if num == 1:

@@ -11,9 +11,11 @@ script = ExtResource("2_qken1")
 meshNode = NodePath("MeshInstance3D")
 model = ExtResource("3_qken1")
 modelMaterial = ExtResource("4_s81pm")
-modelOffset = Vector3i(0, 0, 0)
+modelOffset = Vector3(0, 0, 0)
+modelScale = Vector3(1, 1, 1)
 energyCost = 1
 looksAtMouse = true
+rotateWithPlayer = false
 fireRate = 0.15
 fireRateTimer = 0.0
 

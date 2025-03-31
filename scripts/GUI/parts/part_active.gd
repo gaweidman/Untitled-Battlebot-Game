@@ -5,10 +5,12 @@ class_name PartActive
 @export var meshNode : MeshInstance3D;
 @export var model : Mesh;
 @export var modelMaterial : StandardMaterial3D;
-@export var modelOffset = Vector3i(0,0,0);
+@export var modelOffset = Vector3(0,0,0);
+@export var modelScale = Vector3(1,1,1);
 @export var energyCost = 1;
 @export var positionNode : Node3D; ##This needs to be the thing with the position on it - in thbis case, the Body node
 @export var looksAtMouse := true;
+@export var rotateWithPlayer := false;
 var combatHandler : CombatHandler;
 var inputHandler : InputHandler;
 
@@ -17,8 +19,9 @@ var inputHandler : InputHandler;
 
 func _ready():
 	super();
-	meshNode.set_deferred("mesh", model)
-	meshNode.set_deferred("surface_material_override/0", modelMaterial)
+	meshNode.set_deferred("mesh", model);
+	meshNode.set_deferred("surface_material_override/0", modelMaterial);
+	meshNode.set_deferred("scale", modelScale);
 
 func _activate():
 	if can_fire():
@@ -36,6 +39,7 @@ func _set_fire_rate_timer():
 
 func _physics_process(delta):
 	if looksAtMouse: _rotate_to_look_at_mouse(delta)
+	if rotateWithPlayer: _rotate_with_player();
 	
 	if fireRateTimer <= 0:
 		pass
@@ -59,6 +63,7 @@ func _process(delta):
 		combatHandler = GameState.get_combat_handler();
 	if ! is_instance_valid(inputHandler):
 		inputHandler = GameState.get_input_handler();
+	meshNode.set_deferred("position", modelOffset);
 
 func _rotate_to_look_at_mouse(delta):
 	var rot = InputHandler.mouseProjectionRotation(positionNode);
@@ -67,3 +72,7 @@ func _rotate_to_look_at_mouse(delta):
 	meshNode.look_at(meshNode.global_transform.origin + rot, Vector3.UP)
 	meshNode.rotation += positionNode.rotation;
 	#rotation = 
+
+func _rotate_with_player():
+	var bdy = GameState.get_player_body_mesh()
+	meshNode.rotation = bdy.rotation;

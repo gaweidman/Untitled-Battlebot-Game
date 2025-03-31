@@ -143,6 +143,13 @@ func test_add_stuff():
 		add_child(part);
 		add_part(part, Vector2i(0,0));
 		combatHandler.activeParts[0] = part;
+		
+		
+		var partScene2 = load("res://scenes/parts/part_active_melee.tscn");
+		var part2 = partScene2.instantiate();
+		add_child(part2);
+		add_part(part2, Vector2i(2,0));
+		combatHandler.activeParts[1] = part2;
 	pass
 
 func assign_player(makeNull := false):
