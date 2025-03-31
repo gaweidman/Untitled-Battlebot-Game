@@ -44,8 +44,8 @@ func get_movement_vector():
 	return movementVector;
 
 
-func mouseProjectionRotation(positionNode : Node3D):
-	var viewport = get_viewport();
+static func mouseProjectionRotation(positionNode : Node3D):
+	var viewport = positionNode.get_viewport();
 	var camera = viewport.get_camera_3d();
 	
 	var mousePos = viewport.get_mouse_position();

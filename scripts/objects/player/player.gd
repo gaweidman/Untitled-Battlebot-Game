@@ -2,6 +2,9 @@ extends MakesNoise;
 
 var body; 
 var combatHandler;
+var _partOffset1 := Vector3(0, 0.086, 0.0);
+
+var _partOffset2 := Vector3(0, 0.172, 0);
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -28,3 +31,17 @@ func get_sign(num):
 		
 func _on_body_body_entered(collider: Node) -> void:
 	combatHandler._on_collision(collider);
+
+func _get_part_offset(num):
+	var offset = Vector3(0,0,0);
+	if num == 1:
+		offset = _partOffset1;
+	elif num == 2:
+		offset = _partOffset2;
+	else:
+		return offset;
+	
+	var newOffset = offset.rotated(Vector3(1,0,0), body.rotation.x);
+	newOffset = offset.rotated(Vector3(0,1,0), body.rotation.y);
+	newOffset = offset.rotated(Vector3(0,0,1), body.rotation.z);
+	return newOffset;

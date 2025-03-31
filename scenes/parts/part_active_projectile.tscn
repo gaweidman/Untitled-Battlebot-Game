@@ -18,3 +18,4 @@ fireRateTimer = 0.0
 startingHealth = 0
 model = ExtResource("4_vi2dv")
 modelMaterial = ExtResource("5_vi2dv")
+looksAtMouse = true

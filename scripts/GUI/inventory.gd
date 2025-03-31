@@ -86,6 +86,7 @@ func add_part(part: Part, invPosition : Vector2i):
 		part.inventoryNode = self;
 		if part is PartActive:
 			part.positionNode = battleBotBody;
+			part.meshNode.reparent(battleBotBody);
 	else:
 		pass 
 	pass
@@ -95,6 +96,7 @@ func remove_part(part: Part):
 	part.invPosition = Vector2i(0,0);
 	if part is PartActive:
 		part.positionNode = null;
+		part.meshNode.reparent(part);
 	
 	for coord : Vector2i in coordsToRemove:
 		clear_slot_at(coord.x, coord.y);
