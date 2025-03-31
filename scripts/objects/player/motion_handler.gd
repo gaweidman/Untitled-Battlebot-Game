@@ -4,17 +4,17 @@ var body;
 var botBodyMesh;
 var inputHandler;
 var raycasts;
+var bodyRotationAngle = Vector2.ZERO;
 
 @export var maxSpeed: float;
-
-var bodyRotationAngle = Vector2(0,0)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	player = GameState.get_player();
-	body = player.get_node("Body");
-	botBodyMesh = player.get_node("Body/BotBody");
-	inputHandler = player.get_node("InputHandler");
+	if player:
+		body = player.get_node("Body");
+		botBodyMesh = body.get_node("BotBody");
+		inputHandler = player.get_node("InputHandler");
 	raycasts = [%Raycast1, %Raycast2, %Raycast3, %Raycast4];
 	pass # Replace with function body.
 
@@ -25,15 +25,18 @@ func _process(delta: float) -> void:
 		player = GameState.get_player();
 		if player:
 			body = player.get_node("Body");
-			botBodyMesh = player.get_node("Body/BotBody");
+			botBodyMesh = body.get_node("BotBody");
 			inputHandler = player.get_node("InputHandler");
+			
+			print(botBodyMesh, " BODY MESH ")
 # custom physics handling for player movement. regular movement feels flat and boring.
 func _physics_process(delta):	
-	
+	print("WE ARE RUNNING", body.get_node("../Body/BotBody"))
 	if body:
-	
 		var downVec = -body.global_transform.basis.y;
-    
+		
+	var movementVector = inputHandler.get_movement_vector();
+	
 	##Rotating the body mesh towards the movement vector
 	var rotatedMV = movementVector.rotated(deg_to_rad(90));
 	
@@ -41,29 +44,22 @@ func _physics_process(delta):
 		bodyRotationAngle = lerp(bodyRotationAngle, movementVector.rotated(deg_to_rad(90)), delta * 10)
 	
 	var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
-	botBodyMesh.look_at(rotateVector)
-		for raycast in raycasts:
-			# if we're not making contact at any of the contact points, we don't do anything, so just return
-			if !raycast.is_colliding() && false:
-				return
-				
-		
-		var movementVector = inputHandler.get_movement_vector();
-		var forceVector = Vector3.ZERO
-		
-		forceVector += body.global_transform.basis.x * movementVector.x * -GameState.PLAYER_ACCELERATION;
-		forceVector += body.global_transform.basis.z * movementVector.y * -GameState.PLAYER_ACCELERATION;
-		
-		body.apply_central_force(forceVector);
-		
-		##Rotating the body mesh towards the movement vector
-		var rotatedMV = movementVector.rotated(deg_to_rad(90));
-		
-		if inputHandler.is_inputting_movement():
-			bodyRotationAngle = lerp(bodyRotationAngle, movementVector.rotated(deg_to_rad(90)), delta * 10)
-		
-		var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
+	
+	print(botBodyMesh.global_position, " ", rotateVector)
+	if !botBodyMesh.global_position.is_equal_approx(rotateVector):
 		botBodyMesh.look_at(rotateVector)
+	
+	for raycast in raycasts:
+		# if we're not making contact at any of the contact points, we don't do anything, so just return
+		if !raycast.is_colliding() && false:
+			return
+		
+	var forceVector = Vector3.ZERO
+	forceVector += body.global_transform.basis.x * movementVector.x * -GameState.PLAYER_ACCELERATION;
+	forceVector += body.global_transform.basis.z * movementVector.y * -GameState.PLAYER_ACCELERATION;
+	body.apply_central_force(forceVector);
+	clamp_speed();
+		
 # make sure the player's speed doesn't go over its max speed
 func clamp_speed():
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);
