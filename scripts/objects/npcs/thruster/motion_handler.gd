@@ -45,7 +45,13 @@ func _physics_process(delta):
 	var rotatedMV = movementVector.rotated(deg_to_rad(90));
 	
 	var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
-	botBodyMesh.look_at(rotateVector)
+	
+	look_at_safe(botBodyMesh, rotateVector);
+
+func look_at_safe(node, target):
+	if node.global_transform.origin.is_equal_approx(target): return;
+	node.look_at(target);
+
 # make sure the player's speed doesn't go over its max speed
 func clamp_speed():
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);
