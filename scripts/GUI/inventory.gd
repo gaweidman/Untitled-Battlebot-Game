@@ -2,9 +2,11 @@ extends Control
 
 class_name Inventory
 
-var inputHandler : InputHandler;
-var battleBotBody : RigidBody3D;
-var combatHandler : CombatHandler;
+@export var inputHandler : InputHandler;
+@export var battleBotBody : RigidBody3D;
+
+var activePart1 : PartActive;
+var activePart2 : PartActive;
 
 var slots := {
 	## Row 0
@@ -120,15 +122,11 @@ func _ready():
 	test_add_stuff()
 
 func _process(delta):
-	if ! is_instance_valid(inputHandler):
-		inputHandler = GameState.get_input_handler();
-	
-	if ! is_instance_valid(combatHandler):
-		combatHandler = GameState.get_combat_handler();
-		combatHandler.inventory = self;
-	
-	if ! is_instance_valid(battleBotBody):
+	if inputHandler == null:
+		inputHandler = GameState.get_player().get_node("InputHandler")
+	if battleBotBody == null:
 		test_add_stuff()
+		push_error("hi")
 
 func _physics_process(delta):
 	if battleBotBody != null:
@@ -136,23 +134,15 @@ func _physics_process(delta):
 
 func test_add_stuff():
 	
+	var ply = GameState.get_player();
 	#print(ply)
-	if assign_player():
+	if ply:
+		print("exists")
+		if ply.body != null:
+			battleBotBody = ply.body
+	
 		var partScene = load("res://scenes/parts/part_active_projectile.tscn");
 		var part = partScene.instantiate();
 		add_child(part);
 		add_part(part, Vector2i(0,0));
-		combatHandler.activeParts[0] = part;
 	pass
-
-func assign_player(makeNull := false):
-	
-	if makeNull:
-		battleBotBody = null;
-	else:
-		var ply = GameState.get_player();
-		if ply:
-			if ply.body != null:
-				battleBotBody = ply.body
-				return true;
-	return false;

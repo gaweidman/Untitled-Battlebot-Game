@@ -20,6 +20,9 @@ func _ready():
 	
 	print(PB)
 	_populate_buttons();
+#func _process(delta):
+	#
+	#pass
 
 func _get_sell_price(_discount := 0.0):
 	var discount = 1.0 + _discount
