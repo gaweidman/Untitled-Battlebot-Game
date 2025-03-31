@@ -46,6 +46,7 @@ func _physics_process(delta):
 	
 	if !botBodyMesh.global_position.is_equal_approx(rotateVector):
 		botBodyMesh.look_at(rotateVector)
+	look_at_safe(botBodyMesh, rotateVector)
 	
 	for raycast in raycasts:
 		# if we're not making contact at any of the contact points, we don't do anything, so just return
@@ -57,7 +58,10 @@ func _physics_process(delta):
 	forceVector += body.global_transform.basis.z * movementVector.y * -GameState.PLAYER_ACCELERATION;
 	body.apply_central_force(forceVector);
 	clamp_speed();
-		
+
+func look_at_safe(node, target):
+	if node.global_transform.origin.is_equal_approx(target): return;
+	node.look_at(target);
 # make sure the player's speed doesn't go over its max speed
 func clamp_speed():
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);
