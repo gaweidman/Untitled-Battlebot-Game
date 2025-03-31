@@ -12,8 +12,10 @@ meshNode = NodePath("MeshInstance3D")
 model = ExtResource("3_qken1")
 modelMaterial = ExtResource("4_s81pm")
 modelOffset = Vector3i(0, 0, 0)
-energyCost = 0
+energyCost = 1
 looksAtMouse = true
+fireRate = 0.15
+fireRateTimer = 0.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." index="2"]
 mesh = ExtResource("4_3mubo")

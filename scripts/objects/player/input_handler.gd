@@ -18,8 +18,8 @@ func _process(delta: float) -> void:
 func _physics_process(delta):
 	process_movement(get_movement_vector(), delta);
 	
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && combatHandler.can_fire():
-		combatHandler.fireBullet();
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && combatHandler.can_fire(0):
+		combatHandler.use_active(0);
 	
 # we apply forces in motion_handler
 func process_movement(movementVector, delta):
@@ -42,6 +42,20 @@ func get_movement_vector():
 		
 	return movementVector;
 
+func is_inputting_movement():
+	if Input.is_action_pressed("MoveLeft"):
+		return true;
+		
+	if Input.is_action_pressed("MoveRight"):
+		return true;
+		
+	if Input.is_action_pressed("MoveUp"):
+		return true;
+		
+	if Input.is_action_pressed("MoveDown"):
+		return true;
+	
+	return false;
 
 static func mouseProjectionRotation(positionNode : Node3D):
 	var viewport = positionNode.get_viewport();
