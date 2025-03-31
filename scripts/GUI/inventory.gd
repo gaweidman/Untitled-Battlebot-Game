@@ -2,6 +2,12 @@ extends Control
 
 class_name Inventory
 
+@export var inputHandler : InputHandler;
+@export var battleBotBody : RigidBody3D;
+
+var activePart1 : PartActive;
+var activePart2 : PartActive;
+
 var slots := {
 	## Row 0
 	Vector2i(0,0) : null,
@@ -60,7 +66,7 @@ func is_slot_free(x: int, y: int) -> bool:
 			return true;
 	return false;
 
-func get_modified_part_dimensions(part: Node, modifier: Vector2i):
+func get_modified_part_dimensions(part: Part, modifier: Vector2i):
 	var dimensions = part.dimensions;
 	var coords = [];
 	for index in dimensions:
@@ -69,7 +75,7 @@ func get_modified_part_dimensions(part: Node, modifier: Vector2i):
 	
 	return coords
 
-func add_part(part: Node, invPosition : Vector2i):
+func add_part(part: Part, invPosition : Vector2i):
 	var coordsToCheck = get_modified_part_dimensions(part, invPosition);
 	
 	if check_coordinate_table_is_free(coordsToCheck):
@@ -77,15 +83,26 @@ func add_part(part: Node, invPosition : Vector2i):
 			set_slot_at(index.x, index.y, part);
 		listOfPieces.append(part);
 		part.invPosition = invPosition;
+		part.inventoryNode = self;
+		if part is PartActive:
+			part.positionNode = battleBotBody;
+			part.meshNode.reparent(battleBotBody);
 	else:
 		pass 
 	pass
 
-func remove_part(part: Node):
+func remove_part(part: Part):
 	var coordsToRemove = get_modified_part_dimensions(part, part.invPosition);
+	part.invPosition = Vector2i(0,0);
+	if part is PartActive:
+		part.positionNode = null;
+		part.meshNode.reparent(part);
 	
 	for coord : Vector2i in coordsToRemove:
 		clear_slot_at(coord.x, coord.y);
+	
+	while listOfPieces.find(part) != -1:
+		listOfPieces.remove_at(listOfPieces.find(part));
 
 func check_coordinate_table_is_free(coords:Array):
 	for index in coords:
@@ -95,6 +112,37 @@ func check_coordinate_table_is_free(coords:Array):
 			return false
 	return true
 
-func set_slot_at(x: int, y: int, part: Node):
+func set_slot_at(x: int, y: int, part: Part):
 	if is_slot_free(x, y):
 		var index = Vector2i(x, y);
+
+#########################
+
+func _ready():
+	test_add_stuff()
+
+func _process(delta):
+	if inputHandler == null:
+		inputHandler = GameState.get_input_handler()
+	if battleBotBody == null:
+		test_add_stuff()
+		push_error("hi")
+
+func _physics_process(delta):
+	if battleBotBody != null:
+		pass
+
+func test_add_stuff():
+	
+	var ply = GameState.get_player();
+	#print(ply)
+	if ply:
+		print("exists")
+		if ply.body != null:
+			battleBotBody = ply.body
+	
+		var partScene = load("res://scenes/parts/part_active_projectile.tscn");
+		var part = partScene.instantiate();
+		add_child(part);
+		add_part(part, Vector2i(0,0));
+	pass

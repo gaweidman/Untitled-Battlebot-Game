@@ -1,0 +1,165 @@
+[gd_scene load_steps=24 format=3 uid="uid://css47ma4dkprr"]
+
+[ext_resource type="Shader" uid="uid://dg32qqa8g2mpk" path="res://graphics/materials/particle shaders/HitShader.tres" id="1_qthd6"]
+[ext_resource type="Texture2D" uid="uid://dudtaiypxfh0g" path="res://graphics/images/particle PNGs/Hit.png" id="2_g4rio"]
+[ext_resource type="Shader" uid="uid://mkewhskpwthm" path="res://graphics/materials/particle shaders/SparksShader.tres" id="3_fu82u"]
+[ext_resource type="Texture2D" uid="uid://ctfbeo5h23eux" path="res://graphics/images/particle PNGs/Sparks.png" id="4_3g46v"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3mjrp"]
+render_priority = 0
+shader = ExtResource("1_qthd6")
+shader_parameter/Hit_Texture = ExtResource("2_g4rio")
+
+[sub_resource type="Curve" id="Curve_uq0he"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_an45m"]
+curve = SubResource("Curve_uq0he")
+
+[sub_resource type="Gradient" id="Gradient_jyxl5"]
+colors = PackedColorArray(8, 0.5, 0, 1, 2.5, 1.5, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_duryk"]
+gradient = SubResource("Gradient_jyxl5")
+use_hdr = true
+
+[sub_resource type="Curve" id="Curve_ghlp7"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ms6xq"]
+curve = SubResource("Curve_ghlp7")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_a7xoy"]
+angle_min = -180.0
+angle_max = 180.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.8
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_ms6xq")
+color_ramp = SubResource("GradientTexture1D_duryk")
+alpha_curve = SubResource("CurveTexture_an45m")
+
+[sub_resource type="QuadMesh" id="QuadMesh_bblpl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nmp5v"]
+render_priority = 0
+shader = ExtResource("3_fu82u")
+shader_parameter/Hit_Texture = ExtResource("4_3g46v")
+
+[sub_resource type="Curve" id="Curve_iwda7"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_vxe0f"]
+curve = SubResource("Curve_iwda7")
+
+[sub_resource type="Gradient" id="Gradient_46387"]
+colors = PackedColorArray(8, 0.5, 0, 1, 2.5, 2, 0.5, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_o24lv"]
+gradient = SubResource("Gradient_46387")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_h134o"]
+particle_flag_align_y = true
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_min = 8.0
+initial_velocity_max = 12.0
+gravity = Vector3(0, -20, 0)
+scale_min = 0.3
+scale_max = 0.5
+color = Color(2.5, 2, 0.5, 1)
+color_ramp = SubResource("GradientTexture1D_o24lv")
+alpha_curve = SubResource("CurveTexture_vxe0f")
+
+[sub_resource type="QuadMesh" id="QuadMesh_3av37"]
+size = Vector2(0.05, 0.3)
+
+[sub_resource type="Animation" id="Animation_o24lv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hit:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sparks:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_46387"]
+resource_name = "hit_anim"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hit:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sparks:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2l5em"]
+_data = {
+&"RESET": SubResource("Animation_o24lv"),
+&"hit_anim": SubResource("Animation_46387")
+}
+
+[node name="HitSparkVFX" type="Node3D"]
+
+[node name="Hit" type="GPUParticles3D" parent="."]
+material_override = SubResource("ShaderMaterial_3mjrp")
+amount = 1
+lifetime = 0.25
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_a7xoy")
+draw_pass_1 = SubResource("QuadMesh_bblpl")
+
+[node name="Sparks" type="GPUParticles3D" parent="."]
+material_override = SubResource("ShaderMaterial_nmp5v")
+amount = 20
+lifetime = 0.25
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_h134o")
+draw_pass_1 = SubResource("QuadMesh_3av37")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_2l5em")
+}
+autoplay = "RESET"

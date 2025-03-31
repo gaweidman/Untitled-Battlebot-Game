@@ -1,0 +1,19 @@
+[gd_scene load_steps=6 format=3 uid="uid://n5li36gn6xf7"]
+
+[ext_resource type="PackedScene" uid="uid://dl72cklqtx2gj" path="res://scenes/parts/part.tscn" id="1_n3dox"]
+[ext_resource type="Script" uid="uid://iqtg1aix4f4b" path="res://scripts/GUI/parts/part_active.gd" id="2_qken1"]
+[ext_resource type="ArrayMesh" uid="uid://du8e8ijsylohb" path="res://graphics/models/blade.obj" id="3_qken1"]
+[ext_resource type="ArrayMesh" uid="uid://yk6x46nqkc77" path="res://graphics/models/cannonMapped.obj" id="4_3mubo"]
+[ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="4_s81pm"]
+
+[node name="PartActive" node_paths=PackedStringArray("meshNode") instance=ExtResource("1_n3dox")]
+script = ExtResource("2_qken1")
+meshNode = NodePath("MeshInstance3D")
+model = ExtResource("3_qken1")
+modelMaterial = ExtResource("4_s81pm")
+modelOffset = Vector3i(0, 0, 0)
+energyCost = 0
+looksAtMouse = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="2"]
+mesh = ExtResource("4_3mubo")

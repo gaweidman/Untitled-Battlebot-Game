@@ -24,7 +24,7 @@ func _process(delta):
 		position = initPosition + positionAppend;
 	pass
 
-func fire(_launcher : CombatHandler ,_initPosition : Vector3, _direction := Vector3(1,0,0), _fireSpeed := 30.0, _lifetime := 1.0):
+func fire(_launcher : Node ,_initPosition : Vector3, _direction := Vector3(1,0,0), _fireSpeed := 30.0, _lifetime := 1.0):
 	launcher = _launcher;
 	speed = _fireSpeed;
 	dir = _direction;

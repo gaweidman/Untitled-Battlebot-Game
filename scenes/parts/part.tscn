@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://dl72cklqtx2gj"]
+
+[ext_resource type="Script" uid="uid://cpbysvdkuo81x" path="res://scripts/GUI/parts/part.gd" id="1_aqhpi"]
+[ext_resource type="Texture2D" uid="uid://karkyqgr60hk" path="res://graphics/images/HUD/parts/Part4x4.png" id="2_q68sn"]
+[ext_resource type="Script" uid="uid://bbw0ohklpa26f" path="res://scripts/button_holder.gd" id="3_u3hhk"]
+[ext_resource type="PackedScene" uid="uid://drt3u15k4mjxe" path="res://scenes/parts/part_button.tscn" id="4_tfv4d"]
+
+[node name="Part" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_aqhpi")
+invSprite = ExtResource("2_q68sn")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="Buttons" type="Control" parent="."]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_u3hhk")
+buttonPrefab = ExtResource("4_tfv4d")

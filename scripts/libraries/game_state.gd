@@ -19,8 +19,17 @@ func get_player():
 	
 	if ply == null:
 		return null;
-		
+    
 	return ply;
+
+func get_input_handler():
+	var ply = get_player();
 	
+	for child in ply.get_children():
+		if child is InputHandler:
+			return child;
+	return null;
+	#var input = 
+
 func get_hud():
 	return get_node("/root/GameBoard/HUD");
