@@ -24,7 +24,6 @@ func _physics_process(delta):
 	#if positionNode != null:
 		#meshNode.position = positionNode.position;
 	#meshNode.position += Vector3(0,0,1)
-	print("AAA")
 
 func _process(delta):
 	#print("why.")

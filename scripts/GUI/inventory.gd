@@ -123,7 +123,7 @@ func _ready():
 
 func _process(delta):
 	if inputHandler == null:
-		inputHandler = GameState.get_input_handler()
+		inputHandler = GameState.get_player().get_node("InputHandler")
 	if battleBotBody == null:
 		test_add_stuff()
 		push_error("hi")

@@ -16,20 +16,8 @@ func _process(delta: float) -> void:
 
 func get_player():
 	var ply = get_node_or_null("/root/GameBoard/Player")
-	
-	if ply == null:
-		return null;
-    
-	return ply;
 
-func get_input_handler():
-	var ply = get_player();
-	
-	for child in ply.get_children():
-		if child is InputHandler:
-			return child;
-	return null;
-	#var input = 
+	return ply;
 
 func get_hud():
 	return get_node("/root/GameBoard/HUD");

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bsm6u7uqjwdne"
-path="res://.godot/imported/Ammo 1.png-de36e04cd4d0f60a3be3c6661d616534.ctex"
+path="res://.godot/imported/Ammo 1.png-bf1bce34039fa744ac196a203ce642e1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/hud/Ammo 1.png"
-dest_files=["res://.godot/imported/Ammo 1.png-de36e04cd4d0f60a3be3c6661d616534.ctex"]
+source_file="res://graphics/images/HUD/Ammo 1.png"
+dest_files=["res://.godot/imported/Ammo 1.png-bf1bce34039fa744ac196a203ce642e1.ctex"]
 
 [params]
 
