@@ -54,7 +54,7 @@ func take_damage(damage):
 		die();
 		
 	GameState.get_hud().update();
-		
+
 func die():
 	queue_free();
 
