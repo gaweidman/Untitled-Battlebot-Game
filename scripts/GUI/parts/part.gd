@@ -8,6 +8,7 @@ var invPosition : Vector2i;
 var scrapCost : int;
 @export var inventoryNode : Inventory;
 var partBounds : Vector2i;
+var inPlayerInventory := false;
 
 #func _init():
 

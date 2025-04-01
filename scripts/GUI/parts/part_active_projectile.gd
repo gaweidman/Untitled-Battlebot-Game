@@ -46,7 +46,7 @@ func fireBullet():
 	if is_instance_valid(bullet):
 		##This offset can be changed later to be controllable
 		var offset = Vector3(0,1,0);
-		firingAngle = inputHandler.mouseProjectionRotation(positionNode);
+		firingAngle = InputHandler.mouseProjectionRotation(positionNode);
 		
 		bullet.fire(self, positionNode.position + offset, firingAngle, fireSpeed, bulletLifetime);
 		_set_fire_rate_timer();

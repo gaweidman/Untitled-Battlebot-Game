@@ -15,9 +15,6 @@ bulletLifetime = 1.0
 firingAngle = Vector3(0, 0, 1)
 model = ExtResource("4_vi2dv")
 modelMaterial = ExtResource("5_vi2dv")
-modelOffset = Vector3(0, 0, 0)
-modelScale = Vector3(1, 1, 1)
-rotateWithPlayer = false
 
 [node name="LeakTimer" type="Timer" parent="." index="3"]
 wait_time = 3.0

@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://dr0v7dohkt13a" path="res://scripts/objects/camera_3d.gd" id="5_l5xbb"]
 [ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/prefabs/objects/damage_cube.tscn" id="8_hfgcm"]
 [ext_resource type="Script" uid="uid://ct0mq8smfqpjl" path="res://scripts/libraries/sound_manager.gd" id="9_hh74c"]
-[ext_resource type="PackedScene" uid="uid://d12ckrvst1osp" path="res://scenes/prefabs/objects/npcs/thruster.tscn" id="15_jhciq"]
+[ext_resource type="PackedScene" uid="uid://d12ckrvst1osp" path="res://scenes/prefabs/objects/npcs/enemy.tscn" id="15_jhciq"]
 [ext_resource type="Texture2D" uid="uid://656rheocyr17" path="res://graphics/images/HUD/Health 0.png" id="18_qp1dh"]
 [ext_resource type="Script" uid="uid://6rlmlcy2eex2" path="res://scripts/GUI/hud.gd" id="18_wbopo"]
 [ext_resource type="Script" uid="uid://dweefn74rktyo" path="res://scripts/GUI/health.gd" id="19_2w6wh"]

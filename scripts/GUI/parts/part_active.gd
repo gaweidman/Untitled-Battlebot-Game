@@ -13,6 +13,7 @@ class_name PartActive
 @export var rotateWithPlayer := false;
 var combatHandler : CombatHandler;
 var inputHandler : InputHandler;
+var motionHandler;
 
 @export var fireRate := 0.15;
 @export var fireRateTimer := 0.0;
@@ -63,6 +64,8 @@ func _process(delta):
 		combatHandler = GameState.get_combat_handler();
 	if ! is_instance_valid(inputHandler):
 		inputHandler = GameState.get_input_handler();
+	if ! is_instance_valid(motionHandler):
+		motionHandler = GameState.get_player().get_node_or_null("MotionHandler");
 	meshNode.set_deferred("position", modelOffset);
 
 func _rotate_to_look_at_mouse(delta):

@@ -1,15 +1,15 @@
 [gd_scene load_steps=14 format=3 uid="uid://d12ckrvst1osp"]
 
-[ext_resource type="Script" uid="uid://do7rqw7y5akti" path="res://scripts/objects/npcs/thruster/thruster.gd" id="1_u733l"]
+[ext_resource type="Script" uid="uid://do7rqw7y5akti" path="res://scripts/objects/npcs/baseEnemy/enemy.gd" id="1_u733l"]
 [ext_resource type="Material" uid="uid://uyr61s32rxaj" path="res://graphics/materials/PlayerBody_Bottom.tres" id="2_u733l"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="3_uaa5m"]
 [ext_resource type="Material" uid="uid://cbvhbi7cs2id6" path="res://graphics/materials/Treads.tres" id="4_fyoyp"]
 [ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="5_aw2uh"]
 [ext_resource type="ArrayMesh" uid="uid://b81yaluc55jmc" path="res://graphics/models/bot.obj" id="6_fts7a"]
 [ext_resource type="PackedScene" uid="uid://dqn5vwvgp6ddp" path="res://scenes/prefabs/utilities/combat_handler.tscn" id="7_nefpp"]
-[ext_resource type="Script" uid="uid://c25f0pj3y257c" path="res://scripts/objects/npcs/thruster/combat_handler.gd" id="8_uaa5m"]
-[ext_resource type="Script" uid="uid://bxrmoul0q2cgc" path="res://scripts/objects/npcs/thruster/motion_handler.gd" id="9_fyoyp"]
-[ext_resource type="Script" uid="uid://duwahhtdrj35c" path="res://scripts/objects/npcs/thruster/ai_handler.gd" id="9_m42r2"]
+[ext_resource type="Script" uid="uid://c25f0pj3y257c" path="res://scripts/objects/npcs/baseEnemy/combat_handler.gd" id="8_uaa5m"]
+[ext_resource type="Script" uid="uid://bxrmoul0q2cgc" path="res://scripts/objects/npcs/baseEnemy/motion_handler.gd" id="9_fyoyp"]
+[ext_resource type="Script" uid="uid://duwahhtdrj35c" path="res://scripts/objects/npcs/baseEnemy/ai_handler.gd" id="9_m42r2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -21,7 +21,7 @@ radius = 0.95
 [sub_resource type="SphereShape3D" id="SphereShape3D_hnom0"]
 radius = 0.611008
 
-[node name="Thruster" type="Node3D"]
+[node name="Enemy" type="Node3D"]
 script = ExtResource("1_u733l")
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant Body"]]
@@ -159,6 +159,7 @@ health = 0
 
 [node name="MotionHandler" type="Node3D" parent="."]
 script = ExtResource("9_fyoyp")
+maxSpeed = null
 
 [node name="AIHandler" type="Node3D" parent="."]
 script = ExtResource("9_m42r2")

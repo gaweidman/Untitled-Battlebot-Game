@@ -20,12 +20,13 @@ invSprite = null
 transform = Transform3D(0.61, 0, 0, 0, 0.61, 0, 0, 0, 0.61, 0, -0.167726, 0)
 mesh = ExtResource("3_yl1nc")
 
-[node name="Weapon" type="RigidBody3D" parent="." index="3"]
+[node name="Weapon" type="Area3D" parent="." index="3"]
 unique_name_in_owner = true
-collision_layer = 2
-collision_mask = 2
+collision_layer = 3
+collision_mask = 3
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Weapon" index="0"]
+unique_name_in_owner = true
 shape = SubResource("CylinderShape3D_thmrx")
 
 [connection signal="body_entered" from="Weapon" to="." method="_on_weapon_body_entered"]
