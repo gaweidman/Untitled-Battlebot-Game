@@ -28,11 +28,11 @@ script = ExtResource("1_qx18r")
 lifeTimer = NodePath("LifeTimer")
 collision = NodePath("CollisionShape3D")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["Projectile"]]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 shape = SubResource("SphereShape3D_8grda")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." groups=["Projectile"]]
 transform = Transform3D(0.120565, 0, -0.000227261, 0, 0.120566, 0, 0.000227261, 0, 0.120565, 0, 0, 0)
 mesh = ExtResource("2_r0xnt")
 surface_material_override/0 = SubResource("StandardMaterial3D_1g6nv")

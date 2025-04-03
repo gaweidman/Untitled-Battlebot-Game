@@ -59,4 +59,4 @@ func default_OnDropEntity():
 	pass
 	
 func OnPlayerCollision(collider: Node):
-	print("collision detected in hooks");
+	pass

@@ -10,4 +10,4 @@ func get_movement_vector():
 		var posDiff = get_parent().get_node("Body").get_global_position() - ply.get_node("Body").get_global_position()
 		posDiff = posDiff.normalized();
 		
-		return Vector2(posDiff.x, posDiff.z)
+		return Vector2(posDiff.x, posDiff.z);

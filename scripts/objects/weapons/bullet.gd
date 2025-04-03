@@ -11,6 +11,7 @@ var lifetime := 1.0;
 var initPosition = position;
 var positionAppend := Vector3.ZERO;
 var launcher : PartActive;
+var attacker : Node3D;
 
 var leaking := false;
 
@@ -36,6 +37,7 @@ func fire(_launcher : Node ,_initPosition : Vector3, _direction := Vector3(1,0,0
 	position = initPosition;
 	collision.set_deferred("disabled", false);
 	rotateTowardVector3(dir);
+	print("PARENT", _launcher, _launcher.get_parent());
 	
 	show();
 	fired = true;
@@ -57,10 +59,18 @@ func _on_life_timer_timeout():
 	pass # Replace with function body.
 
 func _on_body_entered(body):
+	if body.get_parent() is Combatant:
+		body.get_parent().take_damage(1);
+	
 	if not ( body.is_in_group("Player Part") ):
-		print(body)
 		die();
 	pass # Replace with function body.
 
 func leak():
 	leaking = true;
+
+func get_attacker():
+	return attacker;
+	
+func set_attacker(atkr):
+	attacker = atkr;

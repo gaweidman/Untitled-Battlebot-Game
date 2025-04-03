@@ -49,17 +49,22 @@ func get_active_part(index) -> PartActive:
 
 func take_damage(damage):
 	health -= damage;
-	get_node("../GUI/Health").text = "Health: " + health + "/" + maxHealth;
+	#get_node("../GUI/Health").text = "Health: " + str(health) + "/" + str(maxHealth);
 	if health <= 0:
 		die();
 		
 	GameState.get_hud().update();
 
 func die():
-	queue_free();
+	get_parent().queue_free();
 
-func _on_collision(colliderdw):
-	pass
+func _on_collision(collider):
+	var parent = collider.get_parent();
+	
+	if parent and parent.is_in_group("Projectile"):
+		if parent.get_attacker() != self:
+			pass
+			#take_damage(1);
 
 func _exit_tree():
 	pass;

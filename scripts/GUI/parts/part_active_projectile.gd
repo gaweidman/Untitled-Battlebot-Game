@@ -32,8 +32,10 @@ func _physics_process(delta: float) -> void:
 	pass
 
 func fireBullet():
-	print("pew");
+	#print("pew");
 	var bullet : Bullet;
+	
+	print( "PARENT!!!!!       ", self.get_parent().get_parent() );
 	
 #	##Create new bullets when there are less than there should be
 	if magazine.size() < magazineMax:
@@ -70,7 +72,7 @@ func nextBullet():
 	##Checks the magazine for the next non-fired bullet
 	for bullet in magazine:
 		if is_instance_valid(bullet) && (not bullet.fired):
-			print("not fired?");
+			#print("not fired?");
 			return bullet;
 	return null;
 

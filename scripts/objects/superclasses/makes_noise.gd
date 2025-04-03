@@ -7,7 +7,6 @@ var PLAYER_PARENT;
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	PLAYER_PARENT = %_AudioStreamPlayers;
-	print("PLAYER PARENT", PLAYER_PARENT)
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

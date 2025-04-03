@@ -159,7 +159,6 @@ health = 0
 
 [node name="MotionHandler" type="Node3D" parent="."]
 script = ExtResource("9_fyoyp")
-maxSpeed = null
 
 [node name="AIHandler" type="Node3D" parent="."]
 script = ExtResource("9_m42r2")

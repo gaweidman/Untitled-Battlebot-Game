@@ -30,6 +30,9 @@ func get_sign(num):
 	else:
 		return num/abs(num);
 		
+func die():
+	combatHandler.die();
+		
 func _on_body_body_entered(collider: Node) -> void:
 	combatHandler._on_collision(collider);
 	motionHandler._on_collision(%Body, collider);
@@ -53,3 +56,7 @@ func _get_combat_handler():
 
 func _get_motion_handler():
 	return get_node_or_null("MotionHandler")
+
+func take_damage(damage):
+	pass
+	#combatHandler.take_damage(damage);

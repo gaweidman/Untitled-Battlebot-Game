@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://karkyqgr60hk"
-path="res://.godot/imported/Part4x4.png-9ffb09c06cb952fa1de9df0a14f9fc21.ctex"
+path="res://.godot/imported/Part4x4.png-c24fc423b0ed3bc7fadc760ab3cf0f2d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/parts/Part4x4.png"
-dest_files=["res://.godot/imported/Part4x4.png-9ffb09c06cb952fa1de9df0a14f9fc21.ctex"]
+source_file="res://graphics/images/hud/parts/Part4x4.png"
+dest_files=["res://.godot/imported/Part4x4.png-c24fc423b0ed3bc7fadc760ab3cf0f2d.ctex"]
 
 [params]
 

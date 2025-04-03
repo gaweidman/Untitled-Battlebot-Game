@@ -204,6 +204,4 @@ func get_proper_sound(collider1: Node3D, collider2: Node3D):
 	elif soundMaker.is_in_group("Plastic"):
 		material = "Plastic"
 		
-	print("SOUND MAKER", soundMaker, soundMaker.get_groups())
-		
 	return "Collision." + soundMakerAudiosrc + "." + material

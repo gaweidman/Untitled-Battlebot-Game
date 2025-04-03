@@ -29,7 +29,6 @@ func _physics_process(delta):
 	if ! is_instance_valid(aiHandler):
 		aiHandler = thisBot.get_node("AIHandler");
 	if Time.get_ticks_msec() >= nextThrust:
-		print("THRUST")
 		nextThrust += 1000;
 		
 		var forceVector = Vector3.ZERO
