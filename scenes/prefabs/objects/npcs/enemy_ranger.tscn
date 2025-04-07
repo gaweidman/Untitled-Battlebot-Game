@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://c804ujoh6bpv7"]
+
+[ext_resource type="PackedScene" uid="uid://d12ckrvst1osp" path="res://scenes/prefabs/objects/npcs/enemy.tscn" id="1_2omub"]
+[ext_resource type="Script" uid="uid://cigmffkv6nxvb" path="res://scripts/objects/npcs/thruster/thruster.gd" id="2_5x1qy"]
+
+[node name="Ranger" instance=ExtResource("1_2omub")]
+script = ExtResource("2_5x1qy")
+
+[node name="MotionHandler" parent="." index="3"]
+maxSpeed = null

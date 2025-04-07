@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://p8nchh2uegmh"]
 
-[ext_resource type="PackedScene" uid="uid://n5li36gn6xf7" path="res://scenes/parts/part_active.tscn" id="1_xxlqa"]
+[ext_resource type="PackedScene" uid="uid://n5li36gn6xf7" path="res://scenes/prefabs/objects/parts/part_active.tscn" id="1_xxlqa"]
 [ext_resource type="Script" uid="uid://cc6sda2iomhr1" path="res://scripts/GUI/parts/part_active_melee.gd" id="2_psr1p"]
 [ext_resource type="ArrayMesh" uid="uid://du8e8ijsylohb" path="res://graphics/models/blade.obj" id="3_yl1nc"]
 

@@ -19,7 +19,7 @@ func grab_references():
 	thisBot = get_node("../");
 	super();
 	if thisBot:
-		aiHandler = get_node("AIHandler");
+		aiHandler = thisBot.get_node("AIHandler");
 
 
 ## This enemy thrusts.
@@ -34,8 +34,8 @@ func _physics_process(delta):
 		var forceVector = Vector3.ZERO
 		var movementVector = aiHandler.get_movement_vector();
 		
-		forceVector += body.global_transform.basis.x * movementVector.x * -125000;
-		forceVector += body.global_transform.basis.z * movementVector.y * -125000;
+		forceVector += body.global_transform.basis.x * movementVector.x;
+		forceVector += body.global_transform.basis.z * movementVector.y;
 		
 		body.apply_central_force(forceVector);
 		

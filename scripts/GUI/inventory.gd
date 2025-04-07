@@ -135,17 +135,16 @@ func _physics_process(delta):
 		pass
 
 func test_add_stuff():
-	
 	#print(ply)
 	if assign_player():
-		var partScene = load("res://scenes/parts/part_active_projectile.tscn");
+		var partScene = load("res://scenes/prefabs/objects/parts/part_active_projectile.tscn");
 		var part = partScene.instantiate();
 		add_child(part);
 		add_part(part, Vector2i(0,0));
 		combatHandler.activeParts[0] = part;
 		
 		
-		var partScene2 = load("res://scenes/parts/part_active_melee.tscn");
+		var partScene2 = load("res://scenes/prefabs/objects/parts/part_active_melee.tscn");
 		var part2 = partScene2.instantiate();
 		add_child(part2);
 		add_part(part2, Vector2i(2,0));

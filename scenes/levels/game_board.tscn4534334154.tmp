@@ -43,7 +43,7 @@ transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 
 material_override = ExtResource("4_jhciq")
 mesh = ExtResource("5_kt0si")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="ArenaWall" groups=["Concrete", "World", "WorldWall"]]
+[node name="StaticBody3D" type="StaticBody3D" parent="ArenaWall" groups=["Concrete", "World"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaWall/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_usc4f")
@@ -102,4 +102,5 @@ script = ExtResource("9_hh74c")
 
 [node name="Flash" parent="." instance=ExtResource("16_kt0si")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.96272, 3.78368, 14.14)
-chargeDistance = 0.0
+chargeDistance = null
+AudioSourceType = null
