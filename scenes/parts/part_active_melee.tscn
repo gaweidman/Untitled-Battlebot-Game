@@ -16,6 +16,12 @@ looksAtMouse = false
 rotateWithPlayer = true
 invSprite = null
 
+[node name="TextureRect" parent="." index="0"]
+visible = true
+
+[node name="Buttons" parent="." index="1"]
+visible = true
+
 [node name="MeshInstance3D" parent="." index="2"]
 transform = Transform3D(0.61, 0, 0, 0, 0.61, 0, 0, 0, 0.61, 0, -0.167726, 0)
 mesh = ExtResource("3_yl1nc")

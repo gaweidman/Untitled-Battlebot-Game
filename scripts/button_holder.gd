@@ -8,6 +8,7 @@ var selected;
 
 func _process(delta):
 	selected = false;
+	return; ##Delete this return for final, this just makes the parts invisible for now
 	for button in get_children():
 		if button.button_pressed:
 			selected = true;

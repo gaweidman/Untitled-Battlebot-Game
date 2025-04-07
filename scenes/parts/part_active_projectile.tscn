@@ -16,6 +16,12 @@ firingAngle = Vector3(0, 0, 1)
 model = ExtResource("4_vi2dv")
 modelMaterial = ExtResource("5_vi2dv")
 
+[node name="TextureRect" parent="." index="0"]
+visible = true
+
+[node name="Buttons" parent="." index="1"]
+visible = true
+
 [node name="LeakTimer" type="Timer" parent="." index="3"]
 wait_time = 3.0
 autostart = true

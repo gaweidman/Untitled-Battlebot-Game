@@ -53,6 +53,7 @@ func can_fire() -> bool:
 
 func _process(delta):
 	#print("why.")
+	super(delta)
 	if positionNode != null:
 		var ply = GameState.get_player()
 		#var pos = ply._get_part_offset(1)

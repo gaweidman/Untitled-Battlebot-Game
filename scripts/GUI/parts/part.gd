@@ -61,3 +61,6 @@ func _populate_buttons():
 		button.set_deferred("position", index * 32);
 		button.set_deferred("size", Vector2i(32, 32));
 		#print(button.disabled)
+
+func _process(delta):
+	$TextureRect.hide()

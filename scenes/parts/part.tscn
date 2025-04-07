@@ -12,6 +12,7 @@ script = ExtResource("1_aqhpi")
 invSprite = ExtResource("2_q68sn")
 
 [node name="TextureRect" type="TextureRect" parent="."]
+visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -19,6 +20,7 @@ mouse_filter = 2
 
 [node name="Buttons" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
