@@ -1,4 +1,4 @@
-[gd_resource type="VisualShader" load_steps=8 format=3 uid="uid://cmm5lxlxjlg76"]
+[gd_resource type="VisualShader" load_steps=8 format=3 uid="uid://sn4yfw365uhu"]
 
 [sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_3raqm"]
 expanded_output_ports = [0]
@@ -90,7 +90,6 @@ void fragment() {
 
 }
 "
-graph_offset = Vector2(-96.6479, 179.398)
 flags/unshaded = true
 nodes/vertex/2/node = SubResource("VisualShaderNodeBillboard_nfifq")
 nodes/vertex/2/position = Vector2(-20, 400)

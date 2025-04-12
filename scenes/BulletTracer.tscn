@@ -1,0 +1,51 @@
+[gd_scene load_steps=10 format=3 uid="uid://bkwtxafp63vfm"]
+
+[ext_resource type="Shader" path="res://graphics/materials/particle shaders/BulletTracer.tres" id="1_1004a"]
+[ext_resource type="Texture2D" uid="uid://byb68ghp0s1nc" path="res://graphics/images/particle PNGs/TestTracerOne.png" id="2_nkp01"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_g4stu"]
+render_priority = 0
+shader = ExtResource("1_1004a")
+shader_parameter/Hit_Texture = ExtResource("2_nkp01")
+
+[sub_resource type="Curve" id="Curve_74wk6"]
+_data = [Vector2(0, 0), 0.0, 5.10433, 0, 0, Vector2(0.495283, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -0.0307358, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_60i48"]
+curve = SubResource("Curve_74wk6")
+
+[sub_resource type="Gradient" id="Gradient_nem14"]
+offsets = PackedFloat32Array(0.295699, 1)
+colors = PackedColorArray(2.5, 0.5, 0, 1, 1.5, 0.5, 0.5, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gomwi"]
+gradient = SubResource("Gradient_nem14")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3sky3"]
+particle_flag_align_y = true
+emission_shape = 2
+emission_sphere_radius = 0.25
+direction = Vector3(-1, 0, 0)
+spread = 0.0
+initial_velocity_min = 3.0
+initial_velocity_max = 8.0
+orbit_velocity_min = 9.49949e-08
+orbit_velocity_max = 9.49949e-08
+radial_velocity_min = 0.499978
+radial_velocity_max = 1.49998
+gravity = Vector3(0, 0, 0)
+color_ramp = SubResource("GradientTexture1D_gomwi")
+alpha_curve = SubResource("CurveTexture_60i48")
+
+[sub_resource type="QuadMesh" id="QuadMesh_xxnja"]
+
+[node name="BulletTracer" type="Node3D"]
+
+[node name="BulletTracerParticles" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.375932, 0, 0)
+material_override = SubResource("ShaderMaterial_g4stu")
+amount = 12
+lifetime = 0.25
+process_material = SubResource("ParticleProcessMaterial_3sky3")
+draw_pass_1 = SubResource("QuadMesh_xxnja")

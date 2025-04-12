@@ -1,14 +1,14 @@
-[gd_scene load_steps=24 format=3 uid="uid://css47ma4dkprr"]
+[gd_scene load_steps=24 format=3 uid="uid://d1cqnd70sse5k"]
 
-[ext_resource type="Shader" uid="uid://dg32qqa8g2mpk" path="res://graphics/materials/particle shaders/HitShader.tres" id="1_qthd6"]
-[ext_resource type="Texture2D" uid="uid://dudtaiypxfh0g" path="res://graphics/images/particle PNGs/Hit.png" id="2_g4rio"]
-[ext_resource type="Shader" uid="uid://mkewhskpwthm" path="res://graphics/materials/particle shaders/SparksShader.tres" id="3_fu82u"]
-[ext_resource type="Texture2D" uid="uid://ctfbeo5h23eux" path="res://graphics/images/particle PNGs/Sparks.png" id="4_3g46v"]
+[ext_resource type="Shader" path="res://graphics/materials/particle shaders/HitShader.tres" id="1_rqfb0"]
+[ext_resource type="Texture2D" uid="uid://boisdn6gpbv6p" path="res://graphics/images/particle PNGs/TestHitEffectThree.png" id="2_jiqv2"]
+[ext_resource type="Shader" path="res://graphics/materials/particle shaders/SparksShader.tres" id="3_ub272"]
+[ext_resource type="Texture2D" uid="uid://xnw0tahhgmow" path="res://graphics/images/particle PNGs/TestCircleOne.png" id="4_cmuu0"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3mjrp"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_meqqk"]
 render_priority = 0
-shader = ExtResource("1_qthd6")
-shader_parameter/Hit_Texture = ExtResource("2_g4rio")
+shader = ExtResource("1_rqfb0")
+shader_parameter/Hit_Texture = ExtResource("2_jiqv2")
 
 [sub_resource type="Curve" id="Curve_uq0he"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -43,10 +43,10 @@ alpha_curve = SubResource("CurveTexture_an45m")
 
 [sub_resource type="QuadMesh" id="QuadMesh_bblpl"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nmp5v"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vx3du"]
 render_priority = 0
-shader = ExtResource("3_fu82u")
-shader_parameter/Hit_Texture = ExtResource("4_3g46v")
+shader = ExtResource("3_ub272")
+shader_parameter/Hit_Texture = ExtResource("4_cmuu0")
 
 [sub_resource type="Curve" id="Curve_iwda7"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -141,7 +141,7 @@ _data = {
 [node name="HitSparkVFX" type="Node3D"]
 
 [node name="Hit" type="GPUParticles3D" parent="."]
-material_override = SubResource("ShaderMaterial_3mjrp")
+material_override = SubResource("ShaderMaterial_meqqk")
 amount = 1
 lifetime = 0.25
 one_shot = true
@@ -150,7 +150,7 @@ process_material = SubResource("ParticleProcessMaterial_a7xoy")
 draw_pass_1 = SubResource("QuadMesh_bblpl")
 
 [node name="Sparks" type="GPUParticles3D" parent="."]
-material_override = SubResource("ShaderMaterial_nmp5v")
+material_override = SubResource("ShaderMaterial_vx3du")
 amount = 20
 lifetime = 0.25
 one_shot = true
