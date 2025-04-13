@@ -25,16 +25,20 @@ data = PackedVector3Array(-2.0005, 5.0276, -2.0005, -2.0005, 5.0276, -0.0004, -3
 [sub_resource type="SphereShape3D" id="SphereShape3D_jhciq"]
 radius = 1.0
 
-[node name="GameBoard" type="Node3D" node_paths=PackedStringArray("enemySpawnPositions", "spawnChecker")]
+[node name="GameBoard" type="Node3D" node_paths=PackedStringArray("enemySpawnPositions", "spawnChecker", "HUD_playerStats", "HUD_mainMenu", "HUD_credits", "HUD_gameOver")]
 top_level = true
 script = ExtResource("1_mlcvp")
 playerSpawnPosition = Vector3(0, 0.605191, 0)
 enemySpawnPositions = NodePath("ArenaWall/StaticBody3D/EnemySpawnLocations")
 spawnChecker = NodePath("ArenaWall/StaticBody3D/EnemySpawnLocations/ShapeCast3D")
+HUD_playerStats = NodePath("HUD/PlayerStats")
+HUD_mainMenu = NodePath("HUD/MainMenu")
+HUD_credits = NodePath("HUD/Credits")
+HUD_gameOver = NodePath("HUD/GameOver")
 metadata/_edit_pinned_properties_ = [&"enemySpawnPositions"]
 
 [node name="ArenaFloor" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, -1.55223, 30.6029)
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 1.46535, -1.55223, 30.6029)
 material_override = ExtResource("2_4jixe")
 mesh = ExtResource("2_p3ee5")
 
@@ -44,7 +48,7 @@ mesh = ExtResource("2_p3ee5")
 shape = SubResource("ConcavePolygonShape3D_er3fg")
 
 [node name="ArenaWall" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, -1.55223, 30.6029)
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 1.46535, -1.55223, 30.6029)
 material_override = ExtResource("4_jhciq")
 mesh = ExtResource("5_kt0si")
 
@@ -179,7 +183,7 @@ target_position = Vector3(0, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 0.604794, 0.796382, 0, -0.796382, 0.604794, -2.58875, 47.1188, -0.186724)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-1, 5.35821e-08, -6.90776e-08, -3.9001e-08, 0.433738, 0.901039, 7.82411e-08, 0.901039, -0.433738, 0, 7.67677, -2.39585)
+transform = Transform3D(-1, 5.35821e-08, -6.90776e-08, -3.9001e-08, 0.433738, 0.901039, 7.82411e-08, 0.901039, -0.433738, 0, 8.3591, -3.19329)
 fov = 90.0
 script = ExtResource("5_l5xbb")
 
@@ -198,17 +202,42 @@ offset_bottom = 105.0
 text = "in-dev overlay
 not finished"
 
-[node name="Health" type="TextureRect" parent="HUD"]
-layout_mode = 0
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 245.0
-offset_bottom = 92.0
+[node name="PlayerStats" type="Control" parent="HUD"]
+layout_mode = 1
+anchor_right = 1.005
+anchor_bottom = 1.0
+offset_right = 0.27002
+offset_bottom = -2.0
+
+[node name="Health" type="TextureRect" parent="HUD/PlayerStats"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.009
+anchor_top = 0.015
+anchor_right = 0.213
+anchor_bottom = 0.142
+offset_left = -0.368001
+offset_top = 0.28
+offset_right = -0.376022
+offset_bottom = -0.0160065
 texture = ExtResource("18_qp1dh")
 expand_mode = 1
 script = ExtResource("19_2w6wh")
 
-[node name="Ammo" type="TextureRect" parent="HUD"]
+[node name="HealthLabel" type="Label" parent="HUD/PlayerStats/Health"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 85.0
+offset_right = -202.0
+offset_bottom = 26.0
+text = "0.0"
+
+[node name="Ammo" type="TextureRect" parent="HUD/PlayerStats"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 907.0
 offset_top = 10.0
@@ -218,8 +247,178 @@ texture = ExtResource("21_xp7sy")
 expand_mode = 1
 script = ExtResource("21_igoyh")
 
+[node name="AmmoLabel" type="Label" parent="HUD/PlayerStats/Ammo"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 202.0
+offset_top = 85.0
+offset_bottom = 26.0
+text = "0.0"
+horizontal_alignment = 2
+
 [node name="Inventory" parent="HUD" instance=ExtResource("20_mlcvp")]
 layout_mode = 1
+
+[node name="MainMenu" type="Control" parent="HUD"]
+visible = false
+layout_mode = 1
+anchor_right = 1.005
+anchor_bottom = 0.997
+offset_right = 0.27002
+offset_bottom = -0.0500488
+
+[node name="Btn_Play" type="Button" parent="HUD/MainMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 469.0
+offset_top = 327.0
+offset_right = -469.0
+offset_bottom = -263.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "PLAY"
+
+[node name="Btn_Credits" type="Button" parent="HUD/MainMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 469.0
+offset_top = 407.0
+offset_right = -469.0
+offset_bottom = -183.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "CREDITS"
+
+[node name="Btn_Exit" type="Button" parent="HUD/MainMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 469.0
+offset_top = 487.0
+offset_right = -469.0
+offset_bottom = -103.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "EXIT GAME"
+
+[node name="Label" type="RichTextLabel" parent="HUD/MainMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 416.0
+offset_top = 200.0
+offset_right = -401.0
+offset_bottom = -360.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/bold_italics_font_size = 29
+bbcode_enabled = true
+text = "[i][b]UNTITLED BATTLEBOT GAME #15"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Credits" type="Control" parent="HUD"]
+visible = false
+layout_mode = 1
+anchor_right = 1.005
+anchor_bottom = 1.0
+offset_right = 0.27002
+offset_bottom = -2.0
+
+[node name="Label" type="RichTextLabel" parent="HUD/Credits"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 416.0
+offset_top = 200.0
+offset_right = -401.0
+offset_bottom = -205.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/bold_italics_font_size = 29
+bbcode_enabled = true
+text = "[i][b]CREDITS[/b]
+Alancin Wolfe
+Gabe Weidman
+Tyler Kem
+Jake Muilenberg
+Sunny Turner"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Btn_Menu" type="Button" parent="HUD/Credits"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 469.0
+offset_top = 407.0
+offset_right = -469.0
+offset_bottom = -183.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "MAIN MENU"
+
+[node name="GameOver" type="Control" parent="HUD"]
+visible = false
+layout_mode = 1
+anchor_right = 1.005
+anchor_bottom = 1.0
+offset_right = 0.27002
+offset_bottom = -2.0
+
+[node name="Btn_Menu" type="Button" parent="HUD/GameOver"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 469.0
+offset_top = 407.0
+offset_right = -469.0
+offset_bottom = -183.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "MAIN MENU"
+
+[node name="Label" type="RichTextLabel" parent="HUD/GameOver"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 416.0
+offset_top = 200.0
+offset_right = -401.0
+offset_bottom = -360.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/bold_italics_font_size = 43
+bbcode_enabled = true
+text = "[i][b][color=000] GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="RichTextLabel" parent="HUD/GameOver/Label"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/bold_italics_font_size = 43
+bbcode_enabled = true
+text = "[i][b][color=F22]GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Damage Cube" parent="." instance=ExtResource("8_hfgcm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.557473, 3.4556, 5.3138)
@@ -228,4 +427,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.557473, 3.4556, 5.3138)
 script = ExtResource("9_hh74c")
 
 [node name="thruster" parent="." instance=ExtResource("15_jhciq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.77226, 1.89045, 6.9509)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.22512, 1.89045, 56.0896)
+
+[connection signal="pressed" from="HUD/MainMenu/Btn_Play" to="." method="_on_btn_play_pressed"]
+[connection signal="pressed" from="HUD/MainMenu/Btn_Credits" to="." method="_on_btn_credits_pressed"]
+[connection signal="pressed" from="HUD/MainMenu/Btn_Exit" to="." method="_on_btn_exit_pressed"]
+[connection signal="pressed" from="HUD/Credits/Btn_Menu" to="." method="_on_btn_menu_pressed"]
+[connection signal="pressed" from="HUD/GameOver/Btn_Menu" to="." method="_on_btn_menu_pressed"]

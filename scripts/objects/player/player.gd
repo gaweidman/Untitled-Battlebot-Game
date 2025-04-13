@@ -2,8 +2,29 @@ extends Combatant;
 
 class_name Player
 
-func get_ammo() -> int:
+var gameBoard : GameBoard;
+
+func _ready():
+	super();
+	hide();
+
+func live():
+	show();
+	$CombatHandler.live();
+	pass;
+
+func get_health(integer := true):
+	if integer:
+		return int(combatHandler.health);
+	return combatHandler.health;
+
+func get_ammo(integer := true):
+	if integer:
+		return int(combatHandler.energy);
 	return combatHandler.energy;
 
 func _get_input_handler():
 	return get_node_or_null("InputHandler");
+
+func _process(delta):
+	super(delta);

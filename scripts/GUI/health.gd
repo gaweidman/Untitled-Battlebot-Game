@@ -17,4 +17,5 @@ func _process(delta: float) -> void:
 	pass
 
 func update(health: int) -> void:
-	set_texture(TEXTURES[health]);
+	if TEXTURES[health]:
+		set_texture(TEXTURES[health]);

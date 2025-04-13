@@ -6,7 +6,6 @@ var refreshTimer = 0;
 func _ready() -> void:
 	pass; # Replace with function body.
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	refreshTimer -= _delta;
@@ -16,5 +15,8 @@ func _process(_delta: float) -> void:
 
 func update() -> void:
 	var ply = GameState.get_player();
-	$Health.update(ply.get_health());
-	$Ammo.update(ply.get_ammo());
+	if ply and %Health and %HealthLabel and %Ammo and %AmmoLabel:
+		%Health.update(ply.get_health());
+		%HealthLabel.text = str(ply.get_health(false));
+		%Ammo.update(ply.get_ammo());
+		%AmmoLabel.text = str(ply.get_ammo(false));

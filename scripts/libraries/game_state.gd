@@ -14,6 +14,28 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
+func get_game_board():
+	var board = get_node_or_null("/root/GameBoard")
+	
+	if board == null:
+		return null;
+	
+	return board;
+
+func get_game_board_state():
+	var board = get_game_board();
+	
+	if board == null:
+		return null;
+	
+	return board.curState;
+
+func set_game_board_state(state : GameBoard.gameState):
+	var board = get_game_board();
+	
+	if board != null:
+		board.change_state(state);
+
 func get_player():
 	var ply = get_node_or_null("/root/GameBoard/Player")
 	

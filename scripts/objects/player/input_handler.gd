@@ -16,16 +16,18 @@ func _process(delta: float) -> void:
 	pass
 
 func _physics_process(delta):
-	process_movement(get_movement_vector(), delta);
 	
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && combatHandler.can_fire(0):
-		combatHandler.use_active(0);
+	if GameState.get_game_board_state() == GameBoard.gameState.PLAY:
+		process_movement(get_movement_vector(), delta);
+		
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && combatHandler.can_fire(0):
+			combatHandler.use_active(0);
 	
 # we apply forces in motion_handler
 func process_movement(movementVector, delta):
 	pass
 	
-func get_movement_vector():
+func get_movement_vector() -> Vector2:
 	var movementVector = Vector2.ZERO
 		
 	if Input.is_action_pressed("MoveLeft"):
@@ -43,17 +45,18 @@ func get_movement_vector():
 	return movementVector;
 
 static func is_inputting_movement():
-	if Input.is_action_pressed("MoveLeft"):
-		return true;
-		
-	if Input.is_action_pressed("MoveRight"):
-		return true;
-		
-	if Input.is_action_pressed("MoveUp"):
-		return true;
-		
-	if Input.is_action_pressed("MoveDown"):
-		return true;
+	if GameState.get_game_board_state() == GameBoard.gameState.PLAY:
+		if Input.is_action_pressed("MoveLeft"):
+			return true;
+			
+		if Input.is_action_pressed("MoveRight"):
+			return true;
+			
+		if Input.is_action_pressed("MoveUp"):
+			return true;
+			
+		if Input.is_action_pressed("MoveDown"):
+			return true;
 	
 	return false;
 

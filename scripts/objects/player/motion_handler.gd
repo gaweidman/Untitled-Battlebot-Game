@@ -3,6 +3,7 @@ extends MotionHandler
 class_name MotionHandlerPlayer
 
 var inputHandler;
+var combatHandler;
 
 
 # Called when the node enters the scene tree for the first time.
@@ -20,13 +21,16 @@ func grab_references():
 	super();
 	if thisBot:
 		inputHandler = thisBot.get_node("InputHandler");
+		combatHandler = thisBot.get_node("CombatHandler");
 	
 
 # custom physics handling for player movement. regular movement feels flat and boring.
 func _physics_process(delta):
 	super(delta);
 		
-	var movementVector = inputHandler.get_movement_vector();
+	var movementVector = Vector2.ZERO;
+	if GameState.get_game_board_state() == GameBoard.gameState.PLAY and combatHandler.health > 0:
+		movementVector = inputHandler.get_movement_vector();
 	
 	##Rotating the body mesh towards the movement vector
 	var rotatedMV = movementVector.rotated(deg_to_rad(90));
