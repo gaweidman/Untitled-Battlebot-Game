@@ -161,5 +161,5 @@ script = ExtResource("6_ui0xh")
 script = ExtResource("7_bdmj6")
 maxSpeed = 13.0
 
-[connection signal="body_entered" from="Body" to="." method="_on_body_body_entered"]
+[connection signal="body_entered" from="Body" to="MotionHandler" method="_on_collision"]
 [connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]

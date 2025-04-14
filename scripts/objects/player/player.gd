@@ -34,3 +34,6 @@ func get_body_position():
 
 func get_global_body_position():
 	return get_node("Body").get_global_position();
+	
+func take_damage(damage):
+	combatHandler.take_damage(damage)

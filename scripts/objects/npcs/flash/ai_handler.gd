@@ -14,8 +14,6 @@ func get_movement_vector():
 	var ply = GameState.get_player();
 	
 	var curTime = Time.get_ticks_msec();
-	
-	print(curTime)
 
 	# this is a hotfix becasue for some reason the timer isn't always reset
 	
@@ -24,10 +22,6 @@ func get_movement_vector():
 		var playerPos = ply.get_global_body_position();
 		var selfPos = this.get_node("Body").get_global_position();
 		var posDiff = playerPos - selfPos;
-		
-		print(posDiff.length())
-		
-		print("PLAYERPOS ", playerPos);
 		
 		if posDiff.length() > CHARGEDIST:
 			var normalized = posDiff.normalized();

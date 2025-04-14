@@ -54,3 +54,9 @@ func _physics_process(delta):
 	clamp_speed();
 
 	pass;
+
+func _on_collision(this, other):
+	print("COLLISION HERE")
+	print(other, other.is_in_group("Combatant"), other.get_groups())
+	if (other.is_in_group("Projectile") && other.get_attacker() != super.get_parent()) || other.is_in_group("MeleeWeapon") || other.is_in_group("Combatant"):
+		super.get_parent().take_damage(1);
