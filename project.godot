@@ -31,6 +31,7 @@ Plastic="A material."
 Combatant="The body of a combatant, including the player."
 MeleeWeapon="A sawblade weapon."
 Projectile=""
+WorldWall=""
 
 [input]
 
