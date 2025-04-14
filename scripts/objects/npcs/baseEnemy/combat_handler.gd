@@ -1,25 +1,9 @@
-extends Node3D
+extends CombatHandler
 
-@export var health: int;
-
-var inputHandler;
-var leakTimer : Timer;
-
-var player;
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-func take_damage(damage):
-	health -= damage;
-	if health <= 0:
-		die();
-	
-func die():
-	get_parent().queue_free();
+class_name CombatHandlerEnemy
 	
 func _on_collision(collider):
+	super(collider);
 	var parent = collider.get_parent();
 	if parent and parent.is_in_group("Projectile"):
 		if parent.get_attacker() != self:

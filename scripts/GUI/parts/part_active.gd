@@ -13,7 +13,7 @@ class_name PartActive
 @export var rotateWithPlayer := false;
 var combatHandler : CombatHandler;
 var inputHandler : InputHandler;
-var motionHandler;
+var motionHandler : MotionHandler;
 
 @export var fireRate := 0.15;
 @export var fireRateTimer := 0.0;
@@ -62,15 +62,19 @@ func _process(delta):
 	else:
 		print('null')
 	if ! is_instance_valid(combatHandler):
-		combatHandler = GameState.get_combat_handler();
-	if ! is_instance_valid(inputHandler):
-		inputHandler = GameState.get_input_handler();
-	if ! is_instance_valid(motionHandler):
-		motionHandler = GameState.get_player().get_node_or_null("MotionHandler");
+		combatHandler = inventoryNode.combatHandler;
+	if ! is_instance_valid(thisBot):
+		thisBot = inventoryNode.thisBot;
+		if ! is_instance_valid(motionHandler):
+			motionHandler = inventoryNode.thisBot.motionHandler;
 	meshNode.set_deferred("position", modelOffset);
 
 func _rotate_to_look_at_mouse(delta):
-	var rot = InputHandler.mouseProjectionRotation(positionNode);
+	var rot = Vector3.ZERO;
+	if thisBot is Player:
+		rot = InputHandler.mouseProjectionRotation(positionNode);
+	else:
+		rot = InputHandler.playerPosRotation(positionNode);
 	rot = rot.rotated(Vector3(0,1,0), deg_to_rad(90))
 	#print(rot)
 	meshNode.look_at(meshNode.global_transform.origin + rot, Vector3.UP)

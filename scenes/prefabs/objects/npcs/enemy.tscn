@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://d12ckrvst1osp"]
+[gd_scene load_steps=15 format=3 uid="uid://d12ckrvst1osp"]
 
 [ext_resource type="Script" uid="uid://do7rqw7y5akti" path="res://scripts/objects/npcs/baseEnemy/enemy.gd" id="1_u733l"]
 [ext_resource type="Material" uid="uid://uyr61s32rxaj" path="res://graphics/materials/PlayerBody_Bottom.tres" id="2_u733l"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://c25f0pj3y257c" path="res://scripts/objects/npcs/baseEnemy/combat_handler.gd" id="8_uaa5m"]
 [ext_resource type="Script" uid="uid://bxrmoul0q2cgc" path="res://scripts/objects/npcs/baseEnemy/motion_handler.gd" id="9_fyoyp"]
 [ext_resource type="Script" uid="uid://duwahhtdrj35c" path="res://scripts/objects/npcs/baseEnemy/ai_handler.gd" id="9_m42r2"]
+[ext_resource type="Script" uid="uid://hspopsylnyxu" path="res://scripts/GUI/inventoryEnemy.gd" id="11_ke8ol"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -155,13 +156,20 @@ unique_name_in_owner = true
 [node name="CombatHandler" parent="." instance=ExtResource("7_nefpp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.388926, 0)
 script = ExtResource("8_uaa5m")
-health = 0
 
 [node name="MotionHandler" type="Node3D" parent="."]
 script = ExtResource("9_fyoyp")
 
 [node name="AIHandler" type="Node3D" parent="."]
 script = ExtResource("9_m42r2")
+
+[node name="Inventory" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("11_ke8ol")
+metadata/_custom_type_script = "uid://lqq6dh38f1k6"
 
 [connection signal="body_entered" from="Body" to="." method="_on_body_body_entered"]
 [connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]

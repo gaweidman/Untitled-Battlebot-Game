@@ -9,6 +9,7 @@ var scrapCost : int;
 @export var inventoryNode : Inventory;
 var partBounds : Vector2i;
 var inPlayerInventory := false;
+var thisBot : Combatant;
 
 #func _init():
 

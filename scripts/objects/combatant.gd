@@ -31,8 +31,9 @@ func get_sign(num):
 		return num/abs(num);
 		
 func die():
-	combatHandler.die();
-		
+	if is_instance_valid(combatHandler):
+		combatHandler.call_deferred("die");
+
 func _on_body_body_entered(collider: Node) -> void:
 	combatHandler._on_collision(collider);
 	motionHandler._on_collision(%Body, collider);

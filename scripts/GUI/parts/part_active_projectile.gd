@@ -48,9 +48,13 @@ func fireBullet():
 	if is_instance_valid(bullet):
 		##This offset can be changed later to be controllable
 		var offset = Vector3(0,1,0);
-		firingAngle = InputHandler.mouseProjectionRotation(positionNode);
+		if thisBot is Player:
+			firingAngle = InputHandler.mouseProjectionRotation(positionNode);
+		else:
+			firingAngle = InputHandler.playerPosRotation(positionNode);
 		
 		bullet.fire(self, positionNode.position + offset, firingAngle, fireSpeed, bulletLifetime);
+		bullet.attacker = thisBot;
 		_set_fire_rate_timer();
 	
 	leakTimer.start();

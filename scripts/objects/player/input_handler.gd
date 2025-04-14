@@ -60,7 +60,7 @@ static func is_inputting_movement():
 	
 	return false;
 
-static func mouseProjectionRotation(positionNode : Node3D):
+static func mouseProjectionRotation(positionNode : Node3D) -> Vector3:
 	var viewport = positionNode.get_viewport();
 	var camera = viewport.get_camera_3d();
 	
@@ -69,4 +69,11 @@ static func mouseProjectionRotation(positionNode : Node3D):
 	var mouseProject = camera.project_position(mousePos, camera.position.y) - positionNode.global_position;
 	
 	var mouseProjectNormalized = Vector3(mouseProject.x, 0, mouseProject.z).normalized()
+	return mouseProjectNormalized;
+
+static func playerPosRotation(positionNode : Node3D) -> Vector3:
+	var ply = GameState.get_player_body();
+	var pos = ply.global_position - positionNode.global_position;
+	
+	var mouseProjectNormalized = Vector3(pos.x, 0, pos.z).normalized()
 	return mouseProjectNormalized;

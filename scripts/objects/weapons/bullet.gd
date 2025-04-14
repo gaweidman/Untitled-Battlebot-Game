@@ -58,7 +58,11 @@ func _on_life_timer_timeout():
 	pass # Replace with function body.
 
 func _on_body_entered(body):
+	if body.get_parent() == attacker:
+		print("entered my attacker")
+		return
 	if body.get_parent() is Combatant:
+		print(body.get_parent())
 		body.get_parent().take_damage(1);
 	
 	if not ( body.is_in_group("Player Part") ):
