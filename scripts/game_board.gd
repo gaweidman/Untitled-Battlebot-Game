@@ -19,7 +19,7 @@ var player : Player;
 
 func _ready():
 	spawnPlayer();
-	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy.tscn"), 1)
+	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_flash.tscn"), 1)
 	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_thruster.tscn"), 2)
 	change_state(gameState.MAIN_MENU);
 	#return_random_spawn_location()
