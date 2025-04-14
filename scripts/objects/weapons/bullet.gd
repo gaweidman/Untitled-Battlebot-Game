@@ -37,7 +37,6 @@ func fire(_launcher : Node ,_initPosition : Vector3, _direction := Vector3(1,0,0
 	position = initPosition;
 	collision.set_deferred("disabled", false);
 	rotateTowardVector3(dir);
-	print("PARENT", _launcher, _launcher.get_parent());
 	
 	show();
 	fired = true;

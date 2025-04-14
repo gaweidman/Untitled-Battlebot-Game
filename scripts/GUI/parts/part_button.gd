@@ -22,5 +22,4 @@ func _on_mouse_exited():
 
 
 func _on_pressed():
-	print("yellow")
 	pass # Replace with function body.

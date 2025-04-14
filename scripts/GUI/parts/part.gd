@@ -18,8 +18,7 @@ func _ready():
 	var PB = _get_part_bounds();
 	
 	$TextureRect.set_deferred("texture", invSprite);
-	
-	print(PB)
+
 	_populate_buttons();
 
 func _get_sell_price(_discount := 0.0):

@@ -28,23 +28,23 @@ func _physics_process(delta):
 	super(delta);
 	if ! is_instance_valid(aiHandler):
 		aiHandler = thisBot.get_node("AIHandler");
-	if Time.get_ticks_msec() >= nextThrust:
-		nextThrust += 1000;
 		
-		var forceVector = Vector3.ZERO
-		var movementVector = aiHandler.get_movement_vector();
-		
-		forceVector += body.global_transform.basis.x * movementVector.x;
-		forceVector += body.global_transform.basis.z * movementVector.y;
-		
-		body.apply_central_force(forceVector);
-		
-		##Rotating the body mesh towards the movement vector
-		var rotatedMV = movementVector.rotated(deg_to_rad(90));
-		
-		var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
-		
-		look_at_safe(botBodyMesh, rotateVector);
-		clamp_speed();
+	nextThrust += 1000;
+	
+	var forceVector = Vector3.ZERO
+	var movementVector = aiHandler.get_movement_vector();
+	
+	forceVector += body.global_transform.basis.x * movementVector.x;
+	forceVector += body.global_transform.basis.z * movementVector.y;
+	
+	body.apply_central_force(forceVector);
+	
+	##Rotating the body mesh towards the movement vector
+	var rotatedMV = movementVector.rotated(deg_to_rad(90));
+	
+	var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
+	
+	look_at_safe(botBodyMesh, rotateVector);
+	clamp_speed();
 	
 	pass;

@@ -37,24 +37,24 @@ HUD_credits = NodePath("HUD/Credits")
 HUD_gameOver = NodePath("HUD/GameOver")
 metadata/_edit_pinned_properties_ = [&"enemySpawnPositions"]
 
-[node name="ArenaFloor" type="MeshInstance3D" parent="."]
+[node name="ArenaFloor" type="MeshInstance3D" parent="." groups=["Concrete", "World", "WorldFloor"]]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 1.4963, -1.552, 30.293)
 material_override = ExtResource("2_4jixe")
 mesh = ExtResource("2_p3ee5")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="ArenaFloor" groups=["Concrete", "World"]]
+[node name="StaticBody3D" type="StaticBody3D" parent="ArenaFloor" groups=["Concrete", "World", "WorldFloor"]]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaFloor/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaFloor/StaticBody3D" groups=["Concrete", "World", "WorldFloor"]]
 shape = SubResource("ConcavePolygonShape3D_er3fg")
 
-[node name="ArenaWall" type="MeshInstance3D" parent="." groups=["WorldWall"]]
+[node name="ArenaWall" type="MeshInstance3D" parent="." groups=["Concrete", "World", "WorldWall"]]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 1.4964, -1.55223, 30.3424)
 material_override = ExtResource("4_jhciq")
 mesh = ExtResource("5_kt0si")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="ArenaWall" groups=["Concrete", "World", "WorldWall"]]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaWall/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaWall/StaticBody3D" groups=["Concrete", "World", "WorldWall"]]
 shape = SubResource("ConcavePolygonShape3D_usc4f")
 
 [node name="EnemySpawnLocations" type="Node3D" parent="ArenaWall/StaticBody3D"]
@@ -429,6 +429,9 @@ script = ExtResource("9_hh74c")
 [node name="Flash" parent="." instance=ExtResource("16_kt0si")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.96272, 3.78368, 14.14)
 chargeDistance = 0.0
+
+[node name="Flash2" parent="." instance=ExtResource("16_kt0si")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.83781, 0.939074, 10.0911)
 
 [connection signal="pressed" from="HUD/MainMenu/Btn_Play" to="." method="_on_btn_play_pressed"]
 [connection signal="pressed" from="HUD/MainMenu/Btn_Credits" to="." method="_on_btn_credits_pressed"]

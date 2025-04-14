@@ -15,8 +15,6 @@ func _process(delta):
 	weaponNode.set_deferred("global_position", meshNode.global_position);
 
 func _on_weapon_body_entered(collider: Node) -> void:
-	print("melee hit")
-	print(collider)
 	
 	combatHandler._on_collision(collider);
 	motionHandler._on_collision(GameState.get_player_body(), collider);
@@ -25,6 +23,6 @@ func _on_weapon_body_entered(collider: Node) -> void:
 
 func contact_damage(collider: Node) -> void:
 	if collider.get_parent() is Combatant:
-		print("hi")
+		pass;
 	else:
 		return;

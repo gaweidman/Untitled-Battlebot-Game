@@ -1,10 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://dp0bj4ebira3l"]
+[gd_scene load_steps=6 format=3 uid="uid://dp0bj4ebira3l"]
 
 [ext_resource type="PackedScene" uid="uid://d12ckrvst1osp" path="res://scenes/prefabs/objects/npcs/enemy.tscn" id="1_273iq"]
 [ext_resource type="Script" uid="uid://cigmffkv6nxvb" path="res://scripts/objects/npcs/thruster/thruster.gd" id="2_2q850"]
+[ext_resource type="Material" uid="uid://cxguwr2myxntx" path="res://graphics/materials/ThrusterBody.tres" id="3_2q850"]
+[ext_resource type="Script" uid="uid://twkg2bo7abyx" path="res://scripts/objects/npcs/thruster/motion_handler.gd" id="4_c5igk"]
+[ext_resource type="Script" uid="uid://hjxoax0xcc12" path="res://scripts/objects/npcs/thruster/ai_handler.gd" id="5_xjdlv"]
 
 [node name="Thruster" instance=ExtResource("1_273iq")]
 script = ExtResource("2_2q850")
 
+[node name="BotBody" parent="Body" index="5"]
+material_override = ExtResource("3_2q850")
+
 [node name="MotionHandler" parent="." index="3"]
-maxSpeed = null
+script = ExtResource("4_c5igk")
+
+[node name="AIHandler" parent="." index="4"]
+script = ExtResource("5_xjdlv")

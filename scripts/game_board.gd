@@ -103,8 +103,6 @@ func _process(delta):
 
 func spawnPlayer(_in_position := playerSpawnPosition) -> Node3D:
 	if player != null:
-		print("PLyaer already exist,s ", _in_position)
-		print(player.body.position)
 		#player.body.position = _in_position;
 		player.body.set_deferred("position", _in_position)
 	else:
@@ -163,7 +161,6 @@ func spawn_wave(numOfEnemies := 0):
 			enemiesAlive.append(enemy);
 			add_child(enemy);
 		else:
-			print("no available positions")
 			numOfEnemies = 0;
 		numOfEnemies -= 1;
 

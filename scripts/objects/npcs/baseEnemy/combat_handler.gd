@@ -21,7 +21,6 @@ func die():
 	
 func _on_collision(collider):
 	var parent = collider.get_parent();
-	print(parent, parent.get_parent());
 	if parent and parent.is_in_group("Projectile"):
 		if parent.get_attacker() != self:
 			pass;
