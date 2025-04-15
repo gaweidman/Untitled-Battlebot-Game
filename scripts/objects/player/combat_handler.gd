@@ -20,7 +20,7 @@ func _physics_process(delta: float) -> void:
 		take_damage(0.5);
 	pass
 
-func take_damage(damage):
+func take_damage(damage:float):
 	super(damage);
 			
 	GameState.get_hud().update();

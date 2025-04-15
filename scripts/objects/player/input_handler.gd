@@ -22,6 +22,8 @@ func _physics_process(delta):
 		
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && combatHandler.can_fire(0):
 			combatHandler.use_active(0);
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) && combatHandler.can_fire(1):
+			combatHandler.use_active(1);
 	
 # we apply forces in motion_handler
 func process_movement(movementVector, delta):
@@ -72,8 +74,7 @@ static func mouseProjectionRotation(positionNode : Node3D) -> Vector3:
 	return mouseProjectNormalized;
 
 static func playerPosRotation(positionNode : Node3D) -> Vector3:
-	var ply = GameState.get_player_body();
-	var pos = ply.global_position - positionNode.global_position;
+	var pos = GameState.get_player_pos_offset(positionNode.global_position);
 	
 	var mouseProjectNormalized = Vector3(pos.x, 0, pos.z).normalized()
 	return mouseProjectNormalized;

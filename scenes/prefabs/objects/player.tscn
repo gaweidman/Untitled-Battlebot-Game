@@ -163,7 +163,7 @@ script = ExtResource("6_ui0xh")
 script = ExtResource("7_bdmj6")
 maxSpeed = 13.0
 
-[node name="InventoryPlayer" type="Control" parent="."]
+[node name="Inventory" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0

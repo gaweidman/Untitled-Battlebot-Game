@@ -40,5 +40,5 @@ func test_add_stuff():
 	#print(ply)
 	if assign_player():
 		add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/part_active_projectile.tscn", 0);
-		add_part_from_scene(2, 0, "res://scenes/prefabs/objects/parts/part_active_melee.tscn", 1);
+		add_part_from_scene(2, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
 	pass

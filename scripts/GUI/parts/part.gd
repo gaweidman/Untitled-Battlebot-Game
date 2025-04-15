@@ -63,4 +63,5 @@ func _populate_buttons():
 		#print(button.disabled)
 
 func _process(delta):
-	$TextureRect.hide()
+	if not inPlayerInventory:
+		$TextureRect.hide();

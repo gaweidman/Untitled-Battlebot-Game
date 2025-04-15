@@ -14,6 +14,7 @@ modelOffset = Vector3(0, -0.168, 0)
 modelScale = Vector3(0.61, 0.61, 0.61)
 looksAtMouse = false
 rotateWithPlayer = true
+baseDamage = 1.0
 invSprite = null
 
 [node name="TextureRect" parent="." index="0"]

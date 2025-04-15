@@ -10,6 +10,7 @@ var magazineCount := 0;
 @export var fireSpeed := 30.0;
 @export var bulletLifetime := 1.0;
 @export var firingAngle := Vector3.BACK;
+@export var firingOffset := Vector3(0,0.50,0);
 
 var leakTimer : Timer;
 
@@ -35,7 +36,7 @@ func fireBullet():
 	#print("pew");
 	var bullet : Bullet;
 	
-	print( "PARENT!!!!!       ", self.get_parent().get_parent() );
+	#print( "PARENT!!!!!       ", self.get_parent().get_parent() );
 	
 #	##Create new bullets when there are less than there should be
 	if magazine.size() < magazineMax:
@@ -46,15 +47,12 @@ func fireBullet():
 	bullet = nextBullet();
 	
 	if is_instance_valid(bullet):
-		##This offset can be changed later to be controllable
-		var offset = Vector3(0,1,0);
 		if thisBot is Player:
 			firingAngle = InputHandler.mouseProjectionRotation(positionNode);
 		else:
 			firingAngle = InputHandler.playerPosRotation(positionNode);
 		
-		bullet.fire(self, positionNode.position + offset, firingAngle, fireSpeed, bulletLifetime);
-		bullet.attacker = thisBot;
+		bullet.fire(thisBot, self, positionNode.global_position + firingOffset + modelOffset, firingAngle, fireSpeed, bulletLifetime, damage);
 		_set_fire_rate_timer();
 	
 	leakTimer.start();

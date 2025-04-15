@@ -9,3 +9,6 @@ script = ExtResource("2_5x1qy")
 
 [node name="BotBody" parent="Body" index="5"]
 material_override = ExtResource("3_5x1qy")
+
+[node name="CombatHandler" parent="." index="2"]
+maxHealth = 1.5

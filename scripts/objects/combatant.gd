@@ -3,20 +3,30 @@ extends MakesNoise;
 class_name Combatant
 
 var body; 
-var combatHandler;
-var motionHandler;
+var combatHandler : CombatHandler;
+var motionHandler : MotionHandler;
+var inventory : Inventory;
 var _partOffset1 := Vector3(0, 0.086, 0.0);
 var _partOffset2 := Vector3(0, 0.172, 0);
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	body = get_node("Body");
-	combatHandler = get_node("CombatHandler");
-	motionHandler = get_node("MotionHandler");
+	assign_refs();
 	super._ready();
+
+func assign_refs():
+	if !is_instance_valid(body):
+		body = get_node("Body");
+	if !is_instance_valid(combatHandler):
+		combatHandler = get_node("CombatHandler");
+	if !is_instance_valid(motionHandler):
+		motionHandler = get_node("MotionHandler");
+	if !is_instance_valid(inventory):
+		inventory = get_node("Inventory");
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
+	assign_refs();
 	pass
 	
 func get_health() -> int:
@@ -61,3 +71,9 @@ func _get_motion_handler():
 func take_damage(damage):
 	pass
 	#combatHandler.take_damage(damage);
+
+func take_knockback(inDir:Vector3):
+	#body.apply_impulse(Vector3(0,10000,0))
+	print("KNOCKBACK: ",inDir)
+	body.apply_impulse(inDir);
+	pass

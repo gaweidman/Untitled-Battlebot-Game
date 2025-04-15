@@ -2,11 +2,11 @@ extends Node3D
 
 class_name CombatHandler
 
-@export var maxHealth = 1.0;
-var health = maxHealth;
+@export var maxHealth := 1.0;
+var health := maxHealth;
 
-@export var maxEnergy = 3.0;
-var energy = maxEnergy;
+@export var maxEnergy := 3.0;
+var energy := maxEnergy;
 @export var energyRefreshRate := 2;
 var invincible := false;
 var invincibleTimer := 0.0;
@@ -17,15 +17,17 @@ var activeParts = { 0 : null, 1: null}
 func die():
 	get_parent().queue_free();
 
-func take_damage(damage):
+func take_damage(damage:float):
 	if GameState.get_game_board_state() == GameBoard.gameState.PLAY:
-		if invincible:
+		if invincible && damage > 0:
 			return;
 		health -= damage;
 		invincibleTimer = maxInvincibleTimer;
-		if health <= 0:
+		if health <= 0.0:
 			die();
-			health = 0;
+			health = 0.0;
+		if health > maxHealth:
+			health = maxHealth;
 	
 func _on_collision(collider):
 	pass;
@@ -45,16 +47,16 @@ func _physics_process(delta: float) -> void:
 	pass
 
 func can_fire(index) -> bool: 
-	if health <= 0:
+	if health <= 0.0:
 		return false;
 	var part = get_active_part(index);
 	if part:
-		return (floor(energy) >= part.energyCost) && part.can_fire();
+		return (energy >= part.energyCost) && part.can_fire();
 	return false;
 
 func use_active(index):
 	var part := get_active_part(index);
-	if part:
+	if part and can_fire(index):
 		part._activate();
 	pass
 

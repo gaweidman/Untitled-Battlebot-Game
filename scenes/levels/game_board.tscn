@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=17 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena_floor.tres" id="2_4jixe"]
@@ -8,7 +8,6 @@
 [ext_resource type="Script" uid="uid://dr0v7dohkt13a" path="res://scripts/objects/camera_3d.gd" id="5_l5xbb"]
 [ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/prefabs/objects/damage_cube.tscn" id="8_hfgcm"]
 [ext_resource type="Script" uid="uid://ct0mq8smfqpjl" path="res://scripts/libraries/sound_manager.gd" id="9_hh74c"]
-[ext_resource type="PackedScene" uid="uid://bv1531ljwto2p" path="res://scenes/prefabs/objects/npcs/enemy_flash.tscn" id="16_kt0si"]
 [ext_resource type="Texture2D" uid="uid://656rheocyr17" path="res://graphics/images/HUD/Health 0.png" id="18_qp1dh"]
 [ext_resource type="Script" uid="uid://6rlmlcy2eex2" path="res://scripts/GUI/hud.gd" id="18_wbopo"]
 [ext_resource type="Script" uid="uid://dweefn74rktyo" path="res://scripts/GUI/health.gd" id="19_2w6wh"]
@@ -182,7 +181,7 @@ target_position = Vector3(0, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 0.604794, 0.796382, 0, -0.796382, 0.604794, -2.58875, 47.1188, -0.186724)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-1, 5.35821e-08, -6.90776e-08, -3.9001e-08, 0.433738, 0.901039, 7.82411e-08, 0.901039, -0.433738, 0, 8.3591, -3.19329)
+transform = Transform3D(-1, 5.35821e-08, -6.90776e-08, -3.9001e-08, 0.433738, 0.901039, 7.82411e-08, 0.901039, -0.433738, 0, 8.3591, -4.33675)
 fov = 90.0
 script = ExtResource("5_l5xbb")
 
@@ -195,6 +194,7 @@ offset_bottom = 650.0
 script = ExtResource("18_wbopo")
 
 [node name="In-Dev Overlay" type="Label" parent="HUD"]
+visible = false
 layout_mode = 0
 offset_right = 323.0
 offset_bottom = 105.0
@@ -417,17 +417,10 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Damage Cube" parent="." instance=ExtResource("8_hfgcm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.557473, 3.4556, 5.3138)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0834, 3.4556, -4.56467)
 
 [node name="SoundManager" type="Node" parent="."]
 script = ExtResource("9_hh74c")
-
-[node name="Flash" parent="." instance=ExtResource("16_kt0si")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.96272, 3.78368, 14.14)
-chargeDistance = 0.0
-
-[node name="Flash2" parent="." instance=ExtResource("16_kt0si")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.83781, 0.939074, 10.0911)
 
 [connection signal="pressed" from="HUD/MainMenu/Btn_Play" to="." method="_on_btn_play_pressed"]
 [connection signal="pressed" from="HUD/MainMenu/Btn_Credits" to="." method="_on_btn_credits_pressed"]

@@ -12,3 +12,8 @@ func _ready():
 
 func _on_body_body_entered(other): 
 	aiHandler._on_collision(other);
+
+func _process(delta):
+	super(delta);
+	if is_instance_valid(inventory):
+		inventory.add_part_from_scene(0,0,"res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn",0);
