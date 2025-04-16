@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://d12ckrvst1osp" path="res://scenes/prefabs/objects/npcs/enemy.tscn" id="1_2omub"]
 [ext_resource type="Script" uid="uid://bobgroujpof5b" path="res://scripts/objects/npcs/ranger/ranger.gd" id="2_5x1qy"]
-[ext_resource type="Material" uid="uid://crx2sr5g55sk8" path="res://graphics/materials/RangerBody.tres" id="3_5x1qy"]
+[ext_resource type="Material" uid="uid://crx2sr5g55sk8" path="res://graphics/materials/models/enemies/ranger.tres" id="3_5x1qy"]
 
 [node name="Ranger" instance=ExtResource("1_2omub")]
 script = ExtResource("2_5x1qy")

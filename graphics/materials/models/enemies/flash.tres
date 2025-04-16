@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://c1dutvtq4wry5"]
+
+[ext_resource type="Texture2D" uid="uid://bd7v6woaxerfn" path="res://graphics/images/models/enemies/flash/body_color.png" id="1_44pte"]
+[ext_resource type="Texture2D" uid="uid://888pdpi0hy4l" path="res://graphics/images/models/enemies/flash/body_metalness.png" id="2_v73n7"]
+[ext_resource type="Texture2D" uid="uid://bmu1704irkxtg" path="res://graphics/images/models/enemies/flash/body_normal.png" id="3_nwsx3"]
+[ext_resource type="Texture2D" uid="uid://cjn43e2ublo62" path="res://graphics/images/models/enemies/flash/body_roughness.png" id="4_vj7qn"]
+
+[resource]
+albedo_texture = ExtResource("1_44pte")
+metallic = 1.0
+metallic_texture = ExtResource("2_v73n7")
+roughness_texture = ExtResource("4_vj7qn")
+normal_enabled = true
+normal_texture = ExtResource("3_nwsx3")

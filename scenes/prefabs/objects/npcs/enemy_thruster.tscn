@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://d12ckrvst1osp" path="res://scenes/prefabs/objects/npcs/enemy.tscn" id="1_273iq"]
 [ext_resource type="Script" uid="uid://cigmffkv6nxvb" path="res://scripts/objects/npcs/thruster/thruster.gd" id="2_2q850"]
-[ext_resource type="Material" uid="uid://cxguwr2myxntx" path="res://graphics/materials/ThrusterBody.tres" id="3_2q850"]
+[ext_resource type="Material" uid="uid://cxguwr2myxntx" path="res://graphics/materials/models/enemies/thruster.tres" id="3_2q850"]
 [ext_resource type="Script" uid="uid://twkg2bo7abyx" path="res://scripts/objects/npcs/thruster/motion_handler.gd" id="4_c5igk"]
 [ext_resource type="Script" uid="uid://hjxoax0xcc12" path="res://scripts/objects/npcs/thruster/ai_handler.gd" id="5_xjdlv"]
 

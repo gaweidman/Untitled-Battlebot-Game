@@ -1,9 +1,9 @@
 [gd_scene load_steps=17 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
-[ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena_floor.tres" id="2_4jixe"]
+[ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena/arena_floor.tres" id="2_4jixe"]
 [ext_resource type="ArrayMesh" uid="uid://dk8jw4aqif445" path="res://graphics/models/arena_floor.obj" id="2_p3ee5"]
-[ext_resource type="Material" uid="uid://b5uawxeiq0ye3" path="res://graphics/materials/models/arena_wall.tres" id="4_jhciq"]
+[ext_resource type="Material" uid="uid://b5uawxeiq0ye3" path="res://graphics/materials/models/arena/arena_wall.tres" id="4_jhciq"]
 [ext_resource type="ArrayMesh" uid="uid://dei2jg7176shk" path="res://graphics/models/arena_wall.obj" id="5_kt0si"]
 [ext_resource type="Script" uid="uid://dr0v7dohkt13a" path="res://scripts/objects/camera_3d.gd" id="5_l5xbb"]
 [ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/prefabs/objects/damage_cube.tscn" id="8_hfgcm"]
