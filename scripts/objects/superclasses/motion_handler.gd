@@ -23,7 +23,6 @@ func _physics_process(delta):
 	grab_references();
 
 func grab_references():
-	raycasts = [%Raycast1, %Raycast2, %Raycast3, %Raycast4];
 	if ! is_instance_valid(thisBot):
 		thisBot = get_node("../");
 	if thisBot:
@@ -32,6 +31,9 @@ func grab_references():
 	pass;
 
 func look_at_safe(node, target):
+	if node.get_parent().get_parent() != GameState.get_player(): 
+		print("IS EQUAL APPROX ", node.global_transform.origin.is_equal_approx(target))
+		print(node.global_transform.origin, " ", target)
 	if node.global_transform.origin.is_equal_approx(target): return;
 	node.look_at(target);
 

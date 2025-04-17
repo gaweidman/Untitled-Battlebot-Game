@@ -135,6 +135,7 @@ motor/target_velocity = 18.8496
 motor/max_impulse = 512.0
 
 [node name="BotBody" type="MeshInstance3D" parent="Body" groups=["Combatant"]]
+unique_name_in_owner = true
 transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 0, -0.263986, 0)
 material_override = ExtResource("3_uaa5m")
 mesh = ExtResource("6_fts7a")

@@ -42,11 +42,6 @@ func _physics_process(delta):
 
 	look_at_safe(botBodyMesh, rotateVector)
 	
-	for raycast in raycasts:
-		# if we're not making contact at any of the contact points, we don't do anything, so just return
-		if !raycast.is_colliding() && false:
-			return
-	
 	var forceVector = Vector3.ZERO
 	forceVector += body.global_transform.basis.x * movementVector.x * -GameState.PLAYER_ACCELERATION;
 	forceVector += body.global_transform.basis.z * movementVector.y * -GameState.PLAYER_ACCELERATION;
