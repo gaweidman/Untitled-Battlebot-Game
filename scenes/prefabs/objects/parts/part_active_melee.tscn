@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://p8nchh2uegmh"]
+[gd_scene load_steps=4 format=3 uid="uid://p8nchh2uegmh"]
 
 [ext_resource type="PackedScene" uid="uid://n5li36gn6xf7" path="res://scenes/prefabs/objects/parts/part_active.tscn" id="1_xxlqa"]
 [ext_resource type="Script" uid="uid://cc6sda2iomhr1" path="res://scripts/GUI/parts/part_active_melee.gd" id="2_psr1p"]
-[ext_resource type="ArrayMesh" uid="uid://du8e8ijsylohb" path="res://graphics/models/obj/blade.obj" id="3_yl1nc"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_thmrx"]
 height = 0.021
@@ -14,7 +13,6 @@ modelOffset = Vector3(0, -0.168, 0)
 modelScale = Vector3(0.61, 0.61, 0.61)
 looksAtMouse = false
 rotateWithPlayer = true
-baseDamage = 1.0
 invSprite = null
 
 [node name="TextureRect" parent="." index="0"]
@@ -25,7 +23,6 @@ visible = true
 
 [node name="MeshInstance3D" parent="." index="2"]
 transform = Transform3D(0.61, 0, 0, 0, 0.61, 0, 0, 0, 0.61, 0, -0.167726, 0)
-mesh = ExtResource("3_yl1nc")
 
 [node name="Weapon" type="Area3D" parent="." index="3"]
 unique_name_in_owner = true
