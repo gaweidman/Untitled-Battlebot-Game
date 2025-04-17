@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://4syj0qkdjw8i"
-path="res://.godot/imported/FloorCollision.fbx-b2fbfe7a583c097dd67f7179e2a0928e.scn"
+uid="uid://dvpf7su0nddfa"
+path="res://.godot/imported/cannon.obj-8436f5c34e97726ee201b090590ef3ee.scn"
 
 [deps]
 
-source_file="res://graphics/models/FloorCollision.fbx"
-dest_files=["res://.godot/imported/FloorCollision.fbx-b2fbfe7a583c097dd67f7179e2a0928e.scn"]
+source_file="res://graphics/models/obj/cannon.obj"
+dest_files=["res://.godot/imported/cannon.obj-8436f5c34e97726ee201b090590ef3ee.scn"]
 
 [params]
 
@@ -28,11 +28,8 @@ meshes/force_disable_compression=false
 skins/use_named_skins=true
 animation/import=true
 animation/fps=30
-animation/trimming=true
+animation/trimming=false
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={}
-fbx/importer=0
-fbx/allow_geometry_helper_nodes=false
-fbx/embedded_image_handling=1

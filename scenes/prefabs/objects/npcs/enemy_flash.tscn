@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://bv1531ljwto2p"]
+[gd_scene load_steps=7 format=3 uid="uid://bv1531ljwto2p"]
 
 [ext_resource type="PackedScene" uid="uid://d12ckrvst1osp" path="res://scenes/prefabs/objects/npcs/enemy.tscn" id="1_ffw06"]
 [ext_resource type="Script" uid="uid://c26tmi1igjnab" path="res://scripts/objects/npcs/flash/flash.gd" id="2_vo1v0"]
-[ext_resource type="Material" uid="uid://c1dutvtq4wry5" path="res://graphics/materials/models/enemies/flash.tres" id="3_cgtuq"]
 [ext_resource type="Script" uid="uid://de8cg6568cdgy" path="res://scripts/objects/npcs/flash/ai_handler.gd" id="3_io48s"]
+[ext_resource type="ArrayMesh" uid="uid://bmh1lb7lajb4y" path="res://graphics/models/extracted/bot.res" id="3_yalhc"]
+[ext_resource type="Material" uid="uid://c1dutvtq4wry5" path="res://graphics/materials/models/bots/flash.tres" id="4_esomk"]
+[ext_resource type="Material" uid="uid://hjfve5f811g3" path="res://graphics/materials/models/bots/tread.tres" id="5_s7sjq"]
 
 [node name="Flash" instance=ExtResource("1_ffw06")]
 script = ExtResource("2_vo1v0")
@@ -22,7 +24,10 @@ visible = false
 visible = false
 
 [node name="BotBody" parent="Body" index="5"]
-material_override = ExtResource("3_cgtuq")
+material_override = null
+mesh = ExtResource("3_yalhc")
+surface_material_override/0 = ExtResource("4_esomk")
+surface_material_override/1 = ExtResource("5_s7sjq")
 
 [node name="AIHandler" parent="." index="4"]
 script = ExtResource("3_io48s")

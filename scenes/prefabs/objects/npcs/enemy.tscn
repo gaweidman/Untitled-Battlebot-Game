@@ -5,7 +5,7 @@
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="3_uaa5m"]
 [ext_resource type="Material" uid="uid://cbvhbi7cs2id6" path="res://graphics/materials/Treads.tres" id="4_fyoyp"]
 [ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="5_aw2uh"]
-[ext_resource type="ArrayMesh" uid="uid://b81yaluc55jmc" path="res://graphics/models/bot.obj" id="6_fts7a"]
+[ext_resource type="ArrayMesh" uid="uid://b81yaluc55jmc" path="res://graphics/models/obj/bot.obj" id="6_fts7a"]
 [ext_resource type="PackedScene" uid="uid://dqn5vwvgp6ddp" path="res://scenes/prefabs/utilities/combat_handler.tscn" id="7_nefpp"]
 [ext_resource type="Script" uid="uid://c25f0pj3y257c" path="res://scripts/objects/npcs/baseEnemy/combat_handler.gd" id="8_uaa5m"]
 [ext_resource type="Script" uid="uid://bxrmoul0q2cgc" path="res://scripts/objects/npcs/baseEnemy/motion_handler.gd" id="9_fyoyp"]

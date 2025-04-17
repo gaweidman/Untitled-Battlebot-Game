@@ -1,14 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://c804ujoh6bpv7"]
+[gd_scene load_steps=6 format=3 uid="uid://c804ujoh6bpv7"]
 
 [ext_resource type="PackedScene" uid="uid://d12ckrvst1osp" path="res://scenes/prefabs/objects/npcs/enemy.tscn" id="1_2omub"]
 [ext_resource type="Script" uid="uid://bobgroujpof5b" path="res://scripts/objects/npcs/ranger/ranger.gd" id="2_5x1qy"]
-[ext_resource type="Material" uid="uid://crx2sr5g55sk8" path="res://graphics/materials/models/enemies/ranger.tres" id="3_5x1qy"]
+[ext_resource type="Material" uid="uid://crx2sr5g55sk8" path="res://graphics/materials/models/bots/ranger.tres" id="3_5x1qy"]
+[ext_resource type="ArrayMesh" uid="uid://bmh1lb7lajb4y" path="res://graphics/models/extracted/bot.res" id="3_ifcje"]
+[ext_resource type="Material" uid="uid://hjfve5f811g3" path="res://graphics/materials/models/bots/tread.tres" id="5_4h4fo"]
 
 [node name="Ranger" instance=ExtResource("1_2omub")]
 script = ExtResource("2_5x1qy")
 
 [node name="BotBody" parent="Body" index="5"]
-material_override = ExtResource("3_5x1qy")
+material_override = null
+mesh = ExtResource("3_ifcje")
+surface_material_override/0 = ExtResource("3_5x1qy")
+surface_material_override/1 = ExtResource("5_4h4fo")
 
 [node name="CombatHandler" parent="." index="2"]
 maxHealth = 1.5
