@@ -2,20 +2,27 @@ extends Control
 
 class_name Part
 
-@export var partName := "Part";
-@export var partDescription := "No description given.";
-@export var dimensions : Array[Vector2i];
 var invPosition : Vector2i;
-@export var invSprite : CompressedTexture2D;
-var scrapCost : int;
-@export var inventoryNode : Inventory;
 var partBounds : Vector2i;
 var inPlayerInventory := false;
 var thisBot : Combatant;
 var textureBase : NinePatchRect;
 var textureScrews : NinePatchRect;
+var textureIcon : TextureRect;
 
 var selected := false;
+
+@export_category("Gameplay")
+@export var scrapCost : int;
+@export var inventoryNode : Inventory;
+@export var dimensions : Array[Vector2i];
+
+@export_category("Vanity")
+@export var partName := "Part";
+@export var partDescription := "No description given.";
+@export var partIcon : CompressedTexture2D;
+@export var invSprite : CompressedTexture2D;
+@export var screwSprite : CompressedTexture2D;
 
 #func _init():
 
@@ -24,14 +31,25 @@ func _ready():
 	
 	var PB = _get_part_bounds();
 	textureBase = $TextureBase;
-	textureScrews = $TextureBase/Screws;
+	
 	textureBase.set_deferred("texture", invSprite);
 	textureBase.set_deferred("size", PB * 48);
-	textureScrews.set_deferred("size", PB * 48);
 	textureBase.set_deferred("patch_margin_left", 13);
 	textureBase.set_deferred("patch_margin_right", 13);
 	textureBase.set_deferred("patch_margin_top", 13);
 	textureBase.set_deferred("patch_margin_bottom", 13);
+	
+	textureScrews = $TextureBase/Screws;
+	textureScrews.set_deferred("texture", screwSprite);
+	textureScrews.set_deferred("size", PB * 48);
+	textureScrews.set_deferred("patch_margin_left", 13);
+	textureScrews.set_deferred("patch_margin_right", 13);
+	textureScrews.set_deferred("patch_margin_top", 13);
+	textureScrews.set_deferred("patch_margin_bottom", 13);
+	
+	textureIcon = $TextureBase/Icon;
+	textureIcon.set_deferred("texture", partIcon);
+	textureIcon.set_deferred("position", Vector2i(4,4));
 
 	_populate_buttons();
 
@@ -85,14 +103,18 @@ func _process(delta):
 	pass
 
 
-func _on_buttons_on_select(foo):
+func _on_buttons_on_select(foo:bool):
 	selected = foo;
 	inventoryNode.select_part(self, foo);
 	pass # Replace with function body.
 
-func select(foo):
+func select(foo:bool):
 	_on_buttons_on_select(foo);
 	%Buttons.set_pressed(foo);
+	move_mode(false);
+
+func move_mode(enable:bool):
+	%Buttons.move_mode_enable(enable);
 
 func destroy():
 	select(false);

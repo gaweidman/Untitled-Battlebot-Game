@@ -29,3 +29,11 @@ func set_pressed(foo:bool):
 func disable():
 	for button in get_children():
 		button.disabled = true;
+
+func move_mode_enable(enable:bool):
+	for button in get_children():
+		if button is PartButton:
+			if enable:
+				button.mouse_filter = Control.MOUSE_FILTER_IGNORE;
+			else:
+				button.mouse_filter = Control.MOUSE_FILTER_STOP;

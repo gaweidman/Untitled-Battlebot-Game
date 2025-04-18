@@ -156,7 +156,7 @@ func return_random_unoccupied_spawn_location():
 	return null;
 
 func spawn_wave(numOfEnemies := 0):
-	return
+	#return
 	while numOfEnemies > 0:
 		var enemyScene = return_random_enemy();
 		var pos = return_random_unoccupied_spawn_location();

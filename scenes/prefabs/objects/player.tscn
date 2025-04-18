@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=43 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -11,7 +11,9 @@
 [ext_resource type="Script" uid="uid://des8smcv31abv" path="res://scripts/objects/player/motion_handler.gd" id="7_bdmj6"]
 [ext_resource type="Script" uid="uid://dtom6khjucb7o" path="res://scripts/GUI/inventoryPlayer.gd" id="10_oyv14"]
 [ext_resource type="Texture2D" uid="uid://8hijaqintxgq" path="res://graphics/images/HUD/hud.png" id="11_nha5v"]
+[ext_resource type="Script" uid="uid://b1r88r130d6k2" path="res://scripts/GUI/parts_holder_engine.gd" id="11_u8qiw"]
 [ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="12_hnom0"]
+[ext_resource type="Script" uid="uid://bpnwpequ3dde0" path="res://scripts/GUI/part_holder_button.gd" id="13_88y0t"]
 [ext_resource type="Texture2D" uid="uid://24e2n07ox528" path="res://graphics/images/HUD/Energy_EmptyOverlayMask.png" id="13_coyr8"]
 [ext_resource type="Texture2D" uid="uid://c5asvsgahkx0d" path="res://graphics/images/HUD/Health_EmptyOverlayMask.png" id="13_eakln"]
 [ext_resource type="Texture2D" uid="uid://dw41lyw5ke54n" path="res://graphics/images/HUD/Health_EmptyOverlay.png" id="13_rvrkp"]
@@ -21,8 +23,8 @@
 [ext_resource type="Texture2D" uid="uid://b30wj1uakji4q" path="res://graphics/images/HUD/Energy_EmptyOverlay.png" id="18_tkm3v"]
 [ext_resource type="Script" uid="uid://cdymr1vwdiwxo" path="res://scripts/GUI/info_box.gd" id="20_7eoqv"]
 [ext_resource type="Texture2D" uid="uid://ba0m2y25qqfbe" path="res://graphics/images/HUD/inventoryTab_upUnselected.png" id="20_rl5wq"]
-[ext_resource type="Texture2D" uid="uid://dqecmx8uqcpbw" path="res://graphics/images/HUD/info_blank.png" id="21_cbonj"]
 [ext_resource type="Texture2D" uid="uid://nqj4mhvsrlxw" path="res://graphics/images/HUD/inventoryTab_upSelected.png" id="21_gti27"]
+[ext_resource type="Texture2D" uid="uid://drjmrl4v24oq6" path="res://graphics/images/HUD/info_melee.png" id="21_jm810"]
 [ext_resource type="Script" uid="uid://bcatqblb5gdws" path="res://scripts/GUI/inventory_panel.gd" id="22_nha5v"]
 [ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/energyIconStriped.png" id="22_r3ynj"]
 [ext_resource type="Texture2D" uid="uid://cnfat2kqvmdcd" path="res://graphics/images/HUD/damageIconStriped.png" id="23_jumtr"]
@@ -30,6 +32,11 @@
 [ext_resource type="Texture2D" uid="uid://djth0eo8kvkcm" path="res://graphics/images/HUD/sell_unselected.png" id="25_jm810"]
 [ext_resource type="Texture2D" uid="uid://btfetdy0ahup8" path="res://graphics/images/HUD/sell_selected.png" id="26_7qptc"]
 [ext_resource type="Texture2D" uid="uid://b71g2q13wr7do" path="res://graphics/images/HUD/sell_disabled.png" id="27_k8cvv"]
+[ext_resource type="Texture2D" uid="uid://dsl0x2nq48gga" path="res://graphics/images/HUD/move_unselected.png" id="28_a23h3"]
+[ext_resource type="Texture2D" uid="uid://cxeur7wg8nvq7" path="res://graphics/images/HUD/move_selected.png" id="29_6g8ao"]
+[ext_resource type="Texture2D" uid="uid://dnu6ivnxlduxo" path="res://graphics/images/HUD/move_hover.png" id="30_hvbb3"]
+[ext_resource type="Texture2D" uid="uid://dyotls8fcbklx" path="res://graphics/images/HUD/move_disabled.png" id="31_jk5of"]
+[ext_resource type="Texture2D" uid="uid://da5mwa6pcphjl" path="res://graphics/images/HUD/inv_selectedPlugIn.png" id="36_a23h3"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -202,6 +209,7 @@ offset_top = -648.0
 offset_right = 576.0
 mouse_filter = 2
 script = ExtResource("10_oyv14")
+metadata/_edit_lock_ = true
 
 [node name="InventoryControls" type="Control" parent="Inventory"]
 unique_name_in_owner = true
@@ -213,16 +221,7 @@ offset_bottom = 0.297974
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 1
-
-[node name="PartsHolder_Engine" type="Control" parent="Inventory/InventoryControls"]
-layout_mode = 1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -240.0
-offset_top = -264.0
-offset_bottom = -23.9999
+metadata/_edit_lock_ = true
 
 [node name="BackingTexture" type="TextureRect" parent="Inventory/InventoryControls"]
 texture_filter = 1
@@ -231,11 +230,12 @@ anchors_preset = -1
 anchor_top = 16.2
 anchor_right = 28.8
 anchor_bottom = 16.2
-offset_top = -10481.6
+offset_top = -10481.4
 offset_right = -32025.6
-offset_bottom = -9833.6
+offset_bottom = -9833.43
 mouse_filter = 2
 texture = ExtResource("11_nha5v")
+metadata/_edit_lock_ = true
 
 [node name="Lbl_Energy" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
 layout_mode = 1
@@ -449,10 +449,10 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 208.0
-offset_top = 8.16602
+offset_top = 8.0
 offset_right = -8.0
-offset_bottom = -135.834
-texture = ExtResource("21_cbonj")
+offset_bottom = -136.0
+texture = ExtResource("21_jm810")
 
 [node name="Name" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
 layout_mode = 0
@@ -575,6 +575,18 @@ theme_override_font_sizes/font_size = 14
 text = "SELL: "
 horizontal_alignment = 1
 
+[node name="MoveButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 0
+offset_left = 129.0
+offset_top = 156.0
+offset_right = 163.0
+offset_bottom = 190.0
+toggle_mode = true
+texture_normal = ExtResource("28_a23h3")
+texture_pressed = ExtResource("29_6g8ao")
+texture_hover = ExtResource("30_hvbb3")
+texture_disabled = ExtResource("31_jk5of")
+
 [node name="\'SCRAP\'" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
 layout_mode = 1
 anchors_preset = -1
@@ -628,9 +640,353 @@ texture_pressed = ExtResource("21_gti27")
 texture_hover = ExtResource("21_gti27")
 script = ExtResource("22_nha5v")
 
+[node name="PartsHolder_Engine" type="Control" parent="Inventory/InventoryControls"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -263.0
+offset_bottom = -22.9999
+script = ExtResource("11_u8qiw")
+
+[node name="PartHolderButton" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 48.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+
+[node name="PartHolderButton2" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 48.0
+offset_right = 96.0
+offset_bottom = 48.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 1
+
+[node name="PartHolderButton3" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 96.0
+offset_right = 144.0
+offset_bottom = 48.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 2
+
+[node name="PartHolderButton4" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 144.0
+offset_right = 192.0
+offset_bottom = 48.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 3
+
+[node name="PartHolderButton5" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 192.0
+offset_right = 240.0
+offset_bottom = 48.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 4
+
+[node name="PartHolderButton6" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_top = 48.0
+offset_right = 48.0
+offset_bottom = 96.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordY = 1
+
+[node name="PartHolderButton7" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 48.0
+offset_top = 48.0
+offset_right = 96.0
+offset_bottom = 96.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 1
+coordY = 1
+
+[node name="PartHolderButton8" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 96.0
+offset_top = 48.0
+offset_right = 144.0
+offset_bottom = 96.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 2
+coordY = 1
+
+[node name="PartHolderButton9" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 144.0
+offset_top = 48.0
+offset_right = 192.0
+offset_bottom = 96.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 3
+coordY = 1
+
+[node name="PartHolderButton10" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 192.0
+offset_top = 48.0
+offset_right = 240.0
+offset_bottom = 96.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 4
+coordY = 1
+
+[node name="PartHolderButton11" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_top = 96.0
+offset_right = 48.0
+offset_bottom = 144.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordY = 2
+
+[node name="PartHolderButton12" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 48.0
+offset_top = 96.0
+offset_right = 96.0
+offset_bottom = 144.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 1
+coordY = 2
+
+[node name="PartHolderButton13" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 96.0
+offset_top = 96.0
+offset_right = 144.0
+offset_bottom = 144.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 2
+coordY = 2
+
+[node name="PartHolderButton14" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 144.0
+offset_top = 96.0
+offset_right = 192.0
+offset_bottom = 144.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 3
+coordY = 2
+
+[node name="PartHolderButton15" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 192.0
+offset_top = 96.0
+offset_right = 240.0
+offset_bottom = 144.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 4
+coordY = 2
+
+[node name="PartHolderButton16" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_top = 144.0
+offset_right = 48.0
+offset_bottom = 192.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordY = 3
+
+[node name="PartHolderButton17" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 48.0
+offset_top = 144.0
+offset_right = 96.0
+offset_bottom = 192.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 1
+coordY = 3
+
+[node name="PartHolderButton18" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 96.0
+offset_top = 144.0
+offset_right = 144.0
+offset_bottom = 192.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 2
+coordY = 3
+
+[node name="PartHolderButton19" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 144.0
+offset_top = 144.0
+offset_right = 192.0
+offset_bottom = 192.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 3
+coordY = 3
+
+[node name="PartHolderButton20" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 192.0
+offset_top = 144.0
+offset_right = 240.0
+offset_bottom = 192.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 4
+coordY = 3
+
+[node name="PartHolderButton21" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_top = 192.0
+offset_right = 48.0
+offset_bottom = 240.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordY = 4
+
+[node name="PartHolderButton22" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 48.0
+offset_top = 192.0
+offset_right = 96.0
+offset_bottom = 240.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 1
+coordY = 4
+
+[node name="PartHolderButton23" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 96.0
+offset_top = 192.0
+offset_right = 144.0
+offset_bottom = 240.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 2
+coordY = 4
+
+[node name="PartHolderButton24" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 144.0
+offset_top = 192.0
+offset_right = 192.0
+offset_bottom = 240.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 3
+coordY = 4
+
+[node name="PartHolderButton25" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+offset_left = 192.0
+offset_top = 192.0
+offset_right = 240.0
+offset_bottom = 240.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 4
+coordY = 4
+
 [connection signal="body_entered" from="Body" to="MotionHandler" method="_on_collision"]
 [connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]
 [connection signal="sellPart" from="Inventory/InventoryControls/BackingTexture/InfoBox" to="Inventory" method="_on_info_box_sell_part"]
 [connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/InfoBox/SellButton" to="Inventory/InventoryControls/BackingTexture/InfoBox" method="_on_sell_button_pressed"]
+[connection signal="toggled" from="Inventory/InventoryControls/BackingTexture/InfoBox/MoveButton" to="Inventory" method="_on_move_button_toggled"]
 [connection signal="inventoryToggle" from="Inventory/InventoryControls/InventoryPanel" to="Inventory" method="_on_inventory_panel_inventory_toggle"]
 [connection signal="toggled" from="Inventory/InventoryControls/InventoryPanel" to="Inventory/InventoryControls/InventoryPanel" method="_on_toggled"]
+[connection signal="buttonPressed" from="Inventory/InventoryControls/PartsHolder_Engine" to="Inventory" method="_on_parts_holder_engine_button_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton2" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton2" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton3" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton3" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton4" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton4" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton5" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton5" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton6" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton6" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton7" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton7" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton8" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton8" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton9" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton9" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton10" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton10" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton11" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton11" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton12" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton12" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton13" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton13" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton14" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton14" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton15" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton15" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton16" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton16" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton17" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton17" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton18" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton18" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton19" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton19" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton20" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton20" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton21" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton21" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton22" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton22" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton23" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton23" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton24" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton24" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton25" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton25" method="_on_pressed"]

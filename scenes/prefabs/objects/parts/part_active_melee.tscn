@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://p8nchh2uegmh"]
+[gd_scene load_steps=7 format=3 uid="uid://p8nchh2uegmh"]
 
 [ext_resource type="PackedScene" uid="uid://n5li36gn6xf7" path="res://scenes/prefabs/objects/parts/part_active.tscn" id="1_xxlqa"]
 [ext_resource type="Script" uid="uid://cc6sda2iomhr1" path="res://scripts/GUI/parts/part_active_melee.gd" id="2_psr1p"]
+[ext_resource type="Texture2D" uid="uid://d0ha035m170v" path="res://graphics/images/HUD/parts/Icons/Sawblade.png" id="3_rfss0"]
 [ext_resource type="Texture2D" uid="uid://bccp2fnt4akrb" path="res://graphics/images/HUD/parts/partBase_melee.png" id="3_swvu8"]
 [ext_resource type="Texture2D" uid="uid://karkyqgr60hk" path="res://graphics/images/HUD/parts/Part4x4.png" id="3_xk484"]
 
@@ -17,7 +18,9 @@ modelOffset = Vector3(0, -0.168, 0)
 modelScale = Vector3(0.61, 0.61, 0.61)
 looksAtMouse = false
 rotateWithPlayer = true
+scrapCost = 0
 partName = "Melee Part"
+partIcon = ExtResource("3_rfss0")
 invSprite = ExtResource("3_swvu8")
 
 [node name="TextureBase" parent="." index="0"]

@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://dl72cklqtx2gj"]
+[gd_scene load_steps=7 format=3 uid="uid://dl72cklqtx2gj"]
 
 [ext_resource type="Script" uid="uid://cpbysvdkuo81x" path="res://scripts/GUI/parts/part.gd" id="1_aqhpi"]
+[ext_resource type="Texture2D" uid="uid://djtwrqsxxebll" path="res://graphics/images/HUD/parts/Icons/Gear.png" id="2_6haxk"]
 [ext_resource type="Texture2D" uid="uid://bd37bf08k5pqu" path="res://graphics/images/HUD/parts/partBase_passive.png" id="2_7gik6"]
 [ext_resource type="Script" uid="uid://bbw0ohklpa26f" path="res://scripts/button_holder.gd" id="3_u3hhk"]
 [ext_resource type="PackedScene" uid="uid://drt3u15k4mjxe" path="res://scenes/prefabs/objects/parts/part_button.tscn" id="4_tfv4d"]
@@ -13,7 +14,10 @@ anchors_preset = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_aqhpi")
+scrapCost = 5
+partIcon = ExtResource("2_6haxk")
 invSprite = ExtResource("2_7gik6")
+screwSprite = ExtResource("5_6haxk")
 
 [node name="TextureBase" type="NinePatchRect" parent="."]
 texture_filter = 1
@@ -46,5 +50,15 @@ offset_bottom = 40.0
 mouse_default_cursor_shape = 2
 script = ExtResource("3_u3hhk")
 buttonPrefab = ExtResource("4_tfv4d")
+
+[node name="Icon" type="TextureRect" parent="TextureBase"]
+layout_mode = 0
+offset_left = -14.0
+offset_top = -14.0
+offset_right = 14.0
+offset_bottom = 14.0
+pivot_offset = Vector2(14, 14)
+mouse_filter = 2
+texture = ExtResource("2_6haxk")
 
 [connection signal="on_select" from="TextureBase/Buttons" to="." method="_on_buttons_on_select"]

@@ -77,6 +77,6 @@ func get_hud():
 	return get_node("/root/GameBoard/HUD");
 
 func get_inventory():
-	var hud = get_hud();
+	var ply = get_player();
 	
-	return hud.get_node_or_null("Inventory");
+	return ply.get_node_or_null("Inventory");

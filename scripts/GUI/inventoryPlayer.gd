@@ -11,7 +11,7 @@ var gameBoard : GameBoard;
 var gameState : GameBoard.gameState;
 @export var HUD_inventory : Control;
 @export var HUD_inventoryPanel : Control;
-@export var HUD_engine : Control;
+@export var HUD_engine : PartsHolder_Engine;
 var scrap := 0.0;
 var startingKitAssigned := false;
 
@@ -21,6 +21,7 @@ func _ready():
 	HUD_inventoryPanel = $InventoryControls/InventoryPanel;
 	HUD_engine = $InventoryControls/PartsHolder_Engine;
 	HUD_inventory.position.y = 1000.0;
+	inventory_panel_toggle(false);
 
 func _process(delta):
 	super(delta);
@@ -133,14 +134,36 @@ func inventory_panel_toggle(foo):
 	HUD_inventoryPanel.change_sprites(foo);
 	if not foo:
 		select_part(selectedPart, false);
+		HUD_engine.disable(true);
 
 func select_part(part:Part, foo:bool):
 	super(part, foo);
 	if foo:
 		%InfoBox.populate_info(part);
+		
 	else:
 		%InfoBox.clear_info();
 
 func _on_info_box_sell_part(part):
 	sell_part(part);
 	pass # Replace with function body.
+
+var movingPart:=false;
+func _on_parts_holder_engine_button_pressed(x, y):
+	print("button pressed at ",x, ", ",y)
+	if movingPart:
+		move_part(selectedPart, Vector2i(x,y));
+	pass # Replace with function body.
+
+func _on_move_button_toggled(toggled_on):
+	move_mode_enable(toggled_on);
+	pass # Replace with function body.
+
+func move_mode_enable(toggled_on:bool):
+	if $InventoryControls/BackingTexture/InfoBox/MoveButton.button_pressed != toggled_on:
+		$InventoryControls/BackingTexture/InfoBox/MoveButton.button_pressed = toggled_on;
+	
+	movingPart = toggled_on;
+	HUD_engine.disable(not toggled_on);
+	if is_instance_valid(selectedPart):
+		selectedPart.move_mode(toggled_on);

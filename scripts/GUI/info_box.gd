@@ -16,6 +16,7 @@ func populate_info(part:Part):
 	$SellButton/Label.text = "SELL: "+ str(part._get_sell_price(0.5));
 	$SellButton/Label.show();
 	$SellButton.disabled = false;
+	$MoveButton.disabled = false;
 	if part is PartActive:
 		$EnergyIcon/Label.text = str(part.energyCost);
 		$EnergyIcon.show();
@@ -43,6 +44,8 @@ func clear_info():
 	$EnergyIcon.hide();
 	$SellButton/Label.hide();
 	$SellButton.disabled = true;
+	$MoveButton.button_pressed = false;
+	$MoveButton.disabled = true;
 	areYouSure = false;
 
 var areYouSure := false;

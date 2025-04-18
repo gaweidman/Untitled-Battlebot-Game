@@ -28,6 +28,7 @@ func take_damage(damage:float):
 func die():
 	get_parent().hide();
 	GameState.set_game_board_state(GameBoard.gameState.GAME_OVER)
+	inventory.inventory_panel_toggle(false);
 	pass;
 
 func live():

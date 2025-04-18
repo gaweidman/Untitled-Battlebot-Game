@@ -12,6 +12,7 @@ offset_bottom = -600.0
 grow_horizontal = 2
 grow_vertical = 2
 toggle_mode = true
+action_mode = 0
 texture_pressed = ExtResource("2_1j71w")
 texture_hover = ExtResource("2_1j71w")
 script = ExtResource("1_q0hjs")
