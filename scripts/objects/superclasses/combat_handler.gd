@@ -62,6 +62,7 @@ func use_active(index):
 
 func get_active_part(index) -> PartActive:
 	if index in activeParts:
-		if activeParts[index] is PartActive:
-			return activeParts[index];
+		if is_instance_valid(activeParts[index]):
+			if activeParts[index] is PartActive:
+				return activeParts[index];
 	return null;

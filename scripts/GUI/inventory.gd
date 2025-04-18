@@ -40,6 +40,7 @@ var slots := {
 }
 
 var listOfPieces = []
+var selectedPart: Part;
 
 func clear_slot_at(x: int, y: int):
 	var index = Vector2i(x, y);
@@ -83,6 +84,8 @@ func add_part(part: Part, invPosition : Vector2i):
 		listOfPieces.append(part);
 		part.invPosition = invPosition;
 		part.inventoryNode = self;
+		if self is InventoryPlayer:
+			part.inPlayerInventory = true;
 		if part is PartActive:
 			part.positionNode = battleBotBody;
 			part.meshNode.reparent(battleBotBody);
@@ -90,18 +93,24 @@ func add_part(part: Part, invPosition : Vector2i):
 		pass 
 	pass
 
-func remove_part(part: Part):
+func remove_part(part: Part, destroy:=false):
 	var coordsToRemove = get_modified_part_dimensions(part, part.invPosition);
 	part.invPosition = Vector2i(0,0);
 	if part is PartActive:
 		part.positionNode = null;
 		part.meshNode.reparent(part);
 	
+	if self is InventoryPlayer:
+		part.inPlayerInventory = false;
+	
 	for coord : Vector2i in coordsToRemove:
 		clear_slot_at(coord.x, coord.y);
 	
 	while listOfPieces.find(part) != -1:
 		listOfPieces.remove_at(listOfPieces.find(part));
+	
+	if destroy:
+		part.destroy();
 
 func check_coordinate_table_is_free(coords:Array):
 	for index in coords:
@@ -126,6 +135,20 @@ func add_part_from_scene(x: int, y:int, _partScene:String, activeSlot = null):
 			add_part(part, Vector2i(x,y));
 			if activeSlot != null && activeSlot is int:
 				combatHandler.activeParts[activeSlot] = part;
+
+func select_part(part:Part, foo:bool):
+	if foo:
+		if part != selectedPart:
+			if is_instance_valid(selectedPart):
+				selectedPart.select(false);
+			selectedPart = part;
+			print("selected new part: ", part);
+	else:
+		selectedPart = null;
+		if is_instance_valid(part):
+			if part.selected:
+				part.select(false);
+		print("Unselected part: ", part);
 
 #########################
 

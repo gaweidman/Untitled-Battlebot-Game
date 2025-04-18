@@ -9,6 +9,14 @@ script = ExtResource("2_ivrqh")
 firingOffset = Vector3(0, 0.75, 0)
 modelOffset = Vector3(0, -0.5, 0)
 fireRate = 0.75
+partName = "Ranger Gun"
+
+[node name="Buttons" parent="TextureBase" index="1"]
+texture_filter = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="MeshInstance3D" parent="." index="2"]
 mesh = ExtResource("3_ivrqh")
+
+[connection signal="on_select" from="TextureBase/Buttons" to="." method="_on_buttons_on_select"]

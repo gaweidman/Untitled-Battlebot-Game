@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=36 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -10,7 +10,7 @@
 [ext_resource type="Script" uid="uid://cci5o1ddo6ond" path="res://scripts/objects/player/input_handler.gd" id="6_ui0xh"]
 [ext_resource type="Script" uid="uid://des8smcv31abv" path="res://scripts/objects/player/motion_handler.gd" id="7_bdmj6"]
 [ext_resource type="Script" uid="uid://dtom6khjucb7o" path="res://scripts/GUI/inventoryPlayer.gd" id="10_oyv14"]
-[ext_resource type="Texture2D" uid="uid://catte4ov5ndwb" path="res://graphics/images/HUD/Sprite-0001.png" id="11_dqk0i"]
+[ext_resource type="Texture2D" uid="uid://8hijaqintxgq" path="res://graphics/images/HUD/hud.png" id="11_nha5v"]
 [ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="12_hnom0"]
 [ext_resource type="Texture2D" uid="uid://24e2n07ox528" path="res://graphics/images/HUD/Energy_EmptyOverlayMask.png" id="13_coyr8"]
 [ext_resource type="Texture2D" uid="uid://c5asvsgahkx0d" path="res://graphics/images/HUD/Health_EmptyOverlayMask.png" id="13_eakln"]
@@ -19,6 +19,17 @@
 [ext_resource type="Script" uid="uid://bfml2ah2jiuo4" path="res://scripts/GUI/health_bar.gd" id="14_ticrt"]
 [ext_resource type="Texture2D" uid="uid://db7xxix2ub0ai" path="res://graphics/images/HUD/Energy_FullOverlay.png" id="17_1ks4x"]
 [ext_resource type="Texture2D" uid="uid://b30wj1uakji4q" path="res://graphics/images/HUD/Energy_EmptyOverlay.png" id="18_tkm3v"]
+[ext_resource type="Script" uid="uid://cdymr1vwdiwxo" path="res://scripts/GUI/info_box.gd" id="20_7eoqv"]
+[ext_resource type="Texture2D" uid="uid://ba0m2y25qqfbe" path="res://graphics/images/HUD/inventoryTab_upUnselected.png" id="20_rl5wq"]
+[ext_resource type="Texture2D" uid="uid://dqecmx8uqcpbw" path="res://graphics/images/HUD/info_blank.png" id="21_cbonj"]
+[ext_resource type="Texture2D" uid="uid://nqj4mhvsrlxw" path="res://graphics/images/HUD/inventoryTab_upSelected.png" id="21_gti27"]
+[ext_resource type="Script" uid="uid://bcatqblb5gdws" path="res://scripts/GUI/inventory_panel.gd" id="22_nha5v"]
+[ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/energyIconStriped.png" id="22_r3ynj"]
+[ext_resource type="Texture2D" uid="uid://cnfat2kqvmdcd" path="res://graphics/images/HUD/damageIconStriped.png" id="23_jumtr"]
+[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/cooldownIconStriped.png" id="24_r4qg5"]
+[ext_resource type="Texture2D" uid="uid://djth0eo8kvkcm" path="res://graphics/images/HUD/sell_unselected.png" id="25_jm810"]
+[ext_resource type="Texture2D" uid="uid://btfetdy0ahup8" path="res://graphics/images/HUD/sell_selected.png" id="26_7qptc"]
+[ext_resource type="Texture2D" uid="uid://b71g2q13wr7do" path="res://graphics/images/HUD/sell_disabled.png" id="27_k8cvv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -30,11 +41,11 @@ radius = 0.95
 [sub_resource type="SphereShape3D" id="SphereShape3D_hnom0"]
 radius = 0.611008
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rvrkp"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1ks4x"]
 shader = ExtResource("12_hnom0")
 shader_parameter/mask = ExtResource("13_eakln")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1ks4x"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tkm3v"]
 shader = ExtResource("12_hnom0")
 shader_parameter/mask = ExtResource("13_coyr8")
 
@@ -180,30 +191,38 @@ script = ExtResource("6_ui0xh")
 script = ExtResource("7_bdmj6")
 maxSpeed = 13.0
 
-[node name="Inventory" type="Control" parent="." node_paths=PackedStringArray("HUD_inventory")]
+[node name="Inventory" type="Control" parent="."]
 layout_mode = 3
 anchor_left = 0.5
-anchor_top = 1.002
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 1.002
+anchor_bottom = 1.0
 offset_left = -576.0
-offset_top = -649.296
+offset_top = -648.0
 offset_right = 576.0
-offset_bottom = -0.296082
 mouse_filter = 2
 script = ExtResource("10_oyv14")
-HUD_inventory = NodePath("InventoryControls")
-metadata/_custom_type_script = "uid://dtom6khjucb7o"
 
 [node name="InventoryControls" type="Control" parent="Inventory"]
 unique_name_in_owner = true
+texture_filter = 1
 layout_mode = 1
 anchor_right = 1.0
 anchor_bottom = 0.998
 offset_bottom = 0.297974
 grow_horizontal = 2
 grow_vertical = 0
-mouse_filter = 2
+mouse_filter = 1
+
+[node name="PartsHolder_Engine" type="Control" parent="Inventory/InventoryControls"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -264.0
+offset_bottom = -23.9999
 
 [node name="BackingTexture" type="TextureRect" parent="Inventory/InventoryControls"]
 texture_filter = 1
@@ -212,11 +231,11 @@ anchors_preset = -1
 anchor_top = 16.2
 anchor_right = 28.8
 anchor_bottom = 16.2
-offset_top = -10497.6
+offset_top = -10481.6
 offset_right = -32025.6
-offset_bottom = -9849.6
+offset_bottom = -9833.6
 mouse_filter = 2
-texture = ExtResource("11_dqk0i")
+texture = ExtResource("11_nha5v")
 
 [node name="Lbl_Energy" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
 layout_mode = 1
@@ -240,7 +259,7 @@ text = "00/00"
 [node name="HealthBar" type="SubViewportContainer" parent="Inventory/InventoryControls/BackingTexture" node_paths=PackedStringArray("emptyBar")]
 unique_name_in_owner = true
 texture_filter = 1
-material = SubResource("ShaderMaterial_rvrkp")
+material = SubResource("ShaderMaterial_1ks4x")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -326,7 +345,7 @@ horizontal_alignment = 2
 [node name="EnergyBar" type="SubViewportContainer" parent="Inventory/InventoryControls/BackingTexture" node_paths=PackedStringArray("emptyBar")]
 unique_name_in_owner = true
 texture_filter = 1
-material = SubResource("ShaderMaterial_1ks4x")
+material = SubResource("ShaderMaterial_tkm3v")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -409,5 +428,209 @@ theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 19
 text = "00/00"
 
+[node name="InfoBox" type="Control" parent="Inventory/InventoryControls/BackingTexture" node_paths=PackedStringArray("iconBase", "lbl_partName")]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -552.0
+offset_top = -216.0
+offset_right = -288.0
+offset_bottom = -24.0
+script = ExtResource("20_7eoqv")
+iconBase = NodePath("InfoIconBase")
+lbl_partName = NodePath("Name")
+
+[node name="InfoIconBase" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 208.0
+offset_top = 8.16602
+offset_right = -8.0
+offset_bottom = -135.834
+texture = ExtResource("21_cbonj")
+
+[node name="Name" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.16602
+offset_right = 113.0
+offset_bottom = 35.166
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 24
+text = "No Part Selected"
+
+[node name="Description" type="RichTextLabel" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 47.0
+offset_right = 262.0
+offset_bottom = 161.0
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 5
+bbcode_enabled = true
+text = "[color=e0dede]No [color=ffffff]description [color=e0dede]given."
+
+[node name="EnergyIcon" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -25.834
+offset_right = 32.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("22_r3ynj")
+
+[node name="Label" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox/EnergyIcon"]
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
+
+[node name="DamageIcon" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 84.0
+offset_top = -25.834
+offset_right = 104.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("23_jumtr")
+
+[node name="Label" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox/DamageIcon"]
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(1, 0.431373, 0.286275, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
+
+[node name="CooldownIcon" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 48.0
+offset_top = -25.834
+offset_right = 68.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("24_r4qg5")
+
+[node name="Label" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox/CooldownIcon"]
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(0.666667, 0.878431, 0.356863, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
+
+[node name="SellButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -94.0
+offset_top = -35.834
+offset_right = -2.0
+offset_bottom = -1.83398
+grow_horizontal = 0
+grow_vertical = 0
+texture_normal = ExtResource("25_jm810")
+texture_pressed = ExtResource("26_7qptc")
+texture_hover = ExtResource("26_7qptc")
+texture_disabled = ExtResource("27_k8cvv")
+
+[node name="Label" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox/SellButton"]
+offset_left = 28.0
+offset_top = 8.0
+offset_right = 67.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0.94902, 0.92549, 0.419608, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "SELL: "
+horizontal_alignment = 1
+
+[node name="\'SCRAP\'" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -274.0
+offset_top = -345.834
+offset_right = -221.0
+offset_bottom = -321.834
+theme_override_colors/font_color = Color(0.741176, 0.729412, 0.501961, 1)
+theme_override_colors/font_outline_color = Color(0.223529, 0.160784, 0.160784, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 17
+text = "SCRAP"
+horizontal_alignment = 1
+
+[node name="ScrapCounter" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -253.0
+offset_top = -327.834
+offset_right = -195.0
+offset_bottom = -299.834
+theme_override_colors/font_color = Color(0.94902, 0.92549, 0.419608, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "00000"
+
+[node name="InventoryPanel" type="TextureButton" parent="Inventory/InventoryControls"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -36.0
+offset_top = -358.0
+offset_right = 36.0
+offset_bottom = -297.0
+toggle_mode = true
+texture_normal = ExtResource("20_rl5wq")
+texture_pressed = ExtResource("21_gti27")
+texture_hover = ExtResource("21_gti27")
+script = ExtResource("22_nha5v")
+
 [connection signal="body_entered" from="Body" to="MotionHandler" method="_on_collision"]
 [connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]
+[connection signal="sellPart" from="Inventory/InventoryControls/BackingTexture/InfoBox" to="Inventory" method="_on_info_box_sell_part"]
+[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/InfoBox/SellButton" to="Inventory/InventoryControls/BackingTexture/InfoBox" method="_on_sell_button_pressed"]
+[connection signal="inventoryToggle" from="Inventory/InventoryControls/InventoryPanel" to="Inventory" method="_on_inventory_panel_inventory_toggle"]
+[connection signal="toggled" from="Inventory/InventoryControls/InventoryPanel" to="Inventory/InventoryControls/InventoryPanel" method="_on_toggled"]

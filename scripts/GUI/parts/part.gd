@@ -2,6 +2,8 @@ extends Control
 
 class_name Part
 
+@export var partName := "Part";
+@export var partDescription := "No description given.";
 @export var dimensions : Array[Vector2i];
 var invPosition : Vector2i;
 @export var invSprite : CompressedTexture2D;
@@ -11,6 +13,9 @@ var partBounds : Vector2i;
 var inPlayerInventory := false;
 var thisBot : Combatant;
 var textureBase : NinePatchRect;
+var textureScrews : NinePatchRect;
+
+var selected := false;
 
 #func _init():
 
@@ -19,8 +24,14 @@ func _ready():
 	
 	var PB = _get_part_bounds();
 	textureBase = $TextureBase;
+	textureScrews = $TextureBase/Screws;
 	textureBase.set_deferred("texture", invSprite);
-	textureBase.set_deferred("scale", PB);
+	textureBase.set_deferred("size", PB * 48);
+	textureScrews.set_deferred("size", PB * 48);
+	textureBase.set_deferred("patch_margin_left", 13);
+	textureBase.set_deferred("patch_margin_right", 13);
+	textureBase.set_deferred("patch_margin_top", 13);
+	textureBase.set_deferred("patch_margin_bottom", 13);
 
 	_populate_buttons();
 
@@ -29,7 +40,7 @@ func _get_sell_price(_discount := 0.0):
 	
 	var sellPrice = discount * scrapCost
 	
-	return roundi(sellPrice)
+	return roundi(max(1, sellPrice))
 
 func _get_part_bounds() -> Vector2i:
 	var highestX = 1;
@@ -60,11 +71,29 @@ func _populate_buttons():
 		button.part = self;
 		button.buttonHolder = %Buttons;
 		
-		button.set_deferred("position", index * 32);
-		button.set_deferred("size", Vector2i(32, 32));
+		button.set_deferred("position", index * 48);
+		button.set_deferred("size", Vector2i(48, 48));
 		#print(button.disabled)
 
 func _process(delta):
 	if (inventoryNode is InventoryPlayer):
 		textureBase.show();
+		if inPlayerInventory:
+			textureBase.position = inventoryNode.HUD_engine.global_position + Vector2(invPosition * 48);
+	else:
+		%Buttons.disable();
 	pass
+
+
+func _on_buttons_on_select(foo):
+	selected = foo;
+	inventoryNode.select_part(self, foo);
+	pass # Replace with function body.
+
+func select(foo):
+	_on_buttons_on_select(foo);
+	%Buttons.set_pressed(foo);
+
+func destroy():
+	select(false);
+	queue_free();

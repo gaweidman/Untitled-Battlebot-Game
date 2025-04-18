@@ -10,10 +10,16 @@ var inventoryUp := false;
 var gameBoard : GameBoard;
 var gameState : GameBoard.gameState;
 @export var HUD_inventory : Control;
+@export var HUD_inventoryPanel : Control;
+@export var HUD_engine : Control;
+var scrap := 0.0;
+var startingKitAssigned := false;
 
 func _ready():
 	test_add_stuff();
 	HUD_inventory = %InventoryControls;
+	HUD_inventoryPanel = $InventoryControls/InventoryPanel;
+	HUD_engine = $InventoryControls/PartsHolder_Engine;
 	HUD_inventory.position.y = 1000.0;
 
 func _process(delta):
@@ -22,7 +28,7 @@ func _process(delta):
 	test_add_stuff();
 	
 	if Input.is_action_just_pressed("InventoryToggle"):
-		inventoryUp = !inventoryUp;
+		inventory_panel_toggle(!inventoryUp);
 	
 	if gameState == GameBoard.gameState.PLAY:
 		if inventoryUp:
@@ -67,9 +73,10 @@ func all_refs_valid():
 
 func test_add_stuff():
 	#print(ply)
-	if assign_player():
+	if (assign_player()) and (not startingKitAssigned):
 		add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/part_active_projectile.tscn", 0);
 		add_part_from_scene(2, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
+		startingKitAssigned = true;
 	pass
 
 func update_stats():
@@ -84,6 +91,8 @@ func update_stats():
 	var energy = combatHandler.energy;
 	%Lbl_Energy.text = format_stat_num(energy) + "/" + format_stat_num(maxEnergy);
 	%EnergyBar.set_health(energy, maxEnergy);
+	
+	update_scrap();
 
 func format_stat_num(_inNum) -> String:
 	var inNum = (floor(_inNum*100))/100
@@ -96,3 +105,42 @@ func format_stat_num(_inNum) -> String:
 	if outString.length() < 5:
 		outString += "0";
 	return outString;
+
+func sell_part(part:Part):
+	add_scrap(part._get_sell_price(0.5));
+	remove_part(part, true);
+
+func add_scrap(amt):
+	scrap = max(0, scrap + roundi(amt));
+	update_scrap();
+
+func remove_scrap(amt):
+	scrap = max(0, scrap - roundi(amt));
+	update_scrap();
+
+func update_scrap():
+	$"InventoryControls/BackingTexture/ScrapCounter".text = str(get_scrap_total());
+
+func get_scrap_total():
+	return roundi(scrap);
+
+func _on_inventory_panel_inventory_toggle(foo):
+	inventory_panel_toggle(foo);
+	pass # Replace with function body.
+
+func inventory_panel_toggle(foo):
+	inventoryUp = foo;
+	HUD_inventoryPanel.change_sprites(foo);
+	if not foo:
+		select_part(selectedPart, false);
+
+func select_part(part:Part, foo:bool):
+	super(part, foo);
+	if foo:
+		%InfoBox.populate_info(part);
+	else:
+		%InfoBox.clear_info();
+
+func _on_info_box_sell_part(part):
+	sell_part(part);
+	pass # Replace with function body.

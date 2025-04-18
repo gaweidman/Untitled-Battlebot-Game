@@ -53,8 +53,8 @@ func _assign_refs():
 			positionNode = thisBot.body;
 
 func _physics_process(delta):
-	if looksAtMouse: _rotate_to_look_at_mouse(delta)
-	if rotateWithPlayer: _rotate_with_player();
+	if looksAtMouse: call_deferred("_rotate_to_look_at_mouse",delta)
+	if rotateWithPlayer: call_deferred("_rotate_with_player");
 	
 	if fireRateTimer <= 0:
 		pass
@@ -81,8 +81,9 @@ func _rotate_to_look_at_mouse(delta):
 		rot = InputHandler.playerPosRotation(positionNode);
 	rot = rot.rotated(Vector3(0,1,0), deg_to_rad(90))
 	#print(rot)
-	meshNode.look_at(meshNode.global_transform.origin + rot, Vector3.UP)
-	meshNode.rotation += positionNode.rotation;
+	if is_instance_valid(meshNode) && is_instance_valid(positionNode):
+		meshNode.look_at(meshNode.global_transform.origin + rot, Vector3.UP)
+		meshNode.set_deferred("rotation", meshNode.rotation +  positionNode.rotation);
 
 func _rotate_with_player():
 	if thisBot is Player:
@@ -93,3 +94,7 @@ func _rotate_with_player():
 		meshNode.rotation = bdy.rotation;
 	else:
 		pass;
+
+func destroy():
+	meshNode.call_deferred("queue_free");
+	super();

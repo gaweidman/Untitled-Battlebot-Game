@@ -5,3 +5,6 @@
 
 [node name="PartPassive" instance=ExtResource("1_rwibx")]
 script = ExtResource("2_6ymx3")
+
+[node name="TextureBase" parent="." index="0"]
+layout_mode = 0
