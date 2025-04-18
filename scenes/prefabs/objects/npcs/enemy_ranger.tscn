@@ -1,14 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://c804ujoh6bpv7"]
+[gd_scene load_steps=3 format=3 uid="uid://c804ujoh6bpv7"]
 
 [ext_resource type="PackedScene" uid="uid://d12ckrvst1osp" path="res://scenes/prefabs/objects/npcs/enemy.tscn" id="1_2omub"]
-[ext_resource type="Script" uid="uid://bobgroujpof5b" path="res://scripts/objects/npcs/ranger/ranger.gd" id="2_5x1qy"]
-[ext_resource type="Material" uid="uid://crx2sr5g55sk8" path="res://graphics/materials/models/bots/ranger.tres" id="3_5x1qy"]
-[ext_resource type="ArrayMesh" uid="uid://bmh1lb7lajb4y" path="res://graphics/models/extracted/bot.res" id="3_ifcje"]
-[ext_resource type="Material" uid="uid://hjfve5f811g3" path="res://graphics/materials/models/bots/tread.tres" id="5_4h4fo"]
+[ext_resource type="Script" uid="uid://cigmffkv6nxvb" path="res://scripts/objects/npcs/thruster/thruster.gd" id="2_5x1qy"]
 
 [node name="Ranger" instance=ExtResource("1_2omub")]
 script = ExtResource("2_5x1qy")
 
+[node name="MotionHandler" parent="." index="3"]
+maxSpeed = null
 [node name="BotBody" parent="Body" index="5"]
 material_override = null
 mesh = ExtResource("3_ifcje")

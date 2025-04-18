@@ -49,17 +49,8 @@ func get_player_body():
 	
 	return ply.get_node_or_null("Body");
 
-func get_player_position():
-	var bdy = get_player_body();
-	
-	return bdy.global_position;
-
-func get_player_pos_offset(inGlobalPosition: Vector3):
-	var pos = get_player_position();
-	return pos - inGlobalPosition;
-
 func get_player_body_mesh():
-	var bdy = get_player_body();
+	var bdy = get_player_body()
 	
 	return bdy.get_node_or_null("BotBody");
 

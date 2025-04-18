@@ -2,9 +2,9 @@ extends Control
 
 class_name Inventory
 
+var inputHandler : InputHandler;
 var battleBotBody : RigidBody3D;
 var combatHandler : CombatHandler;
-var thisBot : Combatant;
 
 var slots := {
 	## Row 0
@@ -177,29 +177,49 @@ func deselect_part():
 
 #########################
 
-func _process(delta):
-	assign_references();
+func _ready():
+	test_add_stuff()
 
-func assign_references():
+func _process(delta):
+	if ! is_instance_valid(inputHandler):
+		inputHandler = GameState.get_input_handler();
+	
 	if ! is_instance_valid(combatHandler):
-		var par = get_parent();
-		combatHandler = par.get_node("CombatHandler");
+		combatHandler = GameState.get_combat_handler();
+		combatHandler.inventory = self;
 	
 	if ! is_instance_valid(battleBotBody):
-		var par = get_parent();
-		battleBotBody = par.get_node("Body");
-		
-	if ! is_instance_valid(thisBot):
-		var par = get_parent();
-		if par is Combatant:
-			thisBot = par;
-
-func all_refs_valid():
-	if is_instance_valid(combatHandler) and is_instance_valid(battleBotBody) and is_instance_valid(thisBot):
-		return true;
-	assign_references();
-	return false;
+		test_add_stuff()
 
 func _physics_process(delta):
 	if battleBotBody != null:
 		pass
+
+func test_add_stuff():
+	#print(ply)
+	if assign_player():
+		var partScene = load("res://scenes/prefabs/objects/parts/part_active_projectile.tscn");
+		var part = partScene.instantiate();
+		add_child(part);
+		add_part(part, Vector2i(0,0));
+		combatHandler.activeParts[0] = part;
+		
+		
+		var partScene2 = load("res://scenes/prefabs/objects/parts/part_active_melee.tscn");
+		var part2 = partScene2.instantiate();
+		add_child(part2);
+		add_part(part2, Vector2i(2,0));
+		combatHandler.activeParts[1] = part2;
+	pass
+
+func assign_player(makeNull := false):
+	
+	if makeNull:
+		battleBotBody = null;
+	else:
+		var ply = GameState.get_player();
+		if ply:
+			if ply.body != null:
+				battleBotBody = ply.body
+				return true;
+	return false;

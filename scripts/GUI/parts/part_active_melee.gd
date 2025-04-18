@@ -2,6 +2,7 @@ extends PartActive
 
 class_name PartActiveMelee
 
+var contactDamage := 1.0;
 var weaponNode;
 var collisionNode;
 
@@ -14,7 +15,9 @@ func _process(delta):
 	weaponNode.set_deferred("global_position", meshNode.global_position);
 
 func _on_weapon_body_entered(collider: Node) -> void:
-	_assign_refs();
+	print("melee hit")
+	print(collider)
+	
 	combatHandler._on_collision(collider);
 	motionHandler._on_collision(GameState.get_player_body(), collider);
 	contact_damage(collider);
@@ -22,6 +25,6 @@ func _on_weapon_body_entered(collider: Node) -> void:
 
 func contact_damage(collider: Node) -> void:
 	if collider.get_parent() is Combatant:
-		pass;
+		print("hi")
 	else:
 		return;

@@ -13,7 +13,7 @@ class_name PartActive
 @export var rotateWithPlayer := false;
 var combatHandler : CombatHandler;
 var inputHandler : InputHandler;
-var motionHandler : MotionHandler;
+var motionHandler;
 
 @export var baseEnergyCost = 1;
 ##This is the calculated final energy cost.
@@ -78,17 +78,6 @@ func get_energy_cost(base:=false):
 func _set_fire_rate_timer():
 	set_deferred("fireRateTimer", get_fire_rate());
 
-func _assign_refs():
-	if ! is_instance_valid(combatHandler):
-		combatHandler = inventoryNode.combatHandler;
-	if ! is_instance_valid(thisBot):
-		thisBot = inventoryNode.thisBot;
-	else:
-		if ! is_instance_valid(motionHandler):
-			motionHandler = thisBot.motionHandler;
-		if ! is_instance_valid(positionNode):
-			positionNode = thisBot.body;
-
 func _physics_process(delta):
 	if looksAtMouse: call_deferred("_rotate_to_look_at_mouse",delta)
 	if rotateWithPlayer: call_deferred("_rotate_with_player");
@@ -113,11 +102,7 @@ func _process(delta):
 	energyCost = baseEnergyCost * baseEnergyCostModifier;
 
 func _rotate_to_look_at_mouse(delta):
-	var rot = Vector3.ZERO;
-	if thisBot is Player:
-		rot = InputHandler.mouseProjectionRotation(positionNode);
-	else:
-		rot = InputHandler.playerPosRotation(positionNode);
+	var rot = InputHandler.mouseProjectionRotation(positionNode);
 	rot = rot.rotated(Vector3(0,1,0), deg_to_rad(90))
 	#print(rot)
 	if is_instance_valid(meshNode) && is_instance_valid(positionNode):

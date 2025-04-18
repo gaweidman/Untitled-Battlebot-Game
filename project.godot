@@ -32,7 +32,6 @@ Combatant="The body of a combatant, including the player."
 MeleeWeapon="A sawblade weapon."
 Projectile=""
 WorldWall=""
-WorldFloor=""
 
 [input]
 
