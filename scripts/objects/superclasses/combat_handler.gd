@@ -7,12 +7,12 @@ var health := maxHealth;
 
 @export var maxEnergy := 3.0;
 var energy := maxEnergy;
-@export var energyRefreshRate := 2;
+@export var energyRefreshRate := 2.0;
 var invincible := false;
 var invincibleTimer := 0.0;
 @export var maxInvincibleTimer := 0.25;
 
-var activeParts = { 0 : null, 1: null}
+var activeParts = { 0 : null, 1: null, 2: null}
 
 func die():
 	get_parent().queue_free();
@@ -51,7 +51,7 @@ func can_fire(index) -> bool:
 		return false;
 	var part = get_active_part(index);
 	if part:
-		return (energy >= part.energyCost) && part.can_fire();
+		return (energy >= part.get_energy_cost()) && part.can_fire();
 	return false;
 
 func use_active(index):

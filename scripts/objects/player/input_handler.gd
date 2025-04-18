@@ -21,10 +21,12 @@ func _physics_process(delta):
 		process_movement(get_movement_vector(), delta);
 		
 		if ! player.inventory.inventoryUp:
-			if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && combatHandler.can_fire(0):
+			if Input.is_action_just_pressed("FireRanged") && combatHandler.can_fire(0):
 				combatHandler.use_active(0);
-			if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) && combatHandler.can_fire(1):
+			if Input.is_action_just_pressed("FireMelee") && combatHandler.can_fire(1):
 				combatHandler.use_active(1);
+			if Input.is_action_just_pressed("FireUtility") && combatHandler.can_fire(2):
+				combatHandler.use_active(2);
 	
 # we apply forces in motion_handler
 func process_movement(movementVector, delta):

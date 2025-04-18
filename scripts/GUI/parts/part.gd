@@ -13,13 +13,15 @@ var textureIcon : TextureRect;
 var selected := false;
 
 @export_category("Gameplay")
-@export var scrapCost : int;
+@export var scrapCostBase : int;
+var scrapSellModifier := 1.0;
+var scrapSellModifierBase := 0.5;
 @export var inventoryNode : Inventory;
 @export var dimensions : Array[Vector2i];
 
 @export_category("Vanity")
 @export var partName := "Part";
-@export var partDescription := "No description given.";
+@export_multiline var partDescription := "No description given.";
 @export var partIcon : CompressedTexture2D;
 @export var invSprite : CompressedTexture2D;
 @export var screwSprite : CompressedTexture2D;
@@ -27,7 +29,9 @@ var selected := false;
 #func _init():
 
 func _ready():
-	dimensions = [Vector2i(0,0), Vector2i(0,1), Vector2i(1,0), Vector2i(1,1)]
+	#dimensions = [Vector2i(0,0), Vector2i(0,1), Vector2i(1,0), Vector2i(1,1)]
+	if dimensions == null:
+		dimensions = [Vector2i(0,0)]
 	
 	var PB = _get_part_bounds();
 	textureBase = $TextureBase;
@@ -53,12 +57,19 @@ func _ready():
 
 	_populate_buttons();
 
-func _get_sell_price(_discount := 0.0):
-	var discount = 1.0 + _discount
+func _get_sell_price():
+	var discount = 1.0 * scrapSellModifier * scrapSellModifierBase;
 	
-	var sellPrice = discount * scrapCost
+	var sellPrice = discount * scrapCostBase
 	
 	return roundi(max(1, sellPrice))
+
+func get_buy_price(_discount := 0.0, markup:=0.0, fixedDiscount := 0, fixedMarkup := 0):
+	var discount = 1.0 + _discount + markup;
+	
+	var sellPrice = discount * scrapCostBase
+	
+	return roundi(max(1, sellPrice + fixedDiscount + fixedMarkup))
 
 func _get_part_bounds() -> Vector2i:
 	var highestX = 1;
@@ -99,9 +110,9 @@ func _process(delta):
 		if inPlayerInventory:
 			textureBase.position = inventoryNode.HUD_engine.global_position + Vector2(invPosition * 48);
 	else:
+		textureBase.hide();
 		%Buttons.disable();
 	pass
-
 
 func _on_buttons_on_select(foo:bool):
 	selected = foo;

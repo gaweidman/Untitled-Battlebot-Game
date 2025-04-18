@@ -18,7 +18,6 @@ modelOffset = Vector3(0, -0.168, 0)
 modelScale = Vector3(0.61, 0.61, 0.61)
 looksAtMouse = false
 rotateWithPlayer = true
-scrapCost = 0
 partName = "Melee Part"
 partIcon = ExtResource("3_rfss0")
 invSprite = ExtResource("3_swvu8")

@@ -76,7 +76,7 @@ func get_combat_handler():
 func get_hud():
 	return get_node("/root/GameBoard/HUD");
 
-func get_inventory():
+func get_inventory() -> InventoryPlayer:
 	var ply = get_player();
 	
 	return ply.get_node_or_null("Inventory");

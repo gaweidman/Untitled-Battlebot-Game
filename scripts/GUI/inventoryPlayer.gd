@@ -75,8 +75,8 @@ func all_refs_valid():
 func test_add_stuff():
 	#print(ply)
 	if (assign_player()) and (not startingKitAssigned):
-		add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/part_active_projectile.tscn", 0);
-		add_part_from_scene(2, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
+		add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 0);
+		add_part_from_scene(1, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
 		startingKitAssigned = true;
 	pass
 
@@ -108,7 +108,7 @@ func format_stat_num(_inNum) -> String:
 	return outString;
 
 func sell_part(part:Part):
-	add_scrap(part._get_sell_price(0.5));
+	add_scrap(part._get_sell_price());
 	remove_part(part, true);
 
 func add_scrap(amt):

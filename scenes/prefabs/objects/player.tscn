@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=44 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -36,6 +36,7 @@
 [ext_resource type="Texture2D" uid="uid://cxeur7wg8nvq7" path="res://graphics/images/HUD/move_selected.png" id="29_6g8ao"]
 [ext_resource type="Texture2D" uid="uid://dnu6ivnxlduxo" path="res://graphics/images/HUD/move_hover.png" id="30_hvbb3"]
 [ext_resource type="Texture2D" uid="uid://dyotls8fcbklx" path="res://graphics/images/HUD/move_disabled.png" id="31_jk5of"]
+[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/magazineIconStriped.png" id="32_6g8ao"]
 [ext_resource type="Texture2D" uid="uid://da5mwa6pcphjl" path="res://graphics/images/HUD/inv_selectedPlugIn.png" id="36_a23h3"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
@@ -468,11 +469,12 @@ text = "No Part Selected"
 [node name="Description" type="RichTextLabel" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
 layout_mode = 0
 offset_left = 2.0
-offset_top = 47.0
+offset_top = 40.0
 offset_right = 262.0
-offset_bottom = 161.0
+offset_bottom = 151.0
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
 theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
 text = "[color=e0dede]No [color=ffffff]description [color=e0dede]given."
 
@@ -481,9 +483,9 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 12.0
+offset_left = 7.0
 offset_top = -25.834
-offset_right = 32.0
+offset_right = 27.0
 offset_bottom = -2.83398
 grow_vertical = 0
 texture = ExtResource("22_r3ynj")
@@ -504,9 +506,9 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 84.0
+offset_left = 73.0
 offset_top = -25.834
-offset_right = 104.0
+offset_right = 93.0
 offset_bottom = -2.83398
 grow_vertical = 0
 texture = ExtResource("23_jumtr")
@@ -527,9 +529,9 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 48.0
+offset_left = 40.0
 offset_top = -25.834
-offset_right = 68.0
+offset_right = 60.0
 offset_bottom = -2.83398
 grow_vertical = 0
 texture = ExtResource("24_r4qg5")
@@ -577,15 +579,38 @@ horizontal_alignment = 1
 
 [node name="MoveButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
 layout_mode = 0
-offset_left = 129.0
+offset_left = 131.0
 offset_top = 156.0
-offset_right = 163.0
+offset_right = 165.0
 offset_bottom = 190.0
 toggle_mode = true
 texture_normal = ExtResource("28_a23h3")
 texture_pressed = ExtResource("29_6g8ao")
 texture_hover = ExtResource("30_hvbb3")
 texture_disabled = ExtResource("31_jk5of")
+
+[node name="MagazineIcon" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 104.0
+offset_top = -25.834
+offset_right = 124.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("32_6g8ao")
+
+[node name="Label" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox/MagazineIcon"]
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
 
 [node name="\'SCRAP\'" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
 layout_mode = 1

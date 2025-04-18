@@ -1,7 +1,9 @@
 extends CombatHandler
 
 class_name CombatHandlerEnemy
-	
+
+@export var scrap_worth := 1;
+
 func _on_collision(collider):
 	super(collider);
 	var parent = collider.get_parent();
@@ -13,3 +15,9 @@ func _on_collision(collider):
 func use_active(index):
 	super(index);
 	#print(can_fire(0))
+
+func die():
+	var inv = GameState.get_inventory();
+	if is_instance_valid(inv):
+		inv.add_scrap(scrap_worth);
+	super();

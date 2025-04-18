@@ -16,4 +16,5 @@ surface_material_override/0 = ExtResource("3_5x1qy")
 surface_material_override/1 = ExtResource("5_4h4fo")
 
 [node name="CombatHandler" parent="." index="2"]
+scrap_worth = 1
 maxHealth = 1.5

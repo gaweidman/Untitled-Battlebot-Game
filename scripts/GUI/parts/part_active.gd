@@ -7,7 +7,7 @@ class_name PartActive
 @export var modelMaterial : StandardMaterial3D;
 @export var modelOffset = Vector3(0,0,0);
 @export var modelScale = Vector3(1,1,1);
-@export var energyCost = 1;
+##This is the base energy cost before any modifiers. Do not modify in code.
 @export var positionNode : Node3D; ##This needs to be the thing with the position on it - in thbis case, the Body node
 @export var looksAtMouse := true;
 @export var rotateWithPlayer := false;
@@ -15,11 +15,29 @@ var combatHandler : CombatHandler;
 var inputHandler : InputHandler;
 var motionHandler : MotionHandler;
 
-@export var fireRate := 0.15;
-@export var fireRateTimer := 0.0;
+@export var baseEnergyCost = 1;
+##This is the calculated final energy cost.
+var energyCost = baseEnergyCost;
+##This modifier should be what is used for damage bonuses from other parts.
+var baseEnergyCostModifier = baseEnergyCost;
+
+##This is the base fire rate (in seconds) for the part's active ability. Do not modify in code.
+@export var baseFireRate := 0.15;
+##This is the calculated fire rate (in seconds) for the part's active ability.
+var fireRate := baseFireRate;
+##This modifier should be what is used for fire rate bonuses from other parts.
+var baseFireRateModifier := 1.0;
+##This is a timer. Do not modify.
+var fireRateTimer := 0.0;
+
+##This is the base damage before any modifiers. Do not modify in code.
 @export var baseDamage := 1.0;
-var damage := baseDamage;
+##This modifier can be changed within the part itself; used fo rthings like sawblade gaining damage when using its active.
 var damageModifier := 1.0;
+##This modifier should be what is used for damage bonuses from other parts.
+var baseDamageModifier := 1.0;
+##This is the calculated final damage.
+var damage := baseDamage;
 
 func _ready():
 	super();
@@ -30,16 +48,35 @@ func _ready():
 func _activate():
 	if can_fire():
 		if combatHandler:
-			combatHandler.energy -= energyCost;
+			combatHandler.energy -= get_energy_cost();
 		else:
 			return
 	else:
 		return
+	_set_fire_rate_timer();
 	##Get Inventory's energy total and subtract energyCost from it
 	pass
 
+func get_damage(base:=false):
+	if !base:
+		return damage;
+	else:
+		return baseDamageModifier * baseDamage;
+
+func get_fire_rate(base:=false):
+	if !base:
+		return fireRate;
+	else:
+		return baseFireRateModifier * baseFireRate;
+
+func get_energy_cost(base:=false):
+	if !base:
+		return energyCost;
+	else:
+		return baseEnergyCostModifier * baseEnergyCost;
+
 func _set_fire_rate_timer():
-	fireRateTimer = fireRate;
+	set_deferred("fireRateTimer", get_fire_rate());
 
 func _assign_refs():
 	if ! is_instance_valid(combatHandler):
@@ -55,23 +92,25 @@ func _assign_refs():
 func _physics_process(delta):
 	if looksAtMouse: call_deferred("_rotate_to_look_at_mouse",delta)
 	if rotateWithPlayer: call_deferred("_rotate_with_player");
-	
-	if fireRateTimer <= 0:
-		pass
-	else:
-		fireRateTimer -= delta;
 
 func can_fire() -> bool: 
 	return fireRateTimer <= 0;
-		##Temp condition, can be changed later
 
 func _process(delta):
 	#print("why.")
 	super(delta)
 	
+	if fireRateTimer <= 0:
+		fireRateTimer = 0;
+		pass
+	else:
+		fireRateTimer -= delta;
+	
 	_assign_refs()
 	meshNode.set_deferred("position", modelOffset);
-	damage = baseDamage * damageModifier;
+	damage = baseDamage * baseDamageModifier * damageModifier;
+	fireRate = baseFireRate * baseDamageModifier;
+	energyCost = baseEnergyCost * baseEnergyCostModifier;
 
 func _rotate_to_look_at_mouse(delta):
 	var rot = Vector3.ZERO;
