@@ -10,6 +10,7 @@ var scrapCost : int;
 var partBounds : Vector2i;
 var inPlayerInventory := false;
 var thisBot : Combatant;
+var textureBase : NinePatchRect;
 
 #func _init():
 
@@ -17,8 +18,9 @@ func _ready():
 	dimensions = [Vector2i(0,0), Vector2i(0,1), Vector2i(1,0), Vector2i(1,1)]
 	
 	var PB = _get_part_bounds();
-	
-	$TextureRect.set_deferred("texture", invSprite);
+	textureBase = $TextureBase;
+	textureBase.set_deferred("texture", invSprite);
+	textureBase.set_deferred("scale", PB);
 
 	_populate_buttons();
 
@@ -63,5 +65,6 @@ func _populate_buttons():
 		#print(button.disabled)
 
 func _process(delta):
-	if not inPlayerInventory:
-		$TextureRect.hide();
+	if (inventoryNode is InventoryPlayer):
+		textureBase.show();
+	pass

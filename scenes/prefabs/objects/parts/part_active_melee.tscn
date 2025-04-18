@@ -13,18 +13,11 @@ modelOffset = Vector3(0, -0.168, 0)
 modelScale = Vector3(0.61, 0.61, 0.61)
 looksAtMouse = false
 rotateWithPlayer = true
-invSprite = null
 
-[node name="TextureRect" parent="." index="0"]
-visible = true
+[node name="Buttons" parent="TextureBase" index="0"]
+visible = false
 
-[node name="Buttons" parent="." index="1"]
-visible = true
-
-[node name="MeshInstance3D" parent="." index="2"]
-transform = Transform3D(0.61, 0, 0, 0, 0.61, 0, 0, 0, 0.61, 0, -0.167726, 0)
-
-[node name="Weapon" type="Area3D" parent="." index="3"]
+[node name="Weapon" type="Area3D" parent="." index="1"]
 unique_name_in_owner = true
 collision_layer = 3
 collision_mask = 3
@@ -32,5 +25,8 @@ collision_mask = 3
 [node name="CollisionShape" type="CollisionShape3D" parent="Weapon" index="0"]
 unique_name_in_owner = true
 shape = SubResource("CylinderShape3D_thmrx")
+
+[node name="MeshInstance3D" parent="." index="2"]
+transform = Transform3D(0.61, 0, 0, 0, 0.61, 0, 0, 0, 0.61, 0, -0.167726, 0)
 
 [connection signal="body_entered" from="Weapon" to="." method="_on_weapon_body_entered"]

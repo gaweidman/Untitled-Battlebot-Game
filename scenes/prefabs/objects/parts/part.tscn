@@ -11,16 +11,15 @@ anchors_preset = 0
 script = ExtResource("1_aqhpi")
 invSprite = ExtResource("2_q68sn")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureBase" type="NinePatchRect" parent="."]
 visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-mouse_filter = 2
+texture = ExtResource("2_q68sn")
 
-[node name="Buttons" type="Control" parent="."]
+[node name="Buttons" type="Control" parent="TextureBase"]
 unique_name_in_owner = true
-visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0

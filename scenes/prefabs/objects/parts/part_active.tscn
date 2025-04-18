@@ -19,4 +19,4 @@ fireRate = 0.15
 fireRateTimer = 0.0
 baseDamage = 1.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="1"]

@@ -9,7 +9,6 @@ script = ExtResource("2_ivrqh")
 firingOffset = Vector3(0, 0.75, 0)
 modelOffset = Vector3(0, -0.5, 0)
 fireRate = 0.75
-invSprite = null
 
 [node name="MeshInstance3D" parent="." index="2"]
 mesh = ExtResource("3_ivrqh")

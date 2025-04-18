@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=25 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -10,6 +10,15 @@
 [ext_resource type="Script" uid="uid://cci5o1ddo6ond" path="res://scripts/objects/player/input_handler.gd" id="6_ui0xh"]
 [ext_resource type="Script" uid="uid://des8smcv31abv" path="res://scripts/objects/player/motion_handler.gd" id="7_bdmj6"]
 [ext_resource type="Script" uid="uid://dtom6khjucb7o" path="res://scripts/GUI/inventoryPlayer.gd" id="10_oyv14"]
+[ext_resource type="Texture2D" uid="uid://catte4ov5ndwb" path="res://graphics/images/HUD/Sprite-0001.png" id="11_dqk0i"]
+[ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="12_hnom0"]
+[ext_resource type="Texture2D" uid="uid://24e2n07ox528" path="res://graphics/images/HUD/Energy_EmptyOverlayMask.png" id="13_coyr8"]
+[ext_resource type="Texture2D" uid="uid://c5asvsgahkx0d" path="res://graphics/images/HUD/Health_EmptyOverlayMask.png" id="13_eakln"]
+[ext_resource type="Texture2D" uid="uid://dw41lyw5ke54n" path="res://graphics/images/HUD/Health_EmptyOverlay.png" id="13_rvrkp"]
+[ext_resource type="Texture2D" uid="uid://2lfl5febi3py" path="res://graphics/images/HUD/Health_FullOverlay.png" id="14_eakln"]
+[ext_resource type="Script" uid="uid://bfml2ah2jiuo4" path="res://scripts/GUI/health_bar.gd" id="14_ticrt"]
+[ext_resource type="Texture2D" uid="uid://db7xxix2ub0ai" path="res://graphics/images/HUD/Energy_FullOverlay.png" id="17_1ks4x"]
+[ext_resource type="Texture2D" uid="uid://b30wj1uakji4q" path="res://graphics/images/HUD/Energy_EmptyOverlay.png" id="18_tkm3v"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -20,6 +29,14 @@ radius = 0.95
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_hnom0"]
 radius = 0.611008
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rvrkp"]
+shader = ExtResource("12_hnom0")
+shader_parameter/mask = ExtResource("13_eakln")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1ks4x"]
+shader = ExtResource("12_hnom0")
+shader_parameter/mask = ExtResource("13_coyr8")
 
 [node name="Player" type="Node3D" groups=["Player Part"]]
 script = ExtResource("1_u8q0c")
@@ -163,13 +180,234 @@ script = ExtResource("6_ui0xh")
 script = ExtResource("7_bdmj6")
 maxSpeed = 13.0
 
-[node name="Inventory" type="Control" parent="."]
+[node name="Inventory" type="Control" parent="." node_paths=PackedStringArray("HUD_inventory")]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchor_left = 0.5
+anchor_top = 1.002
+anchor_right = 0.5
+anchor_bottom = 1.002
+offset_left = -576.0
+offset_top = -649.296
+offset_right = 576.0
+offset_bottom = -0.296082
+mouse_filter = 2
 script = ExtResource("10_oyv14")
+HUD_inventory = NodePath("InventoryControls")
 metadata/_custom_type_script = "uid://dtom6khjucb7o"
+
+[node name="InventoryControls" type="Control" parent="Inventory"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 0.998
+offset_bottom = 0.297974
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="BackingTexture" type="TextureRect" parent="Inventory/InventoryControls"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 16.2
+anchor_right = 28.8
+anchor_bottom = 16.2
+offset_top = -10497.6
+offset_right = -32025.6
+offset_bottom = -9849.6
+mouse_filter = 2
+texture = ExtResource("11_dqk0i")
+
+[node name="Lbl_Energy" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 335.0
+offset_top = -361.0
+offset_right = 576.0
+offset_bottom = -331.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 19
+text = "00/00"
+
+[node name="HealthBar" type="SubViewportContainer" parent="Inventory/InventoryControls/BackingTexture" node_paths=PackedStringArray("emptyBar")]
+unique_name_in_owner = true
+texture_filter = 1
+material = SubResource("ShaderMaterial_rvrkp")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -506.0
+offset_top = -382.0
+offset_right = -302.0
+offset_bottom = -310.0
+stretch = true
+script = ExtResource("14_ticrt")
+emptyBar = NodePath("SubViewport/BarHolder/Empty")
+width = 164.0
+
+[node name="SubViewport" type="SubViewport" parent="Inventory/InventoryControls/BackingTexture/HealthBar"]
+transparent_bg = true
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(204, 72)
+render_target_update_mode = 4
+
+[node name="BarHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/HealthBar/SubViewport"]
+texture_filter = 1
+clip_contents = true
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -102.0
+offset_top = -72.0
+offset_right = 102.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Full" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/HealthBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("14_eakln")
+
+[node name="Empty" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/HealthBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("13_rvrkp")
+
+[node name="Lbl_Health" type="Label" parent="Inventory/InventoryControls/BackingTexture/HealthBar/SubViewport/BarHolder"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -87.0
+offset_top = -49.0
+offset_right = 74.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.431373, 0.286275, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 19
+text = "00/00"
+horizontal_alignment = 2
+
+[node name="EnergyBar" type="SubViewportContainer" parent="Inventory/InventoryControls/BackingTexture" node_paths=PackedStringArray("emptyBar")]
+unique_name_in_owner = true
+texture_filter = 1
+material = SubResource("ShaderMaterial_1ks4x")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 302.0
+offset_top = -382.0
+offset_right = 506.0
+offset_bottom = -310.0
+stretch = true
+script = ExtResource("14_ticrt")
+fromRight = false
+emptyBar = NodePath("SubViewport/BarHolder/Empty")
+width = 164.0
+
+[node name="SubViewport" type="SubViewport" parent="Inventory/InventoryControls/BackingTexture/EnergyBar"]
+transparent_bg = true
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(204, 72)
+render_target_update_mode = 4
+
+[node name="BarHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/EnergyBar/SubViewport"]
+texture_filter = 1
+clip_contents = true
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -102.0
+offset_top = -72.0
+offset_right = 102.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Full" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/EnergyBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("17_1ks4x")
+
+[node name="Empty" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/EnergyBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("18_tkm3v")
+
+[node name="Lbl_Energy" type="Label" parent="Inventory/InventoryControls/BackingTexture/EnergyBar/SubViewport/BarHolder"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -74.0
+offset_top = -49.0
+offset_right = 87.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 19
+text = "00/00"
 
 [connection signal="body_entered" from="Body" to="MotionHandler" method="_on_collision"]
 [connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]
