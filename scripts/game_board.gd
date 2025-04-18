@@ -19,9 +19,8 @@ var player : Player;
 
 func _ready():
 	spawnPlayer();
-	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_flash.tscn"), 1)
+	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy.tscn"), 1)
 	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_thruster.tscn"), 2)
-	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_ranger.tscn"), 2)
 	change_state(gameState.MAIN_MENU);
 	#return_random_spawn_location()
 
@@ -96,10 +95,7 @@ func _process(delta):
 			var amtAlive = check_alive_enemies()
 			#print("alive: ", amtAlive)
 			var amtToSpawn = max(0, min(6, wave + 2 - amtAlive))
-			#var amtToSpawn = max(0, min(1, 1 - amtAlive))
-			print(amtToSpawn, amtAlive)
 			spawn_wave(amtToSpawn)
-			player.take_damage(-0.25);
 		pass
 	else:
 		pass
@@ -107,6 +103,8 @@ func _process(delta):
 
 func spawnPlayer(_in_position := playerSpawnPosition) -> Node3D:
 	if player != null:
+		print("PLyaer already exist,s ", _in_position)
+		print(player.body.position)
 		#player.body.position = _in_position;
 		player.body.set_deferred("position", _in_position)
 	else:
@@ -165,6 +163,7 @@ func spawn_wave(numOfEnemies := 0):
 			enemiesAlive.append(enemy);
 			add_child(enemy);
 		else:
+			print("no available positions")
 			numOfEnemies = 0;
 		numOfEnemies -= 1;
 

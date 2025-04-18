@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=13 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -6,10 +6,9 @@
 [ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="4_nnr5b"]
 [ext_resource type="Material" uid="uid://cbvhbi7cs2id6" path="res://graphics/materials/Treads.tres" id="4_qq3wf"]
 [ext_resource type="PackedScene" uid="uid://dqn5vwvgp6ddp" path="res://scenes/prefabs/utilities/combat_handler.tscn" id="5_8qfif"]
-[ext_resource type="ArrayMesh" uid="uid://bmh1lb7lajb4y" path="res://graphics/models/extracted/bot.res" id="6_oyv14"]
 [ext_resource type="Script" uid="uid://cci5o1ddo6ond" path="res://scripts/objects/player/input_handler.gd" id="6_ui0xh"]
 [ext_resource type="Script" uid="uid://des8smcv31abv" path="res://scripts/objects/player/motion_handler.gd" id="7_bdmj6"]
-[ext_resource type="Script" uid="uid://dtom6khjucb7o" path="res://scripts/GUI/inventoryPlayer.gd" id="10_oyv14"]
+[ext_resource type="ArrayMesh" uid="uid://b81yaluc55jmc" path="res://graphics/models/bot.obj" id="9_nsk11"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -136,7 +135,7 @@ motor/max_impulse = 512.0
 [node name="BotBody" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 0, -0.263986, 0)
 material_override = ExtResource("2_jy4ju")
-mesh = ExtResource("6_oyv14")
+mesh = ExtResource("9_nsk11")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
 shape = SubResource("SphereShape3D_hnom0")
@@ -154,7 +153,6 @@ unique_name_in_owner = true
 
 [node name="CombatHandler" parent="." instance=ExtResource("5_8qfif")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.388926, 0)
-maxHealth = 3.0
 
 [node name="InputHandler" type="Node3D" parent="."]
 script = ExtResource("6_ui0xh")
@@ -163,13 +161,5 @@ script = ExtResource("6_ui0xh")
 script = ExtResource("7_bdmj6")
 maxSpeed = 13.0
 
-[node name="Inventory" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("10_oyv14")
-metadata/_custom_type_script = "uid://dtom6khjucb7o"
-
-[connection signal="body_entered" from="Body" to="MotionHandler" method="_on_collision"]
+[connection signal="body_entered" from="Body" to="." method="_on_body_body_entered"]
 [connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]

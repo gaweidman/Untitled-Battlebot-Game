@@ -28,12 +28,3 @@ func _get_input_handler():
 
 func _process(delta):
 	super(delta);
-
-func get_body_position():
-	return get_node("Body").get_position();
-
-func get_global_body_position():
-	return get_node("Body").get_global_position();
-	
-func take_damage(damage:float):
-	combatHandler.take_damage(damage)

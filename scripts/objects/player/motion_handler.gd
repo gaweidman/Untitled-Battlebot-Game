@@ -42,6 +42,11 @@ func _physics_process(delta):
 
 	look_at_safe(botBodyMesh, rotateVector)
 	
+	for raycast in raycasts:
+		# if we're not making contact at any of the contact points, we don't do anything, so just return
+		if !raycast.is_colliding() && false:
+			return
+	
 	var forceVector = Vector3.ZERO
 	forceVector += body.global_transform.basis.x * movementVector.x * -GameState.PLAYER_ACCELERATION;
 	forceVector += body.global_transform.basis.z * movementVector.y * -GameState.PLAYER_ACCELERATION;
@@ -49,11 +54,3 @@ func _physics_process(delta):
 	clamp_speed();
 
 	pass;
-
-func _on_collision(this, other):
-	print("COLLISION HERE")
-	print(other, other.is_in_group("Combatant"), other.get_groups())
-	#if other.is_in_group("Combatant") && 
-	#if (other.is_in_group("Projectile") && other.get_attacker() != thisBot) || other.is_in_group("MeleeWeapon") || other.is_in_group("Combatant"):
-		##print(other.get_attacker())
-		#combatHandler.take_damage(1);

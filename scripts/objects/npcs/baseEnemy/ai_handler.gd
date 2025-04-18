@@ -11,3 +11,5 @@ func get_movement_vector():
 		posDiff = posDiff.normalized();
 		
 		return Vector2(posDiff.x, posDiff.z);
+		
+	

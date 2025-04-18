@@ -13,13 +13,10 @@ class_name PartActive
 @export var rotateWithPlayer := false;
 var combatHandler : CombatHandler;
 var inputHandler : InputHandler;
-var motionHandler : MotionHandler;
+var motionHandler;
 
 @export var fireRate := 0.15;
 @export var fireRateTimer := 0.0;
-@export var baseDamage := 1.0;
-var damage := baseDamage;
-var damageModifier := 1.0;
 
 func _ready():
 	super();
@@ -41,17 +38,6 @@ func _activate():
 func _set_fire_rate_timer():
 	fireRateTimer = fireRate;
 
-func _assign_refs():
-	if ! is_instance_valid(combatHandler):
-		combatHandler = inventoryNode.combatHandler;
-	if ! is_instance_valid(thisBot):
-		thisBot = inventoryNode.thisBot;
-	else:
-		if ! is_instance_valid(motionHandler):
-			motionHandler = thisBot.motionHandler;
-		if ! is_instance_valid(positionNode):
-			positionNode = thisBot.body;
-
 func _physics_process(delta):
 	if looksAtMouse: _rotate_to_look_at_mouse(delta)
 	if rotateWithPlayer: _rotate_with_player();
@@ -68,28 +54,29 @@ func can_fire() -> bool:
 func _process(delta):
 	#print("why.")
 	super(delta)
-	
-	_assign_refs()
+	if positionNode != null:
+		var ply = GameState.get_player()
+		#var pos = ply._get_part_offset(1)
+		#meshNode.position = positionNode.position + pos;
+		#meshNode.position = positionNode.position;
+	else:
+		print('null')
+	if ! is_instance_valid(combatHandler):
+		combatHandler = GameState.get_combat_handler();
+	if ! is_instance_valid(inputHandler):
+		inputHandler = GameState.get_input_handler();
+	if ! is_instance_valid(motionHandler):
+		motionHandler = GameState.get_player().get_node_or_null("MotionHandler");
 	meshNode.set_deferred("position", modelOffset);
-	damage = baseDamage * damageModifier;
 
 func _rotate_to_look_at_mouse(delta):
-	var rot = Vector3.ZERO;
-	if thisBot is Player:
-		rot = InputHandler.mouseProjectionRotation(positionNode);
-	else:
-		rot = InputHandler.playerPosRotation(positionNode);
+	var rot = InputHandler.mouseProjectionRotation(positionNode);
 	rot = rot.rotated(Vector3(0,1,0), deg_to_rad(90))
 	#print(rot)
 	meshNode.look_at(meshNode.global_transform.origin + rot, Vector3.UP)
 	meshNode.rotation += positionNode.rotation;
+	#rotation = 
 
 func _rotate_with_player():
-	if thisBot is Player:
-		var bdy = GameState.get_player_body_mesh();
-		meshNode.rotation = bdy.rotation;
-	elif thisBot is Combatant:
-		var bdy = thisBot.body;
-		meshNode.rotation = bdy.rotation;
-	else:
-		pass;
+	var bdy = GameState.get_player_body_mesh()
+	meshNode.rotation = bdy.rotation;

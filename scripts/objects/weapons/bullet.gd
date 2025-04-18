@@ -4,7 +4,6 @@ class_name Bullet
 
 var dir := Vector3(0,0,0);
 @export var speed := 30.0;
-var damage := 1;
 var fired := false;
 var lifetime := 1.0;
 @export var lifeTimer : Timer;
@@ -26,34 +25,25 @@ func _process(delta):
 		position = initPosition + positionAppend;
 	pass
 
-func fire(_attacker : Combatant, _launcher : Node ,_initPosition : Vector3, _direction := Vector3(1,0,0), _fireSpeed := 30.0, _lifetime := 1.0, _damage := 1.0):
-	set_attacker(_attacker);
-	if ! is_instance_valid(attacker): 
-		die()
-		return
+func fire(_launcher : Node ,_initPosition : Vector3, _direction := Vector3(1,0,0), _fireSpeed := 30.0, _lifetime := 1.0):
 	launcher = _launcher;
 	speed = _fireSpeed;
 	dir = _direction;
 	lifetime = _lifetime;
 	lifeTimer.wait_time = lifetime;
 	lifeTimer.start();
-	damage = _damage;
 	positionAppend = Vector3.ZERO;
 	initPosition = _initPosition;
 	position = initPosition;
 	collision.set_deferred("disabled", false);
 	rotateTowardVector3(dir);
+	print("PARENT", _launcher, _launcher.get_parent());
 	
 	show();
 	fired = true;
-	print("I have been fired at ", global_position, ", attacker is at ", attacker.global_position)
 
 func rotateTowardVector3(dir : Vector3):
 	look_at(global_transform.origin + dir, Vector3.UP)
-
-func change_direction(newAngle : Vector3):
-	dir = newAngle;
-	rotateTowardVector3(dir);
 
 func die():
 	position = Vector3.ZERO;
@@ -69,21 +59,11 @@ func _on_life_timer_timeout():
 	pass # Replace with function body.
 
 func _on_body_entered(body):
-	if leaking: return;
-	if body.get_parent() == attacker:
-		#print("                     entered my attacker")
-		return;
 	if body.get_parent() is Combatant:
-		#print(body.get_parent())
-		body.get_parent().take_damage(damage);
-		body.get_parent().call_deferred("take_knockback",(dir + Vector3(0,0.01,0)) * 1000);
-		print("should be taking knockback....")
-	#print("Shot ded by ",body, " named: ", body.name)
-	die();
+		body.get_parent().take_damage(1);
 	
-	#if not ( body.is_in_group("Player Part") ):
-		#die()
-		#;
+	if not ( body.is_in_group("Player Part") ):
+		die();
 	pass # Replace with function body.
 
 func leak():
