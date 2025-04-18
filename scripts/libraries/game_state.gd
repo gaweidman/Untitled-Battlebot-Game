@@ -2,16 +2,20 @@ extends Node
 
 # How quickly the player speeds up
 var PLAYER_ACCELERATION = 5000;
+var curtime = 0;
 
 # how fast enemies can go
 var MAX_ENEMY_SPEED = 13
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
+	curtime = Time.get_ticks_msec() / 1000.0;
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	curtime = Time.get_ticks_msec() / 1000.0;
 	pass
 
 func get_game_board():
@@ -80,3 +84,6 @@ func get_inventory():
 	var hud = get_hud();
 	
 	return hud.get_node_or_null("Inventory");
+	
+func get_curtime():
+	return curtime;

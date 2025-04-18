@@ -10,11 +10,34 @@ var rotationDeg := 0.0;
 func contact_damage(collider: Node) -> void:
 	var par = collider.get_parent();
 	if par is Combatant && par != thisBot:
+		# https://www.youtube.com/watch?v=7s0nIxBLZio
 		#if ! par.combatHandler.invincible:
+		
 		par.combatHandler.take_damage(damage);
+		# i'm trying to make the knockback a function of how fast each 
+		# collider is going
+		
+		#var distanceDif = par.body.global_position - thisBot.body.global_position;
+		#par.take_knockback((distanceDif + Vector3(0,0.01,0)) * 1000);
+		#thisBot.take_knockback((-distanceDif + Vector3(0,0.01,0)) * 1000);
+		
 		var distanceDif = par.body.global_position - thisBot.body.global_position;
-		par.take_knockback((distanceDif + Vector3(0,0.01,0)) * 1000);
-		thisBot.take_knockback((-distanceDif + Vector3(0,0.01,0)) * 1000);
+		var parVelocity = par.get_node("Body").linear_velocity;
+		var thisbotVelocity = thisBot.get_node("Body").linear_velocity;
+		
+		var parDirection = parVelocity.normalized();
+		var thisbotDirection = thisbotVelocity.normalized();
+		
+		var parSpeed = parVelocity.length();
+		var thisbotSpeed = thisbotVelocity.length();
+		
+		print("PARSPEED ", parSpeed, " ", thisbotSpeed)
+		
+		par.take_knockback(thisbotVelocity * 100000 + Vector3(0,0.01,0) * 1000000);
+		thisBot.take_knockback(parVelocity * 100000 + Vector3(0,0.01,0) * 1000000);
+		
+		par.get_node("Body").apply_central_force(Vector3(10000, 0, 0))
+		
 		#print("Damage dealt: ", damage)
 		pass;
 	else:

@@ -3,12 +3,10 @@ extends MotionHandler
 class_name MotionHandlerBaseEnemy
 
 var aiHandler;
-var nextThrust;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	super();
-	nextThrust = Time.get_ticks_msec() + randi_range(0, 3) * 1000
 	pass;
 
 func _process(delta: float) -> void:
@@ -22,15 +20,11 @@ func grab_references():
 		aiHandler = thisBot.get_node("AIHandler");
 
 
-## This enemy thrusts.
-## Make sure to move this to the thruster. Default behavior should probably be unmoving.
 func _physics_process(delta):
 	super(delta);
 	if ! is_instance_valid(aiHandler):
 		aiHandler = thisBot.get_node("AIHandler");
 		
-	nextThrust += 1000;
-	
 	# this will be the direction of movement taken from 2D to 3D and multiplied by the speed of movement
 	# multiplication is done BEFORE the movement vector is obtained.
 	var forceVector = Vector3.ZERO
