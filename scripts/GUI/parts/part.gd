@@ -2,32 +2,74 @@ extends Control
 
 class_name Part
 
-@export var dimensions : Array[Vector2i];
 var invPosition : Vector2i;
-@export var invSprite : CompressedTexture2D;
-var scrapCost : int;
-@export var inventoryNode : Inventory;
 var partBounds : Vector2i;
 var inPlayerInventory := false;
+var thisBot : Combatant;
+var textureBase : NinePatchRect;
+var textureScrews : NinePatchRect;
+var textureIcon : TextureRect;
+
+var selected := false;
+
+@export_category("Gameplay")
+@export var scrapCostBase : int;
+var scrapSellModifier := 1.0;
+var scrapSellModifierBase := 0.5;
+@export var inventoryNode : Inventory;
+@export var dimensions : Array[Vector2i];
+
+@export_category("Vanity")
+@export var partName := "Part";
+@export_multiline var partDescription := "No description given.";
+@export var partIcon : CompressedTexture2D;
+@export var invSprite : CompressedTexture2D;
+@export var screwSprite : CompressedTexture2D;
 
 #func _init():
 
 func _ready():
-	dimensions = [Vector2i(0,0), Vector2i(0,1), Vector2i(1,0), Vector2i(1,1)]
+	#dimensions = [Vector2i(0,0), Vector2i(0,1), Vector2i(1,0), Vector2i(1,1)]
+	if dimensions == null:
+		dimensions = [Vector2i(0,0)]
 	
 	var PB = _get_part_bounds();
+	textureBase = $TextureBase;
 	
-	$TextureRect.set_deferred("texture", invSprite);
+	textureBase.set_deferred("texture", invSprite);
+	textureBase.set_deferred("size", PB * 48);
+	textureBase.set_deferred("patch_margin_left", 13);
+	textureBase.set_deferred("patch_margin_right", 13);
+	textureBase.set_deferred("patch_margin_top", 13);
+	textureBase.set_deferred("patch_margin_bottom", 13);
 	
-	print(PB)
+	textureScrews = $TextureBase/Screws;
+	textureScrews.set_deferred("texture", screwSprite);
+	textureScrews.set_deferred("size", PB * 48);
+	textureScrews.set_deferred("patch_margin_left", 13);
+	textureScrews.set_deferred("patch_margin_right", 13);
+	textureScrews.set_deferred("patch_margin_top", 13);
+	textureScrews.set_deferred("patch_margin_bottom", 13);
+	
+	textureIcon = $TextureBase/Icon;
+	textureIcon.set_deferred("texture", partIcon);
+	textureIcon.set_deferred("position", Vector2i(4,4));
+
 	_populate_buttons();
 
-func _get_sell_price(_discount := 0.0):
-	var discount = 1.0 + _discount
+func _get_sell_price():
+	var discount = 1.0 * scrapSellModifier * scrapSellModifierBase;
 	
-	var sellPrice = discount * scrapCost
+	var sellPrice = discount * scrapCostBase
 	
-	return roundi(sellPrice)
+	return roundi(max(1, sellPrice))
+
+func get_buy_price(_discount := 0.0, markup:=0.0, fixedDiscount := 0, fixedMarkup := 0):
+	var discount = 1.0 + _discount + markup;
+	
+	var sellPrice = discount * scrapCostBase
+	
+	return roundi(max(1, sellPrice + fixedDiscount + fixedMarkup))
 
 func _get_part_bounds() -> Vector2i:
 	var highestX = 1;
@@ -58,9 +100,33 @@ func _populate_buttons():
 		button.part = self;
 		button.buttonHolder = %Buttons;
 		
-		button.set_deferred("position", index * 32);
-		button.set_deferred("size", Vector2i(32, 32));
+		button.set_deferred("position", index * 48);
+		button.set_deferred("size", Vector2i(48, 48));
 		#print(button.disabled)
 
 func _process(delta):
-	$TextureRect.hide()
+	if (inventoryNode is InventoryPlayer):
+		textureBase.show();
+		if inPlayerInventory:
+			textureBase.position = inventoryNode.HUD_engine.global_position + Vector2(invPosition * 48);
+	else:
+		textureBase.hide();
+		%Buttons.disable();
+	pass
+
+func _on_buttons_on_select(foo:bool):
+	selected = foo;
+	inventoryNode.select_part(self, foo);
+	pass # Replace with function body.
+
+func select(foo:bool):
+	_on_buttons_on_select(foo);
+	%Buttons.set_pressed(foo);
+	move_mode(false);
+
+func move_mode(enable:bool):
+	%Buttons.move_mode_enable(enable);
+
+func destroy():
+	select(false);
+	queue_free();

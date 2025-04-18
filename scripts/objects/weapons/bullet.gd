@@ -4,6 +4,7 @@ class_name Bullet
 
 var dir := Vector3(0,0,0);
 @export var speed := 30.0;
+var damage := 1.0;
 var fired := false;
 var lifetime := 1.0;
 @export var lifeTimer : Timer;

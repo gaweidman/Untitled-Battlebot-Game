@@ -73,6 +73,8 @@ func take_damage(damage):
 func die():
 	get_parent().hide();
 	GameState.set_game_board_state(GameBoard.gameState.GAME_OVER)
+	if is_instance_valid(inventory):
+		inventory.inventory_panel_toggle(false);
 	pass;
 	#get_parent().queue_free();
 

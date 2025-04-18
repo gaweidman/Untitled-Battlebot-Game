@@ -8,3 +8,12 @@ script = ExtResource("2_5x1qy")
 
 [node name="MotionHandler" parent="." index="3"]
 maxSpeed = null
+[node name="BotBody" parent="Body" index="5"]
+material_override = null
+mesh = ExtResource("3_ifcje")
+surface_material_override/0 = ExtResource("3_5x1qy")
+surface_material_override/1 = ExtResource("5_4h4fo")
+
+[node name="CombatHandler" parent="." index="2"]
+scrap_worth = 1
+maxHealth = 1.5

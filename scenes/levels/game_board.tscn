@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=13 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena_floor.tres" id="2_4jixe"]
@@ -25,13 +25,12 @@ data = PackedVector3Array(-2.0005, 5.0276, -2.0005, -2.0005, 5.0276, -0.0004, -3
 [sub_resource type="SphereShape3D" id="SphereShape3D_jhciq"]
 radius = 1.0
 
-[node name="GameBoard" type="Node3D" node_paths=PackedStringArray("enemySpawnPositions", "spawnChecker", "HUD_playerStats", "HUD_mainMenu", "HUD_credits", "HUD_gameOver")]
+[node name="GameBoard" type="Node3D" node_paths=PackedStringArray("enemySpawnPositions", "spawnChecker", "HUD_mainMenu", "HUD_credits", "HUD_gameOver")]
 top_level = true
 script = ExtResource("1_mlcvp")
 playerSpawnPosition = Vector3(0, 0.605191, 0)
 enemySpawnPositions = NodePath("ArenaWall/StaticBody3D/EnemySpawnLocations")
 spawnChecker = NodePath("ArenaWall/StaticBody3D/EnemySpawnLocations/ShapeCast3D")
-HUD_playerStats = NodePath("HUD/PlayerStats")
 HUD_mainMenu = NodePath("HUD/MainMenu")
 HUD_credits = NodePath("HUD/Credits")
 HUD_gameOver = NodePath("HUD/GameOver")

@@ -40,6 +40,7 @@ var slots := {
 }
 
 var listOfPieces = []
+var selectedPart: Part;
 
 func clear_slot_at(x: int, y: int):
 	var index = Vector2i(x, y);
@@ -55,13 +56,18 @@ func get_slot_at(x: int, y: int):
 	
 	return pointer
 
-func is_slot_free(x: int, y: int) -> bool:
+func is_slot_free(x: int, y: int, filterPart:Part) -> bool:
 	
 	var index = Vector2i(x, y);
 	
 	if index in slots.keys():
-		if get_slot_at(x, y) == null:
+		var slotAt = get_slot_at(x, y)
+		if slotAt == null:
 			return true;
+		else:
+			if is_instance_valid(filterPart):
+				if slotAt == filterPart:
+					return true;
 	return false;
 
 func get_modified_part_dimensions(part: Part, modifier: Vector2i):
@@ -73,15 +79,33 @@ func get_modified_part_dimensions(part: Part, modifier: Vector2i):
 	
 	return coords
 
+func check_coordinate_table_is_free(coords:Array, filterPart:Part):
+	for index in coords:
+		if is_slot_free(index.x, index.y,filterPart):
+			pass
+		else:
+			return false
+	return true
+
+func is_there_space_for_part(part:Part, invPosition : Vector2i) -> bool:
+	if is_instance_valid(part):
+		var partCoords = get_modified_part_dimensions(part, invPosition)
+		if check_coordinate_table_is_free(partCoords, part):
+			return true;
+	return false;
+
 func add_part(part: Part, invPosition : Vector2i):
 	var coordsToCheck = get_modified_part_dimensions(part, invPosition);
 	
-	if check_coordinate_table_is_free(coordsToCheck):
+	if check_coordinate_table_is_free(coordsToCheck, part):
+		print("Coord table is free... somehow ", coordsToCheck)
 		for index in coordsToCheck:
 			set_slot_at(index.x, index.y, part);
 		listOfPieces.append(part);
 		part.invPosition = invPosition;
 		part.inventoryNode = self;
+		if self is InventoryPlayer:
+			part.inPlayerInventory = true;
 		if part is PartActive:
 			part.positionNode = battleBotBody;
 			part.meshNode.reparent(battleBotBody);
@@ -89,30 +113,67 @@ func add_part(part: Part, invPosition : Vector2i):
 		pass 
 	pass
 
-func remove_part(part: Part):
+func remove_part(part: Part, destroy:=false):
 	var coordsToRemove = get_modified_part_dimensions(part, part.invPosition);
 	part.invPosition = Vector2i(0,0);
 	if part is PartActive:
 		part.positionNode = null;
 		part.meshNode.reparent(part);
 	
+	if self is InventoryPlayer:
+		part.inPlayerInventory = false;
+	
 	for coord : Vector2i in coordsToRemove:
 		clear_slot_at(coord.x, coord.y);
 	
 	while listOfPieces.find(part) != -1:
 		listOfPieces.remove_at(listOfPieces.find(part));
+	
+	if destroy:
+		part.destroy();
 
-func check_coordinate_table_is_free(coords:Array):
-	for index in coords:
-		if is_slot_free(index.x, index.y):
-			pass
-		else:
-			return false
-	return true
+func move_part(part:Part, invPosition : Vector2i):
+	if is_there_space_for_part(part, invPosition):
+		remove_part(part);
+		add_part(part, invPosition);
+		deselect_part();
+	pass
 
 func set_slot_at(x: int, y: int, part: Part):
-	if is_slot_free(x, y):
+	if is_slot_free(x, y, part):
 		var index = Vector2i(x, y);
+		slots[index] = part;
+
+func add_part_from_scene(x: int, y:int, _partScene:String, activeSlot = null):
+	if all_refs_valid():
+		if is_slot_free(x,y, null):
+			var partScene = load(_partScene);
+			var part = partScene.instantiate();
+			print("Adding ", part.name)
+			add_child(part);
+			add_part(part, Vector2i(x,y));
+			if activeSlot != null && activeSlot is int:
+				combatHandler.activeParts[activeSlot] = part;
+
+func select_part(part:Part, foo:bool):
+	if foo:
+		if part != selectedPart:
+			if is_instance_valid(selectedPart):
+				selectedPart.select(false);
+			selectedPart = part;
+			print("selected new part: ", part);
+	else:
+		selectedPart = null;
+		if is_instance_valid(part):
+			if part.selected:
+				part.select(false);
+		print("Unselected part: ", part);
+
+func deselect_part():
+	if is_instance_valid(selectedPart):
+		select_part(selectedPart, false);
+	else:
+		selectedPart = null;
 
 #########################
 

@@ -12,7 +12,7 @@ var wave := 0;
 var enemiesAlive = [];
 var player : Player;
 @export_category("HUD nodes")
-@export var HUD_playerStats : Control;
+#@export var HUD_playerStats : Control;
 @export var HUD_mainMenu : Control;
 @export var HUD_credits : Control;
 @export var HUD_gameOver : Control;
@@ -24,7 +24,7 @@ func _ready():
 	change_state(gameState.MAIN_MENU);
 	#return_random_spawn_location()
 
-##State stuff
+##Controls the state of the game.
 enum gameState {
 	START,
 	MAIN_MENU,
@@ -45,7 +45,7 @@ func exit_state(state:gameState):
 		HUD_mainMenu.hide();
 		pass
 	elif state == gameState.GAME_OVER:
-		HUD_playerStats.hide();
+		#HUD_playerStats.hide();
 		HUD_gameOver.hide();
 		pass
 	elif state == gameState.CREDITS:
@@ -72,7 +72,7 @@ func enter_state(state:gameState):
 		wave = 0;
 		spawnPlayer(return_random_unoccupied_spawn_location());
 		player.live();
-		HUD_playerStats.show();
+		#HUD_playerStats.show();
 		change_state(gameState.PLAY)
 		pass
 	elif state == gameState.PLAY:
@@ -154,6 +154,7 @@ func return_random_unoccupied_spawn_location():
 	return null;
 
 func spawn_wave(numOfEnemies := 0):
+	#return
 	while numOfEnemies > 0:
 		var enemyScene = return_random_enemy();
 		var pos = return_random_unoccupied_spawn_location();

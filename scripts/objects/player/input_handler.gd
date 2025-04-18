@@ -20,8 +20,13 @@ func _physics_process(delta):
 	if GameState.get_game_board_state() == GameBoard.gameState.PLAY:
 		process_movement(get_movement_vector(), delta);
 		
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && combatHandler.can_fire(0):
-			combatHandler.use_active(0);
+		if ! player.inventory.inventoryUp:
+			if Input.is_action_just_pressed("FireRanged") && combatHandler.can_fire(0):
+				combatHandler.use_active(0);
+			if Input.is_action_just_pressed("FireMelee") && combatHandler.can_fire(1):
+				combatHandler.use_active(1);
+			if Input.is_action_just_pressed("FireUtility") && combatHandler.can_fire(2):
+				combatHandler.use_active(2);
 	
 # we apply forces in motion_handler
 func process_movement(movementVector, delta):
@@ -60,13 +65,21 @@ static func is_inputting_movement():
 	
 	return false;
 
-static func mouseProjectionRotation(positionNode : Node3D):
-	var viewport = positionNode.get_viewport();
-	var camera = viewport.get_camera_3d();
+static func mouseProjectionRotation(positionNode : Node3D) -> Vector3:
+	if is_instance_valid(positionNode):
+		var viewport = positionNode.get_viewport();
+		var camera = viewport.get_camera_3d();
+		
+		var mousePos = viewport.get_mouse_position();
+		var mousePos3 = camera.project_position(mousePos, 0);
+		var mouseProject = camera.project_position(mousePos, camera.position.y) - positionNode.global_position;
+		
+		var mouseProjectNormalized = Vector3(mouseProject.x, 0, mouseProject.z).normalized()
+		return mouseProjectNormalized;
+	return Vector3.ZERO;
+
+static func playerPosRotation(positionNode : Node3D) -> Vector3:
+	var pos = GameState.get_player_pos_offset(positionNode.global_position);
 	
-	var mousePos = viewport.get_mouse_position();
-	var mousePos3 = camera.project_position(mousePos, 0);
-	var mouseProject = camera.project_position(mousePos, camera.position.y) - positionNode.global_position;
-	
-	var mouseProjectNormalized = Vector3(mouseProject.x, 0, mouseProject.z).normalized()
+	var mouseProjectNormalized = Vector3(pos.x, 0, pos.z).normalized()
 	return mouseProjectNormalized;

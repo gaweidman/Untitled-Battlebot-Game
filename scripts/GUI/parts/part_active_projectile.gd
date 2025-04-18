@@ -6,7 +6,12 @@ class_name PartActiveProjectile
 @export var bulletRef : PackedScene;
 var magazine = [];
 var magazineCount := 0;
-@export var magazineMax := 3;
+##The base max amount of bullets in the magazine.
+@export var magazineMaxBase := 3;
+##Calculated magazine size.
+var magazineMax := magazineMaxBase;
+##Modifier of the max amount of bullets in the mag.
+var magazineMaxModifier := 1.0;
 @export var fireSpeed := 30.0;
 @export var bulletLifetime := 1.0;
 @export var firingAngle := Vector3.BACK;
@@ -27,9 +32,14 @@ func _activate():
 	pass;
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta: float) -> void:
+func _process(delta: float) -> void:
 	super(delta);
+	magazineMax = magazineMaxBase * magazineMaxModifier;
 	pass
+
+func get_magazine_size(base:=false):
+	if base: return magazineMaxBase * magazineMaxModifier;
+	return magazineMax;
 
 func fireBullet():
 	#print("pew");
@@ -50,8 +60,7 @@ func fireBullet():
 		var offset = Vector3(0,1,0);
 		firingAngle = InputHandler.mouseProjectionRotation(positionNode);
 		
-		bullet.fire(self, positionNode.position + offset, firingAngle, fireSpeed, bulletLifetime);
-		_set_fire_rate_timer();
+		bullet.fire(thisBot, self, positionNode.global_position + firingOffset + modelOffset, firingAngle, fireSpeed, bulletLifetime, get_damage());
 	
 	leakTimer.start();
 	GameState.get_hud().update();
@@ -67,6 +76,12 @@ func recountMagazine() -> int:
 	var finalCount = max(count, 0);
 	magazineCount = finalCount;
 	return finalCount;
+
+func can_fire() -> bool: 
+	if fireRateTimer <= 0:
+		if recountMagazine() > 0:
+			return true;
+	return false;
 
 func nextBullet():
 	##Checks the magazine for the next non-fired bullet

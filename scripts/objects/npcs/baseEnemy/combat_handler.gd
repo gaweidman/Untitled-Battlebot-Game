@@ -1,24 +1,9 @@
 extends Node3D
 
-@export var health: int;
+class_name CombatHandlerEnemy
 
-var inputHandler;
-var leakTimer : Timer;
+@export var scrap_worth := 1;
 
-var player;
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-func take_damage(damage):
-	health -= damage;
-	if health <= 0:
-		die();
-	
-func die():
-	get_parent().queue_free();
-	
 func _on_collision(collider):
 	var parent = collider.get_parent();
 	print(parent, parent.get_parent());
@@ -26,3 +11,13 @@ func _on_collision(collider):
 		if parent.get_attacker() != self:
 			pass;
 			#take_damage(1);
+
+func use_active(index):
+	super(index);
+	#print(can_fire(0))
+
+func die():
+	var inv = GameState.get_inventory();
+	if is_instance_valid(inv):
+		inv.add_scrap(scrap_worth);
+	super();

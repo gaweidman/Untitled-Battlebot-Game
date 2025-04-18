@@ -32,6 +32,10 @@ func grab_references():
 	pass;
 
 func look_at_safe(node, target):
+	if node.get_parent().get_parent() != GameState.get_player(): 
+		#print("IS EQUAL APPROX ", node.global_transform.origin.is_equal_approx(target))
+		#print(node.global_transform.origin, " ", target)
+		pass
 	if node.global_transform.origin.is_equal_approx(target): return;
 	node.look_at(target);
 
