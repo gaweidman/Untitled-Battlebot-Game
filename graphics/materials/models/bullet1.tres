@@ -1,0 +1,19 @@
+[gd_resource type="StandardMaterial3D" load_steps=7 format=3 uid="uid://cwkc8sa3x8m5h"]
+
+[ext_resource type="Texture2D" uid="uid://cm2pk65oop54e" path="res://graphics/images/models/bullet1/bullet1_color.png" id="1_3xfx4"]
+[ext_resource type="Texture2D" uid="uid://c524mi8vjxgpi" path="res://graphics/images/models/bullet1/bullet1_emissive.png" id="2_k742o"]
+[ext_resource type="Texture2D" uid="uid://0rfk23j20c51" path="res://graphics/images/models/bullet1/bullet1_height.png" id="3_yem51"]
+[ext_resource type="Texture2D" uid="uid://7ix3qxrs08gq" path="res://graphics/images/models/bullet1/bullet1_metallic.png" id="4_68fc6"]
+[ext_resource type="Texture2D" uid="uid://dpvafyh24gtlk" path="res://graphics/images/models/bullet1/bullet1_normal.png" id="5_c1mnb"]
+[ext_resource type="Texture2D" uid="uid://bjvb7ym40fve5" path="res://graphics/images/models/bullet1/bullet1_roughness.png" id="6_1laxh"]
+
+[resource]
+albedo_texture = ExtResource("1_3xfx4")
+metallic = 1.0
+metallic_texture = ExtResource("4_68fc6")
+roughness_texture = ExtResource("6_1laxh")
+emission_enabled = true
+emission_texture = ExtResource("2_k742o")
+normal_enabled = true
+normal_texture = ExtResource("5_c1mnb")
+heightmap_texture = ExtResource("3_yem51")

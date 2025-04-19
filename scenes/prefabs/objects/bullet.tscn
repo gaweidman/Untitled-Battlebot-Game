@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://clsvb0b2mydc7"]
+
+[ext_resource type="Script" uid="uid://bujcs1qe34eqy" path="res://scripts/objects/weapons/bullet.gd" id="1_qx18r"]
+[ext_resource type="ArrayMesh" uid="uid://bxrjs85uq3lv1" path="res://graphics/models/extracted/bullet1.res" id="2_kkgg0"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8grda"]
+
+[node name="Bullet" type="Area3D" node_paths=PackedStringArray("lifeTimer", "collision") groups=["Metal", "Projectile"]]
+script = ExtResource("1_qx18r")
+lifeTimer = NodePath("LifeTimer")
+collision = NodePath("CollisionShape3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["Projectile"]]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("SphereShape3D_8grda")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." groups=["Projectile"]]
+transform = Transform3D(0.120565, 0, -0.000227261, 0, 0.120566, 0, 0.000227261, 0, 0.120565, 0, 0, 0)
+mesh = ExtResource("2_kkgg0")
+
+[node name="LifeTimer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_shape_entered" from="." to="." method="_on_body_shape_entered"]
+[connection signal="timeout" from="LifeTimer" to="." method="_on_life_timer_timeout"]

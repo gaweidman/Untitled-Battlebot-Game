@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" load_steps=7 format=3 uid="uid://bjpw8orsijmuk"]
+
+[ext_resource type="Texture2D" uid="uid://d0fapb5hsnykx" path="res://graphics/images/models/cannon/cannon_color.png" id="1_o0ufg"]
+[ext_resource type="Texture2D" uid="uid://n7o3t1dq1xec" path="res://graphics/images/models/cannon/cannon_emissive.png" id="2_yyr5r"]
+[ext_resource type="Texture2D" uid="uid://5lngjasr5nqx" path="res://graphics/images/models/cannon/cannon_height.png" id="3_g8ocg"]
+[ext_resource type="Texture2D" uid="uid://75dp2f4fwem3" path="res://graphics/images/models/cannon/cannon_metallic.png" id="4_yf8al"]
+[ext_resource type="Texture2D" uid="uid://b1rgs0irdp14i" path="res://graphics/images/models/cannon/cannon_normal.png" id="5_i5iug"]
+[ext_resource type="Texture2D" uid="uid://comunl4wnvmna" path="res://graphics/images/models/cannon/cannon_roughness.png" id="6_s2y5p"]
+
+[resource]
+albedo_texture = ExtResource("1_o0ufg")
+metallic = 1.0
+metallic_texture = ExtResource("4_yf8al")
+roughness_texture = ExtResource("6_s2y5p")
+emission_texture = ExtResource("2_yyr5r")
+normal_enabled = true
+normal_texture = ExtResource("5_i5iug")
+heightmap_texture = ExtResource("3_g8ocg")
