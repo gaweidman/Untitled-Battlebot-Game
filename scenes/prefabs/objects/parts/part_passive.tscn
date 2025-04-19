@@ -5,3 +5,4 @@
 
 [node name="PartPassive" instance=ExtResource("1_rwibx")]
 script = ExtResource("2_6ymx3")
+myPartType = 0

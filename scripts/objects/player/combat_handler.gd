@@ -26,7 +26,7 @@ func take_damage(damage:float):
 	GameState.get_hud().update();
 
 func die():
-	get_parent().hide();
+	player.body.hide();
 	GameState.set_game_board_state(GameBoard.gameState.GAME_OVER)
 	if is_instance_valid(inventory):
 		inventory.inventory_panel_toggle(false);

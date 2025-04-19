@@ -12,7 +12,7 @@ var gameState : GameBoard.gameState;
 @export var HUD_inventory : Control;
 @export var HUD_inventoryPanel : Control;
 @export var HUD_engine : PartsHolder_Engine;
-var scrap := 0.0;
+var scrap := 9999.0;
 var startingKitAssigned := false;
 var buyMode := false;
 
@@ -77,7 +77,8 @@ func test_add_stuff():
 	if (assign_player()) and (not startingKitAssigned):
 		add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 0);
 		add_part_from_scene(1, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
-		add_part_to_shop("res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn");
+		add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
+		$InventoryControls/BackingTexture/Shop.reroll_shop();
 		startingKitAssigned = true;
 	pass
 	
@@ -193,12 +194,19 @@ func deselect_part():
 func add_part_to_shop(_partScene:String):
 	var stall = next_empty_shop_stall();
 	if is_instance_valid(stall):
+		if is_instance_valid(stall.partRef):
+			print("No part is to be placed here!!! (", stall.name,")")
+			slots[str(stall.name)] = stall.partRef;
+			return
 		var partScene = load(_partScene);
 		var part:Part = partScene.instantiate();
+		print(stall.partRef)
 		part.inventoryNode = self;
 		part.inPlayerInventory = true;
 		part.invHolderNode = stall;
 		stall.partRef = part;
+		slots[str(stall.name)] = part;
+		print(stall.partRef)
 		#part.
 		print("Adding ", part.name, " to shop stall ", stall.name)
 		add_child(part);
@@ -206,12 +214,23 @@ func add_part_to_shop(_partScene:String):
 
 func next_empty_shop_stall():
 	if !is_instance_valid(slots["StallA"]):
-		return $InventoryControls/BackingTexture/Shop/StallA;
-	#if !is_instance_valid(slots["StallB"]):
-		#return $InventoryControls/BackingTexture/Shop/StallB;
-	#if !is_instance_valid(slots["StallC"]):
-		#return $InventoryControls/BackingTexture/Shop/StallC;
+		var StallA = $InventoryControls/BackingTexture/Shop/StallA;
+		if ! StallA.is_frozen():
+			return StallA;
+	
+	if !is_instance_valid(slots["StallB"]):
+		var StallB = $InventoryControls/BackingTexture/Shop/StallB;
+		if ! StallB.is_frozen():
+			return StallB;
+	
+	if !is_instance_valid(slots["StallC"]):
+		var StallC = $InventoryControls/BackingTexture/Shop/StallC;
+		if ! StallC.is_frozen():
+			return StallC;
 	return null;
+
+func is_affordable(inAmt : float):
+	return inAmt <= get_scrap_total();
 
 func add_part(part: Part, invPosition : Vector2i):
 	super(part, invPosition);
@@ -245,7 +264,31 @@ func remove_part_post(part:Part, beingSold := false, beingBought := false):
 	if beingSold:
 		add_scrap(part._get_sell_price());
 	if beingBought:
-		remove_scrap(part.get_buy_price());
+		remove_scrap(part._get_buy_price());
+	if part.invHolderNode is ShopStall:
+		part.invHolderNode.partRef = null;
+		part.invHolderNode.close_stall();
 
-#func move_part():
-	#super();
+func clear_shop_stall(stall:ShopStall, ignoreFrozen := false):
+	if is_instance_valid(stall):
+		if is_instance_valid(stall.partRef):
+			print("VALID PART!!! YIPPPSIEPA")
+			if ignoreFrozen:
+				stall.freeze(false);
+				remove_part(stall.partRef, true);
+			else:
+				if (stall.curState != ShopStall.doorState.FROZEN):
+					print(stall.name + " is NOT frozen")
+					remove_part(stall.partRef, true);
+
+func clear_shop(ignoreFrozen := false, reroll := false):
+	var StallA = $InventoryControls/BackingTexture/Shop/StallA;
+	clear_shop_stall(StallA, ignoreFrozen);
+	var StallB = $InventoryControls/BackingTexture/Shop/StallB;
+	clear_shop_stall(StallB, ignoreFrozen);
+	var StallC = $InventoryControls/BackingTexture/Shop/StallC;
+	clear_shop_stall(StallC, ignoreFrozen);
+	
+	if reroll:
+		$InventoryControls/BackingTexture/Shop.reroll_shop();
+	

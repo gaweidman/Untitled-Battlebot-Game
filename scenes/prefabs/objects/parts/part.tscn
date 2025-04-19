@@ -21,6 +21,7 @@ invSprite = ExtResource("2_7gik6")
 screwSprite = ExtResource("5_6haxk")
 
 [node name="TextureBase" type="NinePatchRect" parent="."]
+visible = false
 texture_filter = 1
 layout_mode = 0
 offset_right = 26.0

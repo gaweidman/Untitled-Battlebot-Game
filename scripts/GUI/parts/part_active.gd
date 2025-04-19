@@ -44,6 +44,7 @@ func _ready():
 	meshNode.set_deferred("mesh", model);
 	meshNode.set_deferred("surface_material_override/0", modelMaterial);
 	meshNode.set_deferred("scale", modelScale);
+	meshNode.hide();
 
 func _activate():
 	if can_fire():
@@ -107,6 +108,19 @@ func _process(delta):
 		fireRateTimer -= delta;
 	
 	_assign_refs()
+	if ownedByPlayer:##If the player owns it...
+		if inPlayerInventory:
+			if positionNode.visible == true:
+				if meshNode.visible == false:
+					meshNode.show()
+	else:##If they don't (at all or yet)
+		if inPlayerInventory: ##if in the player's prescence:
+			if meshNode.visible == true:
+				meshNode.hide()
+		else: ##if NOT in the player's prescence:
+			if positionNode.visible == true:
+				if meshNode.visible == false:
+					meshNode.show()
 	meshNode.set_deferred("position", modelOffset);
 	damage = baseDamage * baseDamageModifier * damageModifier;
 	fireRate = baseFireRate * baseDamageModifier;

@@ -31,7 +31,8 @@ func _process(_delta: float) -> void:
 	
 func get_health() -> int:
 	return combatHandler.health;
-	
+func at_max_health() ->bool:
+	return is_equal_approx(combatHandler.health, combatHandler.maxHealth);
 # if a given number is positive, returns 1. if it's negative, returns -1. if it's
 # 0, returns 0.
 func get_sign(num):

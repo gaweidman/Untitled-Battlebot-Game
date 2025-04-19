@@ -19,24 +19,37 @@ func populate_info(part:Part):
 		$SellButton/Label.show();
 		$SellButton.disabled = false;
 	$Description.text = part.partDescription;
-	if part is PartActive:
+	
+	if part._get_part_type() == Part.partTypes.UTILITY:
 		$EnergyIcon/Label.text = str(part.get_energy_cost(true));
 		$EnergyIcon.show();
 		$CooldownIcon/Label.text = str(part.get_fire_rate(true));
 		$CooldownIcon.show();
-		if part is PartActiveProjectile:
-			iconBase.texture = load("res://graphics/images/HUD/info_ranged.png");
-			$DamageIcon/Label.text = str(part.get_damage(true));
-			$DamageIcon.show();
-			$MagazineIcon/Label.text = str(part.get_magazine_size(true));
-			$MagazineIcon.show();
-		elif part is PartActiveMelee:
-			iconBase.texture = load("res://graphics/images/HUD/info_melee.png");
-			$DamageIcon/Label.text = str(part.get_damage(true));
-			$DamageIcon.show();
-		else:
-			iconBase.texture = load("res://graphics/images/HUD/info_utility.png");
-	else:
+		iconBase.texture = load("res://graphics/images/HUD/info_utility.png");
+		
+	elif part._get_part_type() == Part.partTypes.MELEE:
+		$EnergyIcon/Label.text = str(part.get_energy_cost(true));
+		$EnergyIcon.show();
+		$CooldownIcon/Label.text = str(part.get_fire_rate(true));
+		$CooldownIcon.show();
+		
+		iconBase.texture = load("res://graphics/images/HUD/info_melee.png");
+		$DamageIcon/Label.text = str(part.get_damage(true));
+		$DamageIcon.show();
+		
+	elif part._get_part_type() == Part.partTypes.RANGED:
+		$EnergyIcon/Label.text = str(part.get_energy_cost(true));
+		$EnergyIcon.show();
+		$CooldownIcon/Label.text = str(part.get_fire_rate(true));
+		$CooldownIcon.show();
+		
+		iconBase.texture = load("res://graphics/images/HUD/info_ranged.png");
+		$DamageIcon/Label.text = str(part.get_damage(true));
+		$DamageIcon.show();
+		$MagazineIcon/Label.text = str(part.get_magazine_size(true));
+		$MagazineIcon.show();
+		
+	elif part._get_part_type() == Part.partTypes.PASSIVE:
 		iconBase.texture = load("res://graphics/images/HUD/info_passive.png");
 
 func clear_info():

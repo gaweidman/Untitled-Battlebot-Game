@@ -10,3 +10,5 @@ partName = "Cannon"
 partDescription = "[color=e0dede]Standard issue [color=ffffff]ballistic pew pew.
 
 [color=65a4ff]Active: Fires basic bullets."
+
+[connection signal="on_select" from="TextureBase/Buttons" to="." method="_on_buttons_on_select"]

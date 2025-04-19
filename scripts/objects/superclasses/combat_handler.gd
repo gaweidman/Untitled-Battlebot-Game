@@ -28,6 +28,7 @@ func take_damage(damage:float):
 			health = 0.0;
 		if health > maxHealth:
 			health = maxHealth;
+
 	
 func _on_collision(collider):
 	pass;

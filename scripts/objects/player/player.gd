@@ -10,7 +10,10 @@ func _ready():
 
 func live():
 	show();
+	body.show();
 	$CombatHandler.live();
+	$Inventory/InventoryControls/BackingTexture/Lbl_Timer.start(120, true);
+	$Inventory.clear_shop(true, true);
 	pass;
 
 func get_health(integer := true):
@@ -34,6 +37,9 @@ func get_body_position():
 
 func get_global_body_position():
 	return get_node("Body").get_global_position();
-	
+
 func take_damage(damage:float):
 	combatHandler.take_damage(damage)
+
+func heal(health:float):
+	combatHandler.take_damage(-health)

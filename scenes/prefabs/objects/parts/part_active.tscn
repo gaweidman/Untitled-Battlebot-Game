@@ -20,5 +20,7 @@ baseFireRate = 0.15
 baseDamage = 1.0
 partName = "Active Part"
 invSprite = ExtResource("5_ybbvs")
+myPartType = 3
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." index="1"]
+visible = false

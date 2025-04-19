@@ -24,6 +24,7 @@ modelMaterial = ExtResource("5_vi2dv")
 partName = "Ranged Part"
 partIcon = ExtResource("6_1065k")
 invSprite = ExtResource("6_dfc4u")
+myPartType = 2
 
 [node name="TextureBase" parent="." index="0"]
 texture_filter = 0

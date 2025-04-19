@@ -17,7 +17,7 @@ var selected := false;
 @export_category("Gameplay")
 @export var scrapCostBase : int;
 var scrapSellModifier := 1.0;
-var scrapSellModifierBase := 0.5;
+var scrapSellModifierBase := (2.0/3.0);
 @export var inventoryNode : Inventory;
 @export var dimensions : Array[Vector2i];
 
@@ -28,7 +28,14 @@ var scrapSellModifierBase := 0.5;
 @export var invSprite : CompressedTexture2D;
 @export var screwSprite : CompressedTexture2D;
 
-#func _init():
+@export var myPartType := partTypes.UNASSIGNED;
+enum partTypes {
+	PASSIVE,
+	MELEE,
+	RANGED,
+	UTILITY,
+	UNASSIGNED,
+}
 
 func _ready():
 	#dimensions = [Vector2i(0,0), Vector2i(0,1), Vector2i(1,0), Vector2i(1,1)]
@@ -58,6 +65,21 @@ func _ready():
 	textureIcon.set_deferred("position", Vector2i(4,4));
 
 	_populate_buttons();
+	
+	##Set part type
+	if myPartType == partTypes.UNASSIGNED:
+		if self is PartActive:
+			if self is PartActiveProjectile:
+				myPartType = partTypes.RANGED;
+			elif self is PartActiveMelee:
+				myPartType = partTypes.MELEE;
+			else:
+				myPartType = partTypes.UTILITY;
+		else:
+			myPartType = partTypes.PASSIVE;
+
+func _get_part_type():
+	return myPartType;
 
 func _get_sell_price():
 	var discount = 1.0 * scrapSellModifier * scrapSellModifierBase;
@@ -66,7 +88,7 @@ func _get_sell_price():
 	
 	return roundi(max(1, sellPrice))
 
-func get_buy_price(_discount := 0.0, markup:=0.0, fixedDiscount := 0, fixedMarkup := 0):
+func _get_buy_price(_discount := 0.0, markup:=0.0, fixedDiscount := 0, fixedMarkup := 0):
 	var discount = 1.0 + _discount + markup;
 	
 	var sellPrice = discount * scrapCostBase

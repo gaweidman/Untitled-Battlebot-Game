@@ -21,6 +21,7 @@ rotateWithPlayer = true
 partName = "Melee Part"
 partIcon = ExtResource("3_rfss0")
 invSprite = ExtResource("3_swvu8")
+myPartType = 1
 
 [node name="TextureBase" parent="." index="0"]
 texture_filter = 0
