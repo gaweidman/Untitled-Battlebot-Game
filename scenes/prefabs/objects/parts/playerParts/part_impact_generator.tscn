@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dw1c4uharxt3u"]
+
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_nud80"]
+[ext_resource type="Script" uid="uid://chkqkl5ltikmo" path="res://scripts/GUI/parts/playerParts/part_impact_generator.gd" id="2_w4ulg"]
+
+[node name="PartImpactGenerator" instance=ExtResource("1_nud80")]
+script = ExtResource("2_w4ulg")
+scrapCostBase = 6
+dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1)])
+partName = "Impact Generator"
+partDescription = "[color=f2ec6b]Passive: Gain 2 [color=789be9]Energy [color=f2ec6b]when taking damage."

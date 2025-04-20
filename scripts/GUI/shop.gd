@@ -17,11 +17,14 @@ func _ready():
 	inventory = GameState.get_inventory();
 	player = GameState.get_player();
 	shopDoor = $ShopDoor;
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 3);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 3);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 2);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 2);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn", 2);
-	open_up_shop();
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn", 2);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_magnet.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_generator.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn", 3);
+	close_up_shop();
 
 func deselect():
 	for stall in get_children():
@@ -48,6 +51,7 @@ func close_up_shop():
 	clopen_door();
 	shopOpen = false;
 	clopen_stalls(false);
+	
 
 func clopen_door(open:=false):
 	if open:
@@ -62,11 +66,6 @@ func _physics_process(delta):
 		update_health_button();
 		update_reroll_button();
 		
-		if Input.is_action_just_pressed("FireUtility"):
-			if shopOpen:
-				close_up_shop();
-			else:
-				open_up_shop();
 		##Fancy door shutting
 		if doorOpen && !is_equal_approx(shopDoor.position.y, -237):
 			shopDoorVelocity = move_toward(shopDoorVelocity, -10, delta*100);
@@ -78,7 +77,6 @@ func _physics_process(delta):
 				if not doorActuallyClosed:
 					door_closed();
 		shopDoor.position.y = clamp(shopDoor.position.y + shopDoorVelocity, -237, 0);
-		
 		
 		if awaiting_reroll:
 			if all_stalls_closed():
@@ -131,7 +129,7 @@ func update_reroll_button():
 	if inventory.is_affordable(get_reroll_price()):
 		GameState.set_text_color($RerollButton/TextHolder/Price, "scrap");
 	else:
-		GameState.set_text_color($RerollButton/TextHolder, "unaffordable");
+		GameState.set_text_color($RerollButton/TextHolder/Price, "unaffordable");
 func get_reroll_price():
 	return roundi((rerollPriceBase + rerollPriceIncrement) * rerollPriceModifier);
 

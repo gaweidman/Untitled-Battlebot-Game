@@ -14,7 +14,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-func get_game_board():
+func get_game_board() -> GameBoard:
 	var board = get_node_or_null("/root/GameBoard")
 	
 	if board == null:
@@ -29,6 +29,26 @@ func get_game_board_state():
 		return null;
 	
 	return board.curState;
+
+func get_round_number():
+	var board = get_game_board();
+	
+	return board.round;
+
+func get_round_completion():
+	var board = get_game_board();
+	
+	return board.check_round_completion();
+
+func get_wave_enemies_left():
+	var board = get_game_board();
+	
+	return board.get_enemies_left_for_wave();
+
+func get_in_state_of_play() ->bool:
+	var board = get_game_board();
+	
+	return board.in_state_of_play();
 
 func set_game_board_state(state : GameBoard.gameState):
 	var board = get_game_board();
@@ -80,6 +100,26 @@ func get_inventory() -> InventoryPlayer:
 	var ply = get_player();
 	
 	return ply.get_node_or_null("Inventory");
+
+func get_death_timer() -> DeathTimer:
+	var ply = get_player();
+	
+	return ply.get_node_or_null("Inventory/InventoryControls/BackingTexture/Lbl_Timer");
+
+func add_death_time(time:float):
+	var tmr = get_death_timer();
+	
+	tmr.add_time(time);
+
+func pause_death_timer(paused:=true):
+	var tmr = get_death_timer();
+	
+	tmr.pause(paused);
+
+func start_death_timer(_startTime := 120.0, _reset := false):
+	var tmr = get_death_timer();
+	
+	tmr.start(_startTime, _reset)
 
 # Colors for text.
 const textColors = {

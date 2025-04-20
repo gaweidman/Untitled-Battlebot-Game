@@ -1,5 +1,7 @@
 extends Label
 
+class_name DeathTimer
+
 var blinkCycle := 0.0;
 var blinkTimer := 0.0;
 
@@ -10,10 +12,10 @@ func _process(delta):
 	
 	text = format_time(time);
 	
-	
 	if not paused:
 		if time > 0:
-			time -= delta;
+			if GameState.get_game_board_state() == GameBoard.gameState.PLAY: ##This time it's specific
+				time -= delta;
 		else:
 			time = 0.0;
 		
@@ -39,7 +41,7 @@ func _process(delta):
 					pause();
 
 func blink():
-	if GameState.get_game_board_state() == GameBoard.gameState.PLAY:
+	if GameState.get_in_state_of_play():
 		blinkTimer = 0.10;
 
 func add_time(_time:float):

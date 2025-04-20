@@ -12,14 +12,16 @@ var gameState : GameBoard.gameState;
 @export var HUD_inventory : Control;
 @export var HUD_inventoryPanel : Control;
 @export var HUD_engine : PartsHolder_Engine;
+@export var HUD_shop : Shop;
 var scrap := 9999.0;
-var startingKitAssigned := false;
+var startingKitAssigned := true;
 var buyMode := false;
 
 func _ready():
 	HUD_inventory = %InventoryControls;
 	HUD_inventoryPanel = $InventoryControls/InventoryPanel;
 	HUD_engine = $InventoryControls/PartsHolder_Engine;
+	HUD_shop = $InventoryControls/BackingTexture/Shop;
 	HUD_inventory.position.y = 1000.0;
 	inventory_panel_toggle(false);
 
@@ -31,7 +33,7 @@ func _process(delta):
 	if Input.is_action_just_pressed("InventoryToggle"):
 		inventory_panel_toggle(!inventoryUp);
 	
-	if gameState == GameBoard.gameState.PLAY:
+	if GameState.get_in_state_of_play():
 		if inventoryUp:
 			HUD_inventory.position.y = lerp(HUD_inventory.position.y, 0.0, delta * 20);
 		else:
@@ -42,7 +44,7 @@ func _process(delta):
 
 func _physics_process(delta):
 	super(delta)
-	if gameState == GameBoard.gameState.PLAY:
+	if GameState.get_in_state_of_play():
 		update_stats()
 
 func assign_references():
@@ -72,13 +74,20 @@ func all_refs_valid():
 	assign_references();
 	return false;
 
+func starting_kit():
+	deselect_part();
+	clear_inventory();
+	add_part_from_scene(1, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
+	#add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
+	add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 0);
+	startingKitAssigned = true;
+	$InventoryControls/BackingTexture/Shop.reroll_shop();
+	scrap = 0;
+
 func test_add_stuff():
 	#print(ply)
 	if (assign_player()) and (not startingKitAssigned):
-		add_part_from_scene(1, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
-		add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
-		add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 0);
-		$InventoryControls/BackingTexture/Shop.reroll_shop();
+		starting_kit();
 		startingKitAssigned = true;
 	pass
 	
@@ -86,7 +95,6 @@ func test_add_stuff():
 	slots["StallA"] = null;
 	slots["StallB"] = null;
 	slots["StallC"] = null;
-
 
 func update_stats():
 	var stringHealth = "";
@@ -128,6 +136,9 @@ func remove_scrap(amt):
 
 func update_scrap():
 	$"InventoryControls/BackingTexture/ScrapCounter".text = str(get_scrap_total());
+
+func update_round():
+	$"InventoryControls/BackingTexture/Lbl_Round".text = str(GameState.get_round_number());
 
 func get_scrap_total():
 	return roundi(scrap);
@@ -240,21 +251,7 @@ func is_affordable(inAmt : float):
 
 func add_part(part: Part, invPosition : Vector2i):
 	super(part, invPosition);
-	return
-	var coordsToCheck = get_modified_part_dimensions(part, invPosition);
-	
-	if check_coordinate_table_is_free(coordsToCheck, part):
-		#print("Coord table is free... somehow ", coordsToCheck)
-		for index in coordsToCheck:
-			set_slot_at(index.x, index.y, part);
-		listOfPieces.append(part);
-		part.invPosition = invPosition;
-		part.inventoryNode = self;
-		if part is PartActive:
-			part.positionNode = battleBotBody;
-			part.meshNode.reparent(battleBotBody);
-	else:
-		pass 
+	return;
 	pass
 
 func add_part_post(part:Part):
@@ -269,8 +266,10 @@ func remove_part_post(part:Part, beingSold := false, beingBought := false):
 		slots[part.invHolderNode.name] = null;
 	if beingSold:
 		add_scrap(part._get_sell_price());
+		part.on_sold();
 	if beingBought:
 		remove_scrap(part._get_buy_price());
+		part.on_bought();
 	if part.invHolderNode is ShopStall:
 		part.invHolderNode.partRef = null;
 		part.invHolderNode.close_stall();
@@ -296,3 +295,27 @@ func clear_shop(ignoreFrozen := false, reroll := false):
 	
 	if reroll:
 		$InventoryControls/BackingTexture/Shop.reroll_shop();
+
+################
+
+func new_round():
+	update_round();
+	HUD_shop.close_up_shop();
+	for part in listOfPieces:
+		if is_instance_valid(part):
+			if part is Part:
+				part.new_round();
+	inventory_panel_toggle(false);
+
+func end_round():
+	update_round();
+	for part in listOfPieces:
+		if is_instance_valid(part):
+			if part is Part:
+				part.end_round();
+
+func take_damage(damage:float):
+	for part in listOfPieces:
+		if is_instance_valid(part):
+			if part is Part:
+				part.take_damage(damage);

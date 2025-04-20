@@ -160,3 +160,25 @@ func destroy():
 
 func disable(_disabled:=true):
 	%Buttons.disable(_disabled);
+
+#######
+
+##Fired at the start of a round.
+func new_round():
+	pass
+
+##Fired at the end of a round.
+func end_round():
+	pass
+
+##Fired when the player takes damage.
+func take_damage(damage:float):
+	pass
+
+##Fired when this part is sold.
+func on_sold():
+	pass;
+
+##Fired when this part is bought.
+func on_bought():
+	pass;

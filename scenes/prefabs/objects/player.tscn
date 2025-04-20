@@ -1,4 +1,4 @@
-[gd_scene load_steps=74 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=79 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -64,8 +64,13 @@
 [ext_resource type="Script" uid="uid://b6qoved8v8p2v" path="res://scripts/GUI/round_timer.gd" id="48_2ma37"]
 [ext_resource type="Texture2D" uid="uid://cmagragsm54en" path="res://graphics/images/HUD/shop/reroll_selected.png" id="48_jgoqw"]
 [ext_resource type="Texture2D" uid="uid://bw5pl1p6bmq61" path="res://graphics/images/HUD/timer_blinky.png" id="49_mh0ri"]
+[ext_resource type="Script" uid="uid://lq2evtwp8bvg" path="res://scripts/GUI/enemy_progress_bar.gd" id="56_n1h3t"]
+[ext_resource type="Texture2D" uid="uid://csqo5aaepfs34" path="res://graphics/images/HUD/nextRound/progressBar.png" id="57_ltg8k"]
 [ext_resource type="Script" uid="uid://dsnvmily8r6us" path="res://scripts/GUI/active_reassignment_buttons.gd" id="59_kapkf"]
+[ext_resource type="Texture2D" uid="uid://bgide8muu6eek" path="res://graphics/images/HUD/nextRound/screen_on.png" id="59_yjpf5"]
 [ext_resource type="Texture2D" uid="uid://bv0l751iv6lau" path="res://graphics/images/HUD/partAssign_unselected.png" id="60_8abbg"]
+[ext_resource type="Texture2D" uid="uid://o4glpuf2dmah" path="res://graphics/images/HUD/nextRound/screen_hover.png" id="60_vba6s"]
+[ext_resource type="Texture2D" uid="uid://okkoo55665rm" path="res://graphics/images/HUD/nextRound/screen_off.png" id="61_dbqh0"]
 [ext_resource type="Texture2D" uid="uid://baqnprslvvu8t" path="res://graphics/images/HUD/partAssign_selected.png" id="61_n1h3t"]
 [ext_resource type="Texture2D" uid="uid://c17tsbqn3orah" path="res://graphics/images/HUD/partAssign_disabled.png" id="62_ltg8k"]
 
@@ -342,6 +347,7 @@ autowrap_mode = 3
 [node name="ScreenHolder" type="Control" parent="Inventory/InventoryControls/ActiveSlot0"]
 clip_contents = true
 layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -358,6 +364,7 @@ offset_bottom = 30.0
 texture = ExtResource("14_3ki25")
 
 [node name="PartIcon" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot0"]
+layout_mode = 0
 offset_left = 6.0
 offset_top = 52.0
 offset_right = 34.0
@@ -447,6 +454,7 @@ autowrap_mode = 3
 [node name="ScreenHolder" type="Control" parent="Inventory/InventoryControls/ActiveSlot2"]
 clip_contents = true
 layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -463,6 +471,7 @@ offset_bottom = 30.0
 texture = ExtResource("14_3ki25")
 
 [node name="PartIcon" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot2"]
+layout_mode = 0
 offset_left = 6.0
 offset_top = 52.0
 offset_right = 34.0
@@ -552,6 +561,7 @@ autowrap_mode = 3
 [node name="ScreenHolder" type="Control" parent="Inventory/InventoryControls/ActiveSlot1"]
 clip_contents = true
 layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -568,6 +578,7 @@ offset_bottom = 30.0
 texture = ExtResource("14_3ki25")
 
 [node name="PartIcon" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1"]
+layout_mode = 0
 offset_left = 6.0
 offset_top = 52.0
 offset_right = 34.0
@@ -1341,6 +1352,7 @@ text = "BUY"
 horizontal_alignment = 2
 
 [node name="HealButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop"]
+layout_mode = 0
 offset_left = 15.0
 offset_top = 1.9668
 offset_right = 59.0
@@ -1424,6 +1436,7 @@ offset_bottom = 40.0
 texture = ExtResource("46_xopod")
 
 [node name="RerollButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop"]
+layout_mode = 0
 offset_left = 327.0
 offset_top = 1.9668
 offset_right = 465.0
@@ -1499,6 +1512,69 @@ text = "REROLL
 SHOP"
 horizontal_alignment = 1
 
+[node name="EnemyProgressBar" type="Control" parent="Inventory/InventoryControls/BackingTexture"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -383.0
+offset_right = -48.0
+offset_bottom = -353.0
+script = ExtResource("56_n1h3t")
+
+[node name="NextWaveButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/EnemyProgressBar"]
+layout_mode = 0
+offset_right = 252.0
+offset_bottom = 30.0
+texture_normal = ExtResource("59_yjpf5")
+texture_pressed = ExtResource("60_vba6s")
+texture_hover = ExtResource("59_yjpf5")
+texture_disabled = ExtResource("61_dbqh0")
+
+[node name="ProgressBar" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/EnemyProgressBar"]
+layout_mode = 0
+offset_right = 252.0
+offset_bottom = 30.0
+texture = ExtResource("57_ltg8k")
+
+[node name="Lbl_EnemiesLeft" type="Label" parent="Inventory/InventoryControls/BackingTexture/EnemyProgressBar/ProgressBar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -24.0
+offset_right = 121.0
+offset_bottom = -7.0
+theme_override_fonts/font = ExtResource("47_08lav")
+theme_override_font_sizes/font_size = 15
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Lbl_Round" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -110.0
+offset_top = -346.75
+offset_right = -62.0
+offset_bottom = -329.75
+theme_override_fonts/font = ExtResource("47_08lav")
+theme_override_font_sizes/font_size = 15
+text = "00:00"
+horizontal_alignment = 2
+vertical_alignment = 1
+
 [node name="Lbl_Timer" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
 layout_mode = 1
 anchors_preset = -1
@@ -1528,6 +1604,7 @@ texture = ExtResource("49_mh0ri")
 [node name="ActiveReassignmentButtons" type="Control" parent="Inventory/InventoryControls/BackingTexture"]
 unique_name_in_owner = true
 layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -1549,6 +1626,7 @@ texture_pressed = ExtResource("61_n1h3t")
 texture_disabled = ExtResource("62_ltg8k")
 
 [node name="Slot2" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons"]
+layout_mode = 0
 offset_left = 73.0
 offset_top = -0.0332031
 offset_right = 139.0
@@ -1558,6 +1636,7 @@ texture_pressed = ExtResource("61_n1h3t")
 texture_disabled = ExtResource("62_ltg8k")
 
 [node name="Slot1" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons"]
+layout_mode = 0
 offset_left = 145.0
 offset_top = -0.0332031
 offset_right = 211.0
@@ -1954,6 +2033,7 @@ coordY = 4
 [connection signal="button_down" from="Inventory/InventoryControls/BackingTexture/Shop/RerollButton" to="Inventory/InventoryControls/BackingTexture/Shop/RerollButton" method="_on_button_down"]
 [connection signal="button_up" from="Inventory/InventoryControls/BackingTexture/Shop/RerollButton" to="Inventory/InventoryControls/BackingTexture/Shop/RerollButton" method="_on_button_up"]
 [connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/Shop/RerollButton" to="Inventory/InventoryControls/BackingTexture/Shop" method="_on_reroll_button_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/EnemyProgressBar/NextWaveButton" to="Inventory/InventoryControls/BackingTexture/EnemyProgressBar" method="_on_next_wave_button_pressed"]
 [connection signal="reassignment_button_pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" to="CombatHandler" method="_on_active_reassignment_buttons_reassignment_button_pressed"]
 [connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot0" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_0_pressed"]
 [connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot2" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_2_pressed"]

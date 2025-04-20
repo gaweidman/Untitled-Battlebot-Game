@@ -7,12 +7,14 @@ var gameBoard : GameBoard;
 func _ready():
 	super();
 	hide();
+	freeze(true);
+	inventory = GameState.get_inventory();
 
 func live():
 	show();
+	freeze(false);
 	body.show();
 	$CombatHandler.live();
-	$Inventory/InventoryControls/BackingTexture/Lbl_Timer.start(120, true);
 	$Inventory.clear_shop(true, true);
 	pass;
 
@@ -43,3 +45,20 @@ func take_damage(damage:float):
 
 func heal(health:float):
 	combatHandler.take_damage(-health)
+
+######
+
+func start_new_game():
+	live();
+	inventory.startingKitAssigned = false;
+
+func start_round():
+	inventory.new_round();
+
+func end_round():
+	GameState.add_death_time(60);
+	inventory.end_round();
+
+func enter_shop():
+	inventory.inventory_panel_toggle(true);
+	inventory.HUD_shop.open_up_shop();

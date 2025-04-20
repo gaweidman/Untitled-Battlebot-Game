@@ -78,3 +78,7 @@ func take_knockback(inDir:Vector3):
 	print("KNOCKBACK: ",inDir)
 	body.apply_impulse(inDir);
 	pass
+
+func freeze(enable:=true):
+	if is_instance_valid(body):
+		body.set_freeze_enabled(enable);

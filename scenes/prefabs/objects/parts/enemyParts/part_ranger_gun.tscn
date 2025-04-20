@@ -1,31 +1,21 @@
-[gd_scene load_steps=5 format=3 uid="uid://lkjmims656tp"]
+[gd_scene load_steps=4 format=3 uid="uid://lkjmims656tp"]
 
 [ext_resource type="PackedScene" uid="uid://bbq103vofw8yu" path="res://scenes/prefabs/objects/parts/part_active_projectile.tscn" id="1_werg2"]
 [ext_resource type="Script" uid="uid://cck0sf6oj2mcy" path="res://scripts/GUI/parts/enemyParts/part_rangerGun.gd" id="2_ivrqh"]
-[ext_resource type="Texture2D" uid="uid://brb70j2hksy0p" path="res://graphics/images/HUD/parts/part_screws.png" id="3_e6tqn"]
 [ext_resource type="ArrayMesh" uid="uid://brv02nw813pa6" path="res://graphics/models/extracted/cannonMapped.res" id="3_ivrqh"]
 
 [node name="RangerGun" instance=ExtResource("1_werg2")]
 script = ExtResource("2_ivrqh")
+magazineMaxBase = 2
 firingOffset = Vector3(0, 0.75, 0)
 modelOffset = Vector3(0, -0.5, 0)
 baseFireRate = 0.75
 baseDamage = 0.5
+scrapCostBase = 5
 partName = "Ranger Gun"
 partDescription = "[color=ffffff]This. This [color=e0dede]is the weapon of the [color=cf2121]enemy[color=e0dede].
 
 [color=65a4ff]Active: Fires basic bullets."
 
-[node name="Screws" parent="TextureBase" index="0"]
-visible = true
-texture = ExtResource("3_e6tqn")
-
-[node name="Buttons" parent="TextureBase" index="1"]
-texture_filter = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
 [node name="MeshInstance3D" parent="." index="2"]
 mesh = ExtResource("3_ivrqh")
-
-[connection signal="on_select" from="TextureBase/Buttons" to="." method="_on_buttons_on_select"]

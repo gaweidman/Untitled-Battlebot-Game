@@ -157,7 +157,7 @@ unique_name_in_owner = true
 [node name="CombatHandler" parent="." instance=ExtResource("7_nefpp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.388926, 0)
 script = ExtResource("8_uaa5m")
-scrap_worth = 1
+scrap_worth = 2
 
 [node name="MotionHandler" type="Node3D" parent="."]
 script = ExtResource("9_fyoyp")

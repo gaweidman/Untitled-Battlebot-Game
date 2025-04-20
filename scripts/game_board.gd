@@ -9,6 +9,9 @@ class_name GameBoard;
 @export var spawnChecker : ShapeCast3D;
 var waveTimer := 0.0;
 var wave := 0;
+var roundEnemiesInit := 1;
+var roundEnemies := 0;
+var round := 0;
 var enemiesAlive = [];
 var player : Player;
 @export_category("HUD nodes")
@@ -33,6 +36,8 @@ enum gameState {
 	PLAY,
 	GAME_OVER,
 	CREDITS,
+	SHOP,
+	INIT_ROUND,
 }
 var curState := gameState.START
 func change_state(newState : gameState):
@@ -54,12 +59,18 @@ func exit_state(state:gameState):
 		pass
 	elif state == gameState.PLAY:
 		pass
+	elif state == gameState.SHOP:
+		pass
+	elif state == gameState.INIT_ROUND:
+		pass
 	else:
 		pass
 
 func enter_state(state:gameState):
 	if state == gameState.MAIN_MENU:
 		destroy_all_enemies();
+		player.body.global_position = Vector3(0,20,0);
+		player.freeze();
 		HUD_mainMenu.show();
 		pass
 	elif state == gameState.GAME_OVER:
@@ -69,14 +80,30 @@ func enter_state(state:gameState):
 		HUD_credits.show();
 		pass
 	elif state == gameState.INIT_PLAY:
-		waveTimer = 0;
-		wave = 0;
+		GameState.start_death_timer(120.0,true)
+		round = 0;
+		roundEnemiesInit = 1;
+		
 		spawnPlayer(return_random_unoccupied_spawn_location());
-		player.live();
+		player.start_new_game();
 		#HUD_playerStats.show();
-		change_state(gameState.PLAY)
+		change_state(gameState.INIT_ROUND);
+		
 		pass
 	elif state == gameState.PLAY:
+		pass
+	elif state == gameState.SHOP:
+		player.end_round();
+		player.enter_shop();
+		pass
+	elif state == gameState.INIT_ROUND:
+		round += 1;
+		player.start_round();
+		waveTimer = 0;
+		wave = 0;
+		roundEnemiesInit += 2;
+		roundEnemies = roundEnemiesInit;
+		change_state(gameState.PLAY);
 		pass
 	else:
 		pass
@@ -90,20 +117,37 @@ func _process(delta):
 		pass
 	elif curState == gameState.PLAY:
 		waveTimer -= delta;
-		if waveTimer <= 0:
-			waveTimer = 10;
-			wave += 1;
-			var amtAlive = check_alive_enemies()
-			#print("alive: ", amtAlive)
-			var amtToSpawn = max(0, min(6, wave + 2 - amtAlive))
-			#var amtToSpawn = max(0, min(1, 1 - amtAlive))
-			print(amtToSpawn, amtAlive)
-			spawn_wave(amtToSpawn)
-			player.take_damage(-0.25);
+		#print (check_round_completion())
+		#print(roundEnemies, check_alive_enemies(), roundEnemiesInit)
+		#print(max(0, min(3+round,10,roundEnemies)))
+		if roundEnemies > 0:
+			if waveTimer <= 0:
+				waveTimer = 10;
+				wave += 1;
+				var amtAlive = check_alive_enemies()
+				#print("alive: ", amtAlive)
+				var amtToSpawn = max(0, min(3+round,10,roundEnemies))
+				#var amtToSpawn = max(0, min(1, 1 - amtAlive))
+				#print(amtToSpawn, amtAlive)
+				spawn_wave(amtToSpawn)
+		
+		if get_enemies_left_for_wave() <= 0:
+			change_state(gameState.SHOP);
+		
+		pass
+	elif curState == gameState.SHOP:
+		pass
+	elif curState == gameState.INIT_ROUND:
 		pass
 	else:
 		pass
 	pass
+
+##returns true if we're in a state that might be considered a part of the game loop
+func in_state_of_play()->bool:
+	if GameState.get_game_board_state() == GameBoard.gameState.PLAY or GameState.get_game_board_state() == GameBoard.gameState.SHOP or GameState.get_game_board_state() == GameBoard.gameState.INIT_ROUND:
+		return true;
+	return false;
 
 func spawnPlayer(_in_position := playerSpawnPosition) -> Node3D:
 	if player != null:
@@ -157,7 +201,7 @@ func return_random_unoccupied_spawn_location():
 
 func spawn_wave(numOfEnemies := 0):
 	#return
-	while numOfEnemies > 0:
+	while numOfEnemies > 0 && roundEnemies > 0:
 		var enemyScene = return_random_enemy();
 		var pos = return_random_unoccupied_spawn_location();
 		if pos != null:
@@ -168,6 +212,7 @@ func spawn_wave(numOfEnemies := 0):
 		else:
 			numOfEnemies = 0;
 		numOfEnemies -= 1;
+		roundEnemies -= 1;
 
 func check_alive_enemies():
 	for enemy in enemiesAlive:
@@ -180,6 +225,16 @@ func check_alive_enemies():
 			if checkedEnemy == null:
 				enemiesAlive.erase(enemy);
 	return enemiesAlive.size();
+
+##Should give us the amount of enemies left after all spawning is completed
+func check_round_completion() -> float:
+	#print("Round enemies: ",roundEnemies);
+	#print("Alive enemies: ",check_alive_enemies());
+	#print("Initial round enemies: ",roundEnemiesInit);
+	return float(get_enemies_left_for_wave()) / float(roundEnemiesInit);
+
+func get_enemies_left_for_wave() -> int:
+	return roundEnemies + check_alive_enemies();
 
 func destroy_all_enemies():
 	check_alive_enemies();

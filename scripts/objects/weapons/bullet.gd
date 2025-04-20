@@ -24,6 +24,9 @@ func _process(delta):
 	if fired && visible:
 		positionAppend += (dir * speed * delta);
 		position = initPosition + positionAppend;
+	if not visible:
+		if leaking:
+			die();
 	pass
 
 func fire(_attacker : Combatant, _launcher : Node ,_initPosition : Vector3, _direction := Vector3(1,0,0), _fireSpeed := 30.0, _lifetime := 1.0, _damage := 1.0):

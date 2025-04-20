@@ -18,7 +18,7 @@ func die():
 	get_parent().queue_free();
 
 func take_damage(damage:float):
-	if GameState.get_game_board_state() == GameBoard.gameState.PLAY:
+	if GameState.get_in_state_of_play():
 		if invincible && damage > 0:
 			return;
 		health -= damage;
@@ -40,7 +40,7 @@ func energy_affordable(inAmount:=0.0) -> bool:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
 	##Adds energy over time up to the max but not below 0
-	if GameState.get_game_board_state() == GameBoard.gameState.PLAY:
+	if GameState.get_in_state_of_play():
 		energy = max(0, min(energy + (delta * energyRefreshRate), maxEnergy));
 		if invincibleTimer > 0:
 			invincible = true;

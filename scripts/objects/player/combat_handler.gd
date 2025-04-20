@@ -30,15 +30,17 @@ func _physics_process(delta: float) -> void:
 	super(delta);
 	if Input.is_key_pressed(KEY_P):
 		take_damage(0.5);
+		inventory.add_scrap(99999);
 	pass
 
 func take_damage(damage:float):
 	super(damage);
-			
 	GameState.get_hud().update();
+	inventory.take_damage(damage);
 
 func die():
 	player.body.hide();
+	player.freeze();
 	GameState.set_game_board_state(GameBoard.gameState.GAME_OVER)
 	if is_instance_valid(inventory):
 		inventory.inventory_panel_toggle(false);

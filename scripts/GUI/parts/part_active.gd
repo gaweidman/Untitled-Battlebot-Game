@@ -14,7 +14,7 @@ class_name PartActive
 var combatHandler : CombatHandler;
 var inputHandler : InputHandler;
 var motionHandler : MotionHandler;
-var equipped := true;
+var equipped := false;
 var unequippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_unequpped.png");
 var equippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_equpped.png");
 
@@ -124,23 +124,27 @@ func _process(delta):
 		fireRateTimer -= delta;
 	
 	_assign_refs()
-	if ownedByPlayer:##If the player owns it...
-		if inPlayerInventory:
-			if get_equipped() == true:
+	if is_instance_valid(positionNode):
+		if get_equipped() == false:
+			if meshNode.visible == true:
+				meshNode.hide()
+		if ownedByPlayer:##If the player owns it...
+			if inPlayerInventory:
+				if get_equipped() == true:
+					if positionNode.visible == true:
+						if meshNode.visible == false:
+							meshNode.show()
+				else:
+					if meshNode.visible == true:
+						meshNode.hide()
+		else:##If they don't (at all or yet)
+			if inPlayerInventory: ##if in the player's prescence:
+				if meshNode.visible == true:
+					meshNode.hide()
+			else: ##if NOT in the player's prescence:
 				if positionNode.visible == true:
 					if meshNode.visible == false:
 						meshNode.show()
-			else:
-				if meshNode.visible == true:
-					meshNode.hide()
-	else:##If they don't (at all or yet)
-		if inPlayerInventory: ##if in the player's prescence:
-			if meshNode.visible == true:
-				meshNode.hide()
-		else: ##if NOT in the player's prescence:
-			if positionNode.visible == true:
-				if meshNode.visible == false:
-					meshNode.show()
 	meshNode.set_deferred("position", modelOffset);
 	damage = baseDamage * baseDamageModifier * damageModifier;
 	fireRate = baseFireRate * baseDamageModifier;

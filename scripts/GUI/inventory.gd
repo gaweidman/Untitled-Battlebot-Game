@@ -109,6 +109,7 @@ func add_part(part: Part, invPosition : Vector2i):
 		listOfPieces.append(part);
 		part.invPosition = invPosition;
 		part.inventoryNode = self;
+		part.thisBot = thisBot;
 		if part is PartActive:
 			part.positionNode = battleBotBody;
 			part.meshNode.reparent(battleBotBody);
@@ -171,6 +172,8 @@ func add_part_from_scene(x: int, y:int, _partScene:String, activeSlot = null):
 			print("Adding ", part.name)
 			add_child(part);
 			add_part(part, Vector2i(x,y));
+			if part is PartActive:
+				part.set_equipped(true);
 			if activeSlot != null && activeSlot is int && part is PartActive:
 				combatHandler.set_active_part(part, activeSlot);
 
@@ -198,6 +201,11 @@ func get_selected_part():
 	if is_instance_valid(selectedPart):
 		return selectedPart;
 	return null;
+
+func clear_inventory():
+	while listOfPieces.size() > 0:
+		for part in listOfPieces:
+			remove_part(part);
 
 #########################
 

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://doikwsyev6vk6"]
+
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_wo7cl"]
+[ext_resource type="Script" uid="uid://bh6p4fvqllkk1" path="res://scripts/GUI/parts/playerParts/part_impact_magnet.gd" id="2_rqeqv"]
+
+[node name="Part" instance=ExtResource("1_wo7cl")]
+script = ExtResource("2_rqeqv")
+scrapAmount = 1
+dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1)])
+partName = "Filings Magnet"
+partDescription = "[color=f2ec6b]Passive: Gain 1 Scrap when taking damage."
