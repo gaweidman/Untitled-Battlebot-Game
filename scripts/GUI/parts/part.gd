@@ -2,7 +2,7 @@ extends Control
 
 class_name Part
 
-var invPosition : Vector2i;
+var invPosition := Vector2i(-9,-9);
 var partBounds : Vector2i;
 var inPlayerInventory := false;
 var ownedByPlayer := false;
@@ -62,7 +62,7 @@ func _ready():
 	
 	textureIcon = $TextureBase/Icon;
 	textureIcon.set_deferred("texture", partIcon);
-	textureIcon.set_deferred("position", Vector2i(4,4));
+	textureIcon.set_deferred("position", Vector2i(8,8));
 
 	_populate_buttons();
 	
@@ -132,7 +132,10 @@ func _process(delta):
 	if (inventoryNode is InventoryPlayer):
 		textureBase.show();
 		if inPlayerInventory:
-			textureBase.position = invHolderNode.global_position + Vector2(invPosition * 48);
+			if ownedByPlayer:
+				textureBase.position = invHolderNode.global_position + Vector2(invPosition * 48);
+			else:
+				textureBase.position = invHolderNode.global_position;
 	else:
 		textureBase.hide();
 		%Buttons.disable();

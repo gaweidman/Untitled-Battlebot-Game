@@ -28,6 +28,7 @@ func deselect():
 		if stall is ShopStall:
 			stall.deselect();
 
+
 func open_up_shop():
 	clopen_door(true);
 	shopOpen = true;

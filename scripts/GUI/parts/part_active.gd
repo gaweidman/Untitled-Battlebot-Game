@@ -15,6 +15,8 @@ var combatHandler : CombatHandler;
 var inputHandler : InputHandler;
 var motionHandler : MotionHandler;
 var equipped := true;
+var unequippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_unequpped.png");
+var equippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_equpped.png");
 
 @export var baseEnergyCost = 1;
 ##This is the calculated final energy cost.
@@ -169,10 +171,11 @@ func _rotate_with_player():
 
 func set_equipped(foo):
 	equipped = foo;
-	if foo:
-		print(partName, " has been equipped")
-	else:
-		print(partName, " has been de-equipped")
+	if is_instance_valid($TextureBase/EquippedBlinky):
+		if foo:
+			$TextureBase/EquippedBlinky.texture = equippedBlinkySprite;
+		else:
+			$TextureBase/EquippedBlinky.texture = unequippedBlinkySprite;
 
 func get_equipped() -> bool:
 	return equipped;

@@ -129,6 +129,7 @@ func is_affordable() -> bool:
 
 func _on_buy_button_toggled(toggled_on):
 	if (curState == ShopStall.doorState.OPEN):
+		inventory.deselect_part();
 		if is_instance_valid(partRef):
 			partRef.select(toggled_on);
 			if is_affordable():
