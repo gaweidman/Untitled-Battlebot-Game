@@ -75,9 +75,9 @@ func all_refs_valid():
 func test_add_stuff():
 	#print(ply)
 	if (assign_player()) and (not startingKitAssigned):
-		add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 0);
 		add_part_from_scene(1, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
 		add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
+		add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 0);
 		$InventoryControls/BackingTexture/Shop.reroll_shop();
 		startingKitAssigned = true;
 	pass
@@ -86,7 +86,7 @@ func test_add_stuff():
 	slots["StallA"] = null;
 	slots["StallB"] = null;
 	slots["StallC"] = null;
-	
+
 
 func update_stats():
 	var stringHealth = "";
@@ -147,9 +147,13 @@ func select_part(part:Part, foo:bool):
 	super(part, foo);
 	if foo:
 		%InfoBox.populate_info(part);
-		
+		if (part is PartActive) && part.ownedByPlayer:
+			%ActiveReassignmentButtons.disable(false);
+		else:
+			%ActiveReassignmentButtons.disable(true);
 	else:
 		%InfoBox.clear_info();
+		%ActiveReassignmentButtons.disable(true);
 
 func _on_info_box_sell_part(part):
 	sell_part(part);
@@ -204,6 +208,8 @@ func add_part_to_shop(_partScene:String):
 		part.inventoryNode = self;
 		part.inPlayerInventory = true;
 		part.invHolderNode = stall;
+		if part is PartActive:
+			part.set_equipped(false);
 		stall.partRef = part;
 		slots[str(stall.name)] = part;
 		print(stall.partRef)
@@ -238,7 +244,7 @@ func add_part(part: Part, invPosition : Vector2i):
 	var coordsToCheck = get_modified_part_dimensions(part, invPosition);
 	
 	if check_coordinate_table_is_free(coordsToCheck, part):
-		print("Coord table is free... somehow ", coordsToCheck)
+		#print("Coord table is free... somehow ", coordsToCheck)
 		for index in coordsToCheck:
 			set_slot_at(index.x, index.y, part);
 		listOfPieces.append(part);
@@ -272,13 +278,12 @@ func remove_part_post(part:Part, beingSold := false, beingBought := false):
 func clear_shop_stall(stall:ShopStall, ignoreFrozen := false):
 	if is_instance_valid(stall):
 		if is_instance_valid(stall.partRef):
-			print("VALID PART!!! YIPPPSIEPA")
 			if ignoreFrozen:
 				stall.freeze(false);
 				remove_part(stall.partRef, true);
 			else:
 				if (stall.curState != ShopStall.doorState.FROZEN):
-					print(stall.name + " is NOT frozen")
+					#print(stall.name + " is NOT frozen")
 					remove_part(stall.partRef, true);
 
 func clear_shop(ignoreFrozen := false, reroll := false):
@@ -291,4 +296,3 @@ func clear_shop(ignoreFrozen := false, reroll := false):
 	
 	if reroll:
 		$InventoryControls/BackingTexture/Shop.reroll_shop();
-	

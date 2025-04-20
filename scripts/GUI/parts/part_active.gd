@@ -14,6 +14,7 @@ class_name PartActive
 var combatHandler : CombatHandler;
 var inputHandler : InputHandler;
 var motionHandler : MotionHandler;
+var equipped := true;
 
 @export var baseEnergyCost = 1;
 ##This is the calculated final energy cost.
@@ -76,6 +77,11 @@ func get_energy_cost(base:=false):
 	else:
 		return baseEnergyCostModifier * baseEnergyCost;
 
+func energy_affordable() -> bool:
+	if is_instance_valid(combatHandler):
+		return combatHandler.energy_affordable(get_energy_cost());
+	return false
+
 func _set_fire_rate_timer():
 	set_deferred("fireRateTimer", get_fire_rate());
 
@@ -95,7 +101,15 @@ func _physics_process(delta):
 	if rotateWithPlayer: call_deferred("_rotate_with_player");
 
 func can_fire() -> bool: 
-	return fireRateTimer <= 0;
+	return equipped and (fireRateTimer <= 0);
+
+##Returns the cooldown timer divided by the fire rate.
+func get_cooldown() -> float:
+	return fireRateTimer / get_fire_rate();
+
+##Returns a """percentage""" of the cooldown's completion.
+func get_reverse_cooldown() -> float:
+	return 1.0 - get_cooldown();
 
 func _process(delta):
 	#print("why.")
@@ -110,9 +124,13 @@ func _process(delta):
 	_assign_refs()
 	if ownedByPlayer:##If the player owns it...
 		if inPlayerInventory:
-			if positionNode.visible == true:
-				if meshNode.visible == false:
-					meshNode.show()
+			if get_equipped() == true:
+				if positionNode.visible == true:
+					if meshNode.visible == false:
+						meshNode.show()
+			else:
+				if meshNode.visible == true:
+					meshNode.hide()
 	else:##If they don't (at all or yet)
 		if inPlayerInventory: ##if in the player's prescence:
 			if meshNode.visible == true:
@@ -148,6 +166,16 @@ func _rotate_with_player():
 		meshNode.rotation = bdy.rotation;
 	else:
 		pass;
+
+func set_equipped(foo):
+	equipped = foo;
+	if foo:
+		print(partName, " has been equipped")
+	else:
+		print(partName, " has been de-equipped")
+
+func get_equipped() -> bool:
+	return equipped;
 
 func destroy():
 	meshNode.call_deferred("queue_free");

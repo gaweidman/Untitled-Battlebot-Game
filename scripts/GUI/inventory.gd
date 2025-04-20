@@ -171,8 +171,8 @@ func add_part_from_scene(x: int, y:int, _partScene:String, activeSlot = null):
 			print("Adding ", part.name)
 			add_child(part);
 			add_part(part, Vector2i(x,y));
-			if activeSlot != null && activeSlot is int:
-				combatHandler.activeParts[activeSlot] = part;
+			if activeSlot != null && activeSlot is int && part is PartActive:
+				combatHandler.set_active_part(part, activeSlot);
 
 func select_part(part:Part, foo:bool):
 	if foo:
@@ -193,6 +193,11 @@ func deselect_part():
 		select_part(selectedPart, false);
 	else:
 		selectedPart = null;
+
+func get_selected_part():
+	if is_instance_valid(selectedPart):
+		return selectedPart;
+	return null;
 
 #########################
 

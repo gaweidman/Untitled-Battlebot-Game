@@ -33,6 +33,10 @@ func take_damage(damage:float):
 func _on_collision(collider):
 	pass;
 
+func energy_affordable(inAmount:=0.0) -> bool:
+	return inAmount <= energy;
+
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
 	##Adds energy over time up to the max but not below 0
@@ -44,7 +48,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			invincible = false;
 	if Input.is_key_pressed(KEY_P):
-		take_damage(0.5);
+		take_damage(-9999);
 	pass
 
 func can_fire(index) -> bool: 
@@ -66,4 +70,25 @@ func get_active_part(index) -> PartActive:
 		if is_instance_valid(activeParts[index]):
 			if activeParts[index] is PartActive:
 				return activeParts[index];
+		else:
+			activeParts[index] = null;
 	return null;
+
+func is_active_slot_empty(index):
+	if !(index <= 2 && index >= 0):
+		return false;
+	if activeParts[index] && activeParts[index] == null:
+		return true;
+	return false;
+
+##Adds a part at the given index.
+func set_active_part(part:PartActive, index:int, override := true):
+	if override:
+		activeParts[index] = part;
+		return;
+	else:
+		if is_active_slot_empty(index):
+			activeParts[index] = part;
+			return;
+	push_warning("Attempted to add to slot "+ str(index)+" which either doesn't exist or is full.");
+	return;

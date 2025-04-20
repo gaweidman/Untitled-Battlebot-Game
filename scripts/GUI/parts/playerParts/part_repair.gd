@@ -9,5 +9,12 @@ func _activate():
 	if ! thisBot.at_max_health():
 		super();
 		if inventoryNode is InventoryPlayer:
-			inventoryNode.remove_scrap(12);
+			if inventoryNode.is_affordable(scrapCost):
+				inventoryNode.remove_scrap(12);
 		thisBot.take_damage(-healing);
+
+func can_fire():
+	if ! is_instance_valid(thisBot): return false;
+	if thisBot.at_max_health(): return false;
+	if ! inventoryNode.is_affordable(scrapCost): return false;
+	return super();

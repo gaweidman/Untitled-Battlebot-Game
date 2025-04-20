@@ -109,17 +109,17 @@ func is_frozen() -> bool:
 func updatePrice():
 	if is_instance_valid(partRef):
 		if curState == doorState.CLOSED:
-			$BuyButton/TextHolder/Price.set_deferred("theme_override_colors/font_color", Color("f2ec6b"))
+			GameState.set_text_color($BuyButton/TextHolder/Price, "scrap");
 			$BuyButton/TextHolder/Price.text = "???";
 		else:
 			var price = partRef._get_buy_price();
 			$BuyButton/TextHolder/Price.text = str(price);
 			if is_affordable():
-				$BuyButton/TextHolder/Price.set_deferred("theme_override_colors/font_color", Color("f2ec6b"))
+				GameState.set_text_color($BuyButton/TextHolder/Price, "scrap");
 			else:
-				$BuyButton/TextHolder/Price.set_deferred("theme_override_colors/font_color", Color("ff0000"))
+				GameState.set_text_color($BuyButton/TextHolder/Price, "unaffordable");
 	else:
-		$BuyButton/TextHolder/Price.set_deferred("theme_override_colors/font_color", Color("ff0000"))
+		GameState.set_text_color($BuyButton/TextHolder/Price, "unaffordable");
 		$BuyButton/TextHolder/Price.text = "-/-";
 
 func is_affordable() -> bool:

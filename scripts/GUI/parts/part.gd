@@ -78,7 +78,7 @@ func _ready():
 		else:
 			myPartType = partTypes.PASSIVE;
 
-func _get_part_type():
+func _get_part_type() -> partTypes:
 	return myPartType;
 
 func _get_sell_price():

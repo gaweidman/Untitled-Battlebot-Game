@@ -8,17 +8,18 @@ var rotationSpeed := baseRotationSpeed;
 var rotationDeg := 0.0;
 
 func contact_damage(collider: Node) -> void:
-	var par = collider.get_parent();
-	if par is Combatant && par != thisBot:
-		#if ! par.combatHandler.invincible:
-		par.combatHandler.take_damage(get_damage());
-		var distanceDif = par.body.global_position - thisBot.body.global_position;
-		par.take_knockback((distanceDif + Vector3(0,0.01,0)) * 1000);
-		thisBot.take_knockback((-distanceDif + Vector3(0,0.01,0)) * 1000);
-		#print("Damage dealt: ", damage)
-		pass;
-	else:
-		return;
+	if equipped:
+		var par = collider.get_parent();
+		if par is Combatant && par != thisBot:
+			#if ! par.combatHandler.invincible:
+			par.combatHandler.take_damage(get_damage());
+			var distanceDif = par.body.global_position - thisBot.body.global_position;
+			par.take_knockback((distanceDif + Vector3(0,0.01,0)) * 1000);
+			thisBot.take_knockback((-distanceDif + Vector3(0,0.01,0)) * 1000);
+			#print("Damage dealt: ", damage)
+			pass;
+		else:
+			return;
 
 func _process(delta):
 	super(delta);
@@ -42,6 +43,7 @@ func _process(delta):
 					var dir = bullet.dir * -1;
 					bullet.change_direction(dir);
 					bullet.set_attacker(thisBot);
+	
 
 func _activate():
 	super();

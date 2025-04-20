@@ -6,7 +6,6 @@
 
 [node name="RangerGun" instance=ExtResource("1_werg2")]
 script = ExtResource("2_ivrqh")
-magazineMaxBase = 3
 firingOffset = Vector3(0, 0.75, 0)
 modelOffset = Vector3(0, -0.5, 0)
 baseFireRate = 0.75

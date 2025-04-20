@@ -80,3 +80,29 @@ func get_inventory() -> InventoryPlayer:
 	var ply = get_player();
 	
 	return ply.get_node_or_null("Inventory");
+
+# Colors for text.
+const textColors = {
+	"white" : Color("ffffff"),
+	"grey" : Color("e0dede"),
+	"utility" : Color("aae05b"),
+	"ranged" : Color("789be9"),
+	"melee" : Color("ff6e49"),
+	"scrap" : Color("f2ec6b"),
+	"red" : Color("cf2121"),
+	"unaffordable" : Color("ff0000"),
+	"inaffordable" : Color("ff0000"),
+}
+
+static func set_text_color(node, color):
+	if is_instance_valid(node):
+		if color is Color:
+			node.set_deferred("theme_override_colors/font_color", color);
+		else:
+			if color is String:
+				var newCol := Color(textColors["white"]);
+				if color in textColors:
+					newCol = Color(textColors[color]);
+				else:
+					newCol = Color(color);
+				node.set_deferred("theme_override_colors/font_color", newCol);

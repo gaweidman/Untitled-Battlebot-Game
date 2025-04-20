@@ -8,6 +8,7 @@ var player : Player;
 var shopDoor : TextureRect;
 var shopDoorVelocity := 0.0
 var doorOpen := false;
+var doorActuallyClosed := false;
 var shopOpen := false;
 
 var awaiting_reroll := false;
@@ -50,6 +51,7 @@ func close_up_shop():
 func clopen_door(open:=false):
 	if open:
 		doorOpen = true;
+		doorActuallyClosed = false;
 	else:
 		doorOpen = false;
 		shopDoorVelocity = 0;
@@ -70,9 +72,10 @@ func _physics_process(delta):
 		else:
 			shopDoorVelocity += 9.87 * delta;
 			if (shopDoor.position.y + shopDoorVelocity) > 0:
-				door_closed();
 				shopDoor.position.y = 0;
 				shopDoorVelocity *= -0.3;
+				if not doorActuallyClosed:
+					door_closed();
 		shopDoor.position.y = clamp(shopDoor.position.y + shopDoorVelocity, -237, 0);
 		
 		
@@ -87,6 +90,7 @@ func door_closed():
 	reroll_shop();
 	rerollPriceIncrement = 0;
 	healPriceIncrement = 0;
+	doorActuallyClosed = true;
 
 var healAmountBase := 1.0;
 var healAmountModifier := 1.0;
@@ -98,10 +102,10 @@ var healPriceIncrement := 0.0;
 func update_health_button():
 	$HealButton/TextHolder/HEAL.text = "HEAL\n"+str(get_heal_amount()) + " HP"
 	$HealButton/TextHolder/Price.text = str(get_heal_price());
-	if inventory.is_affordable(get_heal_price()):
-		$HealButton/TextHolder/Price.set_deferred("theme_override_colors/font_color", Color("f2ec6b"))
+	if inventory.is_affordable(get_heal_price()) && ! player.at_max_health():
+		GameState.set_text_color($HealButton/TextHolder/Price, "scrap");
 	else:
-		$HealButton/TextHolder/Price.set_deferred("theme_override_colors/font_color", Color("ff0000"))
+		GameState.set_text_color($HealButton/TextHolder/Price, "unaffordable");
 func get_heal_amount():
 	return healAmountBase * healAmountModifier;
 func get_heal_price():
@@ -124,9 +128,9 @@ var rerollPriceIncrement := 0.0;
 func update_reroll_button():
 	$RerollButton/TextHolder/Price.text = str(get_reroll_price());
 	if inventory.is_affordable(get_reroll_price()):
-		$RerollButton/TextHolder/Price.set_deferred("theme_override_colors/font_color", Color("f2ec6b"))
+		GameState.set_text_color($RerollButton/TextHolder/Price, "scrap");
 	else:
-		$RerollButton/TextHolder/Price.set_deferred("theme_override_colors/font_color", Color("ff0000"))
+		GameState.set_text_color($RerollButton/TextHolder, "unaffordable");
 func get_reroll_price():
 	return roundi((rerollPriceBase + rerollPriceIncrement) * rerollPriceModifier);
 
