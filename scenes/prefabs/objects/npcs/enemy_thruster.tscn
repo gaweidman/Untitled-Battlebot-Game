@@ -10,6 +10,7 @@
 
 [node name="Thruster" instance=ExtResource("1_273iq")]
 script = ExtResource("2_2q850")
+AudioSourceType = 0
 
 [node name="BotBody" parent="Body" index="5"]
 material_override = null
@@ -19,6 +20,9 @@ surface_material_override/1 = ExtResource("5_c67qj")
 
 [node name="CombatHandler" parent="." index="2"]
 maxHealth = 2.0
+maxEnergy = 3.0
+energyRefreshRate = 2.0
+maxInvincibleTimer = 0.25
 
 [node name="MotionHandler" parent="." index="3"]
 script = ExtResource("4_c5igk")

@@ -1,0 +1,2078 @@
+[gd_scene load_steps=79 format=3 uid="uid://chfjdkxumme1r"]
+
+[ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
+[ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
+[ext_resource type="Material" uid="uid://uyr61s32rxaj" path="res://graphics/materials/PlayerBody_Bottom.tres" id="2_slssq"]
+[ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="4_nnr5b"]
+[ext_resource type="Material" uid="uid://cbvhbi7cs2id6" path="res://graphics/materials/Treads.tres" id="4_qq3wf"]
+[ext_resource type="PackedScene" uid="uid://dqn5vwvgp6ddp" path="res://scenes/prefabs/utilities/combat_handler.tscn" id="5_8qfif"]
+[ext_resource type="ArrayMesh" uid="uid://bmh1lb7lajb4y" path="res://graphics/models/extracted/bot.res" id="6_oyv14"]
+[ext_resource type="Script" uid="uid://cci5o1ddo6ond" path="res://scripts/objects/player/input_handler.gd" id="6_ui0xh"]
+[ext_resource type="Script" uid="uid://des8smcv31abv" path="res://scripts/objects/player/motion_handler.gd" id="7_bdmj6"]
+[ext_resource type="Script" uid="uid://dtom6khjucb7o" path="res://scripts/GUI/inventoryPlayer.gd" id="10_oyv14"]
+[ext_resource type="Texture2D" uid="uid://djodq5u8kwgfe" path="res://graphics/images/HUD/activeTab/tabBase.png" id="11_3ki25"]
+[ext_resource type="Texture2D" uid="uid://8hijaqintxgq" path="res://graphics/images/HUD/hud.png" id="11_nha5v"]
+[ext_resource type="Script" uid="uid://b1r88r130d6k2" path="res://scripts/GUI/parts_holder_engine.gd" id="11_u8qiw"]
+[ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="12_hnom0"]
+[ext_resource type="Script" uid="uid://70olwffu7ehc" path="res://scripts/GUI/active_slot_tab.gd" id="12_maiqi"]
+[ext_resource type="Script" uid="uid://bpnwpequ3dde0" path="res://scripts/GUI/part_holder_button.gd" id="13_88y0t"]
+[ext_resource type="Texture2D" uid="uid://24e2n07ox528" path="res://graphics/images/HUD/Energy_EmptyOverlayMask.png" id="13_coyr8"]
+[ext_resource type="Texture2D" uid="uid://c5asvsgahkx0d" path="res://graphics/images/HUD/Health_EmptyOverlayMask.png" id="13_eakln"]
+[ext_resource type="Texture2D" uid="uid://c8xvb4vxf8hvb" path="res://graphics/images/HUD/activeTab/mouse1.png" id="13_fh32w"]
+[ext_resource type="Texture2D" uid="uid://dw41lyw5ke54n" path="res://graphics/images/HUD/Health_EmptyOverlay.png" id="13_rvrkp"]
+[ext_resource type="Texture2D" uid="uid://t5h4p3r8oscs" path="res://graphics/images/HUD/activeTab/screenRanged.png" id="14_3ki25"]
+[ext_resource type="Texture2D" uid="uid://2lfl5febi3py" path="res://graphics/images/HUD/Health_FullOverlay.png" id="14_eakln"]
+[ext_resource type="Script" uid="uid://bfml2ah2jiuo4" path="res://scripts/GUI/health_bar.gd" id="14_ticrt"]
+[ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/Cannon.png" id="15_maiqi"]
+[ext_resource type="Texture2D" uid="uid://du4swb4g8x0x2" path="res://graphics/images/HUD/activeTab/mouse3.png" id="16_fh32w"]
+[ext_resource type="Texture2D" uid="uid://db7xxix2ub0ai" path="res://graphics/images/HUD/Energy_FullOverlay.png" id="17_1ks4x"]
+[ext_resource type="Texture2D" uid="uid://c1wx7qpxonisn" path="res://graphics/images/HUD/activeTab/mouse2.png" id="17_58nj6"]
+[ext_resource type="Texture2D" uid="uid://b30wj1uakji4q" path="res://graphics/images/HUD/Energy_EmptyOverlay.png" id="18_tkm3v"]
+[ext_resource type="Script" uid="uid://cdymr1vwdiwxo" path="res://scripts/GUI/info_box.gd" id="20_7eoqv"]
+[ext_resource type="Texture2D" uid="uid://ba0m2y25qqfbe" path="res://graphics/images/HUD/inventoryTab_upUnselected.png" id="20_rl5wq"]
+[ext_resource type="Texture2D" uid="uid://nqj4mhvsrlxw" path="res://graphics/images/HUD/inventoryTab_upSelected.png" id="21_gti27"]
+[ext_resource type="Texture2D" uid="uid://drjmrl4v24oq6" path="res://graphics/images/HUD/info_melee.png" id="21_jm810"]
+[ext_resource type="Script" uid="uid://bcatqblb5gdws" path="res://scripts/GUI/inventory_panel.gd" id="22_nha5v"]
+[ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/energyIconStriped.png" id="22_r3ynj"]
+[ext_resource type="Texture2D" uid="uid://cnfat2kqvmdcd" path="res://graphics/images/HUD/damageIconStriped.png" id="23_jumtr"]
+[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/cooldownIconStriped.png" id="24_r4qg5"]
+[ext_resource type="Texture2D" uid="uid://djth0eo8kvkcm" path="res://graphics/images/HUD/sell_unselected.png" id="25_jm810"]
+[ext_resource type="Texture2D" uid="uid://btfetdy0ahup8" path="res://graphics/images/HUD/sell_selected.png" id="26_7qptc"]
+[ext_resource type="Texture2D" uid="uid://b71g2q13wr7do" path="res://graphics/images/HUD/sell_disabled.png" id="27_k8cvv"]
+[ext_resource type="Texture2D" uid="uid://dsl0x2nq48gga" path="res://graphics/images/HUD/move_unselected.png" id="28_a23h3"]
+[ext_resource type="Texture2D" uid="uid://cxeur7wg8nvq7" path="res://graphics/images/HUD/move_selected.png" id="29_6g8ao"]
+[ext_resource type="Texture2D" uid="uid://dnu6ivnxlduxo" path="res://graphics/images/HUD/move_hover.png" id="30_hvbb3"]
+[ext_resource type="Texture2D" uid="uid://dyotls8fcbklx" path="res://graphics/images/HUD/move_disabled.png" id="31_jk5of"]
+[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/magazineIconStriped.png" id="32_6g8ao"]
+[ext_resource type="Script" uid="uid://f2utlpnj4kg4" path="res://scripts/GUI/shop_stall.gd" id="33_1l826"]
+[ext_resource type="Script" uid="uid://tpms6gmabjc8" path="res://scripts/GUI/shop.gd" id="33_o11jw"]
+[ext_resource type="Texture2D" uid="uid://blmdrpsajj6f7" path="res://graphics/images/HUD/shop/freezerblinky_off.png" id="34_7p70o"]
+[ext_resource type="Texture2D" uid="uid://ppmc64phinum" path="res://graphics/images/HUD/shop/stall_door_left.png" id="34_ddll7"]
+[ext_resource type="Texture2D" uid="uid://dx4xvvlp28d07" path="res://graphics/images/HUD/shop/stall_door_right.png" id="35_7p70o"]
+[ext_resource type="Texture2D" uid="uid://da5mwa6pcphjl" path="res://graphics/images/HUD/inv_selectedPlugIn.png" id="36_a23h3"]
+[ext_resource type="Texture2D" uid="uid://b1olqkpvwejg" path="res://graphics/images/HUD/shop/stall_door_frozen.png" id="36_ddll7"]
+[ext_resource type="Texture2D" uid="uid://dt6jjoibn5xfx" path="res://graphics/images/HUD/shop/freeze_unselected.png" id="38_ufcqf"]
+[ext_resource type="Texture2D" uid="uid://c275qd77g6x86" path="res://graphics/images/HUD/shop/freeze_selected.png" id="39_3614p"]
+[ext_resource type="Texture2D" uid="uid://s8bx72jtl1h4" path="res://graphics/images/HUD/shop/buy_unselected.png" id="40_bsnw8"]
+[ext_resource type="Texture2D" uid="uid://dyfx0k6ohqmpe" path="res://graphics/images/HUD/shop/buy_selected.png" id="41_o11jw"]
+[ext_resource type="Texture2D" uid="uid://ccklnmdcymtig" path="res://graphics/images/HUD/shop/heal_unselected.png" id="43_vok4d"]
+[ext_resource type="Texture2D" uid="uid://g2oapmprsygp" path="res://graphics/images/HUD/shop/heal_selected.png" id="44_4wvq4"]
+[ext_resource type="Script" uid="uid://56vk7o0gmt7p" path="res://scripts/GUI/shop_button.gd" id="45_4wvq4"]
+[ext_resource type="Texture2D" uid="uid://b7r4txn23e8xc" path="res://graphics/images/HUD/shop/shop_door.png" id="46_xopod"]
+[ext_resource type="FontFile" uid="uid://s3k2ji7jxshs" path="res://graphics/images/HUD/8-segment.png" id="47_08lav"]
+[ext_resource type="Texture2D" uid="uid://6qqfwg274ig8" path="res://graphics/images/HUD/shop/reroll_unselected.png" id="47_mh0ri"]
+[ext_resource type="Script" uid="uid://b6qoved8v8p2v" path="res://scripts/GUI/round_timer.gd" id="48_2ma37"]
+[ext_resource type="Texture2D" uid="uid://cmagragsm54en" path="res://graphics/images/HUD/shop/reroll_selected.png" id="48_jgoqw"]
+[ext_resource type="Texture2D" uid="uid://bw5pl1p6bmq61" path="res://graphics/images/HUD/timer_blinky.png" id="49_mh0ri"]
+[ext_resource type="Script" uid="uid://lq2evtwp8bvg" path="res://scripts/GUI/enemy_progress_bar.gd" id="56_n1h3t"]
+[ext_resource type="Texture2D" uid="uid://csqo5aaepfs34" path="res://graphics/images/HUD/nextRound/progressBar.png" id="57_ltg8k"]
+[ext_resource type="Script" uid="uid://dsnvmily8r6us" path="res://scripts/GUI/active_reassignment_buttons.gd" id="59_kapkf"]
+[ext_resource type="Texture2D" uid="uid://bgide8muu6eek" path="res://graphics/images/HUD/nextRound/screen_on.png" id="59_yjpf5"]
+[ext_resource type="Texture2D" uid="uid://bv0l751iv6lau" path="res://graphics/images/HUD/partAssign_unselected.png" id="60_8abbg"]
+[ext_resource type="Texture2D" uid="uid://o4glpuf2dmah" path="res://graphics/images/HUD/nextRound/screen_hover.png" id="60_vba6s"]
+[ext_resource type="Texture2D" uid="uid://okkoo55665rm" path="res://graphics/images/HUD/nextRound/screen_off.png" id="61_dbqh0"]
+[ext_resource type="Texture2D" uid="uid://baqnprslvvu8t" path="res://graphics/images/HUD/partAssign_selected.png" id="61_n1h3t"]
+[ext_resource type="Texture2D" uid="uid://c17tsbqn3orah" path="res://graphics/images/HUD/partAssign_disabled.png" id="62_ltg8k"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
+size = Vector3(1, 0.333479, 1)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fise2"]
+height = 0.021
+radius = 0.95
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hnom0"]
+radius = 0.611008
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1ks4x"]
+shader = ExtResource("12_hnom0")
+shader_parameter/mask = ExtResource("13_eakln")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tkm3v"]
+shader = ExtResource("12_hnom0")
+shader_parameter/mask = ExtResource("13_coyr8")
+
+[node name="Player" type="Node3D" groups=["Player Part"]]
+script = ExtResource("1_u8q0c")
+
+[node name="Body" type="RigidBody3D" parent="." groups=["Combatant Body", "Player Part"]]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000182867, 0.00276172, 3.8147e-06)
+disable_mode = 2
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 100.0
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, 0.09, 0)
+contact_monitor = true
+max_contacts_reported = 10
+angular_damp_mode = 1
+
+[node name="Bottom" type="CSGBox3D" parent="Body"]
+transform = Transform3D(0.968925, 0, 0, 0, 0.968925, 0, 0, 0, 0.968925, 0, 0.087, 0)
+visible = false
+material_override = ExtResource("2_slssq")
+size = Vector3(1, 0.15, 1)
+material = ExtResource("2_jy4ju")
+
+[node name="TreadL" type="CSGBox3D" parent="Body/Bottom"]
+transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, -0.08, -0.25)
+size = Vector3(0.75, 0.02, 0.09)
+material = ExtResource("4_qq3wf")
+
+[node name="ContactPoint1" type="Node3D" parent="Body/Bottom/TreadL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, -0.02, 0)
+
+[node name="Raycast1" type="RayCast3D" parent="Body/Bottom/TreadL/ContactPoint1"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+target_position = Vector3(0, -5, 0)
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="ContactPoint2" type="Node3D" parent="Body/Bottom/TreadL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, -0.02, 0)
+
+[node name="Raycast2" type="RayCast3D" parent="Body/Bottom/TreadL/ContactPoint2"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+target_position = Vector3(0, -5, 0)
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="TreadR" type="CSGBox3D" parent="Body/Bottom"]
+transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, -0.08, 0.25)
+size = Vector3(0.75, 0.02, 0.09)
+material = ExtResource("4_qq3wf")
+
+[node name="ContactPoint3" type="Node3D" parent="Body/Bottom/TreadR"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, -0.02, 0)
+
+[node name="Raycast3" type="RayCast3D" parent="Body/Bottom/TreadR/ContactPoint3"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+target_position = Vector3(0, -5, 0)
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="ContactPoint4" type="Node3D" parent="Body/Bottom/TreadR"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, -0.02, 0)
+
+[node name="Raycast4" type="RayCast3D" parent="Body/Bottom/TreadR/ContactPoint4"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+target_position = Vector3(0, -5, 0)
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="Top" type="CSGBox3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.269, 0)
+visible = false
+material_override = ExtResource("2_jy4ju")
+size = Vector3(1, 0.15, 1)
+
+[node name="CollisionShape" type="CollisionShape3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.179051, 0)
+visible = false
+shape = SubResource("BoxShape3D_odmbc")
+disabled = true
+
+[node name="Sawblade" type="RigidBody3D" parent="Body" groups=["Damager", "MeleeWeapon", "Metal", "Player Part"]]
+unique_name_in_owner = true
+transform = Transform3D(0.999993, 0.00324984, 0.00205345, -0.00324838, 0.999994, -0.000714875, -0.00205576, 0.000708211, 0.999998, 0, 0.179466, 0)
+visible = false
+collision_priority = 3.0
+custom_integrator = true
+contact_monitor = true
+max_contacts_reported = 10
+
+[node name="CollisionShape" type="CollisionShape3D" parent="Body/Sawblade"]
+shape = SubResource("CylinderShape3D_fise2")
+disabled = true
+
+[node name="Mesh" type="CSGCylinder3D" parent="Body/Sawblade"]
+material_override = ExtResource("4_nnr5b")
+radius = 0.95
+height = 0.021
+sides = 32
+
+[node name="HingeJoint3D" type="HingeJoint3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+node_a = NodePath("..")
+node_b = NodePath("../Sawblade")
+motor/target_velocity = 18.8496
+motor/max_impulse = 512.0
+
+[node name="BotBody" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 0, -0.263986, 0)
+material_override = ExtResource("2_jy4ju")
+mesh = ExtResource("6_oyv14")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
+shape = SubResource("SphereShape3D_hnom0")
+
+[node name="_AudioStreamPlayers" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="Collision" type="AudioStreamPlayer3D" parent="_AudioStreamPlayers"]
+
+[node name="Movement" type="AudioStreamPlayer3D" parent="_AudioStreamPlayers"]
+
+[node name="Ambient" type="AudioStreamPlayer3D" parent="_AudioStreamPlayers"]
+
+[node name="Weapon" type="AudioStreamPlayer3D" parent="_AudioStreamPlayers"]
+
+[node name="CombatHandler" parent="." node_paths=PackedStringArray("activeSlotTab0", "activeSlotTab1", "activeSlotTab2") instance=ExtResource("5_8qfif")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.388926, 0)
+activeSlotTab0 = NodePath("../Inventory/InventoryControls/ActiveSlot0")
+activeSlotTab1 = NodePath("../Inventory/InventoryControls/ActiveSlot1")
+activeSlotTab2 = NodePath("../Inventory/InventoryControls/ActiveSlot2")
+maxHealth = 3.0
+
+[node name="InputHandler" type="Node3D" parent="."]
+script = ExtResource("6_ui0xh")
+
+[node name="MotionHandler" type="Node3D" parent="."]
+script = ExtResource("7_bdmj6")
+maxSpeed = 13.0
+
+[node name="Inventory" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -576.0
+offset_top = -648.0
+offset_right = 576.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("10_oyv14")
+
+[node name="InventoryControls" type="Control" parent="Inventory"]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 0.998
+offset_bottom = 0.297974
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 1
+metadata/_edit_lock_ = true
+
+[node name="ActiveSlot0" type="TextureRect" parent="Inventory/InventoryControls"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 53.0
+offset_top = -413.002
+offset_right = 127.0
+offset_bottom = -298.002
+texture = ExtResource("11_3ki25")
+script = ExtResource("12_maiqi")
+
+[node name="MouseIndicator" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot0"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 24.0
+offset_right = 45.0
+offset_bottom = 44.0
+texture = ExtResource("13_fh32w")
+
+[node name="EnergyCost" type="Label" parent="Inventory/InventoryControls/ActiveSlot0"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -67.0
+offset_right = 32.0
+offset_bottom = -47.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="AmmoCounter" type="Label" parent="Inventory/InventoryControls/ActiveSlot0"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -51.0
+offset_right = 32.0
+offset_bottom = -31.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "∞"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="PartName" type="Label" parent="Inventory/InventoryControls/ActiveSlot0"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -34.0
+offset_top = -33.0
+offset_right = 34.0
+offset_bottom = 1.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/line_spacing = -6
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Ranger Gun"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ScreenHolder" type="Control" parent="Inventory/InventoryControls/ActiveSlot0"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_top = -64.0
+offset_right = -2.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ScreenBack" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot0/ScreenHolder"]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+texture = ExtResource("14_3ki25")
+
+[node name="PartIcon" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot0"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 52.0
+offset_right = 34.0
+offset_bottom = 80.0
+texture = ExtResource("15_maiqi")
+
+[node name="ActiveSlot2" type="TextureRect" parent="Inventory/InventoryControls"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 125.0
+offset_top = -413.002
+offset_right = 199.0
+offset_bottom = -298.002
+texture = ExtResource("11_3ki25")
+script = ExtResource("12_maiqi")
+
+[node name="MouseIndicator" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot2"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 24.0
+offset_right = 45.0
+offset_bottom = 44.0
+texture = ExtResource("16_fh32w")
+
+[node name="EnergyCost" type="Label" parent="Inventory/InventoryControls/ActiveSlot2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -67.0
+offset_right = 32.0
+offset_bottom = -47.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="AmmoCounter" type="Label" parent="Inventory/InventoryControls/ActiveSlot2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -51.0
+offset_right = 32.0
+offset_bottom = -31.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "∞"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="PartName" type="Label" parent="Inventory/InventoryControls/ActiveSlot2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -34.0
+offset_top = -33.0
+offset_right = 34.0
+offset_bottom = 1.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/line_spacing = -6
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Ranger Gun"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ScreenHolder" type="Control" parent="Inventory/InventoryControls/ActiveSlot2"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_top = -64.0
+offset_right = -2.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ScreenBack" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot2/ScreenHolder"]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+texture = ExtResource("14_3ki25")
+
+[node name="PartIcon" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot2"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 52.0
+offset_right = 34.0
+offset_bottom = 80.0
+texture = ExtResource("15_maiqi")
+
+[node name="ActiveSlot1" type="TextureRect" parent="Inventory/InventoryControls"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 197.0
+offset_top = -413.002
+offset_right = 271.0
+offset_bottom = -298.002
+texture = ExtResource("11_3ki25")
+script = ExtResource("12_maiqi")
+
+[node name="MouseIndicator" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 24.0
+offset_right = 45.0
+offset_bottom = 44.0
+texture = ExtResource("17_58nj6")
+
+[node name="EnergyCost" type="Label" parent="Inventory/InventoryControls/ActiveSlot1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -67.0
+offset_right = 32.0
+offset_bottom = -47.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="AmmoCounter" type="Label" parent="Inventory/InventoryControls/ActiveSlot1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -51.0
+offset_right = 32.0
+offset_bottom = -31.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "∞"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="PartName" type="Label" parent="Inventory/InventoryControls/ActiveSlot1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -34.0
+offset_top = -33.0
+offset_right = 34.0
+offset_bottom = 1.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/line_spacing = -6
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Ranger Gun"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ScreenHolder" type="Control" parent="Inventory/InventoryControls/ActiveSlot1"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_top = -64.0
+offset_right = -2.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ScreenBack" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1/ScreenHolder"]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+texture = ExtResource("14_3ki25")
+
+[node name="PartIcon" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 52.0
+offset_right = 34.0
+offset_bottom = 80.0
+texture = ExtResource("15_maiqi")
+
+[node name="BackingTexture" type="TextureRect" parent="Inventory/InventoryControls"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 16.2
+anchor_right = 28.8
+anchor_bottom = 16.2
+offset_top = -10481.4
+offset_right = -32025.6
+offset_bottom = -9833.43
+mouse_filter = 2
+texture = ExtResource("11_nha5v")
+metadata/_edit_lock_ = true
+
+[node name="Lbl_Energy" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 335.0
+offset_top = -361.0
+offset_right = 576.0
+offset_bottom = -331.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 19
+text = "00/00"
+
+[node name="HealthBar" type="SubViewportContainer" parent="Inventory/InventoryControls/BackingTexture" node_paths=PackedStringArray("emptyBar")]
+unique_name_in_owner = true
+texture_filter = 1
+material = SubResource("ShaderMaterial_1ks4x")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -506.0
+offset_top = -382.0
+offset_right = -302.0
+offset_bottom = -310.0
+stretch = true
+script = ExtResource("14_ticrt")
+emptyBar = NodePath("SubViewport/BarHolder/Empty")
+width = 164.0
+
+[node name="SubViewport" type="SubViewport" parent="Inventory/InventoryControls/BackingTexture/HealthBar"]
+transparent_bg = true
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(204, 72)
+render_target_update_mode = 4
+
+[node name="BarHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/HealthBar/SubViewport"]
+texture_filter = 1
+clip_contents = true
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -102.0
+offset_top = -72.0
+offset_right = 102.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Full" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/HealthBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("14_eakln")
+
+[node name="Empty" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/HealthBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("13_rvrkp")
+
+[node name="Lbl_Health" type="Label" parent="Inventory/InventoryControls/BackingTexture/HealthBar/SubViewport/BarHolder"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -87.0
+offset_top = -49.0
+offset_right = 74.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.431373, 0.286275, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 19
+text = "00/00"
+horizontal_alignment = 2
+
+[node name="EnergyBar" type="SubViewportContainer" parent="Inventory/InventoryControls/BackingTexture" node_paths=PackedStringArray("emptyBar")]
+unique_name_in_owner = true
+texture_filter = 1
+material = SubResource("ShaderMaterial_tkm3v")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 302.0
+offset_top = -382.0
+offset_right = 506.0
+offset_bottom = -310.0
+stretch = true
+script = ExtResource("14_ticrt")
+fromRight = false
+emptyBar = NodePath("SubViewport/BarHolder/Empty")
+width = 164.0
+
+[node name="SubViewport" type="SubViewport" parent="Inventory/InventoryControls/BackingTexture/EnergyBar"]
+transparent_bg = true
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(204, 72)
+render_target_update_mode = 4
+
+[node name="BarHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/EnergyBar/SubViewport"]
+texture_filter = 1
+clip_contents = true
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -102.0
+offset_top = -72.0
+offset_right = 102.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Full" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/EnergyBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("17_1ks4x")
+
+[node name="Empty" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/EnergyBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("18_tkm3v")
+
+[node name="Lbl_Energy" type="Label" parent="Inventory/InventoryControls/BackingTexture/EnergyBar/SubViewport/BarHolder"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -74.0
+offset_top = -49.0
+offset_right = 87.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 19
+text = "00/00"
+
+[node name="InfoBox" type="Control" parent="Inventory/InventoryControls/BackingTexture" node_paths=PackedStringArray("iconBase", "lbl_partName")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -552.0
+offset_top = -216.0
+offset_right = -288.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("20_7eoqv")
+iconBase = NodePath("InfoIconBase")
+lbl_partName = NodePath("Name")
+
+[node name="InfoIconBase" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 208.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -136.0
+texture = ExtResource("21_jm810")
+
+[node name="Name" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.16602
+offset_right = 113.0
+offset_bottom = 35.166
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 24
+text = "No Part Selected"
+
+[node name="Description" type="RichTextLabel" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 40.0
+offset_right = 262.0
+offset_bottom = 151.0
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 13
+bbcode_enabled = true
+text = "[color=e0dede]No [color=ffffff]description [color=e0dede]given."
+
+[node name="EnergyIcon" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = -25.834
+offset_right = 27.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("22_r3ynj")
+
+[node name="Label" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox/EnergyIcon"]
+layout_mode = 0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
+
+[node name="DamageIcon" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 73.0
+offset_top = -25.834
+offset_right = 93.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("23_jumtr")
+
+[node name="Label" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox/DamageIcon"]
+layout_mode = 0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(1, 0.431373, 0.286275, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
+
+[node name="CooldownIcon" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -25.834
+offset_right = 60.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("24_r4qg5")
+
+[node name="Label" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox/CooldownIcon"]
+layout_mode = 0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(0.666667, 0.878431, 0.356863, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
+
+[node name="SellButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -94.0
+offset_top = -35.834
+offset_right = -2.0
+offset_bottom = -1.83398
+grow_horizontal = 0
+grow_vertical = 0
+texture_normal = ExtResource("25_jm810")
+texture_pressed = ExtResource("26_7qptc")
+texture_hover = ExtResource("26_7qptc")
+texture_disabled = ExtResource("27_k8cvv")
+
+[node name="Label" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox/SellButton"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 8.0
+offset_right = 67.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0.94902, 0.92549, 0.419608, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "SELL: "
+horizontal_alignment = 1
+
+[node name="MoveButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 0
+offset_left = 131.0
+offset_top = 156.0
+offset_right = 165.0
+offset_bottom = 190.0
+toggle_mode = true
+texture_normal = ExtResource("28_a23h3")
+texture_pressed = ExtResource("29_6g8ao")
+texture_hover = ExtResource("30_hvbb3")
+texture_disabled = ExtResource("31_jk5of")
+
+[node name="MagazineIcon" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 104.0
+offset_top = -25.834
+offset_right = 124.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("32_6g8ao")
+
+[node name="Label" type="Label" parent="Inventory/InventoryControls/BackingTexture/InfoBox/MagazineIcon"]
+layout_mode = 0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
+
+[node name="\'SCRAP\'" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -274.0
+offset_top = -345.834
+offset_right = -221.0
+offset_bottom = -321.834
+theme_override_colors/font_color = Color(0.741176, 0.729412, 0.501961, 1)
+theme_override_colors/font_outline_color = Color(0.223529, 0.160784, 0.160784, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 17
+text = "SCRAP"
+horizontal_alignment = 1
+
+[node name="ScrapCounter" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -253.0
+offset_top = -327.834
+offset_right = -195.0
+offset_bottom = -299.834
+theme_override_colors/font_color = Color(0.94902, 0.92549, 0.419608, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "00000"
+
+[node name="Shop" type="Control" parent="Inventory/InventoryControls/BackingTexture"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = -261.0
+offset_right = 540.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("33_o11jw")
+
+[node name="StallA" type="Control" parent="Inventory/InventoryControls/BackingTexture/Shop"]
+anchors_preset = 0
+offset_left = 12.0
+offset_top = 45.0
+offset_right = 156.0
+offset_bottom = 189.0
+script = ExtResource("33_1l826")
+
+[node name="FreezerBlinky" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallA"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 159.0
+offset_right = 90.0
+offset_bottom = 177.0
+texture = ExtResource("34_7p70o")
+
+[node name="DoorHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/Shop/StallA"]
+z_index = 7
+clip_contents = true
+anchors_preset = 0
+offset_right = 144.0
+offset_bottom = 144.0
+
+[node name="DoorFreezer" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallA/DoorHolder"]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 144.0
+texture = ExtResource("36_ddll7")
+
+[node name="DoorLeft" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallA/DoorHolder"]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 144.0
+texture = ExtResource("34_ddll7")
+
+[node name="DoorRight" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallA/DoorHolder"]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 144.0
+texture = ExtResource("35_7p70o")
+
+[node name="FreezeButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop/StallA"]
+layout_mode = 0
+offset_left = 97.0
+offset_top = 149.0
+offset_right = 141.0
+offset_bottom = 185.0
+toggle_mode = true
+texture_normal = ExtResource("38_ufcqf")
+texture_pressed = ExtResource("39_3614p")
+
+[node name="BuyButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop/StallA"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 149.0
+offset_right = 69.0
+offset_bottom = 185.0
+toggle_mode = true
+texture_normal = ExtResource("40_bsnw8")
+texture_pressed = ExtResource("41_o11jw")
+script = ExtResource("45_4wvq4")
+
+[node name="TextHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/Shop/StallA/BuyButton"]
+anchors_preset = 0
+offset_right = 66.0
+offset_bottom = 32.0
+mouse_filter = 2
+
+[node name="Price" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/StallA/BuyButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -25.0
+offset_right = 30.0
+offset_bottom = 3.0
+theme_override_colors/font_color = Color(0.94902, 0.92549, 0.419608, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "000"
+horizontal_alignment = 2
+
+[node name="BUY" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/StallA/BuyButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -32.0
+offset_right = 22.0
+offset_bottom = -18.0
+theme_override_colors/font_color = Color(0.333333, 0.258824, 0.145098, 1)
+theme_override_colors/font_outline_color = Color(0.172549, 0.141176, 0.0901961, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = -3
+theme_override_font_sizes/font_size = 10
+text = "BUY"
+horizontal_alignment = 2
+
+[node name="StallB" type="Control" parent="Inventory/InventoryControls/BackingTexture/Shop"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 168.0
+offset_top = 45.0
+offset_right = 312.0
+offset_bottom = 189.0
+script = ExtResource("33_1l826")
+
+[node name="FreezerBlinky" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallB"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 159.0
+offset_right = 90.0
+offset_bottom = 177.0
+texture = ExtResource("34_7p70o")
+
+[node name="DoorHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/Shop/StallB"]
+z_index = 7
+clip_contents = true
+anchors_preset = 0
+offset_right = 144.0
+offset_bottom = 144.0
+
+[node name="DoorFreezer" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallB/DoorHolder"]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 144.0
+texture = ExtResource("36_ddll7")
+
+[node name="DoorLeft" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallB/DoorHolder"]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 144.0
+texture = ExtResource("34_ddll7")
+
+[node name="DoorRight" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallB/DoorHolder"]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 144.0
+texture = ExtResource("35_7p70o")
+
+[node name="FreezeButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop/StallB"]
+layout_mode = 0
+offset_left = 97.0
+offset_top = 149.0
+offset_right = 141.0
+offset_bottom = 185.0
+toggle_mode = true
+texture_normal = ExtResource("38_ufcqf")
+texture_pressed = ExtResource("39_3614p")
+
+[node name="BuyButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop/StallB"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 149.0
+offset_right = 69.0
+offset_bottom = 185.0
+toggle_mode = true
+texture_normal = ExtResource("40_bsnw8")
+texture_pressed = ExtResource("41_o11jw")
+script = ExtResource("45_4wvq4")
+
+[node name="TextHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/Shop/StallB/BuyButton"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 66.0
+offset_bottom = 32.0
+mouse_filter = 2
+
+[node name="Price" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/StallB/BuyButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -25.0
+offset_right = 30.0
+offset_bottom = 3.0
+theme_override_colors/font_color = Color(0.94902, 0.92549, 0.419608, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "000"
+horizontal_alignment = 2
+
+[node name="BUY" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/StallB/BuyButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -32.0
+offset_right = 22.0
+offset_bottom = -18.0
+theme_override_colors/font_color = Color(0.333333, 0.258824, 0.145098, 1)
+theme_override_colors/font_outline_color = Color(0.172549, 0.141176, 0.0901961, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = -3
+theme_override_font_sizes/font_size = 10
+text = "BUY"
+horizontal_alignment = 2
+
+[node name="StallC" type="Control" parent="Inventory/InventoryControls/BackingTexture/Shop"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 324.0
+offset_top = 45.0
+offset_right = 468.0
+offset_bottom = 189.0
+script = ExtResource("33_1l826")
+
+[node name="FreezerBlinky" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallC"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 159.0
+offset_right = 90.0
+offset_bottom = 177.0
+texture = ExtResource("34_7p70o")
+
+[node name="DoorHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/Shop/StallC"]
+z_index = 7
+clip_contents = true
+anchors_preset = 0
+offset_right = 144.0
+offset_bottom = 144.0
+
+[node name="DoorFreezer" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallC/DoorHolder"]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 144.0
+texture = ExtResource("36_ddll7")
+
+[node name="DoorLeft" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallC/DoorHolder"]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 144.0
+texture = ExtResource("34_ddll7")
+
+[node name="DoorRight" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop/StallC/DoorHolder"]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 144.0
+texture = ExtResource("35_7p70o")
+
+[node name="FreezeButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop/StallC"]
+layout_mode = 0
+offset_left = 97.0
+offset_top = 149.0
+offset_right = 141.0
+offset_bottom = 185.0
+toggle_mode = true
+texture_normal = ExtResource("38_ufcqf")
+texture_pressed = ExtResource("39_3614p")
+
+[node name="BuyButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop/StallC"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 149.0
+offset_right = 69.0
+offset_bottom = 185.0
+toggle_mode = true
+texture_normal = ExtResource("40_bsnw8")
+texture_pressed = ExtResource("41_o11jw")
+script = ExtResource("45_4wvq4")
+
+[node name="TextHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/Shop/StallC/BuyButton"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 66.0
+offset_bottom = 32.0
+mouse_filter = 2
+
+[node name="Price" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/StallC/BuyButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -25.0
+offset_right = 30.0
+offset_bottom = 3.0
+theme_override_colors/font_color = Color(0.94902, 0.92549, 0.419608, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "000"
+horizontal_alignment = 2
+
+[node name="BUY" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/StallC/BuyButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -32.0
+offset_right = 22.0
+offset_bottom = -18.0
+theme_override_colors/font_color = Color(0.333333, 0.258824, 0.145098, 1)
+theme_override_colors/font_outline_color = Color(0.172549, 0.141176, 0.0901961, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = -3
+theme_override_font_sizes/font_size = 10
+text = "BUY"
+horizontal_alignment = 2
+
+[node name="HealButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 1.9668
+offset_right = 59.0
+offset_bottom = 37.9668
+texture_normal = ExtResource("43_vok4d")
+texture_pressed = ExtResource("44_4wvq4")
+script = ExtResource("45_4wvq4")
+
+[node name="TextHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/Shop/HealButton"]
+anchors_preset = 0
+offset_right = 138.0
+offset_bottom = 32.0
+mouse_filter = 2
+
+[node name="Price" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/HealButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 29.0
+offset_top = -25.0
+offset_right = 66.0
+offset_bottom = 3.0
+theme_override_colors/font_color = Color(0.94902, 0.92549, 0.419608, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "000"
+horizontal_alignment = 2
+
+[node name="BUY" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/HealButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 38.0
+offset_top = -32.0
+offset_right = 58.0
+offset_bottom = -18.0
+theme_override_colors/font_color = Color(0.333333, 0.258824, 0.145098, 1)
+theme_override_colors/font_outline_color = Color(0.172549, 0.141176, 0.0901961, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = -3
+theme_override_font_sizes/font_size = 10
+text = "BUY"
+horizontal_alignment = 2
+
+[node name="HEAL" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/HealButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -59.0
+offset_top = -32.0
+offset_right = 16.0
+offset_bottom = 4.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.172549, 0.141176, 0.0901961, 1)
+theme_override_colors/font_outline_color = Color(0.588235, 0.0901961, 0.364706, 1)
+theme_override_constants/line_spacing = -8
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 3
+theme_override_constants/shadow_outline_size = 4
+theme_override_font_sizes/font_size = 13
+text = "HEAL
+1 HP"
+horizontal_alignment = 1
+
+[node name="ShopDoor" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop"]
+z_index = 7
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("46_xopod")
+
+[node name="RerollButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop"]
+layout_mode = 0
+offset_left = 327.0
+offset_top = 1.9668
+offset_right = 465.0
+offset_bottom = 37.9668
+texture_normal = ExtResource("47_mh0ri")
+texture_pressed = ExtResource("48_jgoqw")
+script = ExtResource("45_4wvq4")
+
+[node name="TextHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/Shop/RerollButton"]
+anchors_preset = 0
+offset_right = 138.0
+offset_bottom = 32.0
+mouse_filter = 2
+
+[node name="Price" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/RerollButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 29.0
+offset_top = -25.0
+offset_right = 66.0
+offset_bottom = 3.0
+theme_override_colors/font_color = Color(0.94902, 0.92549, 0.419608, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "000"
+horizontal_alignment = 2
+
+[node name="BUY" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/RerollButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 38.0
+offset_top = -32.0
+offset_right = 58.0
+offset_bottom = -18.0
+theme_override_colors/font_color = Color(0.333333, 0.258824, 0.145098, 1)
+theme_override_colors/font_outline_color = Color(0.172549, 0.141176, 0.0901961, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = -3
+theme_override_font_sizes/font_size = 10
+text = "BUY"
+horizontal_alignment = 2
+
+[node name="HEAL" type="Label" parent="Inventory/InventoryControls/BackingTexture/Shop/RerollButton/TextHolder"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -58.0
+offset_top = -32.0
+offset_right = 17.0
+offset_bottom = 4.0
+theme_override_colors/font_color = Color(0.94902, 0.92549, 0.419608, 1)
+theme_override_colors/font_shadow_color = Color(0.172549, 0.141176, 0.0901961, 1)
+theme_override_colors/font_outline_color = Color(0.741176, 0.729412, 0.501961, 1)
+theme_override_constants/line_spacing = -8
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 3
+theme_override_constants/shadow_outline_size = 4
+theme_override_font_sizes/font_size = 13
+text = "REROLL
+SHOP"
+horizontal_alignment = 1
+
+[node name="EnemyProgressBar" type="Control" parent="Inventory/InventoryControls/BackingTexture"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -383.0
+offset_right = -48.0
+offset_bottom = -353.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("56_n1h3t")
+
+[node name="NextWaveButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/EnemyProgressBar"]
+layout_mode = 0
+offset_right = 252.0
+offset_bottom = 30.0
+texture_normal = ExtResource("59_yjpf5")
+texture_pressed = ExtResource("60_vba6s")
+texture_hover = ExtResource("59_yjpf5")
+texture_disabled = ExtResource("61_dbqh0")
+
+[node name="ProgressBar" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/EnemyProgressBar"]
+layout_mode = 0
+offset_right = 252.0
+offset_bottom = 30.0
+texture = ExtResource("57_ltg8k")
+
+[node name="Lbl_EnemiesLeft" type="Label" parent="Inventory/InventoryControls/BackingTexture/EnemyProgressBar/ProgressBar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -24.0
+offset_right = 121.0
+offset_bottom = -7.0
+theme_override_fonts/font = ExtResource("47_08lav")
+theme_override_font_sizes/font_size = 15
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Lbl_Round" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -110.0
+offset_top = -346.75
+offset_right = -62.0
+offset_bottom = -329.75
+theme_override_fonts/font = ExtResource("47_08lav")
+theme_override_font_sizes/font_size = 15
+text = "00:00"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Lbl_Timer" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -108.0
+offset_top = -322.75
+offset_right = -60.0
+offset_bottom = -305.75
+theme_override_fonts/font = ExtResource("47_08lav")
+theme_override_font_sizes/font_size = 15
+text = "00:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("48_2ma37")
+
+[node name="TimerBlinky" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Lbl_Timer"]
+layout_mode = 0
+offset_left = 54.0
+offset_top = 8.0
+offset_right = 64.0
+offset_bottom = 19.0
+texture = ExtResource("49_mh0ri")
+
+[node name="ActiveReassignmentButtons" type="Control" parent="Inventory/InventoryControls/BackingTexture"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 56.0
+offset_top = -294.0
+offset_right = 268.0
+offset_bottom = -267.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("59_kapkf")
+
+[node name="Slot0" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = -0.0332031
+offset_right = 67.0
+offset_bottom = 26.9668
+texture_normal = ExtResource("60_8abbg")
+texture_pressed = ExtResource("61_n1h3t")
+texture_disabled = ExtResource("62_ltg8k")
+
+[node name="Slot2" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons"]
+layout_mode = 0
+offset_left = 73.0
+offset_top = -0.0332031
+offset_right = 139.0
+offset_bottom = 26.9668
+texture_normal = ExtResource("60_8abbg")
+texture_pressed = ExtResource("61_n1h3t")
+texture_disabled = ExtResource("62_ltg8k")
+
+[node name="Slot1" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons"]
+layout_mode = 0
+offset_left = 145.0
+offset_top = -0.0332031
+offset_right = 211.0
+offset_bottom = 26.9668
+texture_normal = ExtResource("60_8abbg")
+texture_pressed = ExtResource("61_n1h3t")
+texture_disabled = ExtResource("62_ltg8k")
+
+[node name="InventoryPanel" type="TextureButton" parent="Inventory/InventoryControls"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -36.0
+offset_top = -358.0
+offset_right = 36.0
+offset_bottom = -297.0
+toggle_mode = true
+texture_normal = ExtResource("20_rl5wq")
+texture_pressed = ExtResource("21_gti27")
+texture_hover = ExtResource("21_gti27")
+script = ExtResource("22_nha5v")
+
+[node name="PartsHolder_Engine" type="Control" parent="Inventory/InventoryControls"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -263.0
+offset_bottom = -22.9999
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("11_u8qiw")
+
+[node name="PartHolderButton" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 48.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+
+[node name="PartHolderButton2" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 48.0
+offset_right = 96.0
+offset_bottom = 48.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 1
+
+[node name="PartHolderButton3" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 96.0
+offset_right = 144.0
+offset_bottom = 48.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 2
+
+[node name="PartHolderButton4" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 144.0
+offset_right = 192.0
+offset_bottom = 48.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 3
+
+[node name="PartHolderButton5" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 192.0
+offset_right = 240.0
+offset_bottom = 48.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 4
+
+[node name="PartHolderButton6" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_top = 48.0
+offset_right = 48.0
+offset_bottom = 96.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordY = 1
+
+[node name="PartHolderButton7" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 48.0
+offset_right = 96.0
+offset_bottom = 96.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 1
+coordY = 1
+
+[node name="PartHolderButton8" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 48.0
+offset_right = 144.0
+offset_bottom = 96.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 2
+coordY = 1
+
+[node name="PartHolderButton9" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 48.0
+offset_right = 192.0
+offset_bottom = 96.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 3
+coordY = 1
+
+[node name="PartHolderButton10" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 48.0
+offset_right = 240.0
+offset_bottom = 96.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 4
+coordY = 1
+
+[node name="PartHolderButton11" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_top = 96.0
+offset_right = 48.0
+offset_bottom = 144.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordY = 2
+
+[node name="PartHolderButton12" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 96.0
+offset_right = 96.0
+offset_bottom = 144.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 1
+coordY = 2
+
+[node name="PartHolderButton13" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 96.0
+offset_right = 144.0
+offset_bottom = 144.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 2
+coordY = 2
+
+[node name="PartHolderButton14" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 96.0
+offset_right = 192.0
+offset_bottom = 144.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 3
+coordY = 2
+
+[node name="PartHolderButton15" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 96.0
+offset_right = 240.0
+offset_bottom = 144.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 4
+coordY = 2
+
+[node name="PartHolderButton16" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_top = 144.0
+offset_right = 48.0
+offset_bottom = 192.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordY = 3
+
+[node name="PartHolderButton17" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 144.0
+offset_right = 96.0
+offset_bottom = 192.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 1
+coordY = 3
+
+[node name="PartHolderButton18" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 144.0
+offset_right = 144.0
+offset_bottom = 192.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 2
+coordY = 3
+
+[node name="PartHolderButton19" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 144.0
+offset_right = 192.0
+offset_bottom = 192.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 3
+coordY = 3
+
+[node name="PartHolderButton20" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 144.0
+offset_right = 240.0
+offset_bottom = 192.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 4
+coordY = 3
+
+[node name="PartHolderButton21" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_top = 192.0
+offset_right = 48.0
+offset_bottom = 240.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordY = 4
+
+[node name="PartHolderButton22" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 192.0
+offset_right = 96.0
+offset_bottom = 240.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 1
+coordY = 4
+
+[node name="PartHolderButton23" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 192.0
+offset_right = 144.0
+offset_bottom = 240.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 2
+coordY = 4
+
+[node name="PartHolderButton24" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 192.0
+offset_right = 192.0
+offset_bottom = 240.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 3
+coordY = 4
+
+[node name="PartHolderButton25" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 192.0
+offset_right = 240.0
+offset_bottom = 240.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("36_a23h3")
+texture_pressed = ExtResource("36_a23h3")
+texture_hover = ExtResource("36_a23h3")
+script = ExtResource("13_88y0t")
+coordX = 4
+coordY = 4
+
+[connection signal="body_entered" from="Body" to="MotionHandler" method="_on_collision"]
+[connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]
+[connection signal="mouse_entered" from="Inventory/InventoryControls/ActiveSlot0" to="Inventory/InventoryControls/ActiveSlot0" method="_on_mouse_entered"]
+[connection signal="mouse_entered" from="Inventory/InventoryControls/ActiveSlot2" to="Inventory/InventoryControls/ActiveSlot2" method="_on_mouse_entered"]
+[connection signal="mouse_entered" from="Inventory/InventoryControls/ActiveSlot1" to="Inventory/InventoryControls/ActiveSlot1" method="_on_mouse_entered"]
+[connection signal="sellPart" from="Inventory/InventoryControls/BackingTexture/InfoBox" to="Inventory" method="_on_info_box_sell_part"]
+[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/InfoBox/SellButton" to="Inventory/InventoryControls/BackingTexture/InfoBox" method="_on_sell_button_pressed"]
+[connection signal="toggled" from="Inventory/InventoryControls/BackingTexture/InfoBox/MoveButton" to="Inventory" method="_on_move_button_toggled"]
+[connection signal="toggled" from="Inventory/InventoryControls/BackingTexture/Shop/StallA/FreezeButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallA" method="_on_freeze_button_toggled"]
+[connection signal="button_down" from="Inventory/InventoryControls/BackingTexture/Shop/StallA/BuyButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallA/BuyButton" method="_on_button_down"]
+[connection signal="button_up" from="Inventory/InventoryControls/BackingTexture/Shop/StallA/BuyButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallA/BuyButton" method="_on_button_up"]
+[connection signal="toggled" from="Inventory/InventoryControls/BackingTexture/Shop/StallA/BuyButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallA" method="_on_buy_button_toggled"]
+[connection signal="toggled" from="Inventory/InventoryControls/BackingTexture/Shop/StallB/FreezeButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallB" method="_on_freeze_button_toggled"]
+[connection signal="button_down" from="Inventory/InventoryControls/BackingTexture/Shop/StallB/BuyButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallB/BuyButton" method="_on_button_down"]
+[connection signal="button_up" from="Inventory/InventoryControls/BackingTexture/Shop/StallB/BuyButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallB/BuyButton" method="_on_button_up"]
+[connection signal="toggled" from="Inventory/InventoryControls/BackingTexture/Shop/StallB/BuyButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallB" method="_on_buy_button_toggled"]
+[connection signal="toggled" from="Inventory/InventoryControls/BackingTexture/Shop/StallC/FreezeButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallC" method="_on_freeze_button_toggled"]
+[connection signal="button_down" from="Inventory/InventoryControls/BackingTexture/Shop/StallC/BuyButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallC/BuyButton" method="_on_button_down"]
+[connection signal="button_up" from="Inventory/InventoryControls/BackingTexture/Shop/StallC/BuyButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallC/BuyButton" method="_on_button_up"]
+[connection signal="toggled" from="Inventory/InventoryControls/BackingTexture/Shop/StallC/BuyButton" to="Inventory/InventoryControls/BackingTexture/Shop/StallC" method="_on_buy_button_toggled"]
+[connection signal="button_down" from="Inventory/InventoryControls/BackingTexture/Shop/HealButton" to="Inventory/InventoryControls/BackingTexture/Shop/HealButton" method="_on_button_down"]
+[connection signal="button_up" from="Inventory/InventoryControls/BackingTexture/Shop/HealButton" to="Inventory/InventoryControls/BackingTexture/Shop/HealButton" method="_on_button_up"]
+[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/Shop/HealButton" to="Inventory/InventoryControls/BackingTexture/Shop" method="_on_heal_button_pressed"]
+[connection signal="button_down" from="Inventory/InventoryControls/BackingTexture/Shop/RerollButton" to="Inventory/InventoryControls/BackingTexture/Shop/RerollButton" method="_on_button_down"]
+[connection signal="button_up" from="Inventory/InventoryControls/BackingTexture/Shop/RerollButton" to="Inventory/InventoryControls/BackingTexture/Shop/RerollButton" method="_on_button_up"]
+[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/Shop/RerollButton" to="Inventory/InventoryControls/BackingTexture/Shop" method="_on_reroll_button_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/EnemyProgressBar/NextWaveButton" to="Inventory/InventoryControls/BackingTexture/EnemyProgressBar" method="_on_next_wave_button_pressed"]
+[connection signal="reassignment_button_pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" to="CombatHandler" method="_on_active_reassignment_buttons_reassignment_button_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot0" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_0_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot2" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_2_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot1" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_1_pressed"]
+[connection signal="inventoryToggle" from="Inventory/InventoryControls/InventoryPanel" to="Inventory" method="_on_inventory_panel_inventory_toggle"]
+[connection signal="toggled" from="Inventory/InventoryControls/InventoryPanel" to="Inventory/InventoryControls/InventoryPanel" method="_on_toggled"]
+[connection signal="buttonPressed" from="Inventory/InventoryControls/PartsHolder_Engine" to="Inventory" method="_on_parts_holder_engine_button_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton2" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton2" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton3" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton3" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton4" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton4" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton5" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton5" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton6" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton6" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton7" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton7" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton8" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton8" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton9" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton9" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton10" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton10" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton11" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton11" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton12" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton12" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton13" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton13" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton14" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton14" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton15" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton15" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton16" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton16" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton17" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton17" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton18" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton18" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton19" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton19" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton20" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton20" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton21" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton21" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton22" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton22" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton23" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton23" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton24" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton24" method="_on_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton25" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton25" method="_on_pressed"]

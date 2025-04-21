@@ -24,7 +24,6 @@ radius = 0.611008
 
 [node name="Enemy" type="Node3D" groups=["Combatant"]]
 script = ExtResource("1_u733l")
-AudioSourceType = null
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Combatant Body", "Damager"]]
 unique_name_in_owner = true
@@ -159,10 +158,6 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.388926, 0)
 script = ExtResource("8_uaa5m")
 scrap_worth = 2
-maxHealth = null
-maxEnergy = null
-energyRefreshRate = null
-maxInvincibleTimer = null
 
 [node name="MotionHandler" type="Node3D" parent="."]
 script = ExtResource("9_fyoyp")

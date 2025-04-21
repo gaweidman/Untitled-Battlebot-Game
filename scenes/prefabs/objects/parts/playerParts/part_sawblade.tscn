@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://c5swob1vx2qg1"]
+[gd_scene load_steps=5 format=3 uid="uid://c5swob1vx2qg1"]
 
 [ext_resource type="PackedScene" uid="uid://p8nchh2uegmh" path="res://scenes/prefabs/objects/parts/part_active_melee.tscn" id="1_bmytx"]
 [ext_resource type="Script" uid="uid://gkhh6j32umxg" path="res://scripts/GUI/parts/playerParts/part_sawblade.gd" id="2_r51y7"]
 [ext_resource type="ArrayMesh" uid="uid://d1yk2k84wlb25" path="res://graphics/models/extracted/blade.res" id="3_r51y7"]
-[ext_resource type="Texture2D" uid="uid://brb70j2hksy0p" path="res://graphics/images/HUD/parts/part_screws.png" id="3_s237q"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_bmytx"]
 radius = 1.5
@@ -20,15 +19,6 @@ partDescription = "[color=e0dede]Never a dull day with a [color=ff6e49]Sawblade[
 
 [color=ff6e49]Active: Reflects bullets, increases damage, and increases range for a time."
 
-[node name="Screws" parent="TextureBase" index="0"]
-visible = true
-texture = ExtResource("3_s237q")
-
-[node name="Buttons" parent="TextureBase" index="1"]
-texture_filter = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
 [node name="MeshInstance3D" parent="." index="2"]
 mesh = ExtResource("3_r51y7")
 
@@ -44,5 +34,4 @@ collide_with_bodies = false
 wait_time = 0.15
 one_shot = true
 
-[connection signal="on_select" from="TextureBase/Buttons" to="." method="_on_buttons_on_select"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
