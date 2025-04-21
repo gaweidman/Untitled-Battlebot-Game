@@ -356,8 +356,6 @@ offset_left = -32.0
 offset_top = -64.0
 offset_right = -2.0
 offset_bottom = -34.0
-grow_horizontal = 2
-grow_vertical = 0
 
 [node name="ScreenBack" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot0/ScreenHolder"]
 layout_mode = 0
@@ -465,8 +463,6 @@ offset_left = -32.0
 offset_top = -64.0
 offset_right = -2.0
 offset_bottom = -34.0
-grow_horizontal = 2
-grow_vertical = 0
 
 [node name="ScreenBack" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot2/ScreenHolder"]
 layout_mode = 0
@@ -574,8 +570,6 @@ offset_left = -32.0
 offset_top = -64.0
 offset_right = -2.0
 offset_bottom = -34.0
-grow_horizontal = 2
-grow_vertical = 0
 
 [node name="ScreenBack" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1/ScreenHolder"]
 layout_mode = 0
@@ -1530,8 +1524,6 @@ offset_left = -300.0
 offset_top = -383.0
 offset_right = -48.0
 offset_bottom = -353.0
-grow_horizontal = 2
-grow_vertical = 0
 script = ExtResource("56_n1h3t")
 
 [node name="NextWaveButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/EnemyProgressBar"]
@@ -1621,8 +1613,6 @@ offset_left = 56.0
 offset_top = -294.0
 offset_right = 268.0
 offset_bottom = -267.0
-grow_horizontal = 2
-grow_vertical = 0
 script = ExtResource("59_kapkf")
 
 [node name="Slot0" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons"]
