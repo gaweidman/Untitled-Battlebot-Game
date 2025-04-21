@@ -43,7 +43,6 @@ transform = Transform3D(10.4175, 0, 0, 0, 10.4175, 0, 0, 0, 10.4175, 0, -8.49945
 shape = SubResource("BoxShape3D_xn35m")
 
 [node name="ArenaWall" type="MeshInstance3D" parent="ArenaFloor" groups=["Concrete", "World", "WorldWall"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00951958, -0.0365124, -0.0431232)
 material_override = ExtResource("4_jfpfj")
 mesh = ExtResource("5_r8hhu")
 

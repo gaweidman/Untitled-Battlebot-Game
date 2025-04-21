@@ -133,9 +133,9 @@ func _process(delta):
 		textureBase.show();
 		if inPlayerInventory:
 			if ownedByPlayer:
-				textureBase.position = invHolderNode.global_position + Vector2(invPosition * 48);
+				textureBase.global_position = invHolderNode.global_position + Vector2(invPosition * 48);
 			else:
-				textureBase.position = invHolderNode.global_position;
+				textureBase.global_position = invHolderNode.global_position;
 	else:
 		textureBase.hide();
 		%Buttons.disable();

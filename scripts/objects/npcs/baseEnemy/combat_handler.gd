@@ -3,7 +3,7 @@ extends CombatHandler
 class_name CombatHandlerEnemy
 
 @export var scrap_worth := 1;
-var DIEFX = load("res://scenes/prefabs/particle-fx/BoltsHit.tscn")
+var DIEFX = preload("res://scenes/prefabs/particle-fx/BoltsHit.tscn")
 
 func _on_collision(collider):
 	super(collider);
@@ -22,5 +22,5 @@ func die():
 	if is_instance_valid(inv):
 		inv.add_scrap(scrap_worth);
 		
-	ParticleFX.play("NutsBolts", GameState.get_game_board(), Vector3(0, 0, 0));
+	ParticleFX.play("NutsBolts", GameState.get_game_board(), body.global_position);
 	super();

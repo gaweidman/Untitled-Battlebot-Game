@@ -4,15 +4,19 @@ class_name CombatHandler
 
 @export var maxHealth := 1.0;
 var health := maxHealth;
-
 @export var maxEnergy := 3.0;
 var energy := maxEnergy;
 @export var energyRefreshRate := 2.0;
 var invincible := false;
 var invincibleTimer := 0.0;
 @export var maxInvincibleTimer := 0.25;
+var thisBot : Combatant;
+var body : RigidBody3D;
 
 var activeParts = { 0 : null, 1: null, 2: null}
+
+func _ready():
+	thisBot = get_parent();
 
 func die():
 	get_parent().queue_free();
@@ -29,13 +33,17 @@ func take_damage(damage:float):
 		if health > maxHealth:
 			health = maxHealth;
 
-	
+func _process(delta):
+	if ! is_instance_valid(thisBot):
+		thisBot = get_parent();
+	if ! is_instance_valid(body):
+		body = thisBot.body;
+
 func _on_collision(collider):
 	pass;
 
 func energy_affordable(inAmount:=0.0) -> bool:
 	return inAmount <= energy;
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:

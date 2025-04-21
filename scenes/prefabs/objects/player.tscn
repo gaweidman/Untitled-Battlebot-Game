@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=80 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://djodq5u8kwgfe" path="res://graphics/images/HUD/activeTab/tabBase.png" id="11_3ki25"]
 [ext_resource type="Texture2D" uid="uid://8hijaqintxgq" path="res://graphics/images/HUD/hud.png" id="11_nha5v"]
 [ext_resource type="Script" uid="uid://b1r88r130d6k2" path="res://scripts/GUI/parts_holder_engine.gd" id="11_u8qiw"]
+[ext_resource type="Script" uid="uid://dmxcynsx5ipq6" path="res://scripts/GUI/inventory_controls.gd" id="11_vba6s"]
 [ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="12_hnom0"]
 [ext_resource type="Script" uid="uid://70olwffu7ehc" path="res://scripts/GUI/active_slot_tab.gd" id="12_maiqi"]
 [ext_resource type="Script" uid="uid://bpnwpequ3dde0" path="res://scripts/GUI/part_holder_button.gd" id="13_88y0t"]
@@ -258,10 +259,11 @@ texture_filter = 1
 layout_mode = 1
 anchor_right = 1.0
 anchor_bottom = 0.998
-offset_bottom = 0.297974
+offset_bottom = 0.295959
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 1
+script = ExtResource("11_vba6s")
 metadata/_edit_lock_ = true
 
 [node name="ActiveSlot0" type="TextureRect" parent="Inventory/InventoryControls"]

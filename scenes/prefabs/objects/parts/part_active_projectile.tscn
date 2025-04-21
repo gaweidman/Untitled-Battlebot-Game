@@ -27,7 +27,6 @@ invSprite = ExtResource("6_dfc4u")
 myPartType = 2
 
 [node name="TextureBase" parent="." index="0"]
-visible = true
 texture_filter = 0
 offset_right = 40.0
 offset_bottom = 40.0

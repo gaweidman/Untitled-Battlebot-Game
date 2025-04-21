@@ -1,8 +1,8 @@
 [gd_scene load_steps=24 format=3 uid="uid://d1cqnd70sse5k"]
 
-[ext_resource type="Shader" path="res://graphics/materials/particle shaders/HitShader.tres" id="1_rqfb0"]
+[ext_resource type="Shader" uid="uid://cmm5lxlxjlg76" path="res://graphics/materials/particle shaders/HitShader.tres" id="1_rqfb0"]
 [ext_resource type="Texture2D" uid="uid://boisdn6gpbv6p" path="res://graphics/images/particle PNGs/TestHitEffectThree.png" id="2_jiqv2"]
-[ext_resource type="Shader" path="res://graphics/materials/particle shaders/SparksShader.tres" id="3_ub272"]
+[ext_resource type="Shader" uid="uid://c6srgtvai4efl" path="res://graphics/materials/particle shaders/SparksShader.tres" id="3_ub272"]
 [ext_resource type="Texture2D" uid="uid://xnw0tahhgmow" path="res://graphics/images/particle PNGs/TestCircleOne.png" id="4_cmuu0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_meqqk"]

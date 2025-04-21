@@ -116,8 +116,7 @@ func get_reverse_cooldown() -> float:
 	return 1.0 - get_cooldown();
 
 func _process(delta):
-	#print("why.")
-	super(delta)
+	super(delta);
 	
 	if fireRateTimer <= 0:
 		fireRateTimer = 0;
