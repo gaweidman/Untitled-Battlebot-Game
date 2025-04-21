@@ -31,42 +31,42 @@ var SOUNDS = {
 	"Collision.Combatant.Metal": [
 		load("res://sounds/collision/Metal_Light_01.wav"),
 		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.wav")
+		load("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.Combatant.Plastic": [
 		load("res://sounds/collision/Plastic_Light_01.wav"),
-		load("res://sounds/collision/Plastic_Light_02.wav"),
+		load("res://sounds/collision/Plastic_Light_02.mp3"),
 		load("res://sounds/collision/Plastic_Light_03.wav"),
 	],
 	
 	"Collision.Combatant.Concrete": [
 		load("res://sounds/collision/Metal_Light_01.wav"),
 		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.wav")
+		load("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.Combatant.Sawblade": [
 		load("res://sounds/collision/Metal_Light_01.wav"),
 		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.wav")
+		load("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.Combatant.Combatant": [
 		load("res://sounds/collision/Metal_Light_01.wav"),
 		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.wav")
+		load("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.Projectile.Metal": [
 		load("res://sounds/collision/Metal_Light_01.wav"),
 		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.wav")
+		load("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.Projectile.Plastic": [
 		load("res://sounds/collision/Plastic_Light_01.wav"),
-		load("res://sounds/collision/Plastic_Light_02.wav"),
+		load("res://sounds/collision/Plastic_Light_02.mp3"),
 		load("res://sounds/collision/Plastic_Light_03.wav"),
 	],
 	
@@ -79,18 +79,18 @@ var SOUNDS = {
 	"Collision.Projectile.Combatant": [
 		load("res://sounds/collision/Metal_Light_01.wav"),
 		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.wav")
+		load("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.MeleeWeapon.Metal": [
 		load("res://sounds/collision/Metal_Light_01.wav"),
 		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.wav")
+		load("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.MeleeWeapon.Plastic": [
 		load("res://sounds/collision/Plastic_Light_01.wav"),
-		load("res://sounds/collision/Plastic_Light_02.wav"),
+		load("res://sounds/collision/Plastic_Light_02.mp3"),
 		load("res://sounds/collision/Plastic_Light_03.wav"),
 	],
 	
@@ -102,30 +102,29 @@ var SOUNDS = {
 	"Collision.MeleeWeapon.Concrete": [
 		load("res://sounds/collision/Metal_Light_01.wav"),
 		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.wav")
+		load("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.World.Metal": [
 		load("res://sounds/collision/Metal_Light_01.wav"),
 		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.wav")
+		load("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.World.Plastic": [
 		load("res://sounds/collision/Plastic_Light_01.wav"),
-		load("res://sounds/collision/Plastic_Light_02.wav"),
+		load("res://sounds/collision/Plastic_Light_02.mp3"),
 		load("res://sounds/collision/Plastic_Light_03.wav"),
 	],
 	
 	"Collision.World.Concrete": [
 		load("res://sounds/collision/Metal_Light_01.wav"),
 		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.wav")
+		load("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Weapon.Shoot": [load("res://sounds/CannonFire01.wav")],
-	"Weapon.Sawblade.Drone": [load("res://sounds/Sawblade.wav")],
-	
+	"Weapon.Sawblade.Drone": [load("res://sounds/SawbladeDrone01.ogg")],
 	"Movement.Drone": [load("res://sounds/Movement_Drone.ogg")],
 	"Movement.Dash": [load("res://sounds/Toaster.wav")]
 }

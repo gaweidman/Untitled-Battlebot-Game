@@ -17,5 +17,9 @@ partDescription = "[color=ffffff]This. This [color=e0dede]is the weapon of the [
 
 [color=65a4ff]Active: Fires basic bullets."
 
+[node name="TextureBase" parent="." index="0"]
+visible = false
+
 [node name="MeshInstance3D" parent="." index="2"]
+visible = false
 mesh = ExtResource("3_ivrqh")

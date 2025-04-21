@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bbq103vofw8yu" path="res://scenes/prefabs/objects/parts/part_active_projectile.tscn" id="1_8wfl3"]
 
 [node name="Cannon" instance=ExtResource("1_8wfl3")]
+visible = false
 baseDamage = 0.75
 scrapCostBase = 12
 dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1)])
@@ -10,3 +11,6 @@ partName = "Cannon"
 partDescription = "[color=e0dede]Standard issue [color=ffffff]ballistic pew pew.
 
 [color=65a4ff]Active: Fires basic bullets."
+
+[node name="MeshInstance3D" parent="." index="2"]
+visible = false

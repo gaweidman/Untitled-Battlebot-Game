@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 GameState="*res://scripts/libraries/game_state.gd"
 Sound="*res://scripts/libraries/sound_manager.gd"
 Hooks="*res://scripts/libraries/hooks.gd"
+ParticleFX="*res://scripts/libraries/particlefx.gd"
 
 [global_group]
 

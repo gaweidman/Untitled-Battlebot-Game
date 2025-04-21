@@ -1,8 +1,8 @@
 [gd_scene load_steps=18 format=3 uid="uid://ddf54puo42pjd"]
 
-[ext_resource type="Shader" path="res://graphics/materials/particle shaders/MetalNutShader.tres" id="1_4yken"]
+[ext_resource type="Shader" uid="uid://3yg2434qgt8l" path="res://graphics/materials/particle shaders/MetalNutShader.tres" id="1_4yken"]
 [ext_resource type="Texture2D" uid="uid://doih2ty5burbb" path="res://graphics/images/particle PNGs/metalnut.png" id="2_gn052"]
-[ext_resource type="Shader" path="res://graphics/materials/particle shaders/MetalBoltShader.tres" id="3_2r8k5"]
+[ext_resource type="Shader" uid="uid://d0u0g85610g72" path="res://graphics/materials/particle shaders/MetalBoltShader.tres" id="3_2r8k5"]
 [ext_resource type="Texture2D" uid="uid://djad04oobp8t6" path="res://graphics/images/particle PNGs/metalbolt.png" id="4_i643m"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2u3de"]
