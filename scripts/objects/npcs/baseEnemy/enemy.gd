@@ -10,4 +10,4 @@ func take_damage(damage):
 
 func _on_body_entered(otherBody: Node) -> void:
 	Hooks.OnCollision(%Body, otherBody);
-	Hooks.OnEnemyCollision($Body, otherBody);
+	#Hooks.OnEnemyCollision($Body, otherBody);

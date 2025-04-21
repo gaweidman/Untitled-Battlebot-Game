@@ -86,13 +86,11 @@ func OnUseShield(item: PartActive):
 func OnPlayerCollision(collider: Node):
 	for hookFunc in list.OnPlayerCollision:
 		hookFunc.call(collider);
-	
-func OnCollision(collider1: StaticBody3D, collider2: StaticBody3D):
+
+func OnCollision(collider1: CollisionObject3D, collider2: CollisionObject3D):
 	for hookFunc in list.OnCollision:
 		hookFunc.call(collider1, collider2);
 	
 func add(hookName: String, instanceName: String, hookFunc: Callable):
 	list[hookName][instanceName] = hookFunc;
-	
-func remove(hookName: String, instanceName: String):
 	list[hookName][instanceName] = null;

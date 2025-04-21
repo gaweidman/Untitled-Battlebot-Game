@@ -88,7 +88,7 @@ func _on_body_entered(body):
 		#die()
 		#;
 		
-	Hooks.OnCollision(%CollisionShape3D, body);	
+	Hooks.OnCollision(self, body);	
 	pass # Replace with function body.
 
 func leak():
