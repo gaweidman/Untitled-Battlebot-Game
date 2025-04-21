@@ -27,6 +27,7 @@ invSprite = ExtResource("6_dfc4u")
 myPartType = 2
 
 [node name="TextureBase" parent="." index="0"]
+visible = true
 texture_filter = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -54,3 +55,6 @@ mouse_default_cursor_shape = 0
 [node name="LeakTimer" type="Timer" parent="." index="1"]
 wait_time = 3.0
 autostart = true
+
+[node name="MeshInstance3D" parent="." index="2"]
+visible = true

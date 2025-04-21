@@ -60,7 +60,7 @@ func _activate():
 	
 	Hooks.OnActiveUse(self);
 	_set_fire_rate_timer();
-	return true;
+	return;
 	##Get Inventory's energy total and subtract energyCost from it
 
 func get_damage(base:=false):

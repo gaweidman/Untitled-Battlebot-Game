@@ -16,6 +16,9 @@ func _process(delta):
 func _activate():
 	Hooks.OnActiveUse(self);
 	Hooks.OnMeleeWeaponSwing(self);
+	
+	if can_fire():
+		_set_fire_rate_timer();
 
 func _on_weapon_body_entered(collider: Node) -> void:
 	_assign_refs();
