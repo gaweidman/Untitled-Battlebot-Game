@@ -5,6 +5,12 @@ class_name InputHandler;
 var player;
 var combatHandler;
 
+enum FIRE {
+	SLOT1,
+	SLOT2,
+	SLOT3
+}
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	player = GameState.get_player();
@@ -21,12 +27,12 @@ func _physics_process(delta):
 		process_movement(get_movement_vector(), delta);
 		
 		if ! player.inventory.inventoryUp:
-			if Input.is_action_just_pressed("FireRanged") && combatHandler.can_fire(0):
-				combatHandler.use_active(0);
-			if Input.is_action_just_pressed("FireMelee") && combatHandler.can_fire(1):
-				combatHandler.use_active(1);
-			if Input.is_action_just_pressed("FireUtility") && combatHandler.can_fire(2):
-				combatHandler.use_active(2);
+			if Input.is_action_just_pressed("FireRanged") && combatHandler.can_fire(FIRE.SLOT1):
+				combatHandler.use_active(FIRE.SLOT1);
+			if Input.is_action_just_pressed("FireMelee") && combatHandler.can_fire(FIRE.SLOT2):
+				combatHandler.use_active(FIRE.SLOT2);
+			if Input.is_action_just_pressed("FireUtility") && combatHandler.can_fire(FIRE.SLOT3):
+				combatHandler.use_active(FIRE.SLOT3);
 	
 # we apply forces in motion_handler
 func process_movement(movementVector, delta):

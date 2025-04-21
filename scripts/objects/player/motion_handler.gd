@@ -51,7 +51,9 @@ func _physics_process(delta):
 	pass;
 
 func _on_collision(this, other):
-	print("COLLISION HERE")
+	Hooks.OnCollision(%Body, other);
+	Hooks.OnPlayerCollision(other);
+	print("COLLISION HERE");
 	print(other, other.is_in_group("Combatant"), other.get_groups())
 	#if other.is_in_group("Combatant") && 
 	#if (other.is_in_group("Projectile") && other.get_attacker() != thisBot) || other.is_in_group("MeleeWeapon") || other.is_in_group("Combatant"):

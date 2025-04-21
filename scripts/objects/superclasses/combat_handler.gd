@@ -62,6 +62,7 @@ func can_fire(index) -> bool:
 func use_active(index):
 	var part := get_active_part(index);
 	if part and can_fire(index):
+		if index == 
 		part._activate();
 	pass
 

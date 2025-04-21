@@ -12,8 +12,8 @@ extends Node;
 #	OnMovementInput
 #
 # Physics
-#	OnHitWall
-# 	OnHitCombatant
+#	OnWallCollision
+# 	OnEnemyCollision
 # 	OnPlayerCollision
 #	OnCollision
 # 
@@ -30,10 +30,10 @@ var list = {
 	"OnUtilityUse": {},
 	"OnActiveUsed": {},
 	"OnMovementInput": {},
-	"OnHitWall": {},
-	"OnHitCombatant": {},
-	"OnPlayerCollision": {},
-	"OnCollision": {},
+	"OnWallCollision": {},
+	"OnEnemyCollision": {}, 
+	"OnPlayerCollision": {},  #
+	"OnCollision": {}, #
 	"PassiveItemTick": {},
 };
 
