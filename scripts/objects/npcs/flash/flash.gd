@@ -10,10 +10,9 @@ var aiHandler;
 func _ready():
 	aiHandler = super.get_node("AIHandler");
 
-func _on_body_body_entered(otherBody): 
-	aiHandler._on_collision(otherBody);
-	super._on_body_entered(otherBody);
-	
+func _on_body_body_entered(other): 
+	aiHandler._on_collision(other);
+
 func _process(delta):
 	super(delta);
 	if is_instance_valid(inventory):

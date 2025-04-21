@@ -14,7 +14,6 @@ func _physics_process(delta):
 	#Vector3.
 	#print(lenToPlayer)
 	if lenToPlayer <= 20:
-		combatHandler.use_active(InputHandler.FIRE.SLOT1);
+		combatHandler.use_active(0);
 		
 		pass;
-		

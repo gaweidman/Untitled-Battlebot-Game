@@ -18,8 +18,6 @@ func _on_weapon_body_entered(collider: Node) -> void:
 	combatHandler._on_collision(collider);
 	motionHandler._on_collision(GameState.get_player_body(), collider);
 	contact_damage(collider);
-	Hooks.OnCollision(%Weapon, collider);
-	
 	pass 
 
 func contact_damage(collider: Node) -> void:
