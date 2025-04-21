@@ -5,6 +5,8 @@ extends Node;
 #	OnFireProjectile
 #	OnMeleeWeaponHit
 #	OnMeleeWeaponSwing
+#	OnUtilityUse
+#	OnActiveUsed
 # 
 # Movement
 #	OnMovementInput
@@ -13,13 +15,27 @@ extends Node;
 #	OnHitWall
 # 	OnHitCombatant
 # 	OnPlayerCollision
+#	OnCollision
 # 
 # Passive
 #	PassiveItemTick
 #
 # Special Abilities
 #	OnUseShield
-#	OnDropEntity
+
+var list = {
+	"OnFireProjectile": {},
+	"OnMeleeWeaponHit": {},
+	"OnMeleeWeaponSwing": {},
+	"OnUtilityUse": {},
+	"OnActiveUsed": {},
+	"OnMovementInput": {},
+	"OnHitWall": {},
+	"OnHitCombatant": {},
+	"OnPlayerCollision": {},
+	"OnCollision": {},
+	"PassiveItemTick": {},
+};
 
 var body;
 
@@ -31,32 +47,52 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass;
 
-func default_OnFireProjectile():
-	pass; # todo
+## Called when a part owner fires a projectile.
+func OnFireProjectile(firer: Node3D):
+	for hookFunc in list.OnFireProjectile:
+		hookFunc.call(firer);
 	
-func default_OnMeleeWeaponHit():
-	pass;
+## Called when a melee weapon hits a combatant.
+func OnMeleeWeaponHit(weapon: Node3D):
+	for hookFunc in list.OnMeleeWeaponHit:
+		hookFunc.call(weapon);
 	
-func default_OnMeleeWeaponSwing():
-	pass;
+## Called when a melee weapon is swung or otherwise used.
+func OnMeleeWeaponSwing(weapon: Node3D):
+	for hookFunc in list.OnMeleeWeaponSwing:
+		hookFunc.call(weapon);
 	
-func default_OnMovementInput():
-	GameState.HandleMovement();
+## Called when the player inputs movement
+func OnMovementInput(movementVector: Vector2):
+	for hookFunc in list.OnMovementInput:
+		hookFunc.call(movementVector);
 	
-func default_OnHitWall():
-	pass;
+func OnHitWall(collider: StaticBody3D):
+	for hookFunc in list.OnHitWall:
+		hookFunc.call(collider);
 	
-func default_OnHitCombatant():
-	pass;
+func OnHitCombatant(collider: StaticBody3D, combatant: Combatant):
+	for hookFunc in list.OnHitCombatant:
+		hookFunc.call(collider, combatant);
 	
-func default_PassiveItemTick():
-	pass;
+func PassiveItemTick(item: PartPassive):
+	for hookFunc in list.PassiveItemTick:
+		hookFunc.call(item);
 	
-func default_OnUseShield():
-	pass;
-	
-func default_OnDropEntity():
-	pass
+func OnUseShield(item: PartActive):
+	for hookFunc in list.OnUseShield:
+		hookFunc.call(item);
 	
 func OnPlayerCollision(collider: Node):
-	pass
+	for hookFunc in list.OnPlayerCollision:
+		hookFunc.call(collider);
+	
+func OnCollision(collider1: StaticBody3D, collider2: StaticBody3D):
+	for hookFunc in list.OnCollision:
+		hookFunc.call(collider1, collider2);
+	
+func add(hookName: String, instanceName: String, hookFunc: Callable):
+	list[hookName][instanceName] = hookFunc;
+	
+func remove(hookName: String, instanceName: String):
+	list[hookName][instanceName] = null;
