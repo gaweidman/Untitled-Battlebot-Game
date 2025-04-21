@@ -34,7 +34,7 @@ func _activate():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	super(delta);
+	
 	magazineMax = magazineMaxBase * magazineMaxModifier;
 	pass
 
@@ -66,6 +66,8 @@ func fireBullet():
 	
 	leakTimer.start();
 	GameState.get_hud().update();
+	
+	Hooks.OnFireProjectile(self, bullet);
 	pass
 
 func recountMagazine() -> int:

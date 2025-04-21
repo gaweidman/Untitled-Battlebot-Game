@@ -5,36 +5,23 @@ extends Node;
 #	OnFireProjectile
 #	OnMeleeWeaponHit
 #	OnMeleeWeaponSwing
-#	OnUtilityUse
-#	OnActiveUsed
-# 
-# Movement
-#	OnMovementInput
+#	OnActiveUse
 #
 # Physics
 #	OnWallCollision
 # 	OnEnemyCollision
 # 	OnPlayerCollision
 #	OnCollision
-# 
-# Passive
-#	PassiveItemTick
-#
-# Special Abilities
-#	OnUseShield
 
 var list = {
-	"OnFireProjectile": {},
-	"OnMeleeWeaponHit": {},
-	"OnMeleeWeaponSwing": {},
-	"OnUtilityUse": {},
-	"OnActiveUsed": {},
-	"OnMovementInput": {},
-	"OnWallCollision": {},
-	"OnEnemyCollision": {}, 
+	"OnFireProjectile": {}, #
+	"OnMeleeWeaponHit": {}, #
+	"OnMeleeWeaponSwing": {}, #
+	"OnActiveUse": {}, #
+	"OnWallCollision": {}, #
+	"OnEnemyCollision": {}, #
 	"OnPlayerCollision": {},  #
 	"OnCollision": {}, #
-	"PassiveItemTick": {},
 };
 
 var body;
@@ -48,49 +35,49 @@ func _process(delta: float) -> void:
 	pass;
 
 ## Called when a part owner fires a projectile.
-func OnFireProjectile(firer: Node3D):
+func OnFireProjectile(firer: PartActiveProjectile, projectile: Node3D):
 	for hookFunc in list.OnFireProjectile:
 		hookFunc.call(firer);
 	
 ## Called when a melee weapon hits a combatant.
-func OnMeleeWeaponHit(weapon: Node3D):
+func OnMeleeWeaponHit(weapon: PartActiveMelee, victim: Node3D):
 	for hookFunc in list.OnMeleeWeaponHit:
 		hookFunc.call(weapon);
 	
 ## Called when a melee weapon is swung or otherwise used.
-func OnMeleeWeaponSwing(weapon: Node3D):
+func OnMeleeWeaponSwing(weapon: PartActiveMelee):
 	for hookFunc in list.OnMeleeWeaponSwing:
 		hookFunc.call(weapon);
 	
-## Called when the player inputs movement
-func OnMovementInput(movementVector: Vector2):
-	for hookFunc in list.OnMovementInput:
-		hookFunc.call(movementVector);
-	
-func OnHitWall(collider: StaticBody3D):
+## Called when something hits the wall.
+func OnHitWall(collider: CollisionObject3D):
 	for hookFunc in list.OnHitWall:
 		hookFunc.call(collider);
 	
-func OnHitCombatant(collider: StaticBody3D, combatant: Combatant):
-	for hookFunc in list.OnHitCombatant:
-		hookFunc.call(collider, combatant);
+## Called when something collides with an enemy.
+func OnEnemyCollision(collider1: CollisionObject3D, collider2: CollisionObject3D):
+	for hookFunc in list.OnEnemyCollision:
+		hookFunc.call(collider1, collider2);
 	
-func PassiveItemTick(item: PartPassive):
-	for hookFunc in list.PassiveItemTick:
-		hookFunc.call(item);
-	
-func OnUseShield(item: PartActive):
-	for hookFunc in list.OnUseShield:
-		hookFunc.call(item);
-	
+## Called when something collides with a player.
 func OnPlayerCollision(collider: Node):
 	for hookFunc in list.OnPlayerCollision:
 		hookFunc.call(collider);
 
+## Called when two things collide.
 func OnCollision(collider1: CollisionObject3D, collider2: CollisionObject3D):
 	for hookFunc in list.OnCollision:
 		hookFunc.call(collider1, collider2);
-	
+		
+func OnActiveUse(activePart: PartActive):
+	for hookFunc in list.OnCollision:
+		activePart;
+
+## Use to add a hook.
+## To use, we go to any file and call
+## Hooks.add("OnActiveUse", "OurImplementation", func (part: ActivePart):
+## 	 print("We used an active item!")
+## )
 func add(hookName: String, instanceName: String, hookFunc: Callable):
 	list[hookName][instanceName] = hookFunc;
 	list[hookName][instanceName] = null;

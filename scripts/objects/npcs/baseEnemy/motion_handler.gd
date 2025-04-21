@@ -66,3 +66,10 @@ func _physics_process(delta):
 	clamp_speed();
 	
 	pass;
+
+func _on_body_entered(otherBody: Node) -> void:
+	Hooks.OnCollision(%Body, otherBody);
+	Hooks.OnEnemyCollision(%Body, otherBody);
+	
+	if otherBody.get_name() == "ArenaWall":
+		Hooks.OnWallCollision(%Body);

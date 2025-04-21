@@ -173,5 +173,5 @@ offset_bottom = 40.0
 script = ExtResource("11_ke8ol")
 metadata/_custom_type_script = "uid://lqq6dh38f1k6"
 
-[connection signal="body_entered" from="Body" to="." method="_on_body_entered"]
+[connection signal="body_entered" from="Body" to="MotionHandler" method="_on_body_entered"]
 [connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]

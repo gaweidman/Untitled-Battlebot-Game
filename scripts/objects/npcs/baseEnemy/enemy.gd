@@ -7,7 +7,3 @@ func _get_AI_handler():
 	
 func take_damage(damage):
 	get_node("CombatHandler").take_damage(damage);
-
-func _on_body_entered(otherBody: Node) -> void:
-	Hooks.OnCollision(%Body, otherBody);
-	#Hooks.OnEnemyCollision($Body, otherBody);

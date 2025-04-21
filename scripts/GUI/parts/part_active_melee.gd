@@ -12,6 +12,10 @@ func _process(delta):
 		weaponNode.add_to_group("Player Part");
 		#weaponNode.add_collision_exception_with(positionNode)
 	weaponNode.set_deferred("global_position", meshNode.global_position);
+	
+func _activate():
+	Hooks.OnActiveUse(self);
+	Hooks.OnMeleeWeaponSwing(self);
 
 func _on_weapon_body_entered(collider: Node) -> void:
 	_assign_refs();
@@ -24,6 +28,7 @@ func _on_weapon_body_entered(collider: Node) -> void:
 
 func contact_damage(collider: Node) -> void:
 	if collider.get_parent() is Combatant:
+		Hooks.OnMeleeWeaponHit(self, collider);
 		pass;
 	else:
 		return;

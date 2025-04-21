@@ -12,7 +12,7 @@ func _ready():
 
 func _on_body_body_entered(otherBody): 
 	aiHandler._on_collision(otherBody);
-	super._on_body_entered(otherBody);
+	super.get_node("MotionHandler")._on_body_entered(otherBody);
 	
 func _process(delta):
 	super(delta);

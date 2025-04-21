@@ -8,6 +8,7 @@ var rotationSpeed := baseRotationSpeed;
 var rotationDeg := 0.0;
 
 func contact_damage(collider: Node) -> void:
+	super(collider);
 	if equipped:
 		var par = collider.get_parent();
 		if par is Combatant && par != thisBot:
