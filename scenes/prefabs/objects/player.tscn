@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=81 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -74,6 +74,7 @@
 [ext_resource type="Texture2D" uid="uid://okkoo55665rm" path="res://graphics/images/HUD/nextRound/screen_off.png" id="61_dbqh0"]
 [ext_resource type="Texture2D" uid="uid://baqnprslvvu8t" path="res://graphics/images/HUD/partAssign_selected.png" id="61_n1h3t"]
 [ext_resource type="Texture2D" uid="uid://c17tsbqn3orah" path="res://graphics/images/HUD/partAssign_disabled.png" id="62_ltg8k"]
+[ext_resource type="Texture2D" uid="uid://ckkqo4l53j7nc" path="res://graphics/images/HUD/HudEdge.png" id="69_dbqh0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -230,6 +231,7 @@ activeSlotTab0 = NodePath("../Inventory/InventoryControls/ActiveSlot0")
 activeSlotTab1 = NodePath("../Inventory/InventoryControls/ActiveSlot1")
 activeSlotTab2 = NodePath("../Inventory/InventoryControls/ActiveSlot2")
 maxHealth = 3.0
+energyRefreshRate = 1.65
 
 [node name="InputHandler" type="Node3D" parent="."]
 script = ExtResource("6_ui0xh")
@@ -262,9 +264,8 @@ anchor_bottom = 0.998
 offset_bottom = 0.295959
 grow_horizontal = 2
 grow_vertical = 0
-mouse_filter = 1
+mouse_filter = 2
 script = ExtResource("11_vba6s")
-metadata/_edit_lock_ = true
 
 [node name="ActiveSlot0" type="TextureRect" parent="Inventory/InventoryControls"]
 layout_mode = 1
@@ -592,6 +593,34 @@ offset_top = 52.0
 offset_right = 34.0
 offset_bottom = 80.0
 texture = ExtResource("15_maiqi")
+
+[node name="InventoryLeftEdge" type="TextureRect" parent="Inventory/InventoryControls"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -578.0
+offset_top = -394.0
+offset_right = -576.0
+offset_bottom = 1.0
+texture = ExtResource("69_dbqh0")
+
+[node name="InventoryRightEdge" type="TextureRect" parent="Inventory/InventoryControls"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 576.0
+offset_top = -394.0
+offset_right = 578.0
+offset_bottom = 1.0
+texture = ExtResource("69_dbqh0")
 
 [node name="BackingTexture" type="TextureRect" parent="Inventory/InventoryControls"]
 texture_filter = 1
@@ -1688,6 +1717,7 @@ offset_bottom = -22.9999
 grow_horizontal = 2
 grow_vertical = 0
 script = ExtResource("11_u8qiw")
+metadata/_edit_group_ = true
 
 [node name="PartHolderButton" type="TextureButton" parent="Inventory/InventoryControls/PartsHolder_Engine"]
 layout_mode = 0

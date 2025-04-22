@@ -43,6 +43,10 @@ func _process(delta):
 func blink():
 	if GameState.get_in_state_of_play():
 		blinkTimer = 0.10;
+		var player = GameState.get_player();
+		var particlePos := Vector3(randf_range(0.5,-0.5),randf_range(0.5,-0.5),randf_range(0.5,-0.5));
+		particlePos += player.body.global_position;
+		ParticleFX.play("SmokePuffSingle", GameState.get_game_board(), particlePos);
 
 func add_time(_time:float):
 	time += _time;

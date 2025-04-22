@@ -99,7 +99,7 @@ func enter_state(state:gameState):
 	elif state == gameState.INIT_ROUND:
 		round += 1;
 		player.start_round();
-		waveTimer = 0;
+		waveTimer = 3;
 		wave = 0;
 		roundEnemiesInit += 2;
 		roundEnemies = roundEnemiesInit;
@@ -201,7 +201,7 @@ func return_random_unoccupied_spawn_location():
 
 func spawn_wave(numOfEnemies := 0):
 	#return
-	while numOfEnemies > 0 && roundEnemies > 0:
+	while numOfEnemies > 0 && roundEnemies > 0 && check_alive_enemies() <= 30:
 		var enemyScene = return_random_enemy();
 		var pos = return_random_unoccupied_spawn_location();
 		if pos != null:
@@ -254,4 +254,7 @@ func _on_btn_credits_pressed():
 	pass # Replace with function body.
 func _on_btn_exit_pressed():
 	get_tree().quit();
+	pass # Replace with function body.
+func _on_btn_end_run_pressed():
+	player.die();
 	pass # Replace with function body.

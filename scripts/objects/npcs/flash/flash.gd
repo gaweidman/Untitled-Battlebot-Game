@@ -1,5 +1,7 @@
 extends EnemyBase
 
+class_name EnemyFlash
+
 @export var regularSpeed : float;
 @export var chargeSpeed : float;
 @export var chargeDistance : float;
@@ -18,3 +20,8 @@ func _process(delta):
 	super(delta);
 	if is_instance_valid(inventory):
 		inventory.add_part_from_scene(0,0,"res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn",0);
+
+func take_knockback(inDir:Vector3):
+	aiHandler.stop_charge();
+	super(inDir);
+	pass

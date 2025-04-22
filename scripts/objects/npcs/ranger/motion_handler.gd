@@ -1,0 +1,3 @@
+extends MotionHandlerBaseEnemy
+
+class_name MotionHandlerRanger

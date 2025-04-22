@@ -28,6 +28,12 @@ func get_ammo(integer := true):
 		return int(combatHandler.energy);
 	return combatHandler.energy;
 
+func take_knockback(_inDir:Vector3):
+	#var inDir = _inDir * 100;
+	#print("Player knockback")
+	#super(inDir);
+	super(_inDir);
+
 func _get_input_handler():
 	return get_node_or_null("InputHandler");
 

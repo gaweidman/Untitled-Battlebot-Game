@@ -11,14 +11,26 @@ func contact_damage(collider: Node) -> void:
 	super(collider);
 	if equipped:
 		var par = collider.get_parent();
-		if par is Combatant && par != thisBot:
-			#if ! par.combatHandler.invincible:
-			par.combatHandler.take_damage(get_damage());
-			var distanceDif = par.body.global_position - thisBot.body.global_position;
-			par.take_knockback((distanceDif + Vector3(0,0.01,0)) * 1000);
-			thisBot.take_knockback((-distanceDif + Vector3(0,0.01,0)) * 1000);
-			#print("Damage dealt: ", damage)
-			pass;
+		if par != thisBot:
+			if par is Combatant:
+				##Particles!!!
+				var particlePos = Vector3(randf_range(0.25,-0.25), 0, randf_range(0.25,-0.25))
+				particlePos += (positionNode.global_position + par.body.global_position) / 2
+				ParticleFX.play("Sparks", GameState.get_game_board(), particlePos)
+				
+				#if ! par.combatHandler.invincible:
+				par.combatHandler.take_damage(get_damage());
+				var distanceDif = par.body.global_position - thisBot.body.global_position;
+				var thatBotVelocity = par.body.linear_velocity;
+				var thisBotVelocity = thisBot.body.linear_velocity;
+				par.take_knockback(((distanceDif + Vector3(0,0.1,0)) * 1000) + thisBotVelocity - thatBotVelocity);
+				thisBot.body.linear_velocity = Vector3(thisBotVelocity.x * -1, thisBotVelocity.y, thisBotVelocity.z * -1)
+				thisBot.take_knockback(((-distanceDif + Vector3(0,0.1,0)) * 1000) - thisBotVelocity + thatBotVelocity);
+				modelScaleOffset /= 1.5;
+				#print("Damage dealt: ", damage)
+				pass;
+			else:
+				return;
 		else:
 			return;
 
@@ -37,13 +49,18 @@ func _process(delta):
 	if $ShapeCast3D.is_colliding():
 		for item in $ShapeCast3D.collision_result:
 			if item.collider is Bullet:
-				
+				print(item)
 				var bullet = item.collider;
 				if bullet.get_attacker() != thisBot:
-					thisBot.call_deferred("take_knockback",(bullet.dir + Vector3(0,0.01,0)) * 1000);
+					thisBot.call_deferred("take_knockback",(bullet.dir + Vector3(0,0.1,0)) * 1000);
 					var dir = bullet.dir * -1;
 					bullet.change_direction(dir);
 					bullet.set_attacker(thisBot);
+					
+					##Particles!!!
+					var particlePos = Vector3(randf_range(0.1,-0.1), 0, randf_range(0.1,-0.1))
+					particlePos += item.point
+					ParticleFX.play("Sparks", GameState.get_game_board(), particlePos)
 	
 
 func _activate():

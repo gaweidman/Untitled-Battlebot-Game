@@ -8,13 +8,9 @@ func _process(delta):
 		inventory.add_part_from_scene(0,0,"res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn",0);
 
 func _physics_process(delta):
-	var offset = GameState.get_player_pos_offset(body.global_position)
-
-	var lenToPlayer = offset.length();
-	#Vector3.
-	#print(lenToPlayer)
-	if lenToPlayer <= 20:
-		combatHandler.use_active(InputHandler.FIRE.SLOT1);
-		
-		pass;
-		
+	if not is_asleep():
+		if GameState.is_player_in_range(body.global_position, 20) and not GameState.is_player_in_range(body.global_position, 5):
+			combatHandler.use_active(InputHandler.FIRE.SLOT1);
+			
+			pass;
+			

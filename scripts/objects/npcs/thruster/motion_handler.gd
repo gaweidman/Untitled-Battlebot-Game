@@ -26,7 +26,7 @@ func _physics_process(delta):
 	super(delta);
 	if ! is_instance_valid(aiHandler):
 		aiHandler = thisBot.get_node("AIHandler");
-	if Time.get_ticks_msec() >= nextThrust:
+	if (Time.get_ticks_msec() >= nextThrust) and not thisBot.is_asleep():
 		nextThrust += 1000;
 		
 		var forceVector = Vector3.ZERO
@@ -40,9 +40,25 @@ func _physics_process(delta):
 		##Rotating the body mesh towards the movement vector
 		var rotatedMV = movementVector.rotated(deg_to_rad(90));
 		
+		bodyRotationAngle = lerp(bodyRotationAngle, rotatedMV, 1);
+		
 		var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
 		
 		look_at_safe(botBodyMesh, rotateVector);
 		clamp_speed();
+	else:
+		
+		var forceVector = Vector3.ZERO
+		var movementVector = aiHandler.get_movement_vector();
+		
+		##Rotating the body mesh towards the movement vector
+		var rotatedMV = movementVector.rotated(deg_to_rad(90));
+		
+		bodyRotationAngle = lerp(bodyRotationAngle, rotatedMV, delta * 6);
+		
+		var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + botBodyMesh.global_position
+		
+		look_at_safe(botBodyMesh, rotateVector);
+		#clamp_speed();
 	
 	pass;

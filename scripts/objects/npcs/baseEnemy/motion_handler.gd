@@ -70,6 +70,8 @@ func _physics_process(delta):
 func _on_body_entered(otherBody: Node) -> void:
 	Hooks.OnCollision(%Body, otherBody);
 	Hooks.OnEnemyCollision(%Body, otherBody);
+	if aiHandler.has_method("_on_collision"):
+		aiHandler._on_collision(%Body, otherBody);
 	
 	if otherBody.get_name() == "ArenaWall":
 		Hooks.OnWallCollision(%Body);

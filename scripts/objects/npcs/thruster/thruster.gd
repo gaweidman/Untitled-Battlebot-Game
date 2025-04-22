@@ -1,4 +1,4 @@
-extends Combatant;
+extends EnemyBase;
 
 class_name Thruster;
 

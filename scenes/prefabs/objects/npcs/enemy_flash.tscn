@@ -13,9 +13,7 @@ regularSpeed = 2500.0
 chargeSpeed = 500.0
 chargeDistance = 3.0
 chargeCooldown = 2.5
-
-[node name="Body" parent="." index="0"]
-mass = 1.0
+sleepTimerLength = 1.5
 
 [node name="CollisionShape" parent="Body/Sawblade" index="0"]
 visible = false

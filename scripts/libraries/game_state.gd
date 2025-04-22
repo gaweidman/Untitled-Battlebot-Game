@@ -78,6 +78,18 @@ func get_player_pos_offset(inGlobalPosition: Vector3):
 	var pos = get_player_position();
 	return pos - inGlobalPosition;
 
+func get_len_to_player(inGlobalPosition: Vector3):
+	var offset = get_player_pos_offset(inGlobalPosition);
+	
+	var lenToPlayer = offset.length();
+	
+	return lenToPlayer;
+
+func is_player_in_range(inGlobalPosition:Vector3, range:float):
+	var lenToPLayer = get_len_to_player(inGlobalPosition);
+	
+	return lenToPLayer <= range;
+
 func get_player_body_mesh():
 	var bdy = get_player_body();
 	

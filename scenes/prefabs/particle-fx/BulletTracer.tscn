@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://bkwtxafp63vfm"]
+[gd_scene load_steps=11 format=3 uid="uid://bkwtxafp63vfm"]
 
 [ext_resource type="Shader" uid="uid://dqmkq07v8t6aj" path="res://graphics/materials/particle shaders/BulletTracer.tres" id="1_1004a"]
+[ext_resource type="Script" uid="uid://bixet4dmtwy3k" path="res://scripts/objects/particle_fx_killer.gd" id="1_vj8st"]
 [ext_resource type="Texture2D" uid="uid://byb68ghp0s1nc" path="res://graphics/images/particle PNGs/TestTracerOne.png" id="2_nkp01"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g4stu"]
@@ -41,6 +42,7 @@ alpha_curve = SubResource("CurveTexture_60i48")
 [sub_resource type="QuadMesh" id="QuadMesh_xxnja"]
 
 [node name="BulletTracer" type="Node3D"]
+script = ExtResource("1_vj8st")
 
 [node name="BulletTracerParticles" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.375932, 0, 0)

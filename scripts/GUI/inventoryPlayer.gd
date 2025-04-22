@@ -40,7 +40,7 @@ func _process(delta):
 			HUD_inventory.position.y = lerp(HUD_inventory.position.y, 295.0, delta * 20);
 	else:
 		inventoryUp = false;
-		HUD_inventory.position.y = lerp(HUD_inventory.position.y, 1000.0, delta * 20);
+		HUD_inventory.position.y = lerp(HUD_inventory.position.y, 400.0, delta * 20);
 
 func _physics_process(delta):
 	super(delta)

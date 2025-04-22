@@ -3,6 +3,7 @@ extends Node;
 var PFX_LIST = {
 	"NutsBolts": preload("res://scenes/prefabs/particle-fx/BoltsHit.tscn"),
 	"Smoke": preload("res://scenes/prefabs/particle-fx/SmokePuffs.tscn"),
+	"SmokePuffSingle": preload("res://scenes/prefabs/particle-fx/SmokePuffSingle.tscn"),
 	"Sparks": preload("res://scenes/prefabs/particle-fx/HitSparksTest.tscn"),
 	"BulletTracer": preload("res://scenes/prefabs/particle-fx/BulletTracer.tscn")
 }
@@ -14,15 +15,18 @@ func _process(_delta: float):
 	pass
 	
 func get_effect_scene(pfxName: String):
-	return PFX_LIST[pfxName];
+	if pfxName in PFX_LIST:
+		return PFX_LIST[pfxName];
+	else:
+		return null;
 
 func play(pfxName: String, parent: Node3D, location: Vector3):
 	var scene = get_effect_scene(pfxName);
 	
 	#print("Firing particle ",pfxName," at location ",location);
-	
-	var sceneInst = scene.instantiate();
-	
-	parent.add_child(sceneInst);
-	
-	sceneInst.set("global_position", location);
+	if is_instance_valid(scene):
+		var sceneInst = scene.instantiate();
+		
+		parent.add_child(sceneInst);
+		
+		sceneInst.set("global_position", location);
