@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://ddf54puo42pjd"]
+[gd_scene load_steps=23 format=3 uid="uid://ddf54puo42pjd"]
 
 [ext_resource type="Shader" uid="uid://3yg2434qgt8l" path="res://graphics/materials/particle shaders/MetalNutShader.tres" id="1_4yken"]
 [ext_resource type="Script" uid="uid://bixet4dmtwy3k" path="res://scripts/objects/particle_fx_killer.gd" id="1_ixkxl"]
@@ -18,6 +18,13 @@ point_count = 2
 [sub_resource type="CurveTexture" id="CurveTexture_vxe0f"]
 curve = SubResource("Curve_fxe7k")
 
+[sub_resource type="Curve" id="Curve_ixkxl"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.45364, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_1unby"]
+curve = SubResource("Curve_ixkxl")
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_8pdvy"]
 particle_flag_align_y = true
 direction = Vector3(0, 1, 0)
@@ -27,11 +34,15 @@ initial_velocity_max = 6.0
 gravity = Vector3(0, -20, 0)
 scale_min = 0.1
 scale_max = 0.3
-color = Color(0.498362, 0.520864, 0.499051, 1)
+scale_curve = SubResource("CurveTexture_1unby")
+color = Color(0.644055, 0.457062, 0.279849, 1)
 alpha_curve = SubResource("CurveTexture_vxe0f")
+collision_mode = 1
+collision_friction = 0.5
+collision_bounce = 0.75
 
 [sub_resource type="QuadMesh" id="QuadMesh_slhxw"]
-size = Vector2(0.4, 0.4)
+size = Vector2(1.4, 1.4)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6iwh7"]
 render_priority = 0
@@ -39,11 +50,18 @@ shader = ExtResource("3_2r8k5")
 shader_parameter/Hit_Texture = ExtResource("4_i643m")
 
 [sub_resource type="Curve" id="Curve_cxf8b"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.21963, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CurveTexture" id="CurveTexture_qb8mw"]
 curve = SubResource("Curve_cxf8b")
+
+[sub_resource type="Curve" id="Curve_w7h7v"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.01338, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_inscr"]
+curve = SubResource("Curve_w7h7v")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fuioh"]
 particle_flag_align_y = true
@@ -54,11 +72,15 @@ initial_velocity_max = 6.0
 gravity = Vector3(0, -20, 0)
 scale_min = 0.3
 scale_max = 0.5
-color = Color(0.282892, 0.29679, 0.284557, 1)
+scale_curve = SubResource("CurveTexture_inscr")
+color = Color(0.483261, 0.395082, 0.350249, 1)
 alpha_curve = SubResource("CurveTexture_qb8mw")
+collision_mode = 1
+collision_friction = 0.5
+collision_bounce = 0.75
 
 [sub_resource type="QuadMesh" id="QuadMesh_rv2b0"]
-size = Vector2(0.4, 0.4)
+size = Vector2(1.4, 1.4)
 
 [sub_resource type="Animation" id="Animation_mkk86"]
 length = 0.001
@@ -127,7 +149,7 @@ script = ExtResource("1_ixkxl")
 [node name="MetalNuts" type="GPUParticles3D" parent="."]
 material_override = SubResource("ShaderMaterial_2u3de")
 amount = 6
-lifetime = 0.5
+lifetime = 1.5
 one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_8pdvy")
@@ -136,7 +158,7 @@ draw_pass_1 = SubResource("QuadMesh_slhxw")
 [node name="MetalBolts" type="GPUParticles3D" parent="."]
 material_override = SubResource("ShaderMaterial_6iwh7")
 amount = 6
-lifetime = 0.5
+lifetime = 1.5
 one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_fuioh")
