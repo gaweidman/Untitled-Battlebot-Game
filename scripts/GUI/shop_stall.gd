@@ -115,7 +115,10 @@ func updatePrice():
 			var price = partRef._get_buy_price();
 			$BuyButton/TextHolder/Price.text = str(price);
 			if is_affordable():
-				GameState.set_text_color($BuyButton/TextHolder/Price, "scrap");
+				if curState == doorState.FROZEN:
+					GameState.set_text_color($BuyButton/TextHolder/Price, "ranged");
+				else:
+					GameState.set_text_color($BuyButton/TextHolder/Price, "scrap");
 			else:
 				GameState.set_text_color($BuyButton/TextHolder/Price, "unaffordable");
 	else:
