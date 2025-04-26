@@ -21,6 +21,7 @@ firingAngle = Vector3(0, 0, 1)
 firingOffset = Vector3(0, 0.5, 0)
 model = ExtResource("4_yi3ku")
 modelMaterial = ExtResource("5_vi2dv")
+baseEnergyCost = 1.0
 partName = "Ranged Part"
 partIcon = ExtResource("6_1065k")
 invSprite = ExtResource("6_dfc4u")

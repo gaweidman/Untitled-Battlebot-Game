@@ -199,6 +199,7 @@ text = "000"
 horizontal_alignment = 1
 
 [node name="Texture" type="TextureRect" parent="Ping"]
+layout_mode = 0
 offset_right = 16.0
 offset_bottom = 16.0
 texture = ExtResource("12_fc5s6")

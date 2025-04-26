@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://1jih7n2ms1st"
+path="res://.godot/imported/Battlebot (1).ogg-4bd8fb204a0d402a102c697373ff449b.oggvorbisstr"
+
+[deps]
+
+source_file="res://sounds/music/Battlebot (1).ogg"
+dest_files=["res://.godot/imported/Battlebot (1).ogg-4bd8fb204a0d402a102c697373ff449b.oggvorbisstr"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=185.0
+beat_count=288
+bar_beats=8

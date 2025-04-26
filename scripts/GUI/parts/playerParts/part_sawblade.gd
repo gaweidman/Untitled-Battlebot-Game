@@ -74,16 +74,16 @@ func _process(delta):
 			#print( * 0.8)
 			var volume = ((80.0 - lenToPlayer) / 80.0)
 			#print(volume)
-			sawSoundVolume = lerp(sawSoundVolume, volume * 0.95, delta * 6);
+			var maxVolume := 0.95
+			if thisBot is Player:
+				maxVolume = 0.85;
+			sawSoundVolume = lerp(sawSoundVolume, volume * maxVolume, delta * 3);
 			#sawSoundPlayer.stream_paused = false;
 		else:
 			sawSoundVolume = lerp(sawSoundVolume, 0.0, delta * 6);
 			#sawSoundPlayer.stream_paused = true;
 		sawSoundPlayer.volume_db = (80.0 * sawSoundVolume) - 80.0;
 		sawSoundPlayer.pitch_scale = sawSoundPitch;
-	
-	
-	
 
 func _activate():
 	if super():

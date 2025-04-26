@@ -7,7 +7,7 @@ class_name EnemyPing;
 var updateTimer := 0.05;
 var targetPos := Vector2(0,0);
 var playerInRange := false;
-var viewportRect := get_viewport_rect()
+var viewportRect : Rect2;
 var initialized := false;
 
 func _ready():
@@ -48,10 +48,17 @@ func _process(delta):
 
 func update():
 	viewportRect = get_viewport_rect()
-	var pos = thisBotBody.global_position
-	if ! GameState.is_player_in_range(pos, 15):
-		playerInRange = false;
-	else:
-		playerInRange = true;
-	updateTimer += 0.05;
-	targetPos = GameState.cam_unproject_position(pos) + Vector2(-8, -32);
+	if viewportRect:
+		var pos = thisBotBody.global_position
+		if ! GameState.is_player_in_range(pos, 15):
+			playerInRange = false;
+		else:
+			playerInRange = true;
+		updateTimer += 0.05;
+		var camPos = GameState.cam_unproject_position(pos)
+		#print(camPos)
+		print("pos ", pos)
+		if camPos.x < 0:
+			camPos.x = 0;
+		targetPos = camPos + Vector2(-8, -32);
+		print(targetPos)
