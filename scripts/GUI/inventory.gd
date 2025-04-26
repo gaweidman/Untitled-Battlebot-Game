@@ -99,7 +99,7 @@ func is_there_space_for_part(part:Part, invPosition : Vector2i) -> bool:
 			return true;
 	return false;
 
-func add_part(part: Part, invPosition : Vector2i):
+func add_part(part: Part, invPosition : Vector2i, noisy := false):
 	var coordsToCheck = get_modified_part_dimensions(part, invPosition);
 	
 	if check_coordinate_table_is_free(coordsToCheck, part):
@@ -113,12 +113,12 @@ func add_part(part: Part, invPosition : Vector2i):
 		if part is PartActive:
 			part.positionNode = battleBotBody;
 			part.meshNode.reparent(battleBotBody);
-		add_part_post(part);
+		add_part_post(part, noisy);
 	else:
 		pass 
 	pass
 
-func add_part_post(part:Part):
+func add_part_post(part:Part, noisy:=false):
 	pass;
 
 func remove_part(part: Part, destroy:=false, beingSold := false, beingBought := false):
@@ -171,7 +171,7 @@ func add_part_from_scene(x: int, y:int, _partScene:String, activeSlot = null):
 			var part = partScene.instantiate();
 			print("Adding ", part.name)
 			add_child(part);
-			add_part(part, Vector2i(x,y));
+			add_part(part, Vector2i(x,y), false);
 			if part is PartActive:
 				part.set_equipped(true);
 			if activeSlot != null && activeSlot is int && part is PartActive:

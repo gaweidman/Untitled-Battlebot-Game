@@ -142,6 +142,7 @@ static var SOUNDS = {
 	],
 	"Movement.Drone": [preload("res://sounds/Movement_Drone.ogg")],
 	"Movement.Dash": [preload("res://sounds/Toaster.wav")],
+	"Part.Place": [preload("res://sounds/Toaster.wav")],
 	
 	"Metal.Ting": [
 		preload("res://sounds/collision/Metal_Ting_01.wav"), 
@@ -151,6 +152,14 @@ static var SOUNDS = {
 		preload("res://sounds/collision/Metal_Light_01.wav"),
 		preload("res://sounds/collision/Metal_Light_02.wav"),
 		preload("res://sounds/collision/Metal_Light_03.mp3")
+	],
+	
+	"Shop.Door.Open": [
+		preload("res://sounds/BuynSell.mp3")
+	],
+	"Shop.Chaching": [
+		preload("res://sounds/BuynSell01.wav"),
+		preload("res://sounds/BuynSell02.wav"),
 	],
 }
 
@@ -252,7 +261,9 @@ static func get_proper_collision_sound(collider1: Node3D, collider2: Node3D):
 
 static var sound3DScene := preload("res://scenes/prefabs/utilities/sound3D.tscn");
 static var sound2DScene := preload("res://scenes/prefabs/utilities/sound_2d.tscn");
+static var sound1DScene := preload("res://scenes/prefabs/utilities/sound1D.tscn");
 
+##For playing a sound in 3D worldspace.
 static func play_sound_at(inSound, inGlobalPosition:Vector3, parent = GameState.get_game_board(), inVolume := 1.0, inPitch := 1.0):
 	var snd;
 	if inSound is String: 
@@ -273,6 +284,7 @@ static func play_sound_at(inSound, inGlobalPosition:Vector3, parent = GameState.
 	newSound.set_and_play_sound(snd);
 	return newSound;
 
+##For playing a sound in 2D worldspace.
 static func play_sound_2D(inSound, inGlobalPosition:=Vector2(0,0), parent = GameState.get_hud(), inVolume := 1.0, inPitch := 1.0):
 	var snd;
 	if inSound is String: 
@@ -288,6 +300,27 @@ static func play_sound_2D(inSound, inGlobalPosition:=Vector2(0,0), parent = Game
 	else:
 		return;
 	newSound.global_position = inGlobalPosition;
+	newSound.volume_db = (80 * inVolume) - 80;
+	newSound.pitch_scale = inPitch;
+	newSound.set_and_play_sound(snd);
+	return newSound;
+
+##For playing a sound without any panning.
+static func play_sound_nondirectional(inSound, inGlobalPosition:=Vector2(0,0), parent = GameState.get_hud(), inVolume := 1.0, inPitch := 1.0):
+	var snd;
+	if inSound is String: 
+		snd = pick_sound(inSound);
+	elif inSound is AudioStream:
+		snd = inSound;
+	else:
+		return;
+	
+	var newSound = sound1DScene.instantiate();
+	if is_instance_valid(parent):
+		parent.add_child(newSound);
+	else:
+		return;
+	
 	newSound.volume_db = (80 * inVolume) - 80;
 	newSound.pitch_scale = inPitch;
 	newSound.set_and_play_sound(snd);

@@ -10,16 +10,16 @@ func _ready() -> void:
 	var castContainer = get_node("Raycasts");
 	var raycasts = castContainer.get_children();
 	for raycast in raycasts:
-		raycast.marked = false;
+		raycast.set_enabled(false);
 			
 func _process(float) -> void:
 	# doing this on _ready dosn't work
 	var castContainer = get_node("Raycasts");
 	var raycasts = castContainer.get_children();
-	if raycasts.length() > 0:
+	if raycasts.size() > 0:
 		for raycast in raycasts:
-			if raycast.is_colliding() && !raycast.marked:
+			if raycast.is_colliding() && !raycast.get_enabled():
 				print("COLLIDING");
 				ai_nodes.append(raycast.get_collision_point());
 				raycast.queue_free();
-				raycast.marked = true;
+				raycast.set_enabled(true);
