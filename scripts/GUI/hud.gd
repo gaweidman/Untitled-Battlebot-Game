@@ -1,5 +1,6 @@
 extends Control;
 var TEXTUREPATH = "res://graphics/images/HUD/";
+var gameBoard : GameBoard;
 var refreshTimer = 0;
 
 var pauseMenuUp := false;
@@ -12,7 +13,10 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if refreshTimer <= 0:
 		refreshTimer = 0.5;
-		update();
+		if is_instance_valid(gameBoard):
+			update();
+		else:
+			gameBoard = GameState.get_game_board();
 	else:
 		refreshTimer -= _delta;
 	
@@ -31,7 +35,9 @@ func _process(_delta: float) -> void:
 
 func update() -> void:
 	var ply = GameState.get_player();
-	
+		#var newPos = $EnemyPings.position.x, $EnemyPings.position.z
+		 #= enemy.global_position;
+		#var screen = 
 	#if ply and %Health and %HealthLabel and %Ammo and %AmmoLabel:
 		#%Health.update(ply.get_health());
 		#%HealthLabel.text = str(ply.get_health(false));

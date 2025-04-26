@@ -18,7 +18,7 @@ var equipped := false;
 var unequippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_unequpped.png");
 var equippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_equpped.png");
 
-@export var baseEnergyCost = 1;
+@export var baseEnergyCost = 1.0;
 ##This is the calculated final energy cost.
 var energyCost = baseEnergyCost;
 ##This modifier should be what is used for damage bonuses from other parts.
@@ -52,16 +52,15 @@ func _ready():
 func _activate():
 	if can_fire():
 		if combatHandler:
-			combatHandler.energy -= get_energy_cost();
+			##Get Inventory's energy total and subtract energyCost from it
+			combatHandler.spend_energy(get_energy_cost());
+			Hooks.OnActiveUse(self);
+			_set_fire_rate_timer();
+			return true;
 		else:
-			return
+			return false;
 	else:
-		return
-	
-	Hooks.OnActiveUse(self);
-	_set_fire_rate_timer();
-	return;
-	##Get Inventory's energy total and subtract energyCost from it
+		return false;
 
 func get_damage(base:=false):
 	if !base:
@@ -105,7 +104,8 @@ func _physics_process(delta):
 	if rotateWithPlayer: call_deferred("_rotate_with_player");
 
 func can_fire() -> bool: 
-	return equipped and (fireRateTimer <= 0);
+	if ! GameState.get_in_state_of_play() : return false;
+	return get_equipped() and (fireRateTimer <= 0);
 
 ##Returns the cooldown timer divided by the fire rate.
 func get_cooldown() -> float:

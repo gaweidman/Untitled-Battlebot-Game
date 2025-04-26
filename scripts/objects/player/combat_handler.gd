@@ -38,12 +38,25 @@ func take_damage(damage:float):
 	GameState.get_hud().update();
 	inventory.take_damage(damage);
 
+
+func get_max_health():
+	return maxHealth + inventory.get_bonus_HP();
+
+func get_max_energy():
+	return maxEnergy + inventory.get_bonus_Energy();
+
+func get_energy_refresh_rate():
+	return energyRefreshRate + inventory.get_bonus_Energy_regen();
+
 func die():
 	player.body.hide();
 	player.freeze();
 	GameState.set_game_board_state(GameBoard.gameState.GAME_OVER)
 	if is_instance_valid(inventory):
 		inventory.inventory_panel_toggle(false);
+	remove_active_part(0);
+	remove_active_part(1);
+	remove_active_part(2);
 	pass;
 
 func live():
@@ -105,5 +118,8 @@ func check_active_slots_for_part(part:Part, ignoreIndex:int):
 
 ##Reassigns the player's selected part to the slot specified.
 func _on_active_reassignment_buttons_reassignment_button_pressed(index):
-	set_active_part(inventory.get_selected_part(), index);
+	if inventory.get_selected_part() == get_active_part(index):
+		remove_active_part(index);
+	else:
+		set_active_part(inventory.get_selected_part(), index);
 	pass # Replace with function body.

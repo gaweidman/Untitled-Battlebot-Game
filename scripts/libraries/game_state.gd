@@ -133,6 +133,16 @@ func start_death_timer(_startTime := 120.0, _reset := false):
 	
 	tmr.start(_startTime, _reset)
 
+func get_camera() -> Camera3D:
+	var brd = get_game_board();
+	
+	return brd.get_node_or_null("Camera3D")
+
+func cam_unproject_position(world_point:Vector3) -> Vector2:
+	var cam = get_camera();
+	
+	return cam.unproject_position(world_point);
+
 # Colors for text.
 const textColors = {
 	"white" : Color("ffffff"),

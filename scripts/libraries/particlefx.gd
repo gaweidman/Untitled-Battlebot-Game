@@ -20,7 +20,7 @@ func get_effect_scene(pfxName: String):
 	else:
 		return null;
 
-func play(pfxName: String, parent: Node3D, location: Vector3):
+func play(pfxName: String, parent: Node3D, location: Vector3, _scale := 1.0, nodeToFollow = GameState.get_game_board()):
 	var scene = get_effect_scene(pfxName);
 	
 	#print("Firing particle ",pfxName," at location ",location);
@@ -28,5 +28,7 @@ func play(pfxName: String, parent: Node3D, location: Vector3):
 		var sceneInst = scene.instantiate();
 		
 		parent.add_child(sceneInst);
-		
+		sceneInst.set("posOffset", location);
 		sceneInst.set("global_position", location);
+		sceneInst.set("scale", sceneInst.scale * _scale);
+		sceneInst.set("nodeToFollow", nodeToFollow);

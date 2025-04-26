@@ -80,6 +80,7 @@ func starting_kit():
 	add_part_from_scene(1, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
 	#add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
 	add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 0);
+	add_part_from_scene(3, 4, "res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn");
 	startingKitAssigned = true;
 	$InventoryControls/BackingTexture/Shop.reroll_shop();
 	scrap = 0;
@@ -98,13 +99,13 @@ func test_add_stuff():
 
 func update_stats():
 	var stringHealth = "";
-	var maxHealth = combatHandler.maxHealth;
+	var maxHealth = combatHandler.get_max_health();
 	var health = combatHandler.health;
 	%Lbl_Health.text = format_stat_num(health) + "/" + format_stat_num(maxHealth);
 	%HealthBar.set_health(health, maxHealth);
 	
 	var stringEnergy = "";
-	var maxEnergy = combatHandler.maxEnergy;
+	var maxEnergy = combatHandler.get_max_energy();
 	var energy = combatHandler.energy;
 	%Lbl_Energy.text = format_stat_num(energy) + "/" + format_stat_num(maxEnergy);
 	%EnergyBar.set_health(energy, maxEnergy);
@@ -149,7 +150,8 @@ func _on_inventory_panel_inventory_toggle(foo):
 
 func inventory_panel_toggle(foo):
 	inventoryUp = foo;
-	HUD_inventoryPanel.change_sprites(foo);
+	if HUD_inventoryPanel.button_pressed != foo:
+		HUD_inventoryPanel.button_pressed = foo;
 	if not foo:
 		select_part(selectedPart, false);
 		HUD_engine.disable(true);
@@ -305,7 +307,6 @@ func new_round():
 		if is_instance_valid(part):
 			if part is Part:
 				part.new_round();
-	inventory_panel_toggle(false);
 
 func end_round():
 	update_round();
@@ -319,3 +320,29 @@ func take_damage(damage:float):
 		if is_instance_valid(part):
 			if part is Part:
 				part.take_damage(damage);
+
+func get_bonus_HP():
+	var bonus = 0.0;
+	for child in listOfPieces:
+		if is_instance_valid(child):
+			if child is PartPassive:
+				bonus += child.bonusHP;
+	return bonus;
+
+func get_bonus_Energy():
+	var bonus = 0.0;
+	for child in listOfPieces:
+		if is_instance_valid(child):
+			if child is PartPassive:
+				bonus += child.bonusEnergy;
+	return bonus;
+
+func get_bonus_Energy_regen():
+	var bonus = 0.0;
+	for child in listOfPieces:
+		if is_instance_valid(child):
+			if child is PartPassive:
+				bonus += child.bonusEnergyRegen;
+	return bonus;
+
+###################

@@ -6,6 +6,9 @@ var modelScaleOffset := Vector3.ONE;
 var baseRotationSpeed := 180.0;
 var rotationSpeed := baseRotationSpeed;
 var rotationDeg := 0.0;
+@export var sawSoundPlayer : AudioStreamPlayer3D;
+var sawSoundVolume := 1.0;
+var sawSoundPitch := 1.0;
 
 func contact_damage(collider: Node) -> void:
 	super(collider);
@@ -61,15 +64,38 @@ func _process(delta):
 					var particlePos = Vector3(randf_range(0.1,-0.1), 0, randf_range(0.1,-0.1))
 					particlePos += item.point
 					ParticleFX.play("Sparks", GameState.get_game_board(), particlePos)
+					SND.play_sound_at("Weapon.Sawblade.Parry", particlePos, GameState.get_game_board(), 1.0, 0.5);
+	
+	if is_instance_valid(sawSoundPlayer):
+		sawSoundPitch = lerp(sawSoundPitch, 0.8, delta * 4);
+		var playerInRange = GameState.is_player_in_range(%Weapon.global_position, 80.0);
+		if get_equipped() && meshNode.visible == true && playerInRange:
+			var lenToPlayer = GameState.get_len_to_player(%Weapon.global_position);
+			#print( * 0.8)
+			var volume = ((80.0 - lenToPlayer) / 80.0)
+			#print(volume)
+			sawSoundVolume = lerp(sawSoundVolume, volume * 0.95, delta * 6);
+			#sawSoundPlayer.stream_paused = false;
+		else:
+			sawSoundVolume = lerp(sawSoundVolume, 0.0, delta * 6);
+			#sawSoundPlayer.stream_paused = true;
+		sawSoundPlayer.volume_db = (80.0 * sawSoundVolume) - 80.0;
+		sawSoundPlayer.pitch_scale = sawSoundPitch;
+	
+	
 	
 
 func _activate():
-	super();
-	modelScaleOffset *= 2;
-	rotationSpeed *= 3;
-	$ShapeCast3D.enabled = true;
-	$Timer.start();
-	damageModifier *= 3;
+	if super():
+		modelScaleOffset *= 2;
+		rotationSpeed *= 3;
+		$ShapeCast3D.enabled = true;
+		$Timer.start();
+		damageModifier *= 3;
+		sawSoundPitch = 0.9;
+		sawSoundVolume = 1.0;
+	#if is_instance_valid(sawSoundPlayer):
+		#sawSoundPlayer.play();
 
 func _rotate_with_player():
 	super();

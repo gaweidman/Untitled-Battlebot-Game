@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://d12ckrvst1osp"]
+[gd_scene load_steps=17 format=3 uid="uid://d12ckrvst1osp"]
 
 [ext_resource type="Script" uid="uid://do7rqw7y5akti" path="res://scripts/objects/npcs/baseEnemy/enemy.gd" id="1_u733l"]
 [ext_resource type="Material" uid="uid://uyr61s32rxaj" path="res://graphics/materials/PlayerBody_Bottom.tres" id="2_u733l"]
@@ -11,6 +11,8 @@
 [ext_resource type="Script" uid="uid://bxrmoul0q2cgc" path="res://scripts/objects/npcs/baseEnemy/motion_handler.gd" id="9_fyoyp"]
 [ext_resource type="Script" uid="uid://duwahhtdrj35c" path="res://scripts/objects/npcs/baseEnemy/ai_handler.gd" id="9_m42r2"]
 [ext_resource type="Script" uid="uid://hspopsylnyxu" path="res://scripts/GUI/inventoryEnemy.gd" id="11_ke8ol"]
+[ext_resource type="Texture2D" uid="uid://oxhe4uwmstjd" path="res://graphics/images/HUD/enemyPing.png" id="12_fc5s6"]
+[ext_resource type="Script" uid="uid://ddmbxvio7xxda" path="res://scripts/GUI/enemyPing.gd" id="13_sbhyg"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -172,6 +174,34 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("11_ke8ol")
 metadata/_custom_type_script = "uid://lqq6dh38f1k6"
+
+[node name="Ping" type="Control" parent="." node_paths=PackedStringArray("combatHandler", "thisBotBody")]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 0
+offset_right = 16.0
+offset_bottom = 16.0
+script = ExtResource("13_sbhyg")
+combatHandler = NodePath("../CombatHandler")
+thisBotBody = NodePath("../Body")
+
+[node name="Label" type="Label" parent="Ping"]
+layout_mode = 0
+offset_left = -74.0
+offset_top = -4.0
+offset_right = 90.0
+offset_bottom = 19.0
+theme_override_colors/font_color = Color(1, 0.431373, 0.286275, 1)
+theme_override_colors/font_outline_color = Color(0.811765, 0.129412, 0.129412, 1)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_outline_size = 0
+text = "000"
+horizontal_alignment = 1
+
+[node name="Texture" type="TextureRect" parent="Ping"]
+offset_right = 16.0
+offset_bottom = 16.0
+texture = ExtResource("12_fc5s6")
 
 [connection signal="body_entered" from="Body" to="MotionHandler" method="_on_body_entered"]
 [connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]

@@ -1,5 +1,7 @@
 extends Node
 
+class_name SND
+
 # These are the types of players that can be in the game. COLLISION2
 # through COLLISION8 exist solely for the world, at least at the
 # moment. There are 8 COLLISION instances for the world, so multiple
@@ -27,117 +29,142 @@ enum AudioSrc {
 # the game must use the pick_sound function to pick one sound out of the
 # possibly multiple options.
 
-var SOUNDS = {
+static var SOUNDS = {
 	"Collision.Combatant.Metal": [
-		load("res://sounds/collision/Metal_Light_01.wav"),
-		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.mp3")
+		preload("res://sounds/collision/Metal_Light_01.wav"),
+		preload("res://sounds/collision/Metal_Light_02.wav"),
+		preload("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.Combatant.Plastic": [
-		load("res://sounds/collision/Plastic_Light_01.wav"),
-		load("res://sounds/collision/Plastic_Light_02.mp3"),
-		load("res://sounds/collision/Plastic_Light_03.wav"),
+		preload("res://sounds/collision/Plastic_Light_01.wav"),
+		preload("res://sounds/collision/Plastic_Light_02.mp3"),
+		preload("res://sounds/collision/Plastic_Light_03.wav"),
 	],
 	
 	"Collision.Combatant.Concrete": [
-		load("res://sounds/collision/Metal_Light_01.wav"),
-		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.mp3")
+		preload("res://sounds/collision/Metal_Light_01.wav"),
+		preload("res://sounds/collision/Metal_Light_02.wav"),
+		preload("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.Combatant.Sawblade": [
-		load("res://sounds/collision/Metal_Light_01.wav"),
-		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.mp3")
+		preload("res://sounds/collision/Metal_Light_01.wav"),
+		preload("res://sounds/collision/Metal_Light_02.wav"),
+		preload("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.Combatant.Combatant": [
-		load("res://sounds/collision/Metal_Light_01.wav"),
-		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.mp3")
+		preload("res://sounds/collision/Metal_Light_01.wav"),
+		preload("res://sounds/collision/Metal_Light_02.wav"),
+		preload("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.Projectile.Metal": [
-		load("res://sounds/collision/Metal_Light_01.wav"),
-		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.mp3")
+		preload("res://sounds/collision/Metal_Light_01.wav"),
+		preload("res://sounds/collision/Metal_Light_02.wav"),
+		preload("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.Projectile.Plastic": [
-		load("res://sounds/collision/Plastic_Light_01.wav"),
-		load("res://sounds/collision/Plastic_Light_02.mp3"),
-		load("res://sounds/collision/Plastic_Light_03.wav"),
+		preload("res://sounds/collision/Plastic_Light_01.wav"),
+		preload("res://sounds/collision/Plastic_Light_02.mp3"),
+		preload("res://sounds/collision/Plastic_Light_03.wav"),
 	],
 	
 	"Collision.Projectile.Concrete": [
-		load("res://sounds/collision/Concrete_Bullet_01.wav"),
-		load("res://sounds/collision/Concrete_Bullet_02.wav"),
-		load("res://sounds/collision/Concrete_Bullet_03.wav")
+		preload("res://sounds/collision/Concrete_Bullet_01.wav"),
+		preload("res://sounds/collision/Concrete_Bullet_02.wav"),
+		preload("res://sounds/collision/Concrete_Bullet_03.wav")
 	],
 	
 	"Collision.Projectile.Combatant": [
-		load("res://sounds/collision/Metal_Light_01.wav"),
-		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.mp3")
+		preload("res://sounds/collision/Metal_Light_01.wav"),
+		preload("res://sounds/collision/Metal_Light_02.wav"),
+		preload("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.MeleeWeapon.Metal": [
-		load("res://sounds/collision/Metal_Light_01.wav"),
-		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.mp3")
+		preload("res://sounds/collision/Metal_Light_01.wav"),
+		preload("res://sounds/collision/Metal_Light_02.wav"),
+		preload("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.MeleeWeapon.Plastic": [
-		load("res://sounds/collision/Plastic_Light_01.wav"),
-		load("res://sounds/collision/Plastic_Light_02.mp3"),
-		load("res://sounds/collision/Plastic_Light_03.wav"),
+		preload("res://sounds/collision/Plastic_Light_01.wav"),
+		preload("res://sounds/collision/Plastic_Light_02.mp3"),
+		preload("res://sounds/collision/Plastic_Light_03.wav"),
 	],
 	
 	"Collision.MeleeWeapon.Sawblade": [
-		load("res://sounds/collision/Metal_Ting_01.wav"), 
-		load("res://sounds/collision/Metal_Ting_02.wav")
+		preload("res://sounds/collision/Metal_Ting_01.wav"), 
+		preload("res://sounds/collision/Metal_Ting_02.wav")
 	], 
 	
 	"Collision.MeleeWeapon.Concrete": [
-		load("res://sounds/collision/Metal_Light_01.wav"),
-		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.mp3")
+		preload("res://sounds/collision/Metal_Light_01.wav"),
+		preload("res://sounds/collision/Metal_Light_02.wav"),
+		preload("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
+	"Collision.Sawblade.Metal": [
+		preload("res://sounds/collision/Metal_Ting_01.wav"), 
+		preload("res://sounds/collision/Metal_Ting_02.wav")
+	], 
+	"Collision.Sawblade.Concrete": [
+		preload("res://sounds/collision/Metal_Ting_01.wav"), 
+		preload("res://sounds/collision/Metal_Ting_02.wav")
+	], 
+	
 	"Collision.World.Metal": [
-		load("res://sounds/collision/Metal_Light_01.wav"),
-		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.mp3")
+		preload("res://sounds/collision/Metal_Light_01.wav"),
+		preload("res://sounds/collision/Metal_Light_02.wav"),
+		preload("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	
 	"Collision.World.Plastic": [
-		load("res://sounds/collision/Plastic_Light_01.wav"),
-		load("res://sounds/collision/Plastic_Light_02.mp3"),
-		load("res://sounds/collision/Plastic_Light_03.wav"),
+		preload("res://sounds/collision/Plastic_Light_01.wav"),
+		preload("res://sounds/collision/Plastic_Light_02.mp3"),
+		preload("res://sounds/collision/Plastic_Light_03.wav"),
 	],
 	
 	"Collision.World.Concrete": [
-		load("res://sounds/collision/Metal_Light_01.wav"),
-		load("res://sounds/collision/Metal_Light_02.wav"),
-		load("res://sounds/collision/Metal_Light_03.mp3")
+		preload("res://sounds/collision/Concrete_Bullet_01.wav"),
+		preload("res://sounds/collision/Concrete_Bullet_02.wav"),
+		preload("res://sounds/collision/Concrete_Bullet_03.wav")
 	],
 	
-	"Weapon.Shoot": [load("res://sounds/CannonFire01.wav")],
-	"Weapon.Sawblade.Drone": [load("res://sounds/SawbladeDrone01.ogg")],
-	"Movement.Drone": [load("res://sounds/Movement_Drone.ogg")],
-	"Movement.Dash": [load("res://sounds/Toaster.wav")]
+	"Weapon.Shoot": [preload("res://sounds/CannonFire01.wav")],
+	"Weapon.Sawblade.Drone": [preload("res://sounds/SawbladeDrone01.wav")],
+	"Weapon.Sawblade.Parry": [
+		preload("res://sounds/collision/Metal_Ting_01.wav"), 
+		preload("res://sounds/collision/Metal_Ting_02.wav")
+	],
+	"Movement.Drone": [preload("res://sounds/Movement_Drone.ogg")],
+	"Movement.Dash": [preload("res://sounds/Toaster.wav")],
+	
+	"Metal.Ting": [
+		preload("res://sounds/collision/Metal_Ting_01.wav"), 
+		preload("res://sounds/collision/Metal_Ting_02.wav")
+	],
+	"Metal.Thump": [
+		preload("res://sounds/collision/Metal_Light_01.wav"),
+		preload("res://sounds/collision/Metal_Light_02.wav"),
+		preload("res://sounds/collision/Metal_Light_03.mp3")
+	],
 }
 
 # When two things collide, what noise do we make? If the sawblade hits the
 # world, do we hear the metallic sawblade, or the concrete of the world? This
 # is part of how we figure it out. The higher value a key has, the more
 # priority it has in being played.
-var COLLIDER_PRIORITIES = {
-	"Combatant": 4,
-	"Projectile": 3,
-	"World": 2,
-	"MeleeWeapon": 1
+static var COLLIDER_PRIORITIES = {
+	"Combatant": 1,
+	"Projectile": 2,
+	"World": 3,
+	"MeleeWeapon": 4,
+	"Sawblade": 5,
+	"Other": 0
 }
 
 # Called when the node enters the scene tree for the first time.
@@ -150,31 +177,38 @@ func _process(delta: float) -> void:
 	pass
 
 # Picks one of multiple .wav file options for a given sound.
-func pick_sound(soundType):
-	var soundOptions = SOUNDS[soundType];
-	
-	var rand = RandomNumberGenerator.new();
-	rand.randomize();
-	
-	return soundOptions[rand.randi_range(0, len(soundOptions) - 1)];
+static func pick_sound(soundType:String):
+	if soundType in SOUNDS:
+		var soundOptions = SOUNDS[soundType];
+		
+		var rand = RandomNumberGenerator.new();
+		rand.randomize();
+		
+		return soundOptions[rand.randi_range(0, len(soundOptions) - 1)];
+	print("No sound type called ", soundType)
+	return null;
 
 # Takes two objects that collided with each other, and returns the proper sound
 # that should be played for the collision.
-func get_proper_sound(collider1: Node3D, collider2: Node3D):
-	var collider1Audiosrc;
-	var collider2Audiosrc;
+static func get_proper_collision_sound_string(collider1: Node3D, collider2: Node3D):
+	var collider1Audiosrc = "Other";
+	var collider2Audiosrc = "Other";
 	
 	if collider1.is_in_group("Combatant"):
 		collider1Audiosrc = "Combatant"
+	elif collider1.is_in_group("Sawblade"):
+		collider1Audiosrc = "Sawblade"
 	elif collider1.is_in_group("MeleeWeapon"):
 		collider1Audiosrc = "MeleeWeapon"
 	elif collider1.is_in_group("World"):
 		collider1Audiosrc = "World"
 	elif collider1.is_in_group("Projectile"):
 		collider1Audiosrc = "Projectile";
-		
+	
 	if collider2.is_in_group("Combatant"):
 		collider2Audiosrc = "Combatant"
+	elif collider1.is_in_group("Sawblade"):
+		collider1Audiosrc = "Sawblade"
 	elif collider2.is_in_group("MeleeWeapon"):
 		collider2Audiosrc = "MeleeWeapon"
 	elif collider2.is_in_group("World"):
@@ -202,5 +236,68 @@ func get_proper_sound(collider1: Node3D, collider2: Node3D):
 		material = "Concrete"
 	elif soundMaker.is_in_group("Plastic"):
 		material = "Plastic"
-		
-	return "Collision." + soundMakerAudiosrc + "." + material
+	
+	var result = "Collision." + str(soundMakerAudiosrc) + "." + str(material)
+	print(result);
+	return result;
+
+static func get_proper_collision_sound(collider1: Node3D, collider2: Node3D):
+	var sndString = get_proper_collision_sound_string(collider1, collider2);
+	var snd = pick_sound(sndString)
+	if is_instance_valid(snd):
+		return snd;
+	
+	print("Sound unavailable: ", sndString);
+	return;
+
+static var sound3DScene := preload("res://scenes/prefabs/utilities/sound3D.tscn");
+static var sound2DScene := preload("res://scenes/prefabs/utilities/sound_2d.tscn");
+
+static func play_sound_at(inSound, inGlobalPosition:Vector3, parent = GameState.get_game_board(), inVolume := 1.0, inPitch := 1.0):
+	var snd;
+	if inSound is String: 
+		snd = pick_sound(inSound);
+	elif inSound is AudioStream:
+		snd = inSound;
+	else:
+		return;
+	
+	var newSound = sound3DScene.instantiate();
+	if is_instance_valid(parent):
+		parent.add_child(newSound);
+	else:
+		return;
+	newSound.global_position = inGlobalPosition;
+	newSound.volume_db = (80 * inVolume) - 80;
+	newSound.pitch_scale = inPitch;
+	newSound.set_and_play_sound(snd);
+	return newSound;
+
+static func play_sound_2D(inSound, inGlobalPosition:=Vector2(0,0), parent = GameState.get_hud(), inVolume := 1.0, inPitch := 1.0):
+	var snd;
+	if inSound is String: 
+		snd = pick_sound(inSound);
+	elif inSound is AudioStream:
+		snd = inSound;
+	else:
+		return;
+	
+	var newSound = sound2DScene.instantiate();
+	if is_instance_valid(parent):
+		parent.add_child(newSound);
+	else:
+		return;
+	newSound.global_position = inGlobalPosition;
+	newSound.volume_db = (80 * inVolume) - 80;
+	newSound.pitch_scale = inPitch;
+	newSound.set_and_play_sound(snd);
+	return newSound;
+
+static func play_collision_sound(collider1: Node3D, collider2: Node3D, inGlobalPositionOffset:=Vector3.ZERO, inVolume := 1.0, inPitch := 1.0):
+	var sound = get_proper_collision_sound(collider1, collider2);
+	var playPos = ((collider1.global_position + collider2.global_position) / 2) + inGlobalPositionOffset;
+	if collider1 is StaticBody3D:
+		playPos= (collider2.global_position) + inGlobalPositionOffset;
+	if collider2 is StaticBody3D:
+		playPos= (collider1.global_position) + inGlobalPositionOffset;
+	play_sound_at(sound, playPos, GameState.get_game_board(), inVolume, inPitch);

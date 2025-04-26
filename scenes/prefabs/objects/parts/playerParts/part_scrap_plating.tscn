@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvv17lv4te8op"]
+
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_47ohu"]
+[ext_resource type="Script" uid="uid://br0rk8re4ei5d" path="res://scripts/GUI/parts/playerParts/part_scrap_plating.gd" id="2_1e002"]
+[ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/Repair.png" id="3_1e002"]
+
+[node name="PartPassive" instance=ExtResource("1_47ohu")]
+script = ExtResource("2_1e002")
+bonusHP = 0.0
+bonusEnergy = 0.0
+bonusEnergyRegen = 0.0
+scrapCostBase = 12
+dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)])
+partName = "Scrap Plating"
+partDescription = "[color=f2ec6b]Passive: Adds 0.05 max health for every Scrap you have, up to a maximum of +3."
+partIcon = ExtResource("3_1e002")

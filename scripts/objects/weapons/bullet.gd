@@ -48,6 +48,8 @@ func fire(_attacker : Combatant, _launcher : Node ,_initPosition : Vector3, _dir
 	rotateTowardVector3(dir);
 	
 	show();
+	ParticleFX.play("SmokePuffSingle", GameState.get_game_board(), Vector3.ZERO, 0.5, self);
+	ParticleFX.play("BulletTracer", GameState.get_game_board(), Vector3.ZERO, 1.0, self);
 	fired = true;
 	print("I have been fired at ", global_position, ", attacker is at ", attacker.global_position)
 
@@ -82,13 +84,16 @@ func _on_body_entered(body):
 		body.get_parent().call_deferred("take_knockback",(dir + Vector3(0,0.01,0)) * 1000);
 		print("should be taking knockback....")
 	#print("Shot ded by ",body, " named: ", body.name)
-	die();
 	
 	#if not ( body.is_in_group("Player Part") ):
 		#die()
 		#;
 		
-	Hooks.OnCollision(self, body);	
+	Hooks.OnCollision(self, body);
+	SND.play_collision_sound(self, body, initPosition + positionAppend, 0.95, 1.5);
+	ParticleFX.play("Sparks", GameState.get_game_board(), initPosition + positionAppend, 0.5);
+	
+	die();
 	pass # Replace with function body.
 
 func leak():

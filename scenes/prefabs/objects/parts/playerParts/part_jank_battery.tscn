@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bf4hwwpmvd0tu"]
+
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_dq51d"]
+[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/Energy.png" id="2_a4ugv"]
+
+[node name="PartPassive" instance=ExtResource("1_dq51d")]
+bonusHP = 0.0
+bonusEnergy = 0.5
+bonusEnergyRegen = -0.1
+scrapCostBase = 7
+partName = "Jank Battery"
+partDescription = "[color=f2ec6b]Passive: Increases max Energy by 0.5. Reduces energy refresh rate by 0.1."
+partIcon = ExtResource("2_a4ugv")

@@ -50,8 +50,8 @@ func _physics_process(delta):
 
 	pass;
 
-func _on_collision(this, other):
-	Hooks.OnCollision(%Body, other);
+func _on_collision(other:PhysicsBody3D, this:PhysicsBody3D=%Body):
+	super(%Body, other)
 	Hooks.OnPlayerCollision(other);
 	print("COLLISION HERE");
 	print(other, other.is_in_group("Combatant"), other.get_groups())

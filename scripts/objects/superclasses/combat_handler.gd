@@ -30,8 +30,21 @@ func take_damage(damage:float):
 		if health <= 0.0:
 			die();
 			health = 0.0;
-		if health > maxHealth:
-			health = maxHealth;
+		if health > get_max_health():
+			health = get_max_health();
+
+func get_max_health():
+	return maxHealth;
+
+func get_max_energy():
+	return maxEnergy;
+
+func get_energy_refresh_rate():
+	return energyRefreshRate;
+
+func spend_energy(amt):
+	energy -= amt;
+	energy = clamp(energy, 0.0, get_max_energy())
 
 func _process(delta):
 	if ! is_instance_valid(thisBot):
@@ -49,7 +62,7 @@ func energy_affordable(inAmount:=0.0) -> bool:
 func _physics_process(delta: float) -> void:
 	##Adds energy over time up to the max but not below 0
 	if GameState.get_in_state_of_play():
-		energy = max(0, min(energy + (delta * energyRefreshRate), maxEnergy));
+		energy = max(0, min(energy + (delta * get_energy_refresh_rate()), get_max_energy()));
 		if invincibleTimer > 0:
 			invincible = true;
 			invincibleTimer -= delta;

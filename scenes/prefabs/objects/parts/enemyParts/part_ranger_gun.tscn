@@ -9,6 +9,7 @@ script = ExtResource("2_ivrqh")
 magazineMaxBase = 2
 firingOffset = Vector3(0, 0.75, 0)
 modelOffset = Vector3(0, -0.5, 0)
+baseEnergyCost = 0.5
 baseFireRate = 0.75
 baseDamage = 0.5
 scrapCostBase = 5
@@ -18,5 +19,7 @@ partDescription = "[color=ffffff]This. This [color=e0dede]is the weapon of the [
 [color=65a4ff]Active: Fires basic bullets."
 
 [node name="MeshInstance3D" parent="." index="2"]
-visible = false
 mesh = ExtResource("3_ivrqh")
+
+[node name="Node3D" type="Node3D" parent="." index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.57889, 0.512126, 0)

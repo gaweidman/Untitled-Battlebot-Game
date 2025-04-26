@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dsoco3bt8u03g"]
+
+[ext_resource type="AudioStream" uid="uid://b3uqoa341umir" path="res://sounds/CannonFire01.wav" id="1_wuspx"]
+[ext_resource type="Script" uid="uid://bs6me5f12mgpi" path="res://scripts/sound3D.gd" id="2_4xcoo"]
+
+[node name="Sound" type="AudioStreamPlayer3D"]
+stream = ExtResource("1_wuspx")
+max_distance = 104.03
+doppler_tracking = 2
+script = ExtResource("2_4xcoo")

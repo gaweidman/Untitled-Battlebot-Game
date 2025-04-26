@@ -206,9 +206,9 @@ func spawn_wave(numOfEnemies := 0):
 		var pos = return_random_unoccupied_spawn_location();
 		if pos != null:
 			var enemy = enemyScene.instantiate();
-			enemy.global_position = pos;
 			enemiesAlive.append(enemy);
 			add_child(enemy);
+			enemy.global_position = pos;
 		else:
 			numOfEnemies = 0;
 		numOfEnemies -= 1;

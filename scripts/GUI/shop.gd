@@ -6,9 +6,12 @@ var inventory : InventoryPlayer;
 var player : Player;
 
 var shopDoor : TextureRect;
-var shopDoorVelocity := 0.0
+var shopDoorVelocity := 0.0;
+var shopDoorPrevPosY := 0.0;
 var doorOpen := false;
-var doorActuallyClosed := false;
+var doorActuallyClosed := true;
+var doorStomps := 9;
+var thumping := true;
 var shopOpen := false;
 
 var awaiting_reroll := false;
@@ -26,12 +29,16 @@ func deselect():
 
 func reset_shop():
 	clear_shop_spawn_list();
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_big_battery.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 2);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 2);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn", 2);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_magnet.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_coolant.tscn", 2);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_generator.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_magnet.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_jank_battery.tscn", 3);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 2);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn", 2);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_scrap_plating.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn", 3);
 	rerollPriceIncrementPermanent = 0;
 	rerollPriceIncrement = 0;
@@ -63,6 +70,7 @@ func clopen_door(open:=false):
 	if open:
 		doorOpen = true;
 		doorActuallyClosed = false;
+		doorStomps = 0;
 	else:
 		doorOpen = false;
 		shopDoorVelocity = 0;
@@ -73,6 +81,7 @@ func _physics_process(delta):
 		update_reroll_button();
 		
 		##Fancy door shutting
+		var makeThump = false;
 		if doorOpen && !is_equal_approx(shopDoor.position.y, -237):
 			shopDoorVelocity = move_toward(shopDoorVelocity, -10, delta*100);
 		else:
@@ -80,9 +89,24 @@ func _physics_process(delta):
 			if (shopDoor.position.y + shopDoorVelocity) > 0:
 				shopDoor.position.y = 0;
 				shopDoorVelocity *= -0.3;
+				makeThump = true;
 				if not doorActuallyClosed:
 					door_closed();
+				else:
+					if doorStomps < 1:
+						doorStomps += 1;
+						door_closed_lite(0.9);
+					else:
+						if doorStomps < 2:
+							doorStomps += 1;
+							door_closed_lite(0.8);
+						else:
+							if doorStomps < 3:
+								doorStomps += 1;
+								inventory.inventory_panel_toggle(false);
+		
 		shopDoor.position.y = clamp(shopDoor.position.y + shopDoorVelocity, -237, 0);
+		
 		
 		if awaiting_reroll:
 			if all_stalls_closed():
@@ -98,6 +122,10 @@ func door_closed():
 	healPriceIncrementPermanent += 1.0;
 	healPriceIncrement = healPriceIncrementPermanent;
 	doorActuallyClosed = true;
+	SND.play_sound_2D("Metal.Thump");
+
+func door_closed_lite(volume := 1.0):
+	SND.play_sound_2D("Metal.Thump", global_position, GameState.get_hud(), volume);
 
 var healAmountBase := 1.0;
 var healAmountModifier := 1.0;

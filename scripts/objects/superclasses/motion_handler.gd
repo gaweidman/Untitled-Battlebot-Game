@@ -43,9 +43,11 @@ func clamp_speed():
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);
 	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed);
 
-func _on_collision(thisComponent: Node, collider: Node):
+func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = %Body):
 	# if we've assigned a material to it, it can make a sound on collision, so this is how we check
 	# whether or not this collision can play a sound
-	if (collider.is_in_group("Concrete") || collider.is_in_group("Metal") || collider.is_in_group("Plastic")) && (thisComponent.is_in_group("Concrete") || thisComponent.is_in_group("Metal") || thisComponent.is_in_group("Plastic")):
-		thisBot.play_sound(Sound.get_proper_sound(collider, thisComponent))
-	Hooks.OnPlayerCollision(collider);
+	#if (collider.is_in_group("Concrete") || collider.is_in_group("Metal") || collider.is_in_group("Plastic")) && (thisComponent.is_in_group("Concrete") || thisComponent.is_in_group("Metal") || thisComponent.is_in_group("Plastic")):
+		#SND.play_collision_sound(thisComponent, collider)
+		#thisBot.play_sound(SND.get_proper_sound(collider, thisComponent))
+	SND.play_collision_sound(thisComponent, collider, Vector3.ZERO, 0.75)
+	Hooks.OnCollision(thisComponent, collider);

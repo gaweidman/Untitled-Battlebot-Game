@@ -27,9 +27,14 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 func _activate():
-	super();
-	if can_fire():
-		fireBullet();
+	if super():
+		if can_fire():
+			fireBullet();
+			return true;
+		else:
+			return false;
+	else:
+		return false;
 	pass;
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -64,6 +69,8 @@ func fireBullet():
 			firingAngle = InputHandler.playerPosRotation(positionNode);
 		
 		bullet.fire(thisBot, self, positionNode.global_position + firingOffset + modelOffset, firingAngle, fireSpeed, bulletLifetime, get_damage());
+		
+		SND.play_sound_at("Weapon.Shoot", positionNode.global_position + firingOffset + modelOffset, GameState.get_game_board(), 0.93, randf_range(3.5, 2.5))
 	
 	leakTimer.start();
 	GameState.get_hud().update();
@@ -83,7 +90,9 @@ func recountMagazine() -> int:
 func can_fire() -> bool: 
 	if fireRateTimer <= 0:
 		if recountMagazine() > 0:
-			return true;
+			if GameState.get_in_state_of_play():
+				if get_equipped():
+					return true;
 	return false;
 
 func nextBullet():

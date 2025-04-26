@@ -18,6 +18,7 @@ modelOffset = Vector3(0, -0.168, 0)
 modelScale = Vector3(0.61, 0.61, 0.61)
 looksAtMouse = false
 rotateWithPlayer = true
+baseEnergyCost = 1.0
 partName = "Melee Part"
 partIcon = ExtResource("3_rfss0")
 invSprite = ExtResource("3_swvu8")
@@ -48,7 +49,7 @@ z_index = 0
 layout_mode = 0
 mouse_default_cursor_shape = 0
 
-[node name="Weapon" type="Area3D" parent="." index="1"]
+[node name="Weapon" type="Area3D" parent="." index="1" groups=["MeleeWeapon"]]
 unique_name_in_owner = true
 collision_layer = 3
 collision_mask = 3
