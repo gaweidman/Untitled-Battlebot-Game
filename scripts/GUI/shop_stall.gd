@@ -97,8 +97,12 @@ func freeze(toggled_on:=true):
 	if (curState == ShopStall.doorState.OPEN) or (curState == ShopStall.doorState.FROZEN):
 		if toggled_on:
 			changeState(ShopStall.doorState.FROZEN);
+			if GameState.get_in_state_of_play():
+				SND.play_sound_nondirectional("Part.Select", 0.85, 0.5);
 		else:
 			changeState(ShopStall.doorState.OPEN);
+			if GameState.get_in_state_of_play():
+				SND.play_sound_nondirectional("Part.Select", 0.85, 0.5);
 		deselect(true);
 	elif curState == ShopStall.doorState.CLOSED:
 		$FreezeButton.button_pressed = false;
@@ -154,6 +158,9 @@ func deselect(deselectPart:=false):
 func open_stall():
 	if !(curState == ShopStall.doorState.FROZEN):
 		changeState(ShopStall.doorState.OPEN);
+		if GameState.get_in_state_of_play() && inventory.inventoryUp:
+			var pitchMod = randf_range(2.5,3.5)
+			SND.play_sound_nondirectional("Shop.Door.Open", 0.85, pitchMod)
 	$BuyButton.disabled = false;
 	$FreezeButton.disabled = false;
 
@@ -161,6 +168,9 @@ func close_stall():
 	deselect()
 	if !(curState == ShopStall.doorState.FROZEN):
 		changeState(ShopStall.doorState.CLOSED);
+		if GameState.get_in_state_of_play() && inventory.inventoryUp:
+			var pitchMod = randf_range(2.5,3.5)
+			SND.play_sound_nondirectional("Shop.Door.Open", 0.85, pitchMod)
 	$BuyButton.disabled = true;
 	$FreezeButton.disabled = true;
 

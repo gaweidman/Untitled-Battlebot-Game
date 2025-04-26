@@ -142,6 +142,10 @@ static var SOUNDS = {
 	],
 	"Movement.Drone": [preload("res://sounds/Movement_Drone.ogg")],
 	"Movement.Dash": [preload("res://sounds/Toaster.wav")],
+	
+	"Button.Press": [preload("res://sounds/PickupClick.wav")],
+	
+	"Part.Select": [preload("res://sounds/PickupClick.wav")],
 	"Part.Place": [preload("res://sounds/Toaster.wav")],
 	
 	"Metal.Ting": [
@@ -155,7 +159,10 @@ static var SOUNDS = {
 	],
 	
 	"Shop.Door.Open": [
-		preload("res://sounds/BuynSell.mp3")
+		preload("res://sounds/Shopdoor.wav")
+	],
+	"Shop.Door.Thump": [
+		preload("res://sounds/collision/Metal_Light_03.mp3")
 	],
 	"Shop.Chaching": [
 		preload("res://sounds/BuynSell01.wav"),
@@ -306,8 +313,9 @@ static func play_sound_2D(inSound, inGlobalPosition:=Vector2(0,0), parent = Game
 	return newSound;
 
 ##For playing a sound without any panning.
-static func play_sound_nondirectional(inSound, inGlobalPosition:=Vector2(0,0), parent = GameState.get_hud(), inVolume := 1.0, inPitch := 1.0):
+static func play_sound_nondirectional(inSound, inVolume := 1.0, inPitch := 1.0):
 	var snd;
+	var parent = GameState.get_hud();
 	if inSound is String: 
 		snd = pick_sound(inSound);
 	elif inSound is AudioStream:

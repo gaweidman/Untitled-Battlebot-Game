@@ -71,6 +71,7 @@ func clopen_door(open:=false):
 		doorOpen = true;
 		doorActuallyClosed = false;
 		doorStomps = 0;
+		SND.play_sound_nondirectional("Shop.Door.Open", 1.0, 2.0)
 	else:
 		doorOpen = false;
 		shopDoorVelocity = 0;
@@ -127,7 +128,8 @@ func door_closed():
 func door_closed_sound(volume := 1.0):
 	if !inventory.inventoryUp:
 		volume *= 0.8
-	SND.play_sound_nondirectional("Metal.Thump", global_position, GameState.get_hud(), volume);
+	var pitchMod = randf_range(0.7, 1.3)
+	SND.play_sound_nondirectional("Shop.Door.Thump", volume, pitchMod);
 
 var healAmountBase := 1.0;
 var healAmountModifier := 1.0;

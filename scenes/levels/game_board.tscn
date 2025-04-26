@@ -173,7 +173,6 @@ mesh = ExtResource("5_4jixe")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaWall/StaticBody3D" groups=["Concrete", "World", "WorldWall"]]
 shape = SubResource("ConcavePolygonShape3D_usc4f")
-disabled = true
 
 [node name="EnemySpawnLocations" type="Node3D" parent="ArenaWall/StaticBody3D"]
 
