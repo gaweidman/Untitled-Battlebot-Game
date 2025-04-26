@@ -23,4 +23,6 @@ func die():
 		inv.add_scrap(scrap_worth);
 		
 	ParticleFX.play("NutsBolts", GameState.get_game_board(), body.global_position);
+	if GameState.get_in_state_of_play():
+		SND.play_sound_at("Combatant.Die", body.global_position);
 	super();

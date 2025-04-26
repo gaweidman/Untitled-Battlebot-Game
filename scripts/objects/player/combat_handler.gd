@@ -51,12 +51,15 @@ func get_energy_refresh_rate():
 func die():
 	player.body.hide();
 	player.freeze();
+	if GameState.get_in_state_of_play():
+		SND.play_sound_nondirectional("Combatant.Die");
 	GameState.set_game_board_state(GameBoard.gameState.GAME_OVER)
 	if is_instance_valid(inventory):
 		inventory.inventory_panel_toggle(false);
 	remove_active_part(0);
 	remove_active_part(1);
 	remove_active_part(2);
+	ParticleFX.play("NutsBolts", GameState.get_game_board(), body.global_position);
 	pass;
 
 func live():

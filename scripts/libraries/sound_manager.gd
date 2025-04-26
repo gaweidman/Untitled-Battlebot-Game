@@ -134,7 +134,8 @@ static var SOUNDS = {
 		preload("res://sounds/collision/Concrete_Bullet_03.wav")
 	],
 	
-	"Weapon.Shoot": [preload("res://sounds/CannonFire01.wav")],
+	"Weapon.Shoot.Heavy": [preload("res://sounds/CannonFire01.wav")],
+	"Weapon.Shoot.Light": [preload("res://sounds/HigherPitchedShot.wav")],
 	"Weapon.Sawblade.Drone": [preload("res://sounds/SawbladeDrone01.wav")],
 	"Weapon.Sawblade.Parry": [
 		preload("res://sounds/collision/Metal_Ting_01.wav"), 
@@ -168,6 +169,13 @@ static var SOUNDS = {
 		preload("res://sounds/BuynSell01.wav"),
 		preload("res://sounds/BuynSell02.wav"),
 	],
+	
+	"Combatant.Die": [
+		preload("res://sounds/DeathNoise01.wav"),
+		preload("res://sounds/DeathNoise02.wav"),
+		preload("res://sounds/DeathNoise03.wav"),
+		preload("res://sounds/DeathNoise04.wav"),
+	]
 }
 
 # When two things collide, what noise do we make? If the sawblade hits the

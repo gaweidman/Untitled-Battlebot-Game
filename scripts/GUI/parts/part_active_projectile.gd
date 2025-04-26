@@ -16,6 +16,10 @@ var magazineMaxModifier := 1.0;
 @export var bulletLifetime := 1.0;
 @export var firingAngle := Vector3.BACK;
 @export var firingOffset := Vector3(0,0.50,0);
+@export_category("Firing Sound")
+@export var firingSoundString := "Weapon.Shoot.Heavy"
+@export var firingSoundPitchAdjust := 3.0;
+@export var firingSoundVolumeAdjust := 0.93;
 
 var leakTimer : Timer;
 
@@ -70,7 +74,7 @@ func fireBullet():
 		
 		bullet.fire(thisBot, self, positionNode.global_position + firingOffset + modelOffset, firingAngle, fireSpeed, bulletLifetime, get_damage());
 		
-		SND.play_sound_at("Weapon.Shoot", positionNode.global_position + firingOffset + modelOffset, GameState.get_game_board(), 0.93, randf_range(3.5, 2.5))
+		SND.play_sound_at(firingSoundString, positionNode.global_position + firingOffset + modelOffset, GameState.get_game_board(), firingSoundVolumeAdjust, randf_range(firingSoundPitchAdjust * 1.15, firingSoundPitchAdjust * 0.85))
 	
 	leakTimer.start();
 	GameState.get_hud().update();
