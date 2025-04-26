@@ -21,6 +21,7 @@ GameState="*res://scripts/libraries/game_state.gd"
 Sound="*res://scripts/libraries/sound_manager.gd"
 Hooks="*res://scripts/libraries/hooks.gd"
 ParticleFX="*res://scripts/libraries/particlefx.gd"
+AI="*res://scripts/libraries/ai.gd"
 
 [global_group]
 
