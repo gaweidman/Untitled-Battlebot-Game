@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=25 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena/arena_floor.tres" id="2_4jixe"]
@@ -10,8 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/prefabs/objects/damage_cube.tscn" id="8_hfgcm"]
 [ext_resource type="Script" uid="uid://ct0mq8smfqpjl" path="res://scripts/libraries/sound_manager.gd" id="9_hh74c"]
 [ext_resource type="PackedScene" uid="uid://b2vped1gbe1st" path="res://scenes/prefabs/objects/aimap.tscn" id="11_c2xgd"]
-[ext_resource type="Shader" uid="uid://dqmkq07v8t6aj" path="res://graphics/materials/particle shaders/BulletTracer.tres" id="12_e8tnf"]
-[ext_resource type="Texture2D" uid="uid://byb68ghp0s1nc" path="res://graphics/images/particle PNGs/TestTracerOne.png" id="13_4jixe"]
 [ext_resource type="AudioStream" uid="uid://clkb8qmb50nhq" path="res://sounds/music/Battlebot(Base).ogg" id="15_7s7sx"]
 [ext_resource type="AudioStream" uid="uid://dod8lqc5mj6gd" path="res://sounds/music/Battlebot(Bass).ogg" id="16_l8dsy"]
 [ext_resource type="AudioStream" uid="uid://xudb8rpoft5g" path="res://sounds/music/Battlebot(Melody).ogg" id="17_gj52v"]
@@ -38,22 +36,6 @@ data = PackedVector3Array(-2.0005, 5.0276, -2.0005, -2.0005, 5.0276, -0.0004, -3
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_jhciq"]
 radius = 1.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jhciq"]
-render_priority = 0
-shader = ExtResource("12_e8tnf")
-shader_parameter/Hit_Texture = ExtResource("13_4jixe")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_kt0si"]
-particle_flag_align_y = true
-emission_shape = 2
-emission_sphere_radius = 1.0
-collision_mode = 1
-collision_friction = 0.5
-collision_bounce = 0.75
-
-[sub_resource type="QuadMesh" id="QuadMesh_u31dy"]
-size = Vector2(2, 2)
 
 [sub_resource type="AudioStreamSynchronized" id="AudioStreamSynchronized_6fdki"]
 stream_count = 5
@@ -730,15 +712,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0834, 3.4556, -4.56467)
 script = ExtResource("9_hh74c")
 
 [node name="AiMap" parent="." instance=ExtResource("11_c2xgd")]
-
-[node name="[Test]Heaven\'s Spear" type="GPUParticles3D" parent="."]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 7.76681, 20.6773)
-visible = false
-material_override = SubResource("ShaderMaterial_jhciq")
-amount = 20
-lifetime = 2.0
-process_material = SubResource("ParticleProcessMaterial_kt0si")
-draw_pass_1 = SubResource("QuadMesh_u31dy")
 
 [node name="BGM2" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamSynchronized_6fdki")
