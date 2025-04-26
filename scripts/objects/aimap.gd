@@ -5,6 +5,7 @@ class_name AIMap;
 # These points are actually the nodes. The raycasts are just meant to find
 # the exact point on the ground.
 var ai_nodes = [];
+var ainode = preload("res://scenes/prefabs/utilities/ainode.tscn");
 
 func _ready() -> void:
 	var castContainer = get_node("Raycasts");
@@ -18,8 +19,9 @@ func _process(float) -> void:
 	var raycasts = castContainer.get_children();
 	if raycasts.length() > 0:
 		for raycast in raycasts:
-			if raycast.is_colliding() && !raycast.marked:
-				print("COLLIDING");
-				ai_nodes.append(raycast.get_collision_point());
+			if raycast.is_colliding() && !raycast.get_enabled():
+				var newAinode = ainode.instantiate();
+				newAinode.reparent(self);
+				newAinode.set_position(raycast.get_collision_point())
 				raycast.queue_free();
-				raycast.marked = true;
+				raycast.set_enabled(false);

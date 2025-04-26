@@ -68,3 +68,6 @@ func end_round():
 func enter_shop():
 	inventory.inventory_panel_toggle(true);
 	inventory.HUD_shop.open_up_shop();
+	
+func get_closest_ai_node():
+	pass;
