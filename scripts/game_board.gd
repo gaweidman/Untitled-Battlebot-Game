@@ -14,6 +14,7 @@ var roundEnemies := 0;
 var round := 0;
 var enemiesAlive = [];
 var player : Player;
+var enemiesKilled := 0;
 @export_category("HUD nodes")
 #@export var HUD_playerStats : Control;
 @export var HUD_mainMenu : Control;
@@ -82,7 +83,7 @@ func enter_state(state:gameState):
 		HUD_gameOver.show();
 		pass
 	elif state == gameState.CREDITS:
-		MUSIC.change_state(MusicHandler.musState.MENU);
+		MUSIC.change_state(MusicHandler.musState.CREDITS);
 		
 		HUD_credits.show();
 		pass
