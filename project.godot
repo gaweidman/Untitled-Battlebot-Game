@@ -36,6 +36,16 @@ WorldWall=""
 WorldFloor=""
 Sawblade=""
 
+[importer_defaults]
+
+oggvorbisstr={
+"bar_beats": 8,
+"beat_count": 288,
+"bpm": 185.0,
+"loop": true,
+"loop_offset": 0
+}
+
 [input]
 
 MoveLeft={

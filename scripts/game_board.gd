@@ -19,6 +19,7 @@ var player : Player;
 @export var HUD_mainMenu : Control;
 @export var HUD_credits : Control;
 @export var HUD_gameOver : Control;
+@export var MUSIC : MusicHandler;
 
 func _ready():
 	spawnPlayer();
@@ -68,18 +69,26 @@ func exit_state(state:gameState):
 
 func enter_state(state:gameState):
 	if state == gameState.MAIN_MENU:
+		MUSIC.change_state(MusicHandler.musState.MENU);
+		
 		destroy_all_enemies();
 		player.body.global_position = Vector3(0,20,0);
 		player.freeze();
 		HUD_mainMenu.show();
 		pass
 	elif state == gameState.GAME_OVER:
+		MUSIC.change_state(MusicHandler.musState.GAME_OVER);
+		
 		HUD_gameOver.show();
 		pass
 	elif state == gameState.CREDITS:
+		MUSIC.change_state(MusicHandler.musState.MENU);
+		
 		HUD_credits.show();
 		pass
 	elif state == gameState.INIT_PLAY:
+		MUSIC.change_state(MusicHandler.musState.SHOP);
+		
 		GameState.start_death_timer(120.0,true)
 		round = 0;
 		roundEnemiesInit = 1;
@@ -91,12 +100,17 @@ func enter_state(state:gameState):
 		
 		pass
 	elif state == gameState.PLAY:
+		MUSIC.change_state(MusicHandler.musState.BATTLING);
 		pass
 	elif state == gameState.SHOP:
+		MUSIC.change_state(MusicHandler.musState.SHOP);
+		
 		player.end_round();
 		player.enter_shop();
 		pass
 	elif state == gameState.INIT_ROUND:
+		MUSIC.change_state(MusicHandler.musState.SHOP);
+		
 		round += 1;
 		player.start_round();
 		waveTimer = 3;

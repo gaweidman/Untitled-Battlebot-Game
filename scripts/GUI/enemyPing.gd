@@ -57,8 +57,8 @@ func update():
 		updateTimer += 0.05;
 		var camPos = GameState.cam_unproject_position(pos)
 		#print(camPos)
-		print("pos ", pos)
+		#print("pos ", pos)
 		if camPos.x < 0:
 			camPos.x = 0;
 		targetPos = camPos + Vector2(-8, -32);
-		print(targetPos)
+		#print(targetPos)
