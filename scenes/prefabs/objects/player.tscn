@@ -1,4 +1,4 @@
-[gd_scene load_steps=82 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=84 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -8,7 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://dqn5vwvgp6ddp" path="res://scenes/prefabs/utilities/combat_handler.tscn" id="5_8qfif"]
 [ext_resource type="ArrayMesh" uid="uid://bmh1lb7lajb4y" path="res://graphics/models/extracted/bot.res" id="6_oyv14"]
 [ext_resource type="Script" uid="uid://cci5o1ddo6ond" path="res://scripts/objects/player/input_handler.gd" id="6_ui0xh"]
+[ext_resource type="Material" uid="uid://cxguwr2myxntx" path="res://graphics/materials/models/bots/thruster.tres" id="7_7lyob"]
 [ext_resource type="Script" uid="uid://des8smcv31abv" path="res://scripts/objects/player/motion_handler.gd" id="7_bdmj6"]
+[ext_resource type="Material" uid="uid://hjfve5f811g3" path="res://graphics/materials/models/bots/tread.tres" id="8_537hj"]
 [ext_resource type="Script" uid="uid://dtom6khjucb7o" path="res://scripts/GUI/inventoryPlayer.gd" id="10_oyv14"]
 [ext_resource type="Texture2D" uid="uid://djodq5u8kwgfe" path="res://graphics/images/HUD/activeTab/tabBase.png" id="11_3ki25"]
 [ext_resource type="Texture2D" uid="uid://8hijaqintxgq" path="res://graphics/images/HUD/hud.png" id="11_nha5v"]
@@ -210,8 +212,9 @@ motor/max_impulse = 512.0
 
 [node name="BotBody" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 0, -0.263986, 0)
-material_override = ExtResource("2_jy4ju")
 mesh = ExtResource("6_oyv14")
+surface_material_override/0 = ExtResource("7_7lyob")
+surface_material_override/1 = ExtResource("8_537hj")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
 shape = SubResource("SphereShape3D_hnom0")
