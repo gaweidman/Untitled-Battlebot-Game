@@ -8,6 +8,9 @@
 script = ExtResource("2_ivrqh")
 magazineMaxBase = 2
 firingOffset = Vector3(0, 0.75, 0)
+firingSoundString = "Weapon.Shoot.Light"
+firingSoundPitchAdjust = 0.8
+firingSoundVolumeAdjust = 1.0
 modelOffset = Vector3(0, -0.5, 0)
 baseEnergyCost = 0.5
 baseFireRate = 0.75

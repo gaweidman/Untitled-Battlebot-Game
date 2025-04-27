@@ -126,6 +126,7 @@ func format_stat_num(_inNum) -> String:
 
 func sell_part(part:Part):
 	remove_part(part, true, true);
+	SND.play_sound_nondirectional("Shop.Chaching");
 
 func add_scrap(amt):
 	scrap = max(0, scrap + roundi(amt));
@@ -164,6 +165,7 @@ func select_part(part:Part, foo:bool):
 			%ActiveReassignmentButtons.disable(false);
 		else:
 			%ActiveReassignmentButtons.disable(true);
+		SND.play_sound_nondirectional("Part.Select", 0.85);
 	else:
 		%InfoBox.clear_info();
 		%ActiveReassignmentButtons.disable(true);
@@ -251,16 +253,18 @@ func next_empty_shop_stall():
 func is_affordable(inAmt : float):
 	return inAmt <= get_scrap_total();
 
-func add_part(part: Part, invPosition : Vector2i):
-	super(part, invPosition);
+func add_part(part: Part, invPosition : Vector2i, noisy:=true):
+	super(part, invPosition, noisy);
 	return;
 	pass
 
-func add_part_post(part:Part):
-	super(part);
+func add_part_post(part:Part, noisy:=true):
+	super(part, noisy);
 	part.inPlayerInventory = true;
 	part.ownedByPlayer = true;
 	part.invHolderNode = HUD_engine;
+	if noisy: 
+		SND.play_sound_nondirectional("Part.Place")
 
 func remove_part_post(part:Part, beingSold := false, beingBought := false):
 	super(part);
@@ -272,6 +276,7 @@ func remove_part_post(part:Part, beingSold := false, beingBought := false):
 	if beingBought:
 		remove_scrap(part._get_buy_price());
 		part.on_bought();
+		SND.play_sound_nondirectional("Shop.Chaching");
 	if part.invHolderNode is ShopStall:
 		part.invHolderNode.partRef = null;
 		part.invHolderNode.close_stall();

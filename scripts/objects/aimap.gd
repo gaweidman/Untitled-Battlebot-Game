@@ -11,13 +11,13 @@ func _ready() -> void:
 	var castContainer = get_node("Raycasts");
 	var raycasts = castContainer.get_children();
 	for raycast in raycasts:
-		raycast.marked = false;
+		raycast.set_enabled(false);
 			
 func _process(float) -> void:
 	# doing this on _ready dosn't work
 	var castContainer = get_node("Raycasts");
 	var raycasts = castContainer.get_children();
-	if raycasts.length() > 0:
+	if raycasts.size() > 0:
 		for raycast in raycasts:
 			if raycast.is_colliding() && !raycast.get_enabled():
 				var newAinode = ainode.instantiate();
