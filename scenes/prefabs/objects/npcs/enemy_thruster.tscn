@@ -25,6 +25,3 @@ script = ExtResource("4_c5igk")
 
 [node name="AIHandler" parent="." index="4"]
 script = ExtResource("5_xjdlv")
-
-[node name="Texture" parent="Ping" index="1"]
-layout_mode = 0

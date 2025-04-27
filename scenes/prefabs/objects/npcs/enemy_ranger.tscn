@@ -31,6 +31,3 @@ CHARGEDIST = 22.0
 RUNDIST = 6.0
 REGULARSPEED = 0.0
 RUNSPEED = 4000.0
-
-[node name="Texture" parent="Ping" index="1"]
-layout_mode = 0

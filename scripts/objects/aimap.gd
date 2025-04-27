@@ -20,6 +20,7 @@ func _process(float) -> void:
 			print("RAYCAST LOOP ", raycast.is_colliding(), " ", raycast.is_enabled())
 			if raycast.is_colliding() && raycast.is_enabled():
 				var newAinode = ainode.instantiate();
+				add_child(newAinode);
 				newAinode.reparent(self);
 				newAinode.set_position(raycast.get_collision_point())
 				print("we've made an instance!!sssa")

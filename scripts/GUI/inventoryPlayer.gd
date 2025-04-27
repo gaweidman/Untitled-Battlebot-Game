@@ -156,6 +156,11 @@ func inventory_panel_toggle(foo):
 	if not foo:
 		select_part(selectedPart, false);
 		HUD_engine.disable(true);
+		if GameState.get_in_state_of_play():
+			SND.play_sound_nondirectional("Inventory.Close", 0.80);
+	else:
+		if GameState.get_in_state_of_play():
+			SND.play_sound_nondirectional("Inventory.Open", 0.82);
 
 func select_part(part:Part, foo:bool):
 	super(part, foo);

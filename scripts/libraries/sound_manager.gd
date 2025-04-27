@@ -169,6 +169,14 @@ static var SOUNDS = {
 		preload("res://sounds/BuynSell01.wav"),
 		preload("res://sounds/BuynSell02.wav"),
 	],
+	"Shop.Freezer.Close": [preload("res://sounds/Toaster.wav")],
+	
+	"Inventory.Open": [
+		preload("res://sounds/Whoosh01.wav")
+	],
+	"Inventory.Close": [
+		preload("res://sounds/Whoosh02.wav")
+	],
 	
 	"Combatant.Die": [
 		preload("res://sounds/DeathNoise01.wav"),

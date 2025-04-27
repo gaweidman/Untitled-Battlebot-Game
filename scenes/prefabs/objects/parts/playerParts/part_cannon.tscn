@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bbq103vofw8yu" path="res://scenes/prefabs/objects/parts/part_active_projectile.tscn" id="1_8wfl3"]
 
 [node name="Cannon" instance=ExtResource("1_8wfl3")]
-firingSoundVolumeAdjust = 0.93
+bulletLifetime = 0.5
 baseFireRate = 0.2
 baseDamage = 0.75
 scrapCostBase = 12
