@@ -12,14 +12,13 @@ firingSoundString = "Weapon.Shoot.Light"
 firingSoundPitchAdjust = 0.8
 firingSoundVolumeAdjust = 1.0
 modelOffset = Vector3(0, -0.5, 0)
-baseEnergyCost = 0.5
 baseFireRate = 0.75
 baseDamage = 0.5
 scrapCostBase = 5
 partName = "Ranger Gun"
 partDescription = "[color=ffffff]This. This [color=e0dede]is the weapon of the [color=cf2121]enemy[color=e0dede].
 
-[color=65a4ff]Active: Fires basic bullets."
+[color=65a4ff]Active: Fires basic bullets. Slightly longer range."
 
 [node name="MeshInstance3D" parent="." index="2"]
 mesh = ExtResource("3_ivrqh")
