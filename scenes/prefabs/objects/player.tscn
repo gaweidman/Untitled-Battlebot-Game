@@ -1,4 +1,4 @@
-[gd_scene load_steps=81 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=82 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -93,6 +93,8 @@ shader_parameter/mask = ExtResource("13_eakln")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tkm3v"]
 shader = ExtResource("12_hnom0")
 shader_parameter/mask = ExtResource("13_coyr8")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_dbqh0"]
 
 [node name="Player" type="Node3D" groups=["Player Part"]]
 script = ExtResource("1_u8q0c")
@@ -2048,6 +2050,16 @@ texture_hover = ExtResource("36_a23h3")
 script = ExtResource("13_88y0t")
 coordX = 4
 coordY = 4
+
+[node name="RadiusCheck" type="Area3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(27.2494, 0, 0, 0, 27.2494, 0, 0, 0, 27.2494, 0, 0, 0)
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RadiusCheck"]
+transform = Transform3D(1.00317, 0, 0, 0, 1.00317, 0, 0, 0, 1.00317, 0, 0, 0)
+shape = SubResource("SphereShape3D_dbqh0")
 
 [connection signal="body_entered" from="Body" to="MotionHandler" method="_on_collision"]
 [connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]

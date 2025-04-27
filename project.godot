@@ -108,6 +108,11 @@ Pause={
 ]
 }
 
+[layer_names]
+
+3d_physics/layer_2="AI Node Setup"
+3d_physics/layer_3="AI Node Check"
+
 [physics]
 
 3d/run_on_separate_thread=true

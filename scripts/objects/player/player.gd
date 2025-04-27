@@ -39,6 +39,11 @@ func _get_input_handler():
 
 func _process(delta):
 	super(delta);
+	var overlapping = %RadiusCheck.get_overlapping_bodies();
+	#aaaaaaaprint("OVERLAPPING ", overlapping)
+	for body in overlapping:
+		if (body is AINode):
+			print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ", body);
 
 func get_body_position():
 	return get_node("Body").get_position();
@@ -69,5 +74,5 @@ func enter_shop():
 	inventory.inventory_panel_toggle(true);
 	inventory.HUD_shop.open_up_shop();
 	
-func get_closest_ai_node():
+func get_closest_ainode():
 	pass;

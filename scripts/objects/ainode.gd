@@ -1,4 +1,5 @@
-extends Node3D
+extends StaticBody3D
+class_name AINode
 
 func get_ylevel():
 	var position = get_position();

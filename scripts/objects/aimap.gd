@@ -10,8 +10,6 @@ var ainode = preload("res://scenes/prefabs/utilities/ainode.tscn");
 func _ready() -> void:
 	var castContainer = get_node("Raycasts");
 	var raycasts = castContainer.get_children();
-	for raycast in raycasts:
-		raycast.set_enabled(false);
 			
 func _process(float) -> void:
 	# doing this on _ready dosn't work
@@ -19,9 +17,11 @@ func _process(float) -> void:
 	var raycasts = castContainer.get_children();
 	if raycasts.size() > 0:
 		for raycast in raycasts:
-			if raycast.is_colliding() && !raycast.get_enabled():
+			print("RAYCAST LOOP ", raycast.is_colliding(), " ", raycast.is_enabled())
+			if raycast.is_colliding() && raycast.is_enabled():
 				var newAinode = ainode.instantiate();
 				newAinode.reparent(self);
 				newAinode.set_position(raycast.get_collision_point())
+				print("we've made an instance!!sssa")
 				raycast.queue_free();
 				raycast.set_enabled(false);
