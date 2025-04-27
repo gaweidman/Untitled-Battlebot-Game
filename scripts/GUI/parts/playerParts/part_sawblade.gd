@@ -3,7 +3,7 @@ extends PartActiveMelee
 class_name PartSawblade
 
 var modelScaleOffset := Vector3.ONE;
-var baseRotationSpeed := 180.0;
+@export var baseRotationSpeed := 270.0;
 var rotationSpeed := baseRotationSpeed;
 var rotationDeg := 0.0;
 @export var sawSoundPlayer : AudioStreamPlayer3D;

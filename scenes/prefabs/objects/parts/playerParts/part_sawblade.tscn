@@ -18,6 +18,7 @@ radius = 1.5
 
 [node name="Sawblade" node_paths=PackedStringArray("sawSoundPlayer") instance=ExtResource("1_bmytx")]
 script = ExtResource("2_r51y7")
+baseRotationSpeed = 270.0
 sawSoundPlayer = NodePath("Weapon/AudioStreamPlayer3D")
 modelScale = Vector3(0.44, 0.44, 0.44)
 baseEnergyCost = 2.0
