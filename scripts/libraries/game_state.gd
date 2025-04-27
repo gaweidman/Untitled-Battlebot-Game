@@ -47,8 +47,10 @@ func get_wave_enemies_left():
 
 func get_in_state_of_play() ->bool:
 	var board = get_game_board();
-	
-	return board.in_state_of_play();
+	if is_instance_valid(board):
+		return board.in_state_of_play();
+	else:
+		return false;
 
 func set_game_board_state(state : GameBoard.gameState):
 	var board = get_game_board();

@@ -55,7 +55,7 @@ func get_movement_vector() -> Vector2:
 		
 	return movementVector;
 
-static func is_inputting_movement():
+static func is_inputting_movement() -> bool:
 	if GameState.get_in_state_of_play():
 		if Input.is_action_pressed("MoveLeft"):
 			return true;

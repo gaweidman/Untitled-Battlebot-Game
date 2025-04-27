@@ -1,4 +1,4 @@
-[gd_scene load_steps=84 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=90 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
@@ -16,6 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://8hijaqintxgq" path="res://graphics/images/HUD/hud.png" id="11_nha5v"]
 [ext_resource type="Script" uid="uid://b1r88r130d6k2" path="res://scripts/GUI/parts_holder_engine.gd" id="11_u8qiw"]
 [ext_resource type="Script" uid="uid://dmxcynsx5ipq6" path="res://scripts/GUI/inventory_controls.gd" id="11_vba6s"]
+[ext_resource type="AudioStream" uid="uid://byccvc14m0mmk" path="res://sounds/silence.ogg" id="12_gfej7"]
 [ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="12_hnom0"]
 [ext_resource type="Script" uid="uid://70olwffu7ehc" path="res://scripts/GUI/active_slot_tab.gd" id="12_maiqi"]
 [ext_resource type="Script" uid="uid://bpnwpequ3dde0" path="res://scripts/GUI/part_holder_button.gd" id="13_88y0t"]
@@ -77,6 +78,10 @@
 [ext_resource type="Texture2D" uid="uid://baqnprslvvu8t" path="res://graphics/images/HUD/partAssign_selected.png" id="61_n1h3t"]
 [ext_resource type="Texture2D" uid="uid://c17tsbqn3orah" path="res://graphics/images/HUD/partAssign_disabled.png" id="62_ltg8k"]
 [ext_resource type="Texture2D" uid="uid://ckkqo4l53j7nc" path="res://graphics/images/HUD/HudEdge.png" id="69_dbqh0"]
+[ext_resource type="AudioStream" uid="uid://b7fnytfbwjn5a" path="res://sounds/Movement_Start.ogg" id="78_gyjhe"]
+[ext_resource type="AudioStream" uid="uid://cwlqqaxddwtx7" path="res://sounds/Movement_Drone.ogg" id="79_gfej7"]
+[ext_resource type="AudioStream" uid="uid://bxl753b2duri4" path="res://sounds/Movement_End.ogg" id="80_s6ktd"]
+[ext_resource type="Script" uid="uid://ko768vgkcu5o" path="res://scripts/GUI/wheels_audio.gd" id="81_xxsjn"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
@@ -87,6 +92,62 @@ radius = 0.95
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_hnom0"]
 radius = 0.611008
+
+[sub_resource type="AudioStreamInteractive" id="AudioStreamInteractive_kpcco"]
+clip_count = 4
+clip_0/name = &"Start"
+clip_0/stream = ExtResource("78_gyjhe")
+clip_0/auto_advance = 1
+clip_0/next_clip = 2
+clip_1/name = &"End"
+clip_1/stream = ExtResource("80_s6ktd")
+clip_1/auto_advance = 1
+clip_1/next_clip = 3
+clip_2/name = &"Drone"
+clip_2/stream = ExtResource("79_gfej7")
+clip_2/auto_advance = 0
+clip_3/name = &"Empty"
+clip_3/stream = ExtResource("12_gfej7")
+clip_3/auto_advance = 0
+initial_clip = 3
+_transitions = {
+Vector2i(0, 1): {
+"fade_beats": 0.0,
+"fade_mode": 4,
+"from_time": 0,
+"to_time": 1
+},
+Vector2i(0, 2): {
+"fade_beats": 0.0,
+"fade_mode": 4,
+"from_time": 0,
+"to_time": 1
+},
+Vector2i(2, 0): {
+"fade_beats": 0.0,
+"fade_mode": 4,
+"from_time": 0,
+"to_time": 1
+},
+Vector2i(2, 1): {
+"fade_beats": 0.0,
+"fade_mode": 4,
+"from_time": 0,
+"to_time": 1
+},
+Vector2i(2, 2): {
+"fade_beats": 1.0,
+"fade_mode": 4,
+"from_time": 3,
+"to_time": 1
+},
+Vector2i(3, 2): {
+"fade_beats": 1.0,
+"fade_mode": 4,
+"from_time": 3,
+"to_time": 1
+}
+}
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1ks4x"]
 shader = ExtResource("12_hnom0")
@@ -218,6 +279,16 @@ surface_material_override/1 = ExtResource("8_537hj")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
 shape = SubResource("SphereShape3D_hnom0")
+
+[node name="Treads" type="AudioStreamPlayer3D" parent="Body" node_paths=PackedStringArray("inputHandler", "body")]
+stream = SubResource("AudioStreamInteractive_kpcco")
+volume_db = -10.667
+max_db = 0.0
+pitch_scale = 0.5
+autoplay = true
+script = ExtResource("81_xxsjn")
+inputHandler = NodePath("../../InputHandler")
+body = NodePath("..")
 
 [node name="_AudioStreamPlayers" type="Node3D" parent="."]
 unique_name_in_owner = true

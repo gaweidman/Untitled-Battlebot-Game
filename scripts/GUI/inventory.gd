@@ -169,13 +169,18 @@ func add_part_from_scene(x: int, y:int, _partScene:String, activeSlot = null):
 		if is_slot_free(x,y, null):
 			var partScene = load(_partScene);
 			var part = partScene.instantiate();
-			print("Adding ", part.name)
-			add_child(part);
-			add_part(part, Vector2i(x,y), false);
-			if part is PartActive:
+			if part is PartActive && activeSlot is int && activeSlot != null:
+				add_child(part);
+				add_part(part, Vector2i(x,y), false);
 				part.set_equipped(true);
-			if activeSlot != null && activeSlot is int && part is PartActive:
-				combatHandler.set_active_part(part, activeSlot);
+				combatHandler.set_active_part(part, activeSlot, true);
+				return
+			else:
+				print("Adding ", part.name)
+				add_child(part);
+				add_part(part, Vector2i(x,y), false);
+				return
+			part.queue_free();
 
 func select_part(part:Part, foo:bool):
 	if foo:

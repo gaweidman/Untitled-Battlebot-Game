@@ -90,7 +90,8 @@ func _set_fire_rate_timer():
 
 func _assign_refs():
 	if ! is_instance_valid(combatHandler):
-		combatHandler = inventoryNode.combatHandler;
+		if is_instance_valid(inventoryNode.combatHandler):
+			combatHandler = inventoryNode.combatHandler;
 	if ! is_instance_valid(thisBot):
 		thisBot = inventoryNode.thisBot;
 	else:

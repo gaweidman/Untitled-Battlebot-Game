@@ -26,12 +26,16 @@ func take_damage(damage:float):
 		if invincible && damage > 0:
 			return;
 		health -= damage;
-		invincibleTimer = maxInvincibleTimer;
+		add_invincibility()
 		if health <= 0.0:
 			die();
 			health = 0.0;
 		if health > get_max_health():
 			health = get_max_health();
+
+func add_invincibility(_time := maxInvincibleTimer):
+	if _time >= invincibleTimer:
+		invincibleTimer = _time;
 
 func get_max_health():
 	return maxHealth;

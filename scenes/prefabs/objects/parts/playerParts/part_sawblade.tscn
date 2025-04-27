@@ -28,7 +28,7 @@ dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0)])
 partName = "Sawblade"
 partDescription = "[color=e0dede]Never a dull day with a [color=ff6e49]Sawblade[color=e0dede] around.
 
-[color=ff6e49]Active: Reflects bullets, increases damage, and increases range for a time."
+[color=ff6e49]Active: Parries bullets, increases sawblade damage, and makes you invincible for a short time."
 
 [node name="Weapon" parent="." index="1" groups=["Metal", "Sawblade"]]
 

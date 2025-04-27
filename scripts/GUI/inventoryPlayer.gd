@@ -78,9 +78,10 @@ func starting_kit():
 	deselect_part();
 	clear_inventory();
 	add_part_from_scene(1, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
-	#add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
 	add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 0);
 	add_part_from_scene(3, 4, "res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn");
+	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 2);
+	#add_part_from_scene(0, 3, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
 	startingKitAssigned = true;
 	$InventoryControls/BackingTexture/Shop.reroll_shop();
 	scrap = 0;
@@ -98,19 +99,20 @@ func test_add_stuff():
 	slots["StallC"] = null;
 
 func update_stats():
-	var stringHealth = "";
-	var maxHealth = combatHandler.get_max_health();
-	var health = combatHandler.health;
-	%Lbl_Health.text = format_stat_num(health) + "/" + format_stat_num(maxHealth);
-	%HealthBar.set_health(health, maxHealth);
+	if all_refs_valid():
+		var stringHealth = "";
+		var maxHealth = combatHandler.get_max_health();
+		var health = combatHandler.health;
+		%Lbl_Health.text = format_stat_num(health) + "/" + format_stat_num(maxHealth);
+		%HealthBar.set_health(health, maxHealth);
+		
+		var stringEnergy = "";
+		var maxEnergy = combatHandler.get_max_energy();
+		var energy = combatHandler.energy;
+		%Lbl_Energy.text = format_stat_num(energy) + "/" + format_stat_num(maxEnergy);
+		%EnergyBar.set_health(energy, maxEnergy);
 	
-	var stringEnergy = "";
-	var maxEnergy = combatHandler.get_max_energy();
-	var energy = combatHandler.energy;
-	%Lbl_Energy.text = format_stat_num(energy) + "/" + format_stat_num(maxEnergy);
-	%EnergyBar.set_health(energy, maxEnergy);
-	
-	update_scrap();
+		update_scrap();
 
 func format_stat_num(_inNum) -> String:
 	var inNum = (floor(_inNum*100))/100

@@ -76,7 +76,8 @@ func take_damage(damage):
 func take_knockback(inDir:Vector3):
 	#body.apply_impulse(Vector3(0,10000,0))
 	print("KNOCKBACK: ",inDir)
-	body.apply_impulse(inDir);
+	body.call_deferred("apply_impulse",inDir);
+	#body.apply_impulse(inDir);
 	pass
 
 func freeze(enable:=true):

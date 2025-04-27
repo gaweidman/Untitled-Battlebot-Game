@@ -94,6 +94,7 @@ func _activate():
 		damageModifier *= 3;
 		sawSoundPitch = 0.9;
 		sawSoundVolume = 1.0;
+		thisBot.combatHandler.add_invincibility(0.25);
 	#if is_instance_valid(sawSoundPlayer):
 		#sawSoundPlayer.play();
 
