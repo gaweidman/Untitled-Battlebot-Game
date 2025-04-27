@@ -34,7 +34,8 @@ func _on_weapon_body_entered(collider: Node) -> void:
 	pass 
 
 func contact_damage(collider: Node) -> void:
-	SND.play_collision_sound(%Weapon, collider);
+	if get_equipped():
+		SND.play_collision_sound(%Weapon, collider);
 	if collider.get_parent() is Combatant:
 		Hooks.OnMeleeWeaponHit(self, collider);
 		pass;
