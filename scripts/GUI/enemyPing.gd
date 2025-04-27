@@ -9,6 +9,7 @@ var targetPos := Vector2(0,0);
 var playerInRange := false;
 var viewportRect : Rect2;
 var initialized := false;
+var pingHidden:= false;
 
 func _ready():
 	$Texture.modulate.a = 0.0;
@@ -31,11 +32,15 @@ func _process(delta):
 			position = lerp(position, targetPos, delta * 20)
 			position.x = clamp(position.x, 16, viewportRect.size.x - 32)
 			position.y = clamp(position.y, 16, viewportRect.size.y - 32)
-			if playerInRange:
-				$Texture.modulate.a = move_toward($Texture.modulate.a, 0.0, delta * 10);
-				$Label.modulate.a = move_toward($Label.modulate.a, 0.75, delta * 10);
+			if not pingHidden:
+				if playerInRange:
+					$Texture.modulate.a = move_toward($Texture.modulate.a, 0.0, delta * 10);
+					$Label.modulate.a = move_toward($Label.modulate.a, 0.75, delta * 10);
+				else:
+					$Texture.modulate.a = move_toward($Texture.modulate.a, 1.0, delta * 10);
+					$Label.modulate.a = move_toward($Label.modulate.a, 0.0, delta * 10);
 			else:
-				$Texture.modulate.a = move_toward($Texture.modulate.a, 1.0, delta * 10);
+				$Texture.modulate.a = move_toward($Texture.modulate.a, 0.0, delta * 10);
 				$Label.modulate.a = move_toward($Label.modulate.a, 0.0, delta * 10);
 		else:
 			update();
@@ -50,15 +55,17 @@ func update():
 	viewportRect = get_viewport_rect()
 	if viewportRect:
 		var pos = thisBotBody.global_position
-		if ! GameState.is_player_in_range(pos, 15):
+		if ! GameState.is_player_in_range(pos, 10):
 			playerInRange = false;
 		else:
 			playerInRange = true;
 		updateTimer += 0.05;
-		var camPos = GameState.cam_unproject_position(pos)
-		#print(camPos)
-		#print("pos ", pos)
-		if camPos.x < 0:
-			camPos.x = 0;
-		targetPos = camPos + Vector2(-8, -32);
-		#print(targetPos)
+		var cam = GameState.get_camera();
+		if cam.is_position_in_frustum(pos):
+			pingHidden = false;
+			var camPos = GameState.cam_unproject_position(pos)
+			if camPos.x < 0:
+				camPos.x = 0;
+			targetPos = camPos + Vector2(-8, -32);
+		else:
+			pingHidden = true;
