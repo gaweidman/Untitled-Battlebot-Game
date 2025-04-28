@@ -82,7 +82,7 @@ func starting_kit():
 	#add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 0);
 	add_part_from_scene(3, 4, "res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn");
 	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 2);
-	add_part_from_scene(0, 3, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
+	#add_part_from_scene(0, 3, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
 	startingKitAssigned = true;
 	$InventoryControls/BackingTexture/Shop.reroll_shop();
 	scrap = 0;

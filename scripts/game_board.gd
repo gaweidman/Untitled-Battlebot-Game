@@ -112,6 +112,7 @@ func enter_state(state:gameState):
 		
 		spawnPlayer(return_random_unoccupied_spawn_location());
 		player.start_new_game();
+		player.inventory.show();
 		#HUD_playerStats.show();
 		change_state(gameState.INIT_ROUND);
 		
