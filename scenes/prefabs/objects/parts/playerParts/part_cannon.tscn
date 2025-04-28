@@ -5,6 +5,7 @@
 [node name="Cannon" instance=ExtResource("1_8wfl3")]
 bulletLifetime = 0.5
 firingSoundVolumeAdjust = 0.75
+modelOffset = Vector3(0, -0.25, 0)
 baseFireRate = 0.2
 baseDamage = 0.75
 scrapCostBase = 12
@@ -12,7 +13,7 @@ dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1)])
 partName = "Cannon"
 partDescription = "[color=e0dede]Standard issue [color=ffffff]ballistic pew pew.
 
-[color=65a4ff]Active: Fires basic bullets."
+[color=65a4ff]Active: Fires basic bullets. Shorter than average range."
 
 [node name="MeshInstance3D" parent="." index="2"]
 visible = false

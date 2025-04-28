@@ -5,6 +5,14 @@ class_name PartRepair
 @export var scrapCost = 15;
 @export var healing = 2.0;
 
+func _process(delta):
+	super(delta);
+	ammoAmountOverride = "$"+str(scrapCost)
+	if ! thisBot.at_max_health() && inventoryNode.is_affordable(scrapCost):
+		ammoAmountColorOverride = "utility";
+	else:
+		ammoAmountColorOverride = "unaffordable";
+
 func _activate():
 	if ! thisBot.at_max_health():
 		if super():

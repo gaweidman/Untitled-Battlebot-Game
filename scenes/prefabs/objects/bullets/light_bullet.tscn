@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://3o20nv1004gi"]
+
+[ext_resource type="PackedScene" uid="uid://clsvb0b2mydc7" path="res://scenes/prefabs/objects/bullets/bullet.tscn" id="1_4rpxp"]
+
+[node name="LightBullet" instance=ExtResource("1_4rpxp")]
+knockbackMult = 200.0
+sizeMult = Vector3(0.8, 0.8, 0.8)

@@ -20,7 +20,13 @@ func get_effect_scene(pfxName: String):
 	else:
 		return null;
 
-func play(pfxName: String, parent: Node3D, location: Vector3, _scale := 1.0, nodeToFollow = GameState.get_game_board()):
+func play(pfxName: String, parent: Node3D, location: Vector3, _scale = 1.0, nodeToFollow = GameState.get_game_board()):
+	var scale = 1.0;
+	if scale is float:
+		scale = _scale;
+	elif scale is Vector3:
+		scale = _scale;
+	
 	var scene = get_effect_scene(pfxName);
 	
 	#print("Firing particle ",pfxName," at location ",location);

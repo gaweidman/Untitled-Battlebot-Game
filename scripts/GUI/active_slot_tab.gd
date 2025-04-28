@@ -47,7 +47,8 @@ func update_displays():
 		$ScreenHolder/ScreenBack.position.x = clampf(partRef.get_cooldown() * -30, -30, 0);
 		targetY = clampf(234.0 + (partRef.get_cooldown() * 6), 234.0, 240.0);
 		##Energy cost
-		$EnergyCost.text = str(partRef.get_energy_cost());
+		if $EnergyCost.text != str(partRef.get_energy_cost()):
+			$EnergyCost.text = str(partRef.get_energy_cost());
 		if partRef.energy_affordable():
 			GameState.set_text_color($EnergyCost, "ranged");
 		else:
@@ -56,16 +57,27 @@ func update_displays():
 		##Magazine counter
 		var magStr = "∞";
 		if partRef is PartActiveProjectile:
+			var magAmt = partRef.recountMagazine();
 			magStr = ""
-			magStr += str(partRef.recountMagazine());
+			magStr += str(magAmt);
 			magStr += "/"
 			magStr += str(partRef.get_magazine_size());
-		$AmmoCounter.text = str(magStr);
+			if magAmt > 0:
+				GameState.set_text_color($AmmoCounter, "ranged")
+			else:
+				GameState.set_text_color($AmmoCounter, "unaffordable")
+		if partRef.ammoAmountOverride != null and partRef.ammoAmountOverride != "":
+			magStr = str(partRef.ammoAmountOverride);
+			GameState.set_text_color($AmmoCounter, partRef.ammoAmountColorOverride)
+		if $AmmoCounter.text != str(magStr):
+			$AmmoCounter.text = str(magStr);
 		##Name
-		$PartName.text = partRef.partName;
+		if $PartName.text != str(partRef.partName):
+			$PartName.text = str(partRef.partName);
 		GameState.set_text_color($PartName, textColor);
 		##Icon
-		$PartIcon.texture = partRef.partIcon;
+		if $PartIcon.texture != partRef.partIcon:
+			$PartIcon.texture = partRef.partIcon;
 		
 	else:
 		partRef = null;

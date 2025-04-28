@@ -177,7 +177,8 @@ const textColors = {
 static func set_text_color(node, color):
 	if is_instance_valid(node):
 		if color is Color:
-			node.set_deferred("theme_override_colors/font_color", color);
+			if node.get("theme_override_colors/font_color") != color:
+				node.set_deferred("theme_override_colors/font_color", color);
 		else:
 			if color is String:
 				var newCol := Color(textColors["white"]);
@@ -185,4 +186,5 @@ static func set_text_color(node, color):
 					newCol = Color(textColors[color]);
 				else:
 					newCol = Color(color);
-				node.set_deferred("theme_override_colors/font_color", newCol);
+				if node.get("theme_override_colors/font_color") != newCol:
+					node.set_deferred("theme_override_colors/font_color", newCol);

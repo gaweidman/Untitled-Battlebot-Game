@@ -17,6 +17,8 @@ var motionHandler : MotionHandler;
 var equipped := false;
 var unequippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_unequpped.png");
 var equippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_equpped.png");
+@export var ammoAmountOverride : String;
+@export var ammoAmountColorOverride := "ranged";
 
 @export var baseEnergyCost = 1.0;
 ##This is the calculated final energy cost.

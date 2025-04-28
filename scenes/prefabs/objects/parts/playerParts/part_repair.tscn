@@ -10,6 +10,7 @@ scrapCost = 15
 healing = 2.0
 model = null
 modelMaterial = null
+ammoAmountColorOverride = "ranged"
 baseFireRate = 10.0
 baseDamage = 0.0
 scrapCostBase = 16

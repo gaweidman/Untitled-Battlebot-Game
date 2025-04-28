@@ -20,7 +20,7 @@ var magazineMaxModifier := 1.0;
 @export var firingSoundString := "Weapon.Shoot.Heavy"
 @export var firingSoundPitchAdjust := 3.0;
 @export var firingSoundVolumeAdjust := 0.75;
-
+	
 var leakTimer : Timer;
 
 # Called when the node enters the scene tree for the first time.

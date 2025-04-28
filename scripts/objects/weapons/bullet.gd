@@ -1,9 +1,10 @@
 extends Area3D
 class_name Bullet
 
-
 var dir := Vector3(0,0,0);
-@export var speed := 30.0;
+var speed := 30.0;
+@export var knockbackMult := 1000.0;
+@export var sizeMult := Vector3(1.0,1.0,1.0);
 var damage := 1.0;
 var fired := false;
 var lifetime := 1.0;
@@ -17,6 +18,7 @@ var attacker : Node3D;
 var leaking := false;
 
 func _ready():
+	
 	die();
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -43,13 +45,14 @@ func fire(_attacker : Combatant, _launcher : Node ,_initPosition : Vector3, _dir
 	damage = _damage;
 	positionAppend = Vector3.ZERO;
 	initPosition = _initPosition;
+	set_deferred("scale", sizeMult);
 	position = initPosition;
 	collision.set_deferred("disabled", false);
 	rotateTowardVector3(dir);
 	
 	show();
 	ParticleFX.play("SmokePuffSingle", GameState.get_game_board(), Vector3.ZERO, 0.5, self);
-	ParticleFX.play("BulletTracer", GameState.get_game_board(), Vector3.ZERO, 1.0, self);
+	ParticleFX.play("BulletTracer", GameState.get_game_board(), Vector3.ZERO, sizeMult, self,);
 	fired = true;
 	print("I have been fired at ", global_position, ", attacker is at ", attacker.global_position)
 
@@ -81,7 +84,7 @@ func _on_body_entered(body):
 	if body.get_parent() is Combatant:
 		#print(body.get_parent())
 		body.get_parent().take_damage(damage);
-		body.get_parent().call_deferred("take_knockback",(dir + Vector3(0,0.01,0)) * 1000);
+		body.get_parent().call_deferred("take_knockback",(dir + Vector3(0,0.01,0)) * knockbackMult);
 		print("should be taking knockback....")
 	#print("Shot ded by ",body, " named: ", body.name)
 	

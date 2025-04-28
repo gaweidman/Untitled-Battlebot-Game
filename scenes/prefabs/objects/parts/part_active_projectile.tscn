@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://n5li36gn6xf7" path="res://scenes/prefabs/objects/parts/part_active.tscn" id="1_63hqi"]
 [ext_resource type="Script" uid="uid://bgw5ipq5kadtt" path="res://scripts/GUI/parts/part_active_projectile.gd" id="2_wu5mq"]
-[ext_resource type="PackedScene" uid="uid://clsvb0b2mydc7" path="res://scenes/prefabs/objects/bullet.tscn" id="3_eppgx"]
+[ext_resource type="PackedScene" uid="uid://clsvb0b2mydc7" path="res://scenes/prefabs/objects/bullets/bullet.tscn" id="3_eppgx"]
 [ext_resource type="ArrayMesh" uid="uid://brv02nw813pa6" path="res://graphics/models/extracted/cannonMapped.res" id="4_yi3ku"]
 [ext_resource type="Material" uid="uid://bjpw8orsijmuk" path="res://graphics/materials/models/weapons/cannon.tres" id="5_vi2dv"]
 [ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/Cannon.png" id="6_1065k"]
@@ -24,6 +24,8 @@ firingSoundPitchAdjust = 3.0
 firingSoundVolumeAdjust = 0.93
 model = ExtResource("4_yi3ku")
 modelMaterial = ExtResource("5_vi2dv")
+ammoAmountOverride = ""
+ammoAmountColorOverride = "ranged"
 partName = "Ranged Part"
 partIcon = ExtResource("6_1065k")
 invSprite = ExtResource("6_dfc4u")
