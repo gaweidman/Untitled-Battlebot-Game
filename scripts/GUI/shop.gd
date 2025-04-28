@@ -97,11 +97,11 @@ func _physics_process(delta):
 				else:
 					if doorStomps < 1:
 						doorStomps += 1;
-						door_closed_sound(0.95);
+						door_closed_sound(0.7);
 					else:
 						if doorStomps < 2:
 							doorStomps += 1;
-							door_closed_sound(0.8);
+							door_closed_sound(0.5);
 						else:
 							if doorStomps < 3:
 								doorStomps += 1;
@@ -127,10 +127,11 @@ func door_closed():
 	door_closed_sound(0.9);
 
 func door_closed_sound(volume := 1.0):
-	if !inventory.inventoryUp:
-		volume *= 0.8
-	var pitchMod = randf_range(0.7, 1.3)
-	SND.play_sound_nondirectional("Shop.Door.Thump", volume, pitchMod);
+	if GameState.get_in_state_of_play():
+		if !inventory.inventoryUp:
+			volume *= 0.5
+		var pitchMod = randf_range(0.7, 1.3)
+		SND.play_sound_nondirectional("Shop.Door.Thump", volume, pitchMod);
 
 var healAmountBase := 1.0;
 var healAmountModifier := 1.0;

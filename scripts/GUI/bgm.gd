@@ -11,6 +11,7 @@ enum musState {
 	SHOP,
 	GAME_OVER,
 	CREDITS,
+	OPTIONS,
 }
 
 var base := 0.0;
@@ -24,6 +25,11 @@ var perc1_mod := 0.0;
 var perc2 := 0.0;
 var perc2_mod := 0.0;
 
+var master_volume := 1.0;
+
+func set_volume(inVol := 1.0):
+	master_volume = inVol;
+
 func change_state(inState:musState):
 	if curState != inState:
 		print(curState)
@@ -32,7 +38,7 @@ func change_state(inState:musState):
 			base = 1.0;
 			slapBass = 0.0;
 			melody = 0.0;
-			perc1 = 0.85;
+			perc1 = 0.60;
 			perc2 = 0.0;
 		elif curState == musState.BATTLING:
 			base = 1.0;
@@ -41,19 +47,25 @@ func change_state(inState:musState):
 			perc1 = 1.0;
 			perc2 = 1.0;
 		elif curState == musState.SHOP:
-			base = 0.8;
+			base = 0.55;
 			slapBass = 1.0;
-			melody = 0.85;
+			melody = 0.60;
 			perc1 = 1.0;
-			perc2 = 0.85;
+			perc2 = 0.60;
 		elif curState == musState.GAME_OVER:
 			base = 1.0;
 			slapBass = 1.0;
 			melody = 0.0;
-			perc1 = 0.85;
-			perc2 = 0.0;
+			perc1 = 0.60;
+			perc2 = 0.60;
 		elif curState == musState.CREDITS:
-			base = 0.9;
+			base = 0.6;
+			slapBass = 0.0;
+			melody = 1.0;
+			perc1 = 1.0;
+			perc2 = 1.0;
+		elif curState == musState.OPTIONS:
+			base = 0.8;
 			slapBass = 1.0;
 			melody = 0.0;
 			perc1 = 1.0;
@@ -73,11 +85,11 @@ func _process(delta):
 	perc2_mod = lerp_volume(4, perc2, perc2_mod, delta);
 
 func clamp_volume(inVal) -> float:
-	return min(0.0, max(-60.0,((inVal * 60.0) - 60.0)))
+	return linear_to_db(inVal);
 
 func lerp_volume(index:int, volume:float, modifier:float, delta:float):
 	var mod = modifier
-	mod = lerp(mod, volume, delta * 5);
+	mod = lerp(mod, volume * master_volume, delta * 5);
 	var vol = clamp_volume(modifier)
 	stream.set_sync_stream_volume(index,vol)
 	return mod;

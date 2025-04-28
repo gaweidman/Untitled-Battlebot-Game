@@ -159,10 +159,10 @@ func inventory_panel_toggle(foo):
 		select_part(selectedPart, false);
 		HUD_engine.disable(true);
 		if GameState.get_in_state_of_play():
-			SND.play_sound_nondirectional("Inventory.Close", 0.80);
+			SND.play_sound_nondirectional("Inventory.Close", 0.40);
 	else:
 		if GameState.get_in_state_of_play():
-			SND.play_sound_nondirectional("Inventory.Open", 0.82);
+			SND.play_sound_nondirectional("Inventory.Open", 0.45);
 
 func select_part(part:Part, foo:bool):
 	super(part, foo);
@@ -172,7 +172,7 @@ func select_part(part:Part, foo:bool):
 			%ActiveReassignmentButtons.disable(false);
 		else:
 			%ActiveReassignmentButtons.disable(true);
-		SND.play_sound_nondirectional("Part.Select", 0.85);
+		SND.play_sound_nondirectional("Part.Select", 0.50);
 	else:
 		%InfoBox.clear_info();
 		%ActiveReassignmentButtons.disable(true);

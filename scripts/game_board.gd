@@ -19,6 +19,7 @@ var enemiesKilled := 0;
 #@export var HUD_playerStats : Control;
 @export var HUD_mainMenu : Control;
 @export var HUD_credits : Control;
+@export var HUD_options : Control;
 @export var HUD_gameOver : Control;
 @export var MUSIC : MusicHandler;
 
@@ -27,8 +28,10 @@ func _ready():
 	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_flash.tscn"), 1)
 	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_thruster.tscn"), 2)
 	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_ranger.tscn"), 2)
-	change_state(gameState.MAIN_MENU);
+	get_tree().current_scene.ready.connect(_on_scenetree_ready)
 	#return_random_spawn_location()
+func _on_scenetree_ready():
+	change_state(gameState.MAIN_MENU);
 
 ##Controls the state of the game.
 enum gameState {
@@ -38,6 +41,7 @@ enum gameState {
 	PLAY,
 	GAME_OVER,
 	CREDITS,
+	OPTIONS,
 	SHOP,
 	INIT_ROUND,
 }
@@ -59,11 +63,18 @@ func exit_state(state:gameState):
 	elif state == gameState.CREDITS:
 		HUD_credits.hide();
 		pass
+	elif state == gameState.OPTIONS:
+		HUD_options.hide();
+		pass
 	elif state == gameState.PLAY:
 		pass
 	elif state == gameState.SHOP:
 		pass
 	elif state == gameState.INIT_ROUND:
+		pass
+	elif state == gameState.START:
+		HUD_options.reset();
+		MUSIC.play();
 		pass
 	else:
 		pass
@@ -86,6 +97,11 @@ func enter_state(state:gameState):
 		MUSIC.change_state(MusicHandler.musState.CREDITS);
 		
 		HUD_credits.show();
+		pass
+	elif state == gameState.OPTIONS:
+		MUSIC.change_state(MusicHandler.musState.OPTIONS);
+		
+		HUD_options.show();
 		pass
 	elif state == gameState.INIT_PLAY:
 		MUSIC.change_state(MusicHandler.musState.SHOP);
@@ -272,4 +288,7 @@ func _on_btn_exit_pressed():
 	pass # Replace with function body.
 func _on_btn_end_run_pressed():
 	player.die();
+	pass # Replace with function body.
+func _on_btn_options_pressed():
+	change_state(gameState.OPTIONS);
 	pass # Replace with function body.

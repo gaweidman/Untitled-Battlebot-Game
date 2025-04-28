@@ -36,12 +36,15 @@ func _process(delta):
 					blinkCycle = 0.5;
 				if time <= 10.0:
 					blinkCycle = 0.25;
+				if time <= 1:
+					blinkCycle = 0.15;
 				if time <= 0:
 					GameState.get_player().die();
 					pause();
 
 func blink():
 	if GameState.get_in_state_of_play():
+		SND.play_sound_nondirectional("Bip", 0.75);
 		blinkTimer = 0.10;
 		var player = GameState.get_player();
 		var particlePos := Vector3(randf_range(0.5,-0.5),randf_range(0.5,-0.5),randf_range(0.5,-0.5));

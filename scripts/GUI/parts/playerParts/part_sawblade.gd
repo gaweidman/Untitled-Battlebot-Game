@@ -9,6 +9,7 @@ var rotationDeg := 0.0;
 @export var sawSoundPlayer : AudioStreamPlayer3D;
 var sawSoundVolume := 1.0;
 var sawSoundPitch := 1.0;
+var snd : SND;
 
 func contact_damage(collider: Node) -> void:
 	super(collider);
@@ -21,7 +22,6 @@ func contact_damage(collider: Node) -> void:
 				particlePos += (positionNode.global_position + par.body.global_position) / 2
 				ParticleFX.play("Sparks", GameState.get_game_board(), particlePos)
 				
-				#if ! par.combatHandler.invincible:
 				par.combatHandler.take_damage(get_damage());
 				var distanceDif = par.body.global_position - thisBot.body.global_position;
 				var thatBotVelocity = par.body.linear_velocity;
@@ -66,24 +66,27 @@ func _process(delta):
 					ParticleFX.play("Sparks", GameState.get_game_board(), particlePos)
 					SND.play_sound_at("Weapon.Sawblade.Parry", particlePos, GameState.get_game_board(), 1.0, 0.5);
 	
-	if is_instance_valid(sawSoundPlayer):
-		sawSoundPitch = lerp(sawSoundPitch, 0.8, delta * 4);
-		var playerInRange = GameState.is_player_in_range(%Weapon.global_position, 80.0);
-		if get_equipped() && meshNode.visible == true && playerInRange:
-			var lenToPlayer = GameState.get_len_to_player(%Weapon.global_position);
-			#print( * 0.8)
-			var volume = ((80.0 - lenToPlayer) / 80.0)
-			#print(volume)
-			var maxVolume := 0.95
-			if thisBot is Player:
-				maxVolume = 0.85;
-			sawSoundVolume = lerp(sawSoundVolume, volume * maxVolume, delta * 3);
-			#sawSoundPlayer.stream_paused = false;
-		else:
-			sawSoundVolume = lerp(sawSoundVolume, 0.0, delta * 6);
-			#sawSoundPlayer.stream_paused = true;
-		sawSoundPlayer.volume_db = (80.0 * sawSoundVolume) - 80.0;
-		sawSoundPlayer.pitch_scale = sawSoundPitch;
+	if ! is_instance_valid(snd):
+		snd = SND.get_physical();
+	else:
+		if is_instance_valid(sawSoundPlayer):
+			sawSoundPitch = lerp(sawSoundPitch, 0.8, delta * 4);
+			var playerInRange = GameState.is_player_in_range(%Weapon.global_position, 80.0);
+			if get_equipped() && meshNode.visible == true && playerInRange:
+				var lenToPlayer = GameState.get_len_to_player(%Weapon.global_position);
+				#print( * 0.8)
+				var volume = ((80.0 - lenToPlayer) / 80.0)
+				#print(volume)
+				var maxVolume := 0.70;
+				if thisBot is Player:
+					maxVolume = 0.40;
+				sawSoundVolume = lerp(sawSoundVolume, volume * maxVolume, delta * 3);
+				#sawSoundPlayer.stream_paused = false;
+			else:
+				sawSoundVolume = lerp(sawSoundVolume, 0.0, delta * 6);
+				#sawSoundPlayer.stream_paused = true;
+			sawSoundPlayer.volume_db = linear_to_db(sawSoundVolume * snd.volumelevelWorld);
+			sawSoundPlayer.pitch_scale = sawSoundPitch;
 
 func _activate():
 	if super():

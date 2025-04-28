@@ -98,12 +98,12 @@ func freeze(toggled_on:=true):
 		if toggled_on:
 			changeState(ShopStall.doorState.FROZEN);
 			if GameState.get_in_state_of_play():
-				SND.play_sound_nondirectional("Part.Select", 0.85, 0.5);
+				SND.play_sound_nondirectional("Part.Select", 0.60, 0.5);
 				SND.play_sound_nondirectional("Shop.Freezer.Close", 0.86, 0.15);
 		else:
 			changeState(ShopStall.doorState.OPEN);
 			if GameState.get_in_state_of_play():
-				SND.play_sound_nondirectional("Part.Select", 0.85, 0.5);
+				SND.play_sound_nondirectional("Part.Select", 0.60, 0.5);
 		deselect(true);
 	elif curState == ShopStall.doorState.CLOSED:
 		$FreezeButton.button_pressed = false;

@@ -125,5 +125,5 @@ func _on_active_reassignment_buttons_reassignment_button_pressed(index):
 		remove_active_part(index);
 	else:
 		set_active_part(inventory.get_selected_part(), index);
-	SND.play_sound_nondirectional("Part.Select", 0.85, 0.5);
+	SND.play_sound_nondirectional("Part.Select", 0.50, 0.5);
 	pass # Replace with function body.

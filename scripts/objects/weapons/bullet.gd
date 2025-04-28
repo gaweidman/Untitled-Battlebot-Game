@@ -90,7 +90,7 @@ func _on_body_entered(body):
 		#;
 		
 	Hooks.OnCollision(self, body);
-	SND.play_collision_sound(self, body, initPosition + positionAppend, 0.95, 1.5);
+	SND.play_collision_sound(self, body, initPosition + positionAppend, 0.85, 1.5);
 	ParticleFX.play("Sparks", GameState.get_game_board(), initPosition + positionAppend, 0.5);
 	
 	die();

@@ -280,7 +280,7 @@ surface_material_override/1 = ExtResource("8_537hj")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
 shape = SubResource("SphereShape3D_hnom0")
 
-[node name="Treads" type="AudioStreamPlayer3D" parent="Body" node_paths=PackedStringArray("inputHandler", "body")]
+[node name="TreadsSound" type="AudioStreamPlayer3D" parent="Body" node_paths=PackedStringArray("inputHandler", "body")]
 stream = SubResource("AudioStreamInteractive_kpcco")
 volume_db = -10.667
 max_db = 0.0

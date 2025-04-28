@@ -49,5 +49,5 @@ func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = %Body
 	#if (collider.is_in_group("Concrete") || collider.is_in_group("Metal") || collider.is_in_group("Plastic")) && (thisComponent.is_in_group("Concrete") || thisComponent.is_in_group("Metal") || thisComponent.is_in_group("Plastic")):
 		#SND.play_collision_sound(thisComponent, collider)
 		#thisBot.play_sound(SND.get_proper_sound(collider, thisComponent))
-	SND.play_collision_sound(thisComponent, collider, Vector3.ZERO, 0.75)
+	SND.play_collision_sound(thisComponent, collider, Vector3.ZERO, 0.45)
 	Hooks.OnCollision(thisComponent, collider);

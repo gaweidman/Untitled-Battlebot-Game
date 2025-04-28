@@ -2,6 +2,10 @@ extends Node
 
 class_name SND
 
+#Gets the physical SND node within the game board.
+static func get_physical() -> SND:
+	return GameState.get_physical_sound_manager();
+
 # These are the types of players that can be in the game. COLLISION2
 # through COLLISION8 exist solely for the world, at least at the
 # moment. There are 8 COLLISION instances for the world, so multiple
@@ -19,6 +23,28 @@ enum AudioSrc {
 	WORLD,
 	WEPMELEE
 }
+
+# Volume levels.
+static var volumeLevelMusic := 1.0;
+func set_volume_music(inVol:=1.0):
+	var mus = GameState.get_music();
+	mus.set_volume(inVol * volumeLevelMaster);
+
+static var volumeLevelUI := 1.0;
+func set_volume_UI(inVol:=1.0):
+	volumeLevelUI = inVol * volumeLevelMaster;
+
+static var volumelevelWorld := 1.0;
+func set_volume_world(inVol:=1.0):
+	volumelevelWorld = inVol * volumeLevelMaster;
+
+static var volumeLevelMaster := 1.0;
+func set_volume_master(inVol:=1.0):
+	volumeLevelMaster = inVol;
+	set_volume_music(volumeLevelMusic);
+	set_volume_UI(volumeLevelUI);
+	set_volume_world(volumelevelWorld);
+
 
 # All sounds in the game have a type assigned to them. Their type is determined
 # by what the sounds are of. There are multiple keywords in a type, separated 
@@ -145,6 +171,8 @@ static var SOUNDS = {
 	"Movement.Dash": [preload("res://sounds/Toaster.wav")],
 	
 	"Button.Press": [preload("res://sounds/PickupClick.wav")],
+	
+	"Bip": [preload("res://sounds/bip.ogg")],
 	
 	"Part.Select": [preload("res://sounds/PickupClick.wav")],
 	"Part.Place": [preload("res://sounds/Toaster.wav")],
@@ -302,7 +330,7 @@ static func play_sound_at(inSound, inGlobalPosition:Vector3, parent = GameState.
 	else:
 		return;
 	newSound.global_position = inGlobalPosition;
-	newSound.volume_db = (80 * inVolume) - 80;
+	newSound.volume_db = linear_to_db(inVolume * volumelevelWorld);
 	newSound.pitch_scale = inPitch;
 	newSound.set_and_play_sound(snd);
 	return newSound;
@@ -323,7 +351,7 @@ static func play_sound_2D(inSound, inGlobalPosition:=Vector2(0,0), parent = Game
 	else:
 		return;
 	newSound.global_position = inGlobalPosition;
-	newSound.volume_db = (80 * inVolume) - 80;
+	newSound.volume_db = linear_to_db(inVolume * volumeLevelUI);
 	newSound.pitch_scale = inPitch;
 	newSound.set_and_play_sound(snd);
 	return newSound;
@@ -345,7 +373,7 @@ static func play_sound_nondirectional(inSound, inVolume := 1.0, inPitch := 1.0):
 	else:
 		return;
 	
-	newSound.volume_db = (80 * inVolume) - 80;
+	newSound.volume_db = linear_to_db(inVolume * volumeLevelUI);
 	newSound.pitch_scale = inPitch;
 	newSound.set_and_play_sound(snd);
 	return newSound;

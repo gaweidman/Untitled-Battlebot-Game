@@ -145,6 +145,22 @@ func cam_unproject_position(world_point:Vector3) -> Vector2:
 	
 	return cam.unproject_position(world_point);
 
+func get_music() -> MusicHandler:
+	var board = get_game_board();
+	
+	if board != null:
+		return board.get_node_or_null("BGM2");
+	
+	return null;
+
+func get_physical_sound_manager() -> SND:
+	var board = get_game_board();
+	
+	if board != null:
+		return board.get_node_or_null("SoundManager");
+	
+	return null;
+
 # Colors for text.
 const textColors = {
 	"white" : Color("ffffff"),

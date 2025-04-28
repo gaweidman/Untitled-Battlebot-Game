@@ -19,7 +19,7 @@ var magazineMaxModifier := 1.0;
 @export_category("Firing Sound")
 @export var firingSoundString := "Weapon.Shoot.Heavy"
 @export var firingSoundPitchAdjust := 3.0;
-@export var firingSoundVolumeAdjust := 0.93;
+@export var firingSoundVolumeAdjust := 0.75;
 
 var leakTimer : Timer;
 
