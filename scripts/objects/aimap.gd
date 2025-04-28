@@ -13,6 +13,7 @@ func _ready() -> void:
 			
 func _process(float) -> void:
 	# doing this on _ready dosn't work
+	return; ##This is causing lag, commenting it out for the upload
 	var castContainer = get_node("Raycasts");
 	var raycasts = castContainer.get_children();
 	if raycasts.size() > 0:
