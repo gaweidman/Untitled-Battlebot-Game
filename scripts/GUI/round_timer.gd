@@ -25,26 +25,28 @@ func _process(delta):
 		else:
 			$TimerBlinky.hide();
 		
-		if blinkCycle >0:
-			blinkCycle -= delta;
-		else:
-			if time <= 60.0:
+		blinkCycle -= delta;
+		if blinkCycle < 0:
+			if time <= 90.0:
 				blink();
-				if time <= 60.0:
-					blinkCycle = 1.0;
-				if time <= 30.0:
-					blinkCycle = 0.5;
-				if time <= 10.0:
-					blinkCycle = 0.25;
-				if time <= 1:
-					blinkCycle = 0.15;
+				blinkCycle = max(0.1, time / 60)
+				#if time <= 91.0:
+					#blinkCycle = 5.0;
+				#if time <= 61.0:
+					#blinkCycle = 1.0;
+				#if time <= 31.0:
+					#blinkCycle = 0.5;
+				#if time <= 11.0:
+					#blinkCycle = 0.25;
+				#if time <= 6:
+					#blinkCycle = 0.15;
 				if time <= 0:
 					GameState.get_player().die();
 					pause();
 
 func blink():
 	if GameState.get_in_state_of_play():
-		SND.play_sound_nondirectional("Bip", 0.75);
+		SND.play_sound_nondirectional("Bip", 1.15);
 		blinkTimer = 0.10;
 		var player = GameState.get_player();
 		var particlePos := Vector3(randf_range(0.5,-0.5),randf_range(0.5,-0.5),randf_range(0.5,-0.5));

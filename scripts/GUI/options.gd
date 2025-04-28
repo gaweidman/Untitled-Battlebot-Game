@@ -16,8 +16,8 @@ func _on_btn_reset_pressed():
 
 func reset():
 	box_music.value = 100.0;
-	box_UI.value = 100.0;
-	box_world.value = 100.0;
+	box_UI.value = 90.0;
+	box_world.value = 80.0;
 	box_master.value = 100.0;
 
 func _on_music_volume_value_changed(value):
