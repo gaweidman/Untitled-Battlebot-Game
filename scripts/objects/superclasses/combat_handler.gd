@@ -72,8 +72,8 @@ func _physics_process(delta: float) -> void:
 			invincibleTimer -= delta;
 		else:
 			invincible = false;
-	if Input.is_key_pressed(KEY_P):
-		take_damage(-9999);
+	#if Input.is_key_pressed(KEY_P):
+		#take_damage(-9999);
 	pass
 
 func can_fire(index) -> bool: 

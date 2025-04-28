@@ -28,9 +28,9 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
 	super(delta);
-	if Input.is_key_pressed(KEY_P):
-		take_damage(0.5);
-		inventory.add_scrap(99999);
+	#if Input.is_key_pressed(KEY_P):
+		#take_damage(0.5);
+		#inventory.add_scrap(99999);
 	pass
 
 func take_damage(damage:float):
