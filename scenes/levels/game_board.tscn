@@ -523,7 +523,6 @@ text = "in-dev overlay
 not finished"
 
 [node name="MainMenu" type="Control" parent="HUD"]
-visible = false
 layout_mode = 1
 anchor_right = 1.005
 anchor_bottom = 0.997
@@ -616,9 +615,9 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 416.0
-offset_top = 200.0
+offset_top = 203.0
 offset_right = -401.0
-offset_bottom = -205.0
+offset_bottom = -106.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
@@ -626,13 +625,15 @@ theme_override_constants/outline_size = 7
 theme_override_font_sizes/bold_italics_font_size = 29
 bbcode_enabled = true
 text = "[i][b]CREDITS[/b]
-Alancin Wolfe
-Gabe Weidman
-Tyler Kem
-Jake Muilenberg
-Sunny Turner"
+Alancin Wolfe:  Coding, UI, Music
+Gabe Weidman:  Coding, 3D Texturing
+Sunny Turner: 3D assets, particles, sound gathering
+Jake Muilenburg:  3D assets
+
+[i][b]Additional Thanks:[/b]
+Prof. Drennen Dooms
+Tyler Kem"
 horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="Btn_Menu" type="Button" parent="HUD/Credits"]
 layout_mode = 1
