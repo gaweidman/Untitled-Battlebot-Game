@@ -82,7 +82,7 @@ func starting_kit():
 	#add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 0);
 	add_part_from_scene(3, 4, "res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn");
 	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 2);
-	#add_part_from_scene(0, 3, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
+	add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
 	startingKitAssigned = true;
 	$InventoryControls/BackingTexture/Shop.reroll_shop();
 	scrap = 0;
@@ -199,8 +199,9 @@ func move_mode_enable(toggled_on:bool):
 	
 	movingPart = toggled_on;
 	HUD_engine.disable(not toggled_on);
-	if is_instance_valid(selectedPart):
-		selectedPart.move_mode(toggled_on);
+	for part in listOfPieces:
+		if is_instance_valid(part):
+			part.move_mode(toggled_on);
 	
 	if not toggled_on:
 		buyMode = false;
@@ -238,6 +239,7 @@ func add_part_to_shop(_partScene:String):
 		print(stall.partRef)
 		#part.
 		print("Adding ", part.name, " to shop stall ", stall.name)
+		part.inventory_vanity_setup();
 		add_child(part);
 	pass
 
@@ -271,6 +273,7 @@ func add_part_post(part:Part, noisy:=true):
 	part.inPlayerInventory = true;
 	part.ownedByPlayer = true;
 	part.invHolderNode = HUD_engine;
+	part.inventory_vanity_setup()
 	if noisy: 
 		SND.play_sound_nondirectional("Part.Place")
 

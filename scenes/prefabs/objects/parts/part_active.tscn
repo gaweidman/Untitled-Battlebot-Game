@@ -7,13 +7,15 @@
 [ext_resource type="Texture2D" uid="uid://cjaqsd2yoxd1c" path="res://graphics/images/HUD/parts/partBase_utility.png" id="5_ybbvs"]
 [ext_resource type="Texture2D" uid="uid://b03t0klh7txrb" path="res://graphics/images/HUD/parts/partActiveCorner_equpped.png" id="6_unj44"]
 
-[node name="PartActive" node_paths=PackedStringArray("meshNode") instance=ExtResource("1_n3dox")]
+[node name="PartActive" node_paths=PackedStringArray("meshNode", "equippedBlinky") instance=ExtResource("1_n3dox")]
 script = ExtResource("2_qken1")
 meshNode = NodePath("MeshInstance3D")
 model = ExtResource("3_lkck5")
 modelMaterial = ExtResource("4_s81pm")
 modelOffset = Vector3(0, 0, 0)
 modelScale = Vector3(1, 1, 1)
+equippedBlinky = NodePath("TextureBase/EquippedBlinky")
+equippedBlinkyOffset = null
 looksAtMouse = true
 rotateWithPlayer = false
 ammoAmountOverride = ""
@@ -21,14 +23,19 @@ ammoAmountColorOverride = "ranged"
 baseEnergyCost = 1.0
 baseFireRate = 0.15
 baseDamage = 1.0
+myPartType = 2
 partName = "Active Part"
 invSprite = ExtResource("5_ybbvs")
-myPartType = 3
+
+[node name="TextureBase" parent="." index="0"]
+offset_right = 17.0
+offset_bottom = 12.0
 
 [node name="EquippedBlinky" type="TextureRect" parent="TextureBase" index="3"]
 layout_mode = 0
 offset_right = 13.0
 offset_bottom = 16.0
+mouse_filter = 2
 texture = ExtResource("6_unj44")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." index="1"]

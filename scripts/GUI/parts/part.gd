@@ -1,5 +1,5 @@
+##The base class for parts the player and enemies use.
 extends Control
-
 class_name Part
 
 var invPosition := Vector2i(-9,-9);
@@ -8,9 +8,9 @@ var inPlayerInventory := false;
 var ownedByPlayer := false;
 var invHolderNode : Control;
 var thisBot : Combatant;
-var textureBase : NinePatchRect;
-var textureScrews : NinePatchRect;
-var textureIcon : TextureRect;
+@export var textureBase : Control;
+@export var textureIcon : TextureRect;
+@export var tilemaps : PartTileset;
 
 var selected := false;
 
@@ -20,51 +20,36 @@ var scrapSellModifier := 1.0;
 var scrapSellModifierBase := (2.0/3.0);
 @export var inventoryNode : Inventory;
 @export var dimensions : Array[Vector2i];
+@export var myPartType := partTypes.UNASSIGNED;
+@export var myPartRarity := partRarities.COMMON;
 
 @export_category("Vanity")
 @export var partName := "Part";
 @export_multiline var partDescription := "No description given.";
 @export var partIcon : CompressedTexture2D;
+@export var partIconOffset := Vector2i(0,0);
 @export var invSprite : CompressedTexture2D;
 @export var screwSprite : CompressedTexture2D;
 
-@export var myPartType := partTypes.UNASSIGNED;
 enum partTypes {
+	UNASSIGNED,
 	PASSIVE,
+	UTILITY,
 	MELEE,
 	RANGED,
-	UTILITY,
-	UNASSIGNED,
+	TRAP,
+}
+
+enum partRarities {
+	COMMON,
+	UNCOMMON,
+	RARE,
 }
 
 func _ready():
 	#dimensions = [Vector2i(0,0), Vector2i(0,1), Vector2i(1,0), Vector2i(1,1)]
 	if dimensions == null:
 		dimensions = [Vector2i(0,0)]
-	
-	var PB = _get_part_bounds();
-	textureBase = $TextureBase;
-	
-	textureBase.set_deferred("texture", invSprite);
-	textureBase.set_deferred("size", PB * 48);
-	textureBase.set_deferred("patch_margin_left", 13);
-	textureBase.set_deferred("patch_margin_right", 13);
-	textureBase.set_deferred("patch_margin_top", 13);
-	textureBase.set_deferred("patch_margin_bottom", 13);
-	
-	textureScrews = $TextureBase/Screws;
-	textureScrews.set_deferred("texture", screwSprite);
-	textureScrews.set_deferred("size", PB * 48);
-	textureScrews.set_deferred("patch_margin_left", 13);
-	textureScrews.set_deferred("patch_margin_right", 13);
-	textureScrews.set_deferred("patch_margin_top", 13);
-	textureScrews.set_deferred("patch_margin_bottom", 13);
-	
-	textureIcon = $TextureBase/Icon;
-	textureIcon.set_deferred("texture", partIcon);
-	textureIcon.set_deferred("position", Vector2i(8,8));
-
-	_populate_buttons();
 	
 	##Set part type
 	if myPartType == partTypes.UNASSIGNED:
@@ -77,6 +62,29 @@ func _ready():
 				myPartType = partTypes.UTILITY;
 		else:
 			myPartType = partTypes.PASSIVE;
+
+##Run when the part gets added to the player's inventory via InventoryPlayer.add_part_post().
+func inventory_vanity_setup():
+	print("somethin' fishy....")
+	textureIcon.set_deferred("texture", partIcon);
+	textureIcon.set_deferred("position", (partIconOffset*48) + Vector2i(8,8));
+	_populate_buttons();
+	tilemaps.call_deferred("set_pattern", dimensions, myPartType, myPartRarity)
+	#tilemaps.set_pattern();
+	textureBase.show();
+
+##Adds the buttons that let you click the part and move it around and stuff. Should theoretically only ever run if placed into the inventory of the player.
+func _populate_buttons():
+	for index in dimensions:
+		var button = %Buttons.buttonPrefab.instantiate();
+		%Buttons.add_child(button);
+		
+		button.part = self;
+		button.buttonHolder = %Buttons;
+		
+		button.set_deferred("position", index * 48);
+		#button.set_deferred("size", Vector2i(48, 48));
+		#print(button.disabled)
 
 func _get_part_type() -> partTypes:
 	return myPartType;
@@ -116,17 +124,6 @@ func _get_part_bounds() -> Vector2i:
 	
 	return partBounds;
 
-func _populate_buttons():
-	for index in dimensions:
-		var button = %Buttons.buttonPrefab.instantiate();
-		%Buttons.add_child(button);
-		
-		button.part = self;
-		button.buttonHolder = %Buttons;
-		
-		button.set_deferred("position", index * 48);
-		button.set_deferred("size", Vector2i(48, 48));
-		#print(button.disabled)
 
 func _process(delta):
 	if (inventoryNode is InventoryPlayer):
@@ -139,7 +136,6 @@ func _process(delta):
 	else:
 		textureBase.hide();
 		%Buttons.disable();
-	pass
 
 func _on_buttons_on_select(foo:bool):
 	selected = foo;

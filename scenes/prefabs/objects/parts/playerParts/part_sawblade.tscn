@@ -30,6 +30,9 @@ partDescription = "[color=e0dede]Never a dull day with a [color=ff6e49]Sawblade[
 
 [color=ff6e49]Active: Parries bullets, increases sawblade damage, and makes you invincible for a short time."
 
+[node name="EquippedBlinky" parent="TextureBase" index="3"]
+mouse_filter = 1
+
 [node name="Weapon" parent="." index="1" groups=["Metal", "Sawblade"]]
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Weapon" index="1"]

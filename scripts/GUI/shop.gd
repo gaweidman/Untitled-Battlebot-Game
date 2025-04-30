@@ -122,7 +122,7 @@ func door_closed():
 	reroll_shop();
 	rerollPriceIncrementPermanent += 0.5;
 	rerollPriceIncrement = rerollPriceIncrementPermanent;
-	healPriceIncrementPermanent += 1.0;
+	healPriceIncrementPermanent += 0.5;
 	healPriceIncrement = healPriceIncrementPermanent;
 	doorActuallyClosed = true;
 	door_closed_sound(0.9);
@@ -134,7 +134,7 @@ func door_closed_sound(volume := 1.0):
 		var pitchMod = randf_range(0.7, 1.3)
 		SND.play_sound_nondirectional("Shop.Door.Thump", volume, pitchMod);
 
-var healAmountBase := 1.0;
+var healAmountBase := 0.5;
 var healAmountModifier := 1.0;
 var healPriceBase := 4.0;
 var healPriceModifier := 1.0;
@@ -150,7 +150,7 @@ func update_health_button():
 	else:
 		GameState.set_text_color($HealButton/TextHolder/Price, "unaffordable");
 func get_heal_amount():
-	return healAmountBase * healAmountModifier;
+	return (healAmountBase * healAmountModifier) * player._get_combat_handler().get_max_health();
 func get_heal_price():
 	return floori((healPriceBase + healPriceIncrement) * healPriceModifier);
 

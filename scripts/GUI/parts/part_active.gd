@@ -7,8 +7,9 @@ class_name PartActive
 @export var modelMaterial : StandardMaterial3D;
 @export var modelOffset = Vector3(0,0,0);
 @export var modelScale = Vector3(1,1,1);
-##This is the base energy cost before any modifiers. Do not modify in code.
 @export var positionNode : Node3D; ##This needs to be the thing with the position on it - in thbis case, the Body node
+@export var equippedBlinky : TextureRect;
+@export var equippedBlinkyOffset := partIconOffset;
 @export var looksAtMouse := true;
 @export var rotateWithPlayer := false;
 var combatHandler : CombatHandler;
@@ -50,6 +51,10 @@ func _ready():
 	meshNode.set_deferred("surface_material_override/0", modelMaterial);
 	meshNode.set_deferred("scale", modelScale);
 	meshNode.hide();
+
+func inventory_vanity_setup():
+	super();
+	equippedBlinky.set_deferred("position", equippedBlinkyOffset * 48);
 
 func _activate():
 	if can_fire():
@@ -179,11 +184,11 @@ func _rotate_with_player():
 
 func set_equipped(foo):
 	equipped = foo;
-	if is_instance_valid($TextureBase/EquippedBlinky):
+	if is_instance_valid(equippedBlinky):
 		if foo:
-			$TextureBase/EquippedBlinky.texture = equippedBlinkySprite;
+			equippedBlinky.texture = equippedBlinkySprite;
 		else:
-			$TextureBase/EquippedBlinky.texture = unequippedBlinkySprite;
+			equippedBlinky.texture = unequippedBlinkySprite;
 
 func get_equipped() -> bool:
 	return equipped;

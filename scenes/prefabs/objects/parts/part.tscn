@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dl72cklqtx2gj"]
+[gd_scene load_steps=9 format=3 uid="uid://dl72cklqtx2gj"]
 
 [ext_resource type="Script" uid="uid://cpbysvdkuo81x" path="res://scripts/GUI/parts/part.gd" id="1_aqhpi"]
 [ext_resource type="Texture2D" uid="uid://djtwrqsxxebll" path="res://graphics/images/HUD/parts/Icons/Gear.png" id="2_6haxk"]
@@ -6,42 +6,53 @@
 [ext_resource type="Script" uid="uid://bbw0ohklpa26f" path="res://scripts/button_holder.gd" id="3_u3hhk"]
 [ext_resource type="PackedScene" uid="uid://drt3u15k4mjxe" path="res://scenes/prefabs/objects/parts/part_button.tscn" id="4_tfv4d"]
 [ext_resource type="Texture2D" uid="uid://brb70j2hksy0p" path="res://graphics/images/HUD/parts/part_screws.png" id="5_6haxk"]
+[ext_resource type="Script" uid="uid://2tgdgw23cl4o" path="res://scripts/GUI/parts/tilemaps.gd" id="7_svhs2"]
+[ext_resource type="TileSet" uid="uid://8fx35csqjuda" path="res://graphics/images/HUD/parts/partTileSet.tres" id="7_ufa2f"]
 
-[node name="Part" type="Control"]
+[node name="Part" type="Control" node_paths=PackedStringArray("textureBase", "textureIcon", "tilemaps")]
 texture_filter = 1
 layout_mode = 3
 anchors_preset = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_aqhpi")
+textureBase = NodePath("TextureBase")
+textureIcon = NodePath("TextureBase/Icon")
+tilemaps = NodePath("TextureBase/Tilemaps")
 scrapCostBase = 10
 dimensions = Array[Vector2i]([Vector2i(0, 0)])
 partIcon = ExtResource("2_6haxk")
 invSprite = ExtResource("2_7gik6")
 screwSprite = ExtResource("5_6haxk")
 
-[node name="TextureBase" type="NinePatchRect" parent="."]
+[node name="TextureBase" type="Control" parent="."]
 visible = false
 texture_filter = 1
-layout_mode = 0
+anchors_preset = 0
 offset_right = 26.0
 offset_bottom = 26.0
-texture = ExtResource("2_7gik6")
-patch_margin_left = 13
-patch_margin_top = 13
-patch_margin_right = 13
-patch_margin_bottom = 13
+mouse_filter = 2
 
-[node name="Screws" type="NinePatchRect" parent="TextureBase"]
-texture_filter = 1
-layout_mode = 0
-offset_right = 26.0
-offset_bottom = 26.0
-texture = ExtResource("5_6haxk")
-patch_margin_left = 13
-patch_margin_top = 13
-patch_margin_right = 13
-patch_margin_bottom = 13
+[node name="Tilemaps" type="Control" parent="TextureBase" node_paths=PackedStringArray("tmBase", "tmBorder", "tmScrew")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+script = ExtResource("7_svhs2")
+tmBase = NodePath("TileMapBase")
+tmBorder = NodePath("TileMapBorder")
+tmScrew = NodePath("TileMapScrews")
+tileSet = ExtResource("7_ufa2f")
+
+[node name="TileMapBase" type="TileMapLayer" parent="TextureBase/Tilemaps"]
+tile_set = ExtResource("7_ufa2f")
+
+[node name="TileMapBorder" type="TileMapLayer" parent="TextureBase/Tilemaps"]
+tile_set = ExtResource("7_ufa2f")
+
+[node name="TileMapScrews" type="TileMapLayer" parent="TextureBase/Tilemaps"]
+tile_set = ExtResource("7_ufa2f")
 
 [node name="Buttons" type="Control" parent="TextureBase"]
 unique_name_in_owner = true
@@ -50,6 +61,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 2
 mouse_default_cursor_shape = 2
 script = ExtResource("3_u3hhk")
 buttonPrefab = ExtResource("4_tfv4d")
