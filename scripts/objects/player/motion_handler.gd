@@ -5,15 +5,19 @@ class_name MotionHandlerPlayer
 var inputHandler;
 var combatHandler;
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	super();
 	pass # Replace with function body.
 
-
 func _process(delta: float) -> void:
 	super(delta);
+	
+	if !GameState.get_player().closestAiNode:
+		var curScale = %RadiusCheck.get_scale();
+		# the scaling is uniform for RadiusCheck, so we just need to check 1 component
+		if curScale.x < 100:
+			%RadiusCheck.set_scale(Vector3(curScale.x + 1, curScale.y + 1, curScale.z + 1));
 	pass;
 
 func grab_references():
@@ -59,3 +63,32 @@ func _on_collision(other:PhysicsBody3D, this:PhysicsBody3D=%Body):
 	#if (other.is_in_group("Projectile") && other.get_attacker() != thisBot) || other.is_in_group("MeleeWeapon") || other.is_in_group("Combatant"):
 		##print(other.get_attacker())
 		#combatHandler.take_damage(1);
+
+func _on_radius_check_area_entered(newNode: AINode) -> void:
+	var nodesInRadius = %RadiusCheck.get_overlapping_areas();
+	var ply = GameState.get_player()
+	
+	if nodesInRadius.size() > 1:
+		var closestNode
+		var closestNodePos
+		var distanceSqr
+		var playerPos = ply.get_body_position();
+		
+		for aiNode in nodesInRadius:
+			if !closestNode:
+				closestNode = aiNode;
+				closestNodePos = closestNode.get_position();
+				distanceSqr = closestNodePos.distance_squared_to(playerPos);
+			else:
+				var newPos = aiNode.get_position()
+				var newDist = newPos.distance_squared_to(playerPos)
+				if newDist < distanceSqr:
+					closestNode = aiNode;
+					closestNodePos = newPos;
+					distanceSqr = newDist;
+		
+		ply.closestAiNode = closestNode;
+	else:
+		ply.closestAiNode = newNode;
+		
+	%RadiusCheck.set_scale(Vector3(7, 7, 7))

@@ -1,10 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://dj28apgfh06qu"]
+[gd_scene load_steps=3 format=3 uid="uid://dj28apgfh06qu"]
+
+[ext_resource type="Script" uid="uid://dmc0kbys6dn0b" path="res://scenes/prefabs/utilities/ainode.gd" id="1_pl5ic"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_mxdrl"]
 
-[node name="AINode" type="StaticBody3D"]
+[node name="AINode" type="Area3D"]
 collision_layer = 4
 collision_mask = 4
+script = ExtResource("1_pl5ic")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_mxdrl")

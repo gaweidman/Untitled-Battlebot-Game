@@ -13,13 +13,12 @@ func _ready() -> void:
 			
 func _process(float) -> void:
 	# doing this on _ready dosn't work
-	return; ##This is causing lag, commenting it out for the upload
 	var castContainer = get_node("Raycasts");
 	var raycasts = castContainer.get_children();
 	if raycasts.size() > 0:
 		for raycast in raycasts:
 			print("RAYCAST LOOP ", raycast.is_colliding(), " ", raycast.is_enabled())
-			if raycast.is_colliding() && raycast.is_enabled():
+			if raycast.is_enabled() && raycast.is_colliding():
 				var newAinode = ainode.instantiate();
 				add_child(newAinode);
 				newAinode.reparent(self);

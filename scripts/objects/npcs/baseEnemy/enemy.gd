@@ -4,6 +4,7 @@ class_name EnemyBase;
 
 @export var sleepTimerLength := 0.0;
 var sleepTimer := sleepTimerLength;
+var closestAiNode;
 
 func _ready():
 	super();

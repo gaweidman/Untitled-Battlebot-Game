@@ -86,6 +86,8 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
 size = Vector3(1, 0.333479, 1)
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_dbqh0"]
+
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_fise2"]
 height = 0.021
 radius = 0.95
@@ -156,8 +158,6 @@ shader_parameter/mask = ExtResource("13_eakln")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tkm3v"]
 shader = ExtResource("12_hnom0")
 shader_parameter/mask = ExtResource("13_coyr8")
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_dbqh0"]
 
 [node name="Player" type="Node3D" groups=["Player Part"]]
 script = ExtResource("1_u8q0c")
@@ -244,6 +244,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.179051, 0)
 visible = false
 shape = SubResource("BoxShape3D_odmbc")
 disabled = true
+
+[node name="RadiusCheck" type="Area3D" parent="Body"]
+unique_name_in_owner = true
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 0.000182867, -0.00276172, -3.8147e-06)
+collision_layer = 4
+collision_mask = 4
+
+[node name="Shape" type="CollisionShape3D" parent="Body/RadiusCheck"]
+transform = Transform3D(1.00317, 0, 0, 0, 1.00317, 0, 0, 0, 1.00317, 0, 0, 0)
+shape = SubResource("SphereShape3D_dbqh0")
 
 [node name="Sawblade" type="RigidBody3D" parent="Body" groups=["Damager", "MeleeWeapon", "Metal", "Player Part"]]
 unique_name_in_owner = true
@@ -2126,17 +2136,8 @@ script = ExtResource("13_88y0t")
 coordX = 4
 coordY = 4
 
-[node name="RadiusCheck" type="Area3D" parent="."]
-unique_name_in_owner = true
-transform = Transform3D(27.2494, 0, 0, 0, 27.2494, 0, 0, 0, 27.2494, 0, 0, 0)
-collision_layer = 4
-collision_mask = 4
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RadiusCheck"]
-transform = Transform3D(1.00317, 0, 0, 0, 1.00317, 0, 0, 0, 1.00317, 0, 0, 0)
-shape = SubResource("SphereShape3D_dbqh0")
-
 [connection signal="body_entered" from="Body" to="MotionHandler" method="_on_collision"]
+[connection signal="area_entered" from="Body/RadiusCheck" to="MotionHandler" method="_on_radius_check_area_entered"]
 [connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]
 [connection signal="mouse_entered" from="Inventory/InventoryControls/ActiveSlot0" to="Inventory/InventoryControls/ActiveSlot0" method="_on_mouse_entered"]
 [connection signal="mouse_entered" from="Inventory/InventoryControls/ActiveSlot2" to="Inventory/InventoryControls/ActiveSlot2" method="_on_mouse_entered"]
