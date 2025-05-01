@@ -66,15 +66,19 @@ func get_player():
 	
 	return ply;
 
-func get_player_body():
+func get_player_body() -> RigidBody3D:
 	var ply = get_player()
 	
-	return ply.get_node_or_null("Body");
+	if is_instance_valid(ply):
+		return ply.get_node_or_null("Body");
+	return null;
 
 func get_player_position():
 	var bdy = get_player_body();
 	
-	return bdy.global_position;
+	if is_instance_valid(bdy):
+		return bdy.global_position;
+	return Vector3(0,0,0);
 
 func get_player_pos_offset(inGlobalPosition: Vector3):
 	var pos = get_player_position();
@@ -95,17 +99,23 @@ func is_player_in_range(inGlobalPosition:Vector3, range:float):
 func get_player_body_mesh():
 	var bdy = get_player_body();
 	
-	return bdy.get_node_or_null("BotBody");
+	if is_instance_valid(bdy):
+		return bdy.get_node_or_null("BotBody");
+	return null;
 
 func get_input_handler():
 	var ply = get_player();
 	
-	return ply.get_node_or_null("InputHandler");
+	if is_instance_valid(ply):
+		return ply.get_node_or_null("InputHandler");
+	return null;
 
 func get_combat_handler():
 	var ply = get_player();
 	
-	return ply.get_node_or_null("CombatHandler");
+	if is_instance_valid(ply):
+		return ply.get_node_or_null("CombatHandler");
+	return null;
 
 func get_hud():
 	return get_node("/root/GameBoard/HUD");
@@ -113,12 +123,16 @@ func get_hud():
 func get_inventory() -> InventoryPlayer:
 	var ply = get_player();
 	
-	return ply.get_node_or_null("Inventory");
+	if is_instance_valid(ply):
+		return ply.get_node_or_null("Inventory");
+	return null;
 
 func get_death_timer() -> DeathTimer:
 	var ply = get_player();
 	
-	return ply.get_node_or_null("Inventory/InventoryControls/BackingTexture/Lbl_Timer");
+	if is_instance_valid(ply):
+		return ply.get_node_or_null("Inventory/InventoryControls/BackingTexture/Lbl_Timer");
+	return null;
 
 func add_death_time(time:float):
 	var tmr = get_death_timer();
@@ -150,7 +164,6 @@ func get_music() -> MusicHandler:
 	
 	if board != null:
 		return board.get_node_or_null("BGM2");
-	
 	return null;
 
 func get_physical_sound_manager() -> SND:
@@ -158,7 +171,6 @@ func get_physical_sound_manager() -> SND:
 	
 	if board != null:
 		return board.get_node_or_null("SoundManager");
-	
 	return null;
 
 # Colors for text.
