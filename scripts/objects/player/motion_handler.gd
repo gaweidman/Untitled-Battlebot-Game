@@ -72,15 +72,15 @@ func _on_radius_check_area_entered(newNode: AINode) -> void:
 		var closestNode
 		var closestNodePos
 		var distanceSqr
-		var playerPos = ply.get_body_position();
+		var playerPos = ply.get_global_body_position();
 		
 		for aiNode in nodesInRadius:
 			if !closestNode:
 				closestNode = aiNode;
-				closestNodePos = closestNode.get_position();
+				closestNodePos = closestNode.get_global_position();
 				distanceSqr = closestNodePos.distance_squared_to(playerPos);
 			else:
-				var newPos = aiNode.get_position()
+				var newPos = aiNode.get_global_position()
 				var newDist = newPos.distance_squared_to(playerPos)
 				if newDist < distanceSqr:
 					closestNode = aiNode;

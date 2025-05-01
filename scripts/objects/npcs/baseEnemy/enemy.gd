@@ -4,7 +4,7 @@ class_name EnemyBase;
 
 @export var sleepTimerLength := 0.0;
 var sleepTimer := sleepTimerLength;
-var closestAiNode;
+var closestAiNode : AINode;
 
 func _ready():
 	super();
@@ -26,3 +26,12 @@ func set_sleep_timer(inTime:=0.0):
 
 func is_asleep() -> bool:
 	return sleepTimer > 0;
+	
+func get_body_position():
+	return %Body.get_position();
+	
+func get_global_body_position():
+	return %Body.get_position();
+
+func get_closest_ainode():
+	return closestAiNode;

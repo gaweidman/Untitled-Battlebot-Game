@@ -13,6 +13,13 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	super(delta);
+	
+	thisBot = get_node("../");
+	if !thisBot.closestAiNode:
+		var curScale = %RadiusCheck.get_scale();
+		# the scaling is uniform for RadiusCheck, so we just need to check 1 component
+		if curScale.x < 100:
+			%RadiusCheck.set_scale(Vector3(curScale.x + 1, curScale.y + 1, curScale.z + 1));
 	pass;
 
 func grab_references():
@@ -83,15 +90,15 @@ func _on_body_entered(otherBody: Node) -> void:
 	if otherBody.get_name() == "ArenaWall":
 		Hooks.OnWallCollision(%Body);
 		
-func _on_radius_check_area_entered(newNode: Area3D) -> void:
+func _on_radius_check_area_entered(newNode: AINode) -> void:
 	var nodesInRadius = %RadiusCheck.get_overlapping_areas();
-	var this = get_parent();
+	var thisBot = get_parent();
 	
 	if nodesInRadius.size() > 1:
 		var closestNode
 		var closestNodePos
 		var distanceSqr
-		var thisPos = get_parent().get_node("Body");
+		var thisPos = thisBot.get_global_body_position();
 		
 		for aiNode in nodesInRadius:
 			if !closestNode:
@@ -106,7 +113,7 @@ func _on_radius_check_area_entered(newNode: Area3D) -> void:
 					closestNodePos = newPos;
 					distanceSqr = newDist;
 		
-		this.closestAiNode = closestNode;
+		thisBot.closestAiNode = closestNode;
 	else:
-		this.closestAiNode = newNode;
+		thisBot.closestAiNode = newNode;
 		

@@ -180,6 +180,7 @@ mesh = ExtResource("5_4jixe")
 shape = SubResource("ConcavePolygonShape3D_usc4f")
 
 [node name="EnemySpawnLocations" type="Node3D" parent="ArenaWall/StaticBody3D"]
+visible = false
 
 [node name="ShapeCast3D" type="ShapeCast3D" parent="ArenaWall/StaticBody3D/EnemySpawnLocations"]
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 17.1386, 2.21485, -18.9982)
@@ -872,16 +873,17 @@ stream = SubResource("AudioStreamSynchronized_6fdki")
 playback_type = 1
 script = ExtResource("20_l8dsy")
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+[node name="NavRegion" type="NavigationRegion3D" parent="."]
+visible = false
 navigation_mesh = SubResource("NavigationMesh_x282c")
 
-[node name="ArenaFloor" type="MeshInstance3D" parent="NavigationRegion3D" groups=["Concrete", "World", "WorldFloor"]]
+[node name="ArenaFloor" type="MeshInstance3D" parent="NavRegion" groups=["Concrete", "World", "WorldFloor"]]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 1.4963, -1.552, 30.293)
 visible = false
 material_override = ExtResource("2_4jixe")
 mesh = ExtResource("3_e8tnf")
 
-[node name="ArenaWall" type="MeshInstance3D" parent="NavigationRegion3D" groups=["Concrete", "World", "WorldWall"]]
+[node name="ArenaWall" type="MeshInstance3D" parent="NavRegion" groups=["Concrete", "World", "WorldWall"]]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 1.4964, -1.55223, 30.3424)
 visible = false
 material_override = ExtResource("4_jhciq")
