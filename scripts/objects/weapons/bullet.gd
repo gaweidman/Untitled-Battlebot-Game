@@ -34,7 +34,7 @@ func _physics_process(delta):
 		raycast.target_position.z = -difLen;
 		if raycast.is_colliding():
 			var col = raycast.get_collider();
-			print("Raycast hit something this time")
+			print("Bullet Raycast hit something this time")
 			shot_something(col);
 	if not visible:
 		if leaking:
@@ -92,6 +92,7 @@ func _on_body_entered(body):
 
 func shot_something(body):
 	if leaking: return;
+	if ! is_instance_valid(body): return;
 	if body.get_parent() == attacker:
 		#print("                     entered my attacker")
 		return;

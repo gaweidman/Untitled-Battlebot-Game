@@ -78,9 +78,11 @@ static func mouseProjectionRotation(positionNode : Node3D) -> Vector3:
 		
 		var mousePos = viewport.get_mouse_position();
 		var mousePos3 = camera.project_position(mousePos, 0);
-		var mouseProject = camera.project_position(mousePos, camera.position.y) - positionNode.global_position;
+		var mouseProject = camera.project_position(mousePos, (camera.global_position - positionNode.global_position).length())
+		#print(projDif)
 		
-		var mouseProjectNormalized = Vector3(mouseProject.x, 0, mouseProject.z).normalized()
+		var vector = mouseProject - positionNode.global_position
+		var mouseProjectNormalized = Vector3(vector.x, 0, vector.z).normalized()
 		return mouseProjectNormalized;
 	return Vector3.ZERO;
 

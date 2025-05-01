@@ -4,6 +4,7 @@ class_name PartActiveProjectile
 
 #@onready var bulletRef : ;
 @export var bulletRef : PackedScene;
+@export var rangeRay : RayCast3D;
 var magazine = [];
 var magazineCount := 0;
 ##The base max amount of bullets in the magazine.
@@ -14,13 +15,15 @@ var magazineMax := magazineMaxBase;
 var magazineMaxModifier := 1.0;
 @export var fireSpeed := 30.0;
 @export var bulletLifetime := 1.0;
-@export var firingAngle := Vector3.BACK;
+var firingAngle := Vector3.BACK;
 @export var firingOffset := Vector3(0,0.50,0);
+##An inaccuracy added to its firing.
+@export var inaccuracy := 0.05;
 @export_category("Firing Sound")
 @export var firingSoundString := "Weapon.Shoot.Heavy"
 @export var firingSoundPitchAdjust := 3.0;
 @export var firingSoundVolumeAdjust := 0.75;
-	
+
 var leakTimer : Timer;
 
 # Called when the node enters the scene tree for the first time.
@@ -28,6 +31,7 @@ func _ready() -> void:
 	super();
 	#inputHandler = $"../InputHandler"
 	leakTimer = $LeakTimer;
+	calc_range();
 	pass # Replace with function body.
 
 func _activate():
@@ -44,6 +48,7 @@ func _activate():
 func _process(delta: float) -> void:
 	super(delta);
 	magazineMax = magazineMaxBase * magazineMaxModifier;
+	calc_range()
 	pass
 
 func get_magazine_size(base:=false):
@@ -61,17 +66,17 @@ func fireBullet():
 		bullet = bulletRef.instantiate();
 		get_node("/root/GameBoard").add_child(bullet);
 		magazine.append(bullet);
-		
-	Hooks.OnFireProjectile(self, bullet);
 	
 	bullet = nextBullet();
 	
 	if is_instance_valid(bullet):
+		Hooks.OnFireProjectile(self, bullet);
 		if thisBot is Player:
 			firingAngle = InputHandler.mouseProjectionRotation(positionNode);
 		else:
 			firingAngle = InputHandler.playerPosRotation(positionNode);
-		
+		firingAngle += inaccuracy * Vector3(randf_range(-1,1),randf_range(-1,1),randf_range(-1,1));
+		firingAngle = firingAngle.normalized();
 		bullet.fire(thisBot, self, positionNode.global_position + firingOffset + modelOffset, firingAngle, fireSpeed, bulletLifetime, get_damage());
 		
 		SND.play_sound_at(firingSoundString, positionNode.global_position + firingOffset + modelOffset, GameState.get_game_board(), firingSoundVolumeAdjust, randf_range(firingSoundPitchAdjust * 1.15, firingSoundPitchAdjust * 0.85))
@@ -122,3 +127,14 @@ func _on_leak_timer_timeout():
 func _exit_tree():
 	leakPrevention();
 	pass;
+
+func calc_range():
+	var delta = get_physics_process_delta_time();
+	var length = fireSpeed * delta * bulletLifetime * 60;
+	rangeRay.target_position.x = length;
+	rangeRay.position = firingOffset;
+
+func get_closest_thing_in_line_of_fire():
+	if rangeRay.is_colliding():
+		return rangeRay.get_collider();
+	return null;

@@ -97,6 +97,11 @@ func set_active_part(part:PartActive, index:int, override := true):
 	push_warning("Attempted to add to slot "+ str(index)+" which either doesn't exist or is full.");
 	return;
 
+func set_active_part_to_next_empty_slot(part:PartActive):
+	var index = get_next_empty_active_slot();
+	if index != null:
+		set_active_part(part, index, false);
+
 func remove_active_part(index):
 	var part = get_active_part(index)
 	if part != null:
@@ -114,10 +119,27 @@ func get_active_part(index):
 	return null;
 
 func check_active_slots_for_part(part:Part, ignoreIndex:int):
-	if get_active_part(0) == part && ignoreIndex != 0: return true;
-	if get_active_part(1) == part && ignoreIndex != 1: return true;
-	if get_active_part(2) == part && ignoreIndex != 2: return true;
+	if get_active_part(0) == part && ignoreIndex != 0: 
+		return true;
+	if get_active_part(1) == part && ignoreIndex != 1: 
+		return true;
+	if get_active_part(2) == part && ignoreIndex != 2: 
+		return true;
 	return false;
+
+func get_next_empty_active_slot():
+	if is_active_slot_empty(0): 
+		print("slot 0 is empty")
+		return 0;
+	if is_active_slot_empty(2): 
+		print("slot 2 is empty")
+		return 2;
+	if is_active_slot_empty(1): 
+		print("slot 1 is empty")
+		return 1;
+	#print(activeParts)
+	print("No slot is empty")
+	return null;
 
 ##Reassigns the player's selected part to the slot specified.
 func _on_active_reassignment_buttons_reassignment_button_pressed(index):

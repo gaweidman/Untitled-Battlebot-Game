@@ -79,6 +79,7 @@ func starting_kit():
 	clear_inventory();
 	add_part_from_scene(1, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
 	add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 0);
+	#add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sniper.tscn", 0);
 	#add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 0);
 	add_part_from_scene(3, 4, "res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn");
 	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 2);
@@ -289,6 +290,9 @@ func remove_part_post(part:Part, beingSold := false, beingBought := false):
 		remove_scrap(part._get_buy_price());
 		part.on_bought();
 		SND.play_sound_nondirectional("Shop.Chaching");
+		if part is PartActive:
+			print("Adding to slot?")
+			combatHandler.set_active_part_to_next_empty_slot(part);
 	if part.invHolderNode is ShopStall:
 		part.invHolderNode.partRef = null;
 		part.invHolderNode.close_stall();

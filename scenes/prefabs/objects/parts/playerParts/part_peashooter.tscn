@@ -8,6 +8,7 @@ bulletRef = ExtResource("2_71v5q")
 magazineMaxBase = 5
 fireSpeed = 35.0
 bulletLifetime = 0.4
+inaccuracy = 0.1
 firingSoundString = "Weapon.Shoot.Light"
 firingSoundPitchAdjust = 1.0
 firingSoundVolumeAdjust = 0.9

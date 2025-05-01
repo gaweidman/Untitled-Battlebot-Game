@@ -103,8 +103,9 @@ func get_active_part(index) -> PartActive:
 func is_active_slot_empty(index):
 	if !(index <= 2 && index >= 0):
 		return false;
-	if activeParts[index] && activeParts[index] == null:
-		return true;
+	if index in activeParts:
+		if activeParts[index] == null:
+			return true;
 	return false;
 
 ##Adds a part at the given index.

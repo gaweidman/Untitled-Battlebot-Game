@@ -29,6 +29,7 @@ partName = "Sawblade"
 partDescription = "[color=e0dede]Never a dull day with a [color=ff6e49]Sawblade[color=e0dede] around.
 
 [color=ff6e49]Active: Parries bullets, increases sawblade damage, and makes you invincible for a short time."
+partIconOffset = Vector2(1, 0)
 
 [node name="EquippedBlinky" parent="TextureBase" index="3"]
 mouse_filter = 1

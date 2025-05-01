@@ -41,6 +41,7 @@ func reset_shop():
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_scrap_plating.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sniper.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn", 3);
 	rerollPriceIncrementPermanent = 0;
 	rerollPriceIncrement = 0;

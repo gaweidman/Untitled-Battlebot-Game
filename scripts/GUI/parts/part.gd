@@ -27,7 +27,7 @@ var scrapSellModifierBase := (2.0/3.0);
 @export var partName := "Part";
 @export_multiline var partDescription := "No description given.";
 @export var partIcon : CompressedTexture2D;
-@export var partIconOffset := Vector2i(0,0);
+@export var partIconOffset := Vector2(0.0,0.0);
 @export var invSprite : CompressedTexture2D;
 @export var screwSprite : CompressedTexture2D;
 
@@ -67,7 +67,7 @@ func _ready():
 func inventory_vanity_setup():
 	print("somethin' fishy....")
 	textureIcon.set_deferred("texture", partIcon);
-	textureIcon.set_deferred("position", (partIconOffset*48) + Vector2i(8,8));
+	textureIcon.set_deferred("position", (partIconOffset*48) + Vector2(10,10));
 	_populate_buttons();
 	tilemaps.call_deferred("set_pattern", dimensions, myPartType, myPartRarity)
 	#tilemaps.set_pattern();
