@@ -96,11 +96,11 @@ func _on_radius_check_area_entered(newNode: Area3D) -> void:
 		for aiNode in nodesInRadius:
 			if !closestNode:
 				closestNode = aiNode;
-				closestNodePos = closestNode.get_position();
-				distanceSqr = closestNodePos.distance_squared_to(thisPos);
+				closestNodePos = closestNode.get_global_position();
+				distanceSqr = closestNodePos.distance_squared_to(thisPos.global_position);
 			else:
-				var newPos = aiNode.get_position()
-				var newDist = newPos.distance_squared_to(thisPos)
+				var newPos = aiNode.get_global_position();
+				var newDist = newPos.distance_squared_to(thisPos.global_position)
 				if newDist < distanceSqr:
 					closestNode = aiNode;
 					closestNodePos = newPos;

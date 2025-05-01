@@ -18,14 +18,14 @@ mesh = ExtResource("3_ifcje")
 surface_material_override/0 = ExtResource("3_5x1qy")
 surface_material_override/1 = ExtResource("5_4h4fo")
 
-[node name="CombatHandler" parent="." index="2"]
+[node name="CombatHandler" parent="." index="3"]
 scrap_worth = 3
 
-[node name="MotionHandler" parent="." index="3"]
+[node name="MotionHandler" parent="." index="4"]
 script = ExtResource("6_x6ndg")
 maxSpeed = 10.0
 
-[node name="AIHandler" parent="." index="4"]
+[node name="AIHandler" parent="." index="5"]
 script = ExtResource("6_4h4fo")
 CHARGEDIST = 22.0
 RUNDIST = 6.0

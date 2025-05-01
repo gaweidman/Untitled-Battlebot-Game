@@ -17,11 +17,11 @@ mesh = ExtResource("3_falhd")
 surface_material_override/0 = ExtResource("3_2q850")
 surface_material_override/1 = ExtResource("5_c67qj")
 
-[node name="CombatHandler" parent="." index="2"]
+[node name="CombatHandler" parent="." index="3"]
 maxHealth = 2.0
 
-[node name="MotionHandler" parent="." index="3"]
+[node name="MotionHandler" parent="." index="4"]
 script = ExtResource("4_c5igk")
 
-[node name="AIHandler" parent="." index="4"]
+[node name="AIHandler" parent="." index="5"]
 script = ExtResource("5_xjdlv")
