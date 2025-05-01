@@ -5,9 +5,10 @@
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_8grda"]
 
-[node name="Bullet" type="Area3D" node_paths=PackedStringArray("lifeTimer", "collision") groups=["Metal", "Projectile"]]
+[node name="Bullet" type="Area3D" node_paths=PackedStringArray("lifeTimer", "raycast", "collision") groups=["Metal", "Projectile"]]
 script = ExtResource("1_lph27")
 lifeTimer = NodePath("LifeTimer")
+raycast = NodePath("RayCast3D")
 collision = NodePath("CollisionShape3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["Projectile"]]
@@ -20,6 +21,11 @@ transform = Transform3D(0.120565, 0, -0.000227261, 0, 0.120566, 0, 0.000227261, 
 mesh = ExtResource("2_lvy2m")
 
 [node name="LifeTimer" type="Timer" parent="."]
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+target_position = Vector3(0, 0, 0)
+debug_shape_custom_color = Color(0, 0.745098, 0, 1)
+debug_shape_thickness = 5
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_shape_entered" from="." to="." method="_on_body_shape_entered"]

@@ -9,6 +9,7 @@ var damage := 1.0;
 var fired := false;
 var lifetime := 1.0;
 @export var lifeTimer : Timer;
+@export var raycast : RayCast3D;
 @export var collision : CollisionShape3D;
 var initPosition = position;
 var positionAppend := Vector3.ZERO;
@@ -18,14 +19,23 @@ var attacker : Node3D;
 var leaking := false;
 
 func _ready():
-	
 	die();
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _physics_process(delta):
 	if fired && visible:
 		positionAppend += (dir * speed * delta);
+		var oldPos = global_position;
 		position = initPosition + positionAppend;
+		var newPos = global_position;
+		var positionDif = oldPos - newPos;
+		var difLen = positionDif.length();
+		raycast.position.z = difLen;
+		raycast.target_position.z = -difLen;
+		if raycast.is_colliding():
+			var col = raycast.get_collider();
+			print("Raycast hit something this time")
+			shot_something(col);
 	if not visible:
 		if leaking:
 			die();
@@ -77,6 +87,10 @@ func _on_life_timer_timeout():
 	pass # Replace with function body.
 
 func _on_body_entered(body):
+	shot_something(body);
+	pass # Replace with function body.
+
+func shot_something(body):
 	if leaking: return;
 	if body.get_parent() == attacker:
 		#print("                     entered my attacker")
@@ -97,7 +111,6 @@ func _on_body_entered(body):
 	ParticleFX.play("Sparks", GameState.get_game_board(), initPosition + positionAppend, 0.5);
 	
 	die();
-	pass # Replace with function body.
 
 func leak():
 	leaking = true;
@@ -107,3 +120,6 @@ func get_attacker():
 	
 func set_attacker(atkr):
 	attacker = atkr;
+	if attacker is Combatant:
+		raycast.clear_exceptions();
+		raycast.add_exception(get_attacker().body);

@@ -82,16 +82,17 @@ func starting_kit():
 	#add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 0);
 	add_part_from_scene(3, 4, "res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn");
 	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 2);
-	add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
-	startingKitAssigned = true;
+	#add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
+	
 	$InventoryControls/BackingTexture/Shop.reroll_shop();
 	scrap = 0;
+	
+	startingKitAssigned = true;
 
 func test_add_stuff():
 	#print(ply)
 	if (assign_player()) and (not startingKitAssigned):
 		starting_kit();
-		startingKitAssigned = true;
 	pass
 	
 	##Shop Stalls
