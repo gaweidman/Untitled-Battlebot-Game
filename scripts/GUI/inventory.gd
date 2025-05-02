@@ -44,7 +44,7 @@ var slots := {
 	"StallC" : null,
 }
 
-var listOfPieces = []
+var listOfPieces : Array[Part] = [];
 var selectedPart: Part;
 
 func clear_slot_at(x: int, y: int):
@@ -119,6 +119,7 @@ func add_part(part: Part, invPosition : Vector2i, noisy := false):
 	pass
 
 func add_part_post(part:Part, noisy:=false):
+	partMods_deploy();
 	pass;
 
 func remove_part(part: Part, destroy:=false, beingSold := false, beingBought := false):
@@ -240,3 +241,66 @@ func all_refs_valid():
 func _physics_process(delta):
 	if battleBotBody != null:
 		pass
+
+######### Below is stuff regarding part modifiers.
+
+##Clears all modifiers.
+func partMods_clear_all():
+	for part in listOfPieces:
+		if part is Part:
+			part.mods_reset(true);
+	pass
+
+##Deploys all modifiers. [b]VERY[/b] HEFTY.
+func partMods_deploy():
+	##All bonuses cleared.
+	partMods_clear_all();
+	##Organizes all parts.
+	var parts = prioritized_parts();
+	for part in parts:
+		if part is Part:
+			part.mods_distribute();
+	##Applies all modifiers after the fact.
+	for part in listOfPieces:
+		if part is Part:
+			part.mods_apply_all();
+	pass
+
+##Organizes a given list of parts (default [Inventory.listOfPieces]) by the order in which they should be prioritized.[br]
+##Part priorty is first priority, then index, then age, then finally whatever method the engine is choosing to order arrays.
+func prioritized_parts(partsArray : Array[Part] = listOfPieces) -> Array:
+	var partPrio = {};
+	##Should end up as this dict: {part.get_effect_priority() : {part.get_inventory_slot_priority() : {part.get_age() : [mod, mod, ...]}}
+	for part in partsArray:
+		if is_instance_valid(part):
+			print(part.partName, " ", part.outgoingModifiers.size())
+			if part.outgoingModifiers.size() > 0:
+				var prio = part.get_effect_priority();
+				var IDX = part.get_inventory_slot_priority();
+				var age = part.get_age();
+				print(prio, IDX, age)
+				
+				if partPrio.has(prio):
+					if partPrio[prio].has(IDX):
+						if partPrio[prio][IDX].has(age):
+							partPrio[prio][IDX][age].append(part);
+						else:
+							partPrio[prio][IDX][age] = [part];
+					else:
+						partPrio[prio][IDX] = {age : [part]};
+				else:
+					partPrio[prio] = {IDX : {age : [part]}}
+	
+	print(partPrio)
+	
+	var returnArray = [];
+	
+	for lv1 in partPrio.keys(): ## looping thru part priority
+		var lv1Dict = partPrio[lv1]
+		for lv2 in lv1Dict.keys(): ##looping thru index
+			var lv2Dict = lv1Dict[lv2]
+			for lv3 in lv2Dict.keys(): ##looping thru age
+				var lv3Array = lv2Dict[lv3]
+				returnArray.append_array(lv3Array); ##Appends the 3rd level to the array
+	print(returnArray)
+	return returnArray;

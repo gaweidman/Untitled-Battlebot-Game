@@ -104,10 +104,10 @@ func _on_radius_check_area_entered(newNode: AINode) -> void:
 			if !closestNode:
 				closestNode = aiNode;
 				closestNodePos = closestNode.get_global_position();
-				distanceSqr = closestNodePos.distance_squared_to(thisPos.global_position);
+				distanceSqr = closestNodePos.distance_squared_to(thisPos);
 			else:
 				var newPos = aiNode.get_global_position();
-				var newDist = newPos.distance_squared_to(thisPos.global_position)
+				var newDist = newPos.distance_squared_to(thisPos)
 				if newDist < distanceSqr:
 					closestNode = aiNode;
 					closestNodePos = newPos;

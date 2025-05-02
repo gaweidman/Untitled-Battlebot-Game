@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3 uid="uid://dqocjyivv13y3"]
+
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_4lfvv"]
+[ext_resource type="Script" uid="uid://dd18vlcrmsx15" path="res://scripts/GUI/part_modifier.gd" id="2_eefed"]
+
+[sub_resource type="Resource" id="Resource_l244e"]
+script = ExtResource("2_eefed")
+priority = 0.0
+valueAdd = 0.0
+valueFlatMult = 0.0
+valueTimesMult = 0.9
+modName = &"FanRight"
+offset = Vector2i(1, 0)
+enabled = true
+myModType = 0
+metadata/_custom_type_script = "uid://dd18vlcrmsx15"
+
+[sub_resource type="Resource" id="Resource_4lfvv"]
+script = ExtResource("2_eefed")
+priority = 0.0
+valueAdd = 0.0
+valueFlatMult = 0.0
+valueTimesMult = 0.9
+modName = &"FanLeft"
+offset = Vector2i(-1, 0)
+enabled = true
+myModType = 0
+metadata/_custom_type_script = "uid://dd18vlcrmsx15"
+
+[sub_resource type="Resource" id="Resource_eefed"]
+script = ExtResource("2_eefed")
+priority = 0.0
+valueAdd = 0.0
+valueFlatMult = 0.0
+valueTimesMult = 0.9
+modName = &"FanUp"
+offset = Vector2i(0, -1)
+enabled = true
+myModType = 0
+metadata/_custom_type_script = "uid://dd18vlcrmsx15"
+
+[sub_resource type="Resource" id="Resource_reqvf"]
+script = ExtResource("2_eefed")
+priority = 0.0
+valueAdd = 0.0
+valueFlatMult = 0.0
+valueTimesMult = 0.9
+modName = &"FanDown"
+offset = Vector2i(0, 1)
+enabled = true
+myModType = 0
+metadata/_custom_type_script = "uid://dd18vlcrmsx15"
+
+[node name="PartFan" instance=ExtResource("1_4lfvv")]
+scrapCostBase = 1
+partName = "Fan"
+partDescription = "Blasts some nice cool air onto your parts.
+
+[color=f2ec6b]Passive: Adjacent parts have 10% reduced energy cost."
+effectPriority = 1
+outgoingModifiers = Array[ExtResource("2_eefed")]([SubResource("Resource_l244e"), SubResource("Resource_4lfvv"), SubResource("Resource_eefed"), SubResource("Resource_reqvf")])

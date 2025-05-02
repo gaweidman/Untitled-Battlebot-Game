@@ -8,13 +8,14 @@ var inPlayerInventory := false;
 var ownedByPlayer := false;
 var invHolderNode : Control;
 var thisBot : Combatant;
+@export_group("References")
 @export var textureBase : Control;
 @export var textureIcon : TextureRect;
 @export var tilemaps : PartTileset;
 
 var selected := false;
 
-@export_category("Gameplay")
+@export_group("Gameplay")
 @export var scrapCostBase : int;
 var scrapSellModifier := 1.0;
 var scrapSellModifierBase := (2.0/3.0);
@@ -23,7 +24,7 @@ var scrapSellModifierBase := (2.0/3.0);
 @export var myPartType := partTypes.UNASSIGNED;
 @export var myPartRarity := partRarities.COMMON;
 
-@export_category("Vanity")
+@export_group("Vanity")
 @export var partName := "Part";
 @export_multiline var partDescription := "No description given.";
 @export var partIcon : CompressedTexture2D;
@@ -65,7 +66,7 @@ func _ready():
 
 ##Run when the part gets added to the player's inventory via InventoryPlayer.add_part_post().
 func inventory_vanity_setup():
-	print("somethin' fishy....")
+	#print("somethin' fishy....")
 	textureIcon.set_deferred("texture", partIcon);
 	textureIcon.set_deferred("position", (partIconOffset*48) + Vector2(10,10));
 	_populate_buttons();
@@ -90,16 +91,16 @@ func _get_part_type() -> partTypes:
 	return myPartType;
 
 func _get_sell_price():
-	var discount = 1.0 * scrapSellModifier * scrapSellModifierBase;
+	var discount = (1.0 + mod_sellPercent.add) * scrapSellModifier * scrapSellModifierBase * (mod_sellPercent.flat * mod_sellPercent.mult);
 	
 	var sellPrice = discount * scrapCostBase
 	
 	return roundi(max(1, sellPrice))
 
 func _get_buy_price(_discount := 0.0, markup:=0.0, fixedDiscount := 0, fixedMarkup := 0):
-	var discount = 1.0 + _discount + markup;
+	var discount = 1.0 + _discount + markup + mod_scrapCost.add;
 	
-	var sellPrice = discount * scrapCostBase
+	var sellPrice = discount * scrapCostBase * (mod_scrapCost.flat * mod_scrapCost.mult);
 	
 	return roundi(max(1, sellPrice + fixedDiscount + fixedMarkup))
 
@@ -157,7 +158,7 @@ func destroy():
 func disable(_disabled:=true):
 	%Buttons.disable(_disabled);
 
-#######
+####### Hooks-adjacent stuff.
 
 ##Fired at the start of a round.
 func new_round():
@@ -178,3 +179,205 @@ func on_sold():
 ##Fired when this part is bought.
 func on_bought():
 	pass;
+
+####### Modifier functions.
+
+@export_group("Modifiers")
+##Shouldn't be modified outside of when the part is initialized. Acts as an ID for effect tiebreaking.
+var ageOrdering := 0;
+##Adjusts the ordering of when this part's effects get distributed. The lower the number, the earlier it'll fire.
+@export var effectPriority := 0;
+var incomingModifiers : Array[PartModifier];
+@export var outgoingModifiers : Array[PartModifier];
+var appliedModsAlready := false;
+var appliedModsAlready_recursion := false;
+var distributedModsAlready := false;
+
+##The below variables are for modifier purposes.
+
+##Modifies energy recharge. Uses the Mods system.
+const mod_resetValue = {"add": 0.0, "flat" : 0.0, "mult" : 1.0};
+##Modifies the scrap cost. Uses the Mods system.
+var mod_scrapCost := mod_resetValue.duplicate();
+##Modifies the percentage of scrap you get back from selling. Uses the Mods system.
+var mod_sellPercent := mod_resetValue.duplicate();
+
+##Resets all modified values back to 0. Extend with mods that are added in later derivative classes.
+func mods_reset(resetArrays := false):
+	if resetArrays:
+		distributedModsAlready = false;
+		incomingModifiers = [];
+	appliedModsAlready = false;
+	appliedModsAlready_recursion = false;
+	mod_scrapCost = mod_resetValue.duplicate();
+	mod_sellPercent = mod_resetValue.duplicate();
+	pass;
+
+func mods_create_modifier(_name : StringName, _modType : PartModifier.modifierType, _offset : Vector2i, _priority, _valueAdd := 0.0, _valueMult := 1.0, _enabledAtStart := true, ):
+	var existingMod = mods_check_outModifier_exists(_name);
+	if existingMod != null:
+		existingMod.create_modifier(self, inventoryNode, _name, _modType, _offset, _priority, _valueAdd, _valueMult, _enabledAtStart);
+	else:
+		var newMod = PartModifier.new();
+		outgoingModifiers.append(newMod);
+		newMod.create_modifier(self, inventoryNode, _name, _modType, _offset, _priority, _valueAdd, _valueMult, _enabledAtStart);
+
+func mods_check_outModifier_exists(modName : StringName) -> PartModifier:
+	for mod in outgoingModifiers:
+		if mod.modName == modName:
+			return mod;
+	return null;
+
+##Tries to fetch and then disable a modifier.
+func mods_disable_outMod(modName : StringName, _enabled := false):
+	var existingMod = mods_check_outModifier_exists(modName);
+	if existingMod != null:
+		existingMod.disable(_enabled);
+
+##Distributes all outgoing modifiers.
+func mods_distribute():
+	mods_validate();
+	if not distributedModsAlready:
+		if not appliedModsAlready_recursion:
+			mods_apply_all();
+		var outMods = outgoingModifiers;
+		for mod in outMods:
+			mod.distribute_modifier();
+			pass;
+		distributedModsAlready = true;
+
+##Adds a modifier to the part. Called from the modifier.[br]
+##Will try to call the distribution script.
+func mods_recieve(inMod : PartModifier):
+	incomingModifiers.erase(inMod);
+	incomingModifiers.append(inMod);
+	pass
+
+##Applies a given modifier to itself.
+func mods_apply(propertyName : String, add:= 0.0, flat := 0.0, mult := 0.0):
+	var property = get(propertyName)
+	if property:
+		print(property)
+		if property.has("add"):
+			property["add"] += add;
+		else:
+			property["add"] = add;
+		
+		if property.has("flat"):
+			property["flat"] += flat;
+		else:
+			property["flat"] = flat;
+		
+		if property.has("mult"):
+			property["mult"] *= mult;
+		else:
+			property["mult"] = mult;
+		print(property)
+		
+		return true;
+		
+	return false;
+
+##Applies all of the modifiers in priority order gathered from [Part.prioritized_mods].
+func mods_apply_all():
+	mods_reset();
+	print("incoming modifiers: ",incomingModifiers)
+	var inMods = prioritized_mods(incomingModifiers);
+	for mod in incomingModifiers:
+		mod.apply_modifier();
+	appliedModsAlready_recursion = true;
+	mods_distribute();
+	appliedModsAlready = true;
+
+func mods_validate():
+	for mod in outgoingModifiers:
+		if mod is PartModifier:
+			if mod.inventoryNode == null:
+				mod.inventoryNode = inventoryNode;
+			if mod.owner == null:
+				mod.owner = self;
+
+##Organizes a given list by the order in which they should be prioritized.[br]
+##Mod priorty is first priority, then owner index, then owner age, then finally whatever method the engine is choosing to order arrays.
+func prioritized_mods(modsArray : Array[PartModifier]) -> Array:
+	var modPrio = {};
+	##Should end up as this dict: {mod.priority : {modOwnerIDX : {modOwnerAge : [mod, mod]}}
+	for mod in modsArray:
+		if mod.is_applicable():
+			var modOwnerIDX = mod.get_owner_index();
+			var modOwnerAge = mod.get_owner_age();
+			
+			if modPrio.has(mod.priority):
+				var lv1 : Dictionary = modPrio[mod.priority]
+				if lv1.has(modOwnerIDX):
+					var lv2 : Dictionary = lv1[modOwnerIDX];
+					if lv2.has(modOwnerAge):
+						var lv3 : Array = lv2[modOwnerAge]
+						#pass
+						lv3.append(mod);
+					else:
+						lv2[modOwnerAge] = [mod];
+				else:
+					lv1[modOwnerIDX] = {modOwnerAge : [mod]};
+			else:
+				modPrio[mod.priority] = {modOwnerIDX : {modOwnerAge : [mod]}}
+	
+	var returnArray = [];
+	
+	for lv1 in modPrio.keys(): ## looping thru mod priority
+		var lv1Dict = modPrio[lv1]
+		for lv2 in lv1Dict.keys(): ##looping thru index
+			var lv2Dict = lv1Dict[lv2]
+			for lv3 in lv2Dict.keys(): ##looping thru age
+				var lv3Array = lv2Dict[lv3]
+				returnArray.append_array(lv3Array); ##Appends the 3rd level to the array
+	
+	return returnArray;
+
+##Returns the value for inventory slot priority based on [Part.slotsDict].
+func get_inventory_slot_priority():
+	if slotsDict.has(invPosition):
+		return slotsDict[invPosition];
+	return 0;
+
+##A dictionary whose sole purpose is as reference for [Part.get_inventory_slot_priority].
+const slotsDict := {
+	## Row 0
+	Vector2i(0,0) : 0,
+	Vector2i(1,0) : 1,
+	Vector2i(2,0) : 2,
+	Vector2i(3,0) : 3,
+	Vector2i(4,0) : 4,
+	## Row 1
+	Vector2i(0,1) : 5,
+	Vector2i(1,1) : 6,
+	Vector2i(2,1) : 7,
+	Vector2i(3,1) : 8,
+	Vector2i(4,1) : 9,
+	## Row 2
+	Vector2i(0,2) : 10,
+	Vector2i(1,2) : 11,
+	Vector2i(2,2) : 12,
+	Vector2i(3,2) : 13,
+	Vector2i(4,2) : 14,
+	## Row 3
+	Vector2i(0,3) : 15,
+	Vector2i(1,3) : 16,
+	Vector2i(2,3) : 17,
+	Vector2i(3,3) : 18,
+	Vector2i(4,3) : 19,
+	## Row 4
+	Vector2i(0,4) : 20,
+	Vector2i(1,4) : 21,
+	Vector2i(2,4) : 22,
+	Vector2i(3,4) : 23,
+	Vector2i(4,4) : 24,
+}
+
+##Returns [Part.ageOrdering].
+func get_age():
+	return ageOrdering;
+
+##Returns [Part.effectPriority].
+func get_effect_priority():
+	return effectPriority;

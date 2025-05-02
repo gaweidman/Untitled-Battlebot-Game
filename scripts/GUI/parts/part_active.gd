@@ -26,6 +26,8 @@ var equippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCo
 var energyCost = baseEnergyCost;
 ##This modifier should be what is used for damage bonuses from other parts.
 var baseEnergyCostModifier = baseEnergyCost;
+##This energy cost modifier interacts with the Mods system.
+var mod_energyCost := mod_resetValue.duplicate();
 
 ##This is the base fire rate (in seconds) for the part's active ability. Do not modify in code.
 @export var baseFireRate := 0.15;
@@ -35,6 +37,8 @@ var fireRate := baseFireRate;
 var baseFireRateModifier := 1.0;
 ##This is a timer. Do not modify.
 var fireRateTimer := 0.0;
+##This fire rate modifier interacts with the Mods system.
+var mod_fireRate := mod_resetValue.duplicate();
 
 ##This is the base damage before any modifiers. Do not modify in code.
 @export var baseDamage := 1.0;
@@ -44,6 +48,14 @@ var damageModifier := 1.0;
 var baseDamageModifier := 1.0;
 ##This is the calculated final damage.
 var damage := baseDamage;
+##This damage modifier interacts with the Mods system.
+var mod_damage := mod_resetValue.duplicate();
+
+func mods_reset(foo:=false):
+	super(foo);
+	mod_energyCost = mod_resetValue.duplicate();
+	mod_fireRate = mod_resetValue.duplicate();
+	mod_damage = mod_resetValue.duplicate();
 
 func _ready():
 	super();
@@ -73,19 +85,19 @@ func get_damage(base:=false):
 	if !base:
 		return damage;
 	else:
-		return baseDamageModifier * baseDamage;
+		return baseDamageModifier * (baseDamage + mod_damage.add) * (mod_damage.mult * mod_damage.flat);
 
 func get_fire_rate(base:=false):
 	if !base:
 		return fireRate;
 	else:
-		return baseFireRateModifier * baseFireRate;
+		return baseFireRateModifier * (baseFireRate + mod_fireRate.add) * (mod_fireRate.mult * mod_fireRate.flat);
 
 func get_energy_cost(base:=false):
 	if !base:
 		return energyCost;
 	else:
-		return baseEnergyCostModifier * baseEnergyCost;
+		return baseEnergyCostModifier * (baseEnergyCost + mod_energyCost.add) * (mod_energyCost.mult * mod_energyCost.flat);
 
 func energy_affordable() -> bool:
 	if is_instance_valid(combatHandler):
@@ -155,9 +167,9 @@ func _process(delta):
 					if meshNode.visible == false:
 						meshNode.show()
 	meshNode.set_deferred("position", modelOffset);
-	damage = baseDamage * baseDamageModifier * damageModifier;
-	fireRate = baseFireRate * baseDamageModifier;
-	energyCost = baseEnergyCost * baseEnergyCostModifier;
+	damage = (baseDamage + mod_damage.flat) * baseDamageModifier * damageModifier * mod_damage.mult;
+	fireRate = (baseFireRate + mod_fireRate.flat) * baseDamageModifier * mod_fireRate.mult;
+	energyCost = (baseEnergyCost + mod_energyCost.flat) * baseEnergyCostModifier * mod_energyCost.mult;
 
 func _rotate_to_look_at_mouse(delta):
 	var rot = Vector3.ZERO;

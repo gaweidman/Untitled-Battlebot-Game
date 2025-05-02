@@ -58,7 +58,7 @@ func set_game_board_state(state : GameBoard.gameState):
 	if board != null:
 		board.change_state(state);
 
-func get_player():
+func get_player() -> Player:
 	var ply = get_node_or_null("/root/GameBoard/Player")
 	
 	if ply == null:
