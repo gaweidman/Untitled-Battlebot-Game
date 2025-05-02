@@ -1,6 +1,5 @@
-extends MotionHandler
+extends MotionHandlerBaseEnemy
 
-var aiHandler;
 var nextThrust;
 
 # Called when the node enters the scene tree for the first time.
@@ -23,7 +22,6 @@ func grab_references():
 ## This enemy thrusts.
 ## Make sure to move this to the thruster. Default behavior should probably be unmoving.
 func _physics_process(delta):
-	super(delta);
 	if ! is_instance_valid(aiHandler):
 		aiHandler = thisBot.get_node("AIHandler");
 	if (Time.get_ticks_msec() >= nextThrust) and not thisBot.is_asleep():
@@ -62,3 +60,6 @@ func _physics_process(delta):
 		#clamp_speed();
 	
 	pass;
+
+func _on_radius_check_area_entered(newNode: AINode) -> void:
+	super(newNode);

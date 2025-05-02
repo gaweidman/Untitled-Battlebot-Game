@@ -75,6 +75,7 @@ func _on_radius_check_area_entered(newNode: AINode) -> void:
 		var playerPos = ply.get_global_body_position();
 		
 		for aiNode in nodesInRadius:
+			print_rich("[color=darkorange] ", newNode is AINode, " ", aiNode is AINode, " [/color]")
 			if !closestNode:
 				closestNode = aiNode;
 				closestNodePos = closestNode.get_global_position();
@@ -86,6 +87,8 @@ func _on_radius_check_area_entered(newNode: AINode) -> void:
 					closestNode = aiNode;
 					closestNodePos = newPos;
 					distanceSqr = newDist;
+					
+		print("CLOSEST NODE", closestNode.get_parent(), closestNode)
 		
 		ply.closestAiNode = closestNode;
 	else:

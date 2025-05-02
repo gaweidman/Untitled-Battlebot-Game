@@ -3,12 +3,10 @@ extends MotionHandler
 class_name MotionHandlerBaseEnemy
 
 var aiHandler;
-var nextThrust;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	super();
-	nextThrust = Time.get_ticks_msec() + randi_range(0, 3) * 1000
 	pass;
 
 func _process(delta: float) -> void:
@@ -42,8 +40,6 @@ func _physics_process(delta):
 	super(delta);
 	if ! is_instance_valid(aiHandler):
 		aiHandler = thisBot.get_node("AIHandler");
-		
-	nextThrust += 1000;
 	
 	# this will be the direction of movement taken from 2D to 3D and multiplied by the speed of movement
 	# multiplication is done BEFORE the movement vector is obtained.
@@ -91,6 +87,7 @@ func _on_body_entered(otherBody: Node) -> void:
 		Hooks.OnWallCollision(%Body);
 		
 func _on_radius_check_area_entered(newNode: AINode) -> void:
+	print("[color=Cyan]area entered[/color]")
 	var nodesInRadius = %RadiusCheck.get_overlapping_areas();
 	var thisBot = get_parent();
 	
@@ -113,7 +110,7 @@ func _on_radius_check_area_entered(newNode: AINode) -> void:
 					closestNodePos = newPos;
 					distanceSqr = newDist;
 		
-		thisBot.closestAiNode = closestNode;
+		thisBot.closestAiNode = closestNode as AINode;
 	else:
-		thisBot.closestAiNode = newNode;
+		thisBot.closestAiNode = newNode as AINode;
 		
