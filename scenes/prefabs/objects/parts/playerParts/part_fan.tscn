@@ -52,10 +52,9 @@ myModType = 0
 metadata/_custom_type_script = "uid://dd18vlcrmsx15"
 
 [node name="PartFan" instance=ExtResource("1_4lfvv")]
-scrapCostBase = 1
 partName = "Fan"
 partDescription = "Blasts some nice cool air onto your parts.
 
-[color=f2ec6b]Passive: Adjacent parts have 10% reduced energy cost."
+[color=f2ec6b]Passive: Adjacent [b]Active[/b] parts have 10% reduced energy cost."
 effectPriority = 1
 outgoingModifiers = Array[ExtResource("2_eefed")]([SubResource("Resource_l244e"), SubResource("Resource_4lfvv"), SubResource("Resource_eefed"), SubResource("Resource_reqvf")])

@@ -29,20 +29,27 @@ func deselect():
 
 func reset_shop():
 	clear_shop_spawn_list();
+	##passives
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_jank_battery.tscn", 3);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_big_battery.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 2);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_coolant.tscn", 2);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_fan.tscn", 2);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn", 2);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_generator.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_magnet.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_jank_battery.tscn", 3);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 2);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn", 2);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_scrap_plating.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 1);
+	##melee
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 2);
+	##ranged
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 2);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sniper.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn", 3);
+	##utility
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 1);
+	##trap
+		#none yet lol
 	rerollPriceIncrementPermanent = 0;
 	rerollPriceIncrement = 0;
 	healPriceIncrementPermanent = 0;
