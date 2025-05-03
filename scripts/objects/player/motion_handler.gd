@@ -90,8 +90,8 @@ func _on_radius_check_area_entered(newNode: AINode) -> void:
 					
 		print("CLOSEST NODE", closestNode.get_parent(), closestNode)
 		
-		ply.closestAiNode = closestNode;
+		ply.closestAiNode = closestNode as AINode;
 	else:
-		ply.closestAiNode = newNode;
+		ply.closestAiNode = newNode as AINode;
 		
 	%RadiusCheck.set_scale(Vector3(7, 7, 7))

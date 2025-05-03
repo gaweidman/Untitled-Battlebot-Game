@@ -46,7 +46,7 @@ func _physics_process(delta):
 	var forceVector = Vector3.ZERO
 	
 	# this is where we get the 2D representation of what direction the player is trying to go
-	var movementVector = aiHandler.get_movement_vector();
+	var movementVector = await aiHandler.get_movement_vector();
 	
 	# the "actual" front of our model is actually a tread, so we rotate the model by 90 degrees so it's
 	# what would logically be the front.

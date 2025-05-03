@@ -866,7 +866,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0834, 3.4556, -4.56467)
 script = ExtResource("9_hh74c")
 
 [node name="AiMap" parent="." instance=ExtResource("11_c2xgd")]
-transform = Transform3D(1.06114, 0, 0, 0, 1.06114, 0, 0, 0, 1.06114, 0, 0, 0)
 
 [node name="BGM2" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamSynchronized_6fdki")
