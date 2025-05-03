@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://d12yhhqpryl4v"]
+
+[ext_resource type="PackedScene" uid="uid://lkjmims656tp" path="res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn" id="1_jwt78"]
+
+[node name="SoldierCannon" instance=ExtResource("1_jwt78")]
+magazineMaxBase = 1
+fireSpeed = 20.0
+bulletLifetime = 2.0
+inaccuracy = 0.1
+firingSoundString = "Weapon.Shoot.Heavy"
+firingSoundPitchAdjust = 1.0
+firingSoundVolumeAdjust = 0.6
+partName = "Soldier Cannon"
+partDescription = "[color=ffffff]This. This [color=e0dede]is the weapon of the [color=cf2121]much stronger enemy[color=e0dede]. Slow bullets.
+
+[color=65a4ff]Active: Fires basic bullets. "

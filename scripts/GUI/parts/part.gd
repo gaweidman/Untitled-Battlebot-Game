@@ -91,18 +91,18 @@ func _get_part_type() -> partTypes:
 	return myPartType;
 
 func _get_sell_price():
-	var discount = (1.0 + mod_sellPercent.add) * scrapSellModifier * scrapSellModifierBase * (mod_sellPercent.flat * mod_sellPercent.mult);
+	var discount = (1.0) * scrapSellModifier * scrapSellModifierBase;
 	
 	var sellPrice = discount * scrapCostBase
 	
-	return roundi(max(1, sellPrice))
+	return roundi(max(1, (sellPrice + mod_sellPercent.add)  * (1 + (mod_sellPercent.flat * mod_sellPercent.mult))))
 
 func _get_buy_price(_discount := 0.0, markup:=0.0, fixedDiscount := 0, fixedMarkup := 0):
-	var discount = 1.0 + _discount + markup + mod_scrapCost.add;
+	var discount = 1.0 + _discount + markup;
 	
-	var sellPrice = discount * scrapCostBase * (mod_scrapCost.flat * mod_scrapCost.mult);
+	var sellPrice = discount * scrapCostBase;
 	
-	return roundi(max(1, sellPrice + fixedDiscount + fixedMarkup))
+	return roundi(max(1, (sellPrice + fixedDiscount + fixedMarkup + mod_scrapCost.add) * (1 + (mod_scrapCost.flat * mod_scrapCost.mult))))
 
 func _get_part_bounds() -> Vector2i:
 	var highestX = 1;

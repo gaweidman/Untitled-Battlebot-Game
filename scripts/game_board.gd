@@ -25,13 +25,46 @@ var enemiesKilled := 0;
 
 func _ready():
 	spawnPlayer();
-	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_flash.tscn"), 1)
-	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_thruster.tscn"), 2)
-	add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_ranger.tscn"), 2)
 	get_tree().current_scene.ready.connect(_on_scenetree_ready)
 	#return_random_spawn_location()
 func _on_scenetree_ready():
 	change_state(gameState.MAIN_MENU);
+
+func set_enemy_spawn_waves(inWave:int):
+	if inWave == 1:
+		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_flash.tscn"), 4)
+		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_thruster.tscn"), 8)
+	if inWave == 2:
+		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_ranger.tscn"), 3)
+	if inWave == 4:
+		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_ranger.tscn"), 4)
+	if inWave == 10:
+		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_soldier.tscn"), 1)
+		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_thruster.tscn"), -3)
+
+func clear_enemy_spawn_list():
+	enemySpawnList.clear();
+
+func add_enemy_to_spawn_list(scene : PackedScene, weight : int):
+	if scene in enemySpawnList.keys():
+		enemySpawnList[scene] += weight;
+		if enemySpawnList[scene] && enemySpawnList[scene] <= 0:
+			enemySpawnList.erase(scene);
+	else:
+		enemySpawnList[scene] = weight;
+
+func return_random_enemy():
+	var pool = []
+	var spawnListCopy = enemySpawnList.duplicate(true);
+	for scene in spawnListCopy.keys():
+		var weight = spawnListCopy[scene];
+		
+		while weight > 0:
+			pool.append(scene);
+			weight -= 1;
+	
+	var sceneReturn = pool.pick_random();
+	return sceneReturn;
 
 ##Controls the state of the game.
 enum gameState {
@@ -109,6 +142,7 @@ func enter_state(state:gameState):
 		GameState.start_death_timer(120.0,true)
 		round = 0;
 		roundEnemiesInit = 1;
+		clear_enemy_spawn_list();
 		
 		spawnPlayer(return_random_unoccupied_spawn_location());
 		player.start_new_game();
@@ -130,6 +164,7 @@ func enter_state(state:gameState):
 		MUSIC.change_state(MusicHandler.musState.SHOP);
 		
 		round += 1;
+		set_enemy_spawn_waves(round);
 		player.start_round();
 		waveTimer = 3;
 		wave = 0;
@@ -192,27 +227,6 @@ func spawnPlayer(_in_position := playerSpawnPosition) -> Node3D:
 		player = newPlayer;
 	
 	return player;
-
-func add_enemy_to_spawn_list(scene : PackedScene, weight : int):
-	if scene in enemySpawnList.keys():
-		enemySpawnList[scene] += weight;
-		if enemySpawnList[scene] && enemySpawnList[scene] <= 0:
-			enemySpawnList.erase(scene);
-	else:
-		enemySpawnList[scene] = weight;
-
-func return_random_enemy():
-	var pool = []
-	var spawnListCopy = enemySpawnList.duplicate(true);
-	for scene in spawnListCopy.keys():
-		var weight = spawnListCopy[scene];
-		
-		while weight > 0:
-			pool.append(scene);
-			weight -= 1;
-	
-	var sceneReturn = pool.pick_random();
-	return sceneReturn;
 
 ##Returns a spawn location that isn't occupied by the player
 func return_random_unoccupied_spawn_location():

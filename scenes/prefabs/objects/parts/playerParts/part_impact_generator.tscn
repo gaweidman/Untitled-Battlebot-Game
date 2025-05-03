@@ -8,7 +8,7 @@ script = ExtResource("2_w4ulg")
 scrapCostBase = 6
 dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1)])
 partName = "Impact Generator"
-partDescription = "[color=f2ec6b]Passive: Gain 2 [color=789be9]Energy [color=f2ec6b]when taking damage."
+partDescription = "[color=f2ec6b]Passive: Gain 4 [color=789be9]Energy [color=f2ec6b]when taking damage."
 
 [node name="Tilemaps" parent="TextureBase" index="0"]
 mouse_filter = 0

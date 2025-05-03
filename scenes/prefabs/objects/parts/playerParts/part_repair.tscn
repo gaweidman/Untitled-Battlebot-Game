@@ -10,6 +10,7 @@ scrapCost = 15
 healing = 1.0
 model = null
 modelMaterial = null
+equippedBlinkyOffset = Vector2(1, 0)
 baseFireRate = 10.0
 baseDamage = 0.0
 scrapCostBase = 16

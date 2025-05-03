@@ -5,7 +5,10 @@ class_name EnemyRanger
 func _process(delta):
 	super(delta);
 	if is_instance_valid(inventory):
-		inventory.add_part_from_scene(0,0,"res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn",0);
+		add_gun();
+
+func add_gun():
+	inventory.add_part_from_scene(0,0,"res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn",0);
 
 var noFireTimer := 0.1;
 
