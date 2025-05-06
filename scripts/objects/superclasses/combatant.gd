@@ -8,6 +8,7 @@ var motionHandler : MotionHandler;
 var inventory : Inventory;
 var _partOffset1 := Vector3(0, 0.086, 0.0);
 var _partOffset2 := Vector3(0, 0.172, 0);
+var bodyMesh : MeshInstance3D; 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -17,6 +18,10 @@ func _ready() -> void:
 func assign_refs():
 	if !is_instance_valid(body):
 		body = get_node("Body");
+	else:
+		if !is_instance_valid(bodyMesh):
+			if is_instance_valid(%BotBody):
+				bodyMesh = %BotBody;
 	if !is_instance_valid(combatHandler):
 		combatHandler = get_node("CombatHandler");
 	if !is_instance_valid(motionHandler):

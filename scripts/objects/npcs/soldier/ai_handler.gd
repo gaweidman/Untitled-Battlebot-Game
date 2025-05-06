@@ -9,7 +9,7 @@ var CHARGEDIST = 8.5;
 var RUNDIST = 7.5;
 var CHARGECOOLDOWN = 2.5;
 var CHARGETIME = 2.0;
-var kitingDir = 90.0;
+var kitingDir = 80.0;
 
 func ready():
 	pass

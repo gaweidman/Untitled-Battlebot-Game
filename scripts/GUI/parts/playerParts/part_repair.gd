@@ -7,6 +7,8 @@ class_name PartRepair
 
 func _process(delta):
 	super(delta);
+	healing = inventoryNode.get_heal_amount();
+	scrapCost = inventoryNode.get_heal_price();
 	ammoAmountOverride = "$"+str(scrapCost)
 	if ! thisBot.at_max_health() && inventoryNode.is_affordable(scrapCost):
 		ammoAmountColorOverride = "utility";
@@ -18,8 +20,7 @@ func _activate():
 		if super():
 			if inventoryNode is InventoryPlayer:
 				if inventoryNode.is_affordable(scrapCost):
-					inventoryNode.remove_scrap(12);
-					thisBot.take_damage(-healing);
+					inventoryNode.heal_from_shop();
 					fx(true)
 			else:
 				fx()

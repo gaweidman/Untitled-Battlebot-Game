@@ -5,6 +5,10 @@ class_name EnemyBase;
 @export var sleepTimerLength := 0.0;
 var sleepTimer := sleepTimerLength;
 var closestAiNode : AINode;
+@export_group("Mesh")
+@export var meshMaterialOverride0 = Material;
+@export var meshMaterialOverride1 = Material;
+var meshMaterialsSet := false;
 
 func _ready():
 	super();
@@ -18,6 +22,8 @@ func take_damage(damage):
 
 func _process(delta):
 	super(delta);
+	if ! meshMaterialsSet:
+		override_mesh_materials();
 	if sleepTimer > 0:
 		sleepTimer -= delta;
 
@@ -35,3 +41,9 @@ func get_global_body_position():
 
 func get_closest_ainode():
 	return closestAiNode;
+
+func override_mesh_materials():
+	if is_instance_valid(bodyMesh):
+		bodyMesh.set_deferred("surface_material_override/0", meshMaterialOverride0);
+		bodyMesh.set_deferred("surface_material_override/1", meshMaterialOverride1);
+		meshMaterialsSet = true;

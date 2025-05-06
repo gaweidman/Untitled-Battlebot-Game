@@ -84,7 +84,7 @@ func starting_kit():
 	add_part_from_scene(3, 4, "res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn");
 	#add_part_from_scene(2, 4, "res://scenes/prefabs/objects/parts/playerParts/part_Fan.tscn");
 	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 2);
-	#add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
+	add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
 	
 	$InventoryControls/BackingTexture/Shop.reroll_shop();
 	scrap = 0;
@@ -366,5 +366,14 @@ func get_bonus_Energy_regen():
 			if child is PartPassive:
 				bonus += child.bonusEnergyRegen;
 	return bonus;
+
+##As mentioned in the parent script, this grab's the shop's price for healing the player.
+func get_heal_price():
+	return HUD_shop.get_heal_price();
+##As mentioned in the parent script, this grab's the shop's heal amount for healing the player.
+func get_heal_amount():
+	return HUD_shop.get_heal_amount();
+func heal_from_shop():
+	HUD_shop._on_heal_button_pressed();
 
 ###################

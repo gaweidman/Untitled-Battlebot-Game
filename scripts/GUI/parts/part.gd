@@ -340,6 +340,7 @@ func get_inventory_slot_priority():
 		return slotsDict[invPosition];
 	return 0;
 
+
 ##A dictionary whose sole purpose is as reference for [Part.get_inventory_slot_priority].
 const slotsDict := {
 	## Row 0

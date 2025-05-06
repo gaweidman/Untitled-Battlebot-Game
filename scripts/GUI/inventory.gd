@@ -215,6 +215,15 @@ func clear_inventory():
 
 #########################
 
+##This is in here for parts like Repair to look at; Returns a fixed 0 here, but the player's version ([InventoryPlayer]) returns a different value based on the shop.
+func get_heal_price():
+	return 0;
+##This is in here for parts like Repair to look at; Returns a fixed 1 here, but the player's version ([InventoryPlayer]) returns a different value based on the shop.
+func get_heal_amount():
+	return 1;
+
+#########################
+
 func _process(delta):
 	assign_references();
 

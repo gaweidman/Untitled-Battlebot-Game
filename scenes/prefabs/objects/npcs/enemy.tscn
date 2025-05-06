@@ -1,12 +1,14 @@
-[gd_scene load_steps=18 format=3 uid="uid://d12ckrvst1osp"]
+[gd_scene load_steps=20 format=3 uid="uid://d12ckrvst1osp"]
 
 [ext_resource type="Script" uid="uid://do7rqw7y5akti" path="res://scripts/objects/npcs/baseEnemy/enemy.gd" id="1_u733l"]
 [ext_resource type="Material" uid="uid://uyr61s32rxaj" path="res://graphics/materials/PlayerBody_Bottom.tres" id="2_u733l"]
+[ext_resource type="Material" uid="uid://cxguwr2myxntx" path="res://graphics/materials/models/bots/thruster.tres" id="2_uec6s"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="3_uaa5m"]
 [ext_resource type="Material" uid="uid://cbvhbi7cs2id6" path="res://graphics/materials/Treads.tres" id="4_fyoyp"]
 [ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="5_aw2uh"]
-[ext_resource type="ArrayMesh" uid="uid://ltwnall6do2t" path="res://graphics/models/obj/bot.obj" id="6_fts7a"]
+[ext_resource type="ArrayMesh" uid="uid://bmh1lb7lajb4y" path="res://graphics/models/extracted/bot.res" id="6_sbhyg"]
 [ext_resource type="PackedScene" uid="uid://dqn5vwvgp6ddp" path="res://scenes/prefabs/utilities/combat_handler.tscn" id="7_nefpp"]
+[ext_resource type="Material" uid="uid://hjfve5f811g3" path="res://graphics/materials/models/bots/tread.tres" id="7_uec6s"]
 [ext_resource type="Script" uid="uid://c25f0pj3y257c" path="res://scripts/objects/npcs/baseEnemy/combat_handler.gd" id="8_uaa5m"]
 [ext_resource type="Script" uid="uid://bxrmoul0q2cgc" path="res://scripts/objects/npcs/baseEnemy/motion_handler.gd" id="9_fyoyp"]
 [ext_resource type="Script" uid="uid://duwahhtdrj35c" path="res://scripts/objects/npcs/baseEnemy/ai_handler.gd" id="9_m42r2"]
@@ -28,6 +30,8 @@ radius = 0.611008
 
 [node name="Enemy" type="Node3D" groups=["Combatant"]]
 script = ExtResource("1_u733l")
+meshMaterialOverride0 = ExtResource("2_uec6s")
+meshMaterialOverride1 = ExtResource("7_uec6s")
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Combatant Body", "Damager"]]
 unique_name_in_owner = true
@@ -141,8 +145,8 @@ motor/max_impulse = 512.0
 [node name="BotBody" type="MeshInstance3D" parent="Body" groups=["Combatant"]]
 unique_name_in_owner = true
 transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 0, -0.263986, 0)
-material_override = ExtResource("3_uaa5m")
-mesh = ExtResource("6_fts7a")
+mesh = ExtResource("6_sbhyg")
+surface_material_override/1 = ExtResource("7_uec6s")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body" groups=["Combatant"]]
 shape = SubResource("SphereShape3D_hnom0")

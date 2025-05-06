@@ -168,7 +168,7 @@ func _on_heal_button_pressed():
 			inventory.remove_scrap(get_heal_price());
 			healPriceIncrement += healPricePressIncrement;
 			player.heal(get_heal_amount());
-			rerollPriceIncrementPermanent += 0.5;
+			healPriceIncrementPermanent += 0.5;
 	pass # Replace with function body.
 
 
