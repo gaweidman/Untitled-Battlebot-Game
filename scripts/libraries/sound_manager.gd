@@ -169,6 +169,10 @@ static var SOUNDS = {
 	],
 	"Movement.Drone": [preload("res://sounds/Movement_Drone.ogg")],
 	"Movement.Dash": [preload("res://sounds/Toaster.wav")],
+	"Movement.Whoosh": [
+		preload("res://sounds/Whoosh01.wav"),
+		preload("res://sounds/Whoosh02.wav")
+		],
 	
 	"Button.Press": [preload("res://sounds/PickupClick.wav")],
 	

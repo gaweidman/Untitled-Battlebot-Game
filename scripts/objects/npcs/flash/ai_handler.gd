@@ -47,6 +47,7 @@ func get_movement_vector():
 				var normalized = posDiff.normalized();
 				lockonPath = Vector2(normalized.x, normalized.z);
 				chargeTimeTimer = CHARGETIME;
+				SND.play_sound_at("Movement.Whoosh", selfPos, this.get_node("Body"), 1, randf_range(0.5,0.9))
 				pass;
 			else:
 				return lockonPath * CHARGESPEED;

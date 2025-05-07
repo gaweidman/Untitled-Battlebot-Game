@@ -7,6 +7,9 @@ class_name GameBoard;
 @export var enemySpawnList := {};
 @onready var playerScene = preload("res://scenes/prefabs/objects/player.tscn");
 @export var spawnChecker : ShapeCast3D;
+var spawnTimer := 0.0;
+var spawnPool := [];
+var waveSpawnList := [];
 var waveTimer := 0.0;
 var wave := 0;
 var roundEnemiesInit := 1;
@@ -31,19 +34,39 @@ func _on_scenetree_ready():
 	change_state(gameState.MAIN_MENU);
 
 func set_enemy_spawn_waves(inWave:int):
+	var changed = false;
 	if inWave == -1:
 		clear_enemy_spawn_list();
+		changed = true;
 	if inWave == 1:
-		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_ranger.tscn"), 2)
-		#add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_flash.tscn"), 4)
-		#add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_thruster.tscn"), 8)
+		#add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_ranger.tscn"), 2)
+		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_flash.tscn"), 4)
+		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_thruster.tscn"), 8)
+		changed = true;
 	if inWave == 2:
 		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_ranger.tscn"), 3)
+		changed = true;
 	if inWave == 4:
 		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_ranger.tscn"), 2)
+		changed = true;
 	if inWave == 10:
 		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_soldier.tscn"), 1)
 		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_thruster.tscn"), -3)
+		changed = true;
+	
+	if changed:
+		define_enemy_spawn_pool();
+
+func define_enemy_spawn_pool():
+	var pool = []
+	var spawnListCopy = enemySpawnList.duplicate(true);
+	for scene in spawnListCopy.keys():
+		var weight = spawnListCopy[scene];
+		
+		while weight > 0:
+			pool.append(scene);
+			weight -= 1;
+	spawnPool = pool;
 
 func clear_enemy_spawn_list():
 	enemySpawnList.clear();
@@ -57,15 +80,7 @@ func add_enemy_to_spawn_list(scene : PackedScene, weight : int):
 		enemySpawnList[scene] = weight;
 
 func return_random_enemy():
-	var pool = []
-	var spawnListCopy = enemySpawnList.duplicate(true);
-	for scene in spawnListCopy.keys():
-		var weight = spawnListCopy[scene];
-		
-		while weight > 0:
-			pool.append(scene);
-			weight -= 1;
-	
+	var pool = spawnPool;
 	var sceneReturn = pool.pick_random();
 	return sceneReturn;
 
@@ -201,8 +216,14 @@ func _process(delta):
 				#print(amtToSpawn, amtAlive)
 				spawn_wave(amtToSpawn)
 		
-		if get_enemies_left_for_wave() <= 0:
-			change_state(gameState.SHOP);
+		spawnTimer -= delta;
+		if spawnTimer <= 0:
+			spawn_enemy_from_wave();
+			
+			if get_enemies_left_for_wave() <= 0:
+				change_state(gameState.SHOP);
+			else:
+				spawnTimer=0.15;
 		
 		pass
 	elif curState == gameState.SHOP:
@@ -253,15 +274,19 @@ func spawn_wave(numOfEnemies := 0):
 	while numOfEnemies > 0 && roundEnemies > 0 && check_alive_enemies() <= 30:
 		var enemyScene = return_random_enemy();
 		var pos = return_random_unoccupied_spawn_location();
+		waveSpawnList.append(enemyScene)
+		numOfEnemies -= 1;
+
+func spawn_enemy_from_wave():
+	if waveSpawnList.size() > 0:
+		var pos = return_random_unoccupied_spawn_location();
 		if pos != null:
+			var enemyScene = waveSpawnList.pop_front();
 			var enemy = enemyScene.instantiate();
 			enemiesAlive.append(enemy);
 			add_child(enemy);
 			enemy.global_position = pos;
-		else:
-			numOfEnemies = 0;
-		numOfEnemies -= 1;
-		roundEnemies -= 1;
+			roundEnemies -= 1;
 
 func check_alive_enemies():
 	for enemy in enemiesAlive:

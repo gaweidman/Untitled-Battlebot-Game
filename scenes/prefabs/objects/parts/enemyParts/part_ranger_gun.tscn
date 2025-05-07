@@ -7,11 +7,10 @@
 [node name="RangerGun" instance=ExtResource("1_werg2")]
 script = ExtResource("2_ivrqh")
 magazineMaxBase = 2
-inaccuracy = 0.05
 firingSoundString = "Weapon.Shoot.Light"
 firingSoundPitchAdjust = 0.8
 firingSoundVolumeAdjust = 1.0
-modelOffset = Vector3(0, -0.35, 0)
+rotationSpeedFactor = 0.9
 baseFireRate = 0.75
 baseDamage = 0.5
 scrapCostBase = 5

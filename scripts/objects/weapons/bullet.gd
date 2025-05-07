@@ -15,6 +15,7 @@ var initPosition = position;
 var positionAppend := Vector3.ZERO;
 var launcher : PartActive;
 var attacker : Node3D;
+@export var tracerFXString := "BulletTracer_small";
 
 var leaking := false;
 
@@ -62,7 +63,7 @@ func fire(_attacker : Combatant, _launcher : Node ,_initPosition : Vector3, _dir
 	
 	show();
 	ParticleFX.play("SmokePuffSingle", GameState.get_game_board(), Vector3.ZERO, 0.5, self);
-	ParticleFX.play("BulletTracer", GameState.get_game_board(), Vector3.ZERO, sizeMult, self,);
+	ParticleFX.play(tracerFXString, GameState.get_game_board(), Vector3.ZERO, sizeMult, self,);
 	fired = true;
 	print("I have been fired at ", global_position, ", attacker is at ", attacker.global_position)
 
@@ -74,6 +75,8 @@ func change_direction(newAngle : Vector3):
 	rotateTowardVector3(dir);
 
 func die():
+	if visible:
+		ParticleFX.play("SmokePuffSingle", GameState.get_game_board(), position, 0.5);
 	position = Vector3.ZERO;
 	fired = false;
 	collision.set_deferred("disabled", true);

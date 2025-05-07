@@ -37,6 +37,8 @@ func _physics_process(delta):
 		
 		body.apply_central_force(forceVector);
 		
+		SND.play_sound_at("Movement.Dash", thisBot.get_node("Body").global_position, thisBot.get_node("Body"), 0.9, randf_range(0.8, 1.2));
+		
 		##Rotating the body mesh towards the movement vector
 		var rotatedMV = movementVector.rotated(deg_to_rad(90));
 		

@@ -195,7 +195,7 @@ var distributedModsAlready := false;
 
 ##The below variables are for modifier purposes.
 
-##Modifies energy recharge. Uses the Mods system.
+##The base dict for modifiers to copy from.
 const mod_resetValue = {"add": 0.0, "flat" : 0.0, "mult" : 1.0};
 ##Modifies the scrap cost. Uses the Mods system.
 var mod_scrapCost := mod_resetValue.duplicate();

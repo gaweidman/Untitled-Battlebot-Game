@@ -12,7 +12,13 @@ func _process(delta):
 		weaponNode.add_to_group("Player Part");
 		#weaponNode.add_collision_exception_with(positionNode)
 	weaponNode.set_deferred("global_position", meshNode.global_position);
-	
+
+func _physics_process(delta):
+	super(delta);
+	if ! is_instance_valid(weaponNode):
+		weaponNode = %Weapon;
+		weaponNode.add_to_group("Player Part");
+
 func _activate():
 	if super():
 		if can_fire():

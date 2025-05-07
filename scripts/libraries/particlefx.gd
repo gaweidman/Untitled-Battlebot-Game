@@ -1,11 +1,12 @@
 extends Node;
 
-var PFX_LIST = {
+const PFX_LIST = {
 	"NutsBolts": preload("res://scenes/prefabs/particle-fx/BoltsHit.tscn"),
 	"Smoke": preload("res://scenes/prefabs/particle-fx/SmokePuffs.tscn"),
 	"SmokePuffSingle": preload("res://scenes/prefabs/particle-fx/SmokePuffSingle.tscn"),
 	"Sparks": preload("res://scenes/prefabs/particle-fx/HitSparksTest.tscn"),
-	"BulletTracer": preload("res://scenes/prefabs/particle-fx/BulletTracer.tscn")
+	"BulletTracer": preload("res://scenes/prefabs/particle-fx/BulletTracer.tscn"),
+	"BulletTracer_small": preload("res://scenes/prefabs/particle-fx/BulletTracer.tscn")
 }
 
 func _ready():

@@ -62,18 +62,28 @@ func _process(delta: float) -> void:
 		pass
 	else:
 		viewport = get_viewport();
-	if is_instance_valid(playerBody):
+
+func _physics_process(delta):
+	if is_instance_valid(playerBody) && is_instance_valid(viewport):
 		var inp = GameState.get_input_handler();
 		var inpVec = inp.get_movement_vector();
 		modInpVec = - Vector3(inpVec.x, 0, inpVec.y);
-		modMouseVec = InputHandler.mouseProjectionRotation(self);
+		var mousePos = viewport.get_mouse_position();
+		var viewRect = viewport.get_visible_rect();
+		var mousePosMoved = (mousePos - (viewRect.size / 2)) / (viewRect.size / 2)
+		var targetInputOffsetX = (-mousePosMoved.x);
+		var targetInputOffsetZ = (-mousePosMoved.y);
+		#targetRotationX = deg_to_rad(-64.3) +  (mousePosMoved.y / -15);sa
+		#targetRotationZ = (mousePosMoved.x / -15);
+		modMouseVec = Vector3(targetInputOffsetX, 0, targetInputOffsetZ)
+		#modMouseVec = InputHandler.mouseProjectionRotation(self);
+		
 		targetInputOffset = modMouseVec + modInpVec;
+		inputOffset = lerp (inputOffset, targetInputOffset, delta * 5)
 		targetPosition = playerBody.get_global_position() + cameraOffset + inputOffset;
 	else:
+		viewport = get_viewport();
 		playerBody = GameState.get_player_body();
-
-func _physics_process(delta):
-	inputOffset = lerp (inputOffset, targetInputOffset, delta * 5)
 	position = lerp(position, targetPosition, delta * 10);
 	
 	##if raycastPos:

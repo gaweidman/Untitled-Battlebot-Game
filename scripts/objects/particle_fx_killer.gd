@@ -5,6 +5,7 @@ class_name ParticleEffect
 var checkTimer := 1.0;
 var nodeToFollow : Node3D;
 var posOffset : Vector3;
+@export var forceFireOnce := false;
 
 func _ready():
 	emit();
@@ -13,6 +14,8 @@ func emit():
 	for child in get_children():
 		if child is GPUParticles3D:
 			child.emitting = true;
+			if forceFireOnce:
+				child.one_shot = true;
 
 func _process(delta):
 	if is_instance_valid(nodeToFollow):

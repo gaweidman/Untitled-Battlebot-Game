@@ -37,7 +37,7 @@ func contact_damage(collider: Node) -> void:
 		else:
 			return;
 
-func _process(delta):
+func _physics_process(delta):
 	super(delta);
 	#modelScaleOffset += Vector3(1,1,1) * delta
 	modelScaleOffset = lerp(modelScaleOffset, Vector3.ONE, delta * 10);

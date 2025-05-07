@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bfg5tgkahtk0p" path="res://scenes/prefabs/particle-fx/SmokePuffs.tscn" id="1_sfksj"]
 
 [node name="SmokePuffSingle" instance=ExtResource("1_sfksj")]
+forceFireOnce = true
 
 [node name="Hit" parent="." index="0"]
 emitting = false

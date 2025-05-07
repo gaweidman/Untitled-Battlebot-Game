@@ -41,6 +41,12 @@ var baseEnergyCostModifier = baseEnergyCost;
 ##This energy cost modifier interacts with the Mods system.
 var mod_energyCost := mod_resetValue.duplicate();
 
+func get_damage(base:=false):
+	if !base:
+		return damage;
+	else:
+		return baseDamageModifier * (baseDamage + mod_damage.add) * (mod_damage.mult * mod_damage.flat);
+
 ##This is the base fire rate (in seconds) for the part's active ability. Do not modify in code.
 @export var baseFireRate := 0.15;
 ##This is the calculated fire rate (in seconds) for the part's active ability.
@@ -52,6 +58,12 @@ var fireRateTimer := 0.0;
 ##This fire rate modifier interacts with the Mods system.
 var mod_fireRate := mod_resetValue.duplicate();
 
+func get_fire_rate(base:=false):
+	if !base:
+		return fireRate;
+	else:
+		return baseFireRateModifier * (baseFireRate + mod_fireRate.add) * (mod_fireRate.mult * mod_fireRate.flat);
+
 ##This is the base damage before any modifiers. Do not modify in code.
 @export var baseDamage := 1.0;
 ##This modifier can be changed within the part itself; used fo rthings like sawblade gaining damage when using its active.
@@ -62,6 +74,12 @@ var baseDamageModifier := 1.0;
 var damage := baseDamage;
 ##This damage modifier interacts with the Mods system.
 var mod_damage := mod_resetValue.duplicate();
+
+func get_energy_cost(base:=false):
+	if !base:
+		return energyCost;
+	else:
+		return baseEnergyCostModifier * (baseEnergyCost + mod_energyCost.add) * (mod_energyCost.mult * mod_energyCost.flat);
 
 func mods_reset(foo:=false):
 	super(foo);
@@ -93,24 +111,6 @@ func _activate():
 	else:
 		return false;
 
-func get_damage(base:=false):
-	if !base:
-		return damage;
-	else:
-		return baseDamageModifier * (baseDamage + mod_damage.add) * (mod_damage.mult * mod_damage.flat);
-
-func get_fire_rate(base:=false):
-	if !base:
-		return fireRate;
-	else:
-		return baseFireRateModifier * (baseFireRate + mod_fireRate.add) * (mod_fireRate.mult * mod_fireRate.flat);
-
-func get_energy_cost(base:=false):
-	if !base:
-		return energyCost;
-	else:
-		return baseEnergyCostModifier * (baseEnergyCost + mod_energyCost.add) * (mod_energyCost.mult * mod_energyCost.flat);
-
 func energy_affordable() -> bool:
 	if is_instance_valid(combatHandler):
 		return combatHandler.energy_affordable(get_energy_cost());
@@ -132,6 +132,7 @@ func _assign_refs():
 			positionNode = thisBot.body;
 
 func _physics_process(delta):
+	_assign_refs();
 	if looksAtMouse: call_deferred("_rotate_to_look_at_mouse",delta)
 	if rotateWithPlayer: call_deferred("_rotate_with_player");
 
@@ -156,7 +157,7 @@ func _process(delta):
 	else:
 		fireRateTimer -= delta;
 	
-	_assign_refs()
+	_assign_refs();
 	if is_instance_valid(positionNode):
 		if get_equipped() == false:
 			if meshNode.visible == true:
@@ -179,9 +180,10 @@ func _process(delta):
 					if meshNode.visible == false:
 						meshNode.show()
 	meshNode.set_deferred("position", modelOffset);
-	damage = (baseDamage + mod_damage.flat) * baseDamageModifier * damageModifier * mod_damage.mult;
-	fireRate = (baseFireRate + mod_fireRate.flat) * baseDamageModifier * mod_fireRate.mult;
-	energyCost = (baseEnergyCost + mod_energyCost.flat) * baseEnergyCostModifier * mod_energyCost.mult;
+	damage = (baseDamage + mod_damage.add) * baseDamageModifier * damageModifier * (1 + (mod_damage.flat * mod_damage.mult));
+	fireRate = (baseFireRate + mod_fireRate.add) * baseDamageModifier * (1 + (mod_fireRate.flat * mod_fireRate.mult));
+	energyCost = (baseEnergyCost + mod_energyCost.add) * baseEnergyCostModifier * (1 + (mod_energyCost.flat * mod_energyCost.mult));
+	
 
 func _rotate_to_look_at_mouse(delta):
 	prevRot = rot;
