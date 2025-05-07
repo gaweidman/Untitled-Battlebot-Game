@@ -16,7 +16,6 @@ surface_material_override/0 = ExtResource("4_x6ndg")
 
 [node name="CombatHandler" parent="." index="3"]
 scrap_worth = 3
-energyRefreshRate = 0.5
 
 [node name="MotionHandler" parent="." index="4"]
 script = ExtResource("6_x6ndg")

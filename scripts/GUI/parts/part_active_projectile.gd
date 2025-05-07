@@ -16,7 +16,6 @@ var magazineMaxModifier := 1.0;
 @export var fireSpeed := 30.0;
 @export var bulletLifetime := 1.0;
 var firingAngle := Vector3.BACK;
-@export var firingOffset := Vector3(0,0.50,0);
 ##An inaccuracy added to its firing.
 @export var inaccuracy := 0.05;
 @export_category("Firing Sound")
@@ -71,10 +70,7 @@ func fireBullet():
 	
 	if is_instance_valid(bullet):
 		Hooks.OnFireProjectile(self, bullet);
-		if thisBot is Player:
-			firingAngle = InputHandler.mouseProjectionRotation(positionNode);
-		else:
-			firingAngle = InputHandler.playerPosRotation(positionNode);
+		firingAngle = Vector3.BACK.rotated(Vector3(0,1,0), aimingRotAngle + deg_to_rad(90));
 		firingAngle += inaccuracy * Vector3(randf_range(-1,1),randf_range(-1,1),randf_range(-1,1));
 		firingAngle = firingAngle.normalized();
 		bullet.fire(thisBot, self, positionNode.global_position + firingOffset + modelOffset, firingAngle, fireSpeed, bulletLifetime, get_damage());

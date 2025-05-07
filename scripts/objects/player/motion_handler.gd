@@ -64,34 +64,35 @@ func _on_collision(other:PhysicsBody3D, this:PhysicsBody3D=%Body):
 		##print(other.get_attacker())
 		#combatHandler.take_damage(1);
 
-func _on_radius_check_area_entered(newNode: AINode) -> void:
-	var nodesInRadius = %RadiusCheck.get_overlapping_areas();
-	var ply = GameState.get_player()
-	
-	if nodesInRadius.size() > 1:
-		var closestNode
-		var closestNodePos
-		var distanceSqr
-		var playerPos = ply.get_global_body_position();
+func _on_radius_check_area_entered(newNode) -> void:
+	if newNode is AINode:
+		var nodesInRadius = %RadiusCheck.get_overlapping_areas();
+		var ply = GameState.get_player()
 		
-		for aiNode in nodesInRadius:
-			print_rich("[color=darkorange] ", newNode is AINode, " ", aiNode is AINode, " [/color]")
-			if !closestNode:
-				closestNode = aiNode;
-				closestNodePos = closestNode.get_global_position();
-				distanceSqr = closestNodePos.distance_squared_to(playerPos);
-			else:
-				var newPos = aiNode.get_global_position()
-				var newDist = newPos.distance_squared_to(playerPos)
-				if newDist < distanceSqr:
+		if nodesInRadius.size() > 1:
+			var closestNode
+			var closestNodePos
+			var distanceSqr
+			var playerPos = ply.get_global_body_position();
+			
+			for aiNode in nodesInRadius:
+				print_rich("[color=darkorange] ", newNode is AINode, " ", aiNode is AINode, " [/color]")
+				if !closestNode:
 					closestNode = aiNode;
-					closestNodePos = newPos;
-					distanceSqr = newDist;
-					
-		print("CLOSEST NODE", closestNode.get_parent(), closestNode)
-		
-		ply.closestAiNode = closestNode as AINode;
-	else:
-		ply.closestAiNode = newNode as AINode;
-		
-	%RadiusCheck.set_scale(Vector3(7, 7, 7))
+					closestNodePos = closestNode.get_global_position();
+					distanceSqr = closestNodePos.distance_squared_to(playerPos);
+				else:
+					var newPos = aiNode.get_global_position()
+					var newDist = newPos.distance_squared_to(playerPos)
+					if newDist < distanceSqr:
+						closestNode = aiNode;
+						closestNodePos = newPos;
+						distanceSqr = newDist;
+						
+			print("CLOSEST NODE", closestNode.get_parent(), closestNode)
+			
+			ply.closestAiNode = closestNode as AINode;
+		else:
+			ply.closestAiNode = newNode as AINode;
+			
+		%RadiusCheck.set_scale(Vector3(7, 7, 7))

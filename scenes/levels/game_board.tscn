@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=29 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena/arena_floor.tres" id="2_4jixe"]
@@ -7,8 +7,10 @@
 [ext_resource type="Script" uid="uid://dwjkokqe7vwbb" path="res://scripts/objects/death_plane.gd" id="4_uflb5"]
 [ext_resource type="ArrayMesh" uid="uid://b4ai185oa1w42" path="res://graphics/models/extracted/arena_wall.res" id="5_4jixe"]
 [ext_resource type="Script" uid="uid://dr0v7dohkt13a" path="res://scripts/objects/camera_3d.gd" id="5_l5xbb"]
+[ext_resource type="ArrayMesh" uid="uid://cyaynswn0bhks" path="res://graphics/models/extracted/bullet2.res" id="8_7s7sx"]
 [ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/prefabs/objects/damage_cube.tscn" id="8_hfgcm"]
 [ext_resource type="Script" uid="uid://ct0mq8smfqpjl" path="res://scripts/libraries/sound_manager.gd" id="9_hh74c"]
+[ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="9_l8dsy"]
 [ext_resource type="Script" uid="uid://bjwlquka60rm4" path="res://scripts/GUI/options.gd" id="9_x282c"]
 [ext_resource type="PackedScene" uid="uid://b2vped1gbe1st" path="res://scenes/prefabs/aimap.tscn" id="11_c2xgd"]
 [ext_resource type="AudioStream" uid="uid://clkb8qmb50nhq" path="res://sounds/music/Battlebot(Base).ogg" id="15_7s7sx"]
@@ -73,13 +75,14 @@ material_override = ExtResource("2_4jixe")
 mesh = ExtResource("3_e8tnf")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="ArenaFloor" groups=["Concrete", "World", "WorldFloor"]]
-collision_layer = 3
+collision_layer = 259
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaFloor/StaticBody3D" groups=["Concrete", "World", "WorldFloor"]]
 shape = SubResource("ConcavePolygonShape3D_er3fg")
 
 [node name="DeathPlane" type="Area3D" parent="ArenaFloor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.02013, 0)
+collision_layer = 257
 script = ExtResource("4_uflb5")
 
 [node name="FloorShape" type="CollisionShape3D" parent="ArenaFloor/DeathPlane" groups=["Concrete", "World", "WorldFloor"]]
@@ -499,10 +502,23 @@ size = Vector3(2.10107, 3.07037, 6.22781)
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.604794, 0.796382, 0, -0.796382, 0.604794, -2.58875, 47.1188, -0.186724)
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("marker", "ray", "floor")]
 transform = Transform3D(-1, 5.35821e-08, -6.90776e-08, -3.9001e-08, 0.433738, 0.901039, 7.82411e-08, 0.901039, -0.433738, 0, 8.3591, -5.84694)
 fov = 90.0
 script = ExtResource("5_l5xbb")
+marker = NodePath("MouseProjectionMarker")
+ray = NodePath("RayCast3D")
+floor = NodePath("../ArenaFloor/StaticBody3D")
+
+[node name="MouseProjectionMarker" type="MeshInstance3D" parent="Camera3D"]
+transform = Transform3D(0.230205, 0, 8.88178e-16, 1.77636e-15, 0.230205, 0, 0, 0, 0.230205, 0, 0, 0)
+visible = false
+mesh = ExtResource("8_7s7sx")
+surface_material_override/0 = ExtResource("9_l8dsy")
+
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
+visible = false
+target_position = Vector3(0, 0, -50)
 
 [node name="HUD" type="Control" parent="."]
 unique_name_in_owner = true

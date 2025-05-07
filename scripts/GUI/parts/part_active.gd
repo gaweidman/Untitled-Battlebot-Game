@@ -2,25 +2,37 @@ extends Part
 
 class_name PartActive
 
+@export_group("References")
 @export var meshNode : MeshInstance3D;
 @export var model : Mesh;
 @export var modelMaterial : StandardMaterial3D;
-@export var modelOffset = Vector3(0,0,0);
-@export var modelScale = Vector3(1,1,1);
-@export var positionNode : Node3D; ##This needs to be the thing with the position on it - in thbis case, the Body node
+@export var positionNode : Node3D; ##This needs to be the thing with the position on it - in this case, the Body node
+var unequippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_unequpped.png");
+var equippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_equpped.png");
 @export var equippedBlinky : TextureRect;
 @export var equippedBlinkyOffset := partIconOffset;
-@export var looksAtMouse := true;
-@export var rotateWithPlayer := false;
 var combatHandler : CombatHandler;
 var inputHandler : InputHandler;
 var motionHandler : MotionHandler;
+@export_group("Rotation and offsets")
+@export var looksAtMouse := true;
+@export var rotateWithPlayer := false;
+@export var rotationSpeedFactor := 1.0; ##This is multiplied by 30 as a lerp_angle() delta component.
+@export var modelOffset = Vector3(0,0,0);
+@export var modelScale = Vector3(1,1,1);
+@export var firingOffset := Vector3(0,0.50,0); ##This is mainly used in gameplay for ranged parts, but needs to be here so parts that look at the mouse can take it into account.
+var rot := Vector3.ZERO;
+var prevRot := rot;
+var rotAngle := 0.0;
+var prevRotAngle := rotAngle;
+var targetRotAngle := rotAngle;
+var aimingRotAngle := targetRotAngle;
 var equipped := false;
-var unequippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_unequpped.png");
-var equippedBlinkySprite = preload("res://graphics/images/HUD/parts/partActiveCorner_equpped.png");
+@export_group("Active tab")
 @export var ammoAmountOverride : String;
 @export var ammoAmountColorOverride := "ranged";
 
+@export_group("Modifiable Stats")
 @export var baseEnergyCost = 1.0;
 ##This is the calculated final energy cost.
 var energyCost = baseEnergyCost;
@@ -172,17 +184,58 @@ func _process(delta):
 	energyCost = (baseEnergyCost + mod_energyCost.flat) * baseEnergyCostModifier * mod_energyCost.mult;
 
 func _rotate_to_look_at_mouse(delta):
-	var rot = Vector3.ZERO;
+	prevRot = rot;
+	rot = Vector3.ZERO;
+	prevRotAngle = rotAngle;
+	rotAngle = 0.0;
+	#targetRotAngle
+	
 	if is_instance_valid(positionNode):
 		if thisBot is Player:
-			rot = InputHandler.mouseProjectionRotation(positionNode);
+			var cam = GameState.get_camera();
+			if is_instance_valid(cam):
+				#rot = InputHandler.mouseProjectionRotation(positionNode);
+				if positionNode.global_position is Vector3 and firingOffset is Vector3 and modelOffset is Vector3:
+					var mouseAim = cam.get_rotation_to_fake_aiming(positionNode.global_position + firingOffset + modelOffset);
+					if mouseAim:
+						rotAngle = mouseAim;
+					else:
+						rotAngle = prevRotAngle;
+				#print(rot)
+					targetRotAngle = rotAngle;
+				else:
+					rotAngle = prevRotAngle;
+					targetRotAngle = rotAngle;
+				
+				#if is_instance_valid(meshNode):
+					#meshNode.rotation.y = lerp_angle(meshNode.rotation.y, -targetRotAngle, delta * 30);
 		else:
-			rot = InputHandler.playerPosRotation(positionNode);
-		rot = rot.rotated(Vector3(0,1,0), deg_to_rad(90))
-		#print(rot)
-		if is_instance_valid(meshNode):
-			meshNode.look_at(meshNode.global_transform.origin + rot, Vector3.UP)
-			meshNode.set_deferred("rotation", meshNode.rotation +  positionNode.rotation);
+			var posV2 = Vector2(positionNode.global_position.x, positionNode.global_position.z);
+			var playerPos = GameState.get_player_position();
+			var playerPosV2 = Vector2(playerPos.x, playerPos.z);
+			rotAngle = posV2.angle_to_point(playerPosV2);
+			targetRotAngle = rotAngle;
+			#rot = InputHandler.playerPosRotation(positionNode);
+			#rot = rot.rotated(Vector3(0,1,0), deg_to_rad(90))
+			#print(rot);
+			
+			#targetRotAngle = positionNode.global_position
+			#if is_instance_valid(meshNode):
+				#meshNode.look_at(meshNode.global_transform.origin + rot, Vector3.UP)
+				#meshNode.set_deferred("rotation", meshNode.rotation +  positionNode.rotation);
+	
+	if is_instance_valid(meshNode):
+		aimingRotAngle = lerp_angle(aimingRotAngle, -targetRotAngle, delta * 30.0 * rotationSpeedFactor)
+		meshNode.rotation.y = aimingRotAngle;
+
+func slerp_rotation(transform:Transform3D, transform2:Transform3D):
+	# Convert basis to quaternion, keep in mind scale is lost
+	var a = Quaternion(transform.basis)
+	var b = Quaternion(transform2.basis)
+	# Interpolate using spherical-linear interpolation (SLERP).
+	var c = a.slerp(b,0.5) # find halfway point between a and b
+	# Apply back
+	transform.basis = Basis(c)
 
 func _rotate_with_player():
 	if thisBot is Player:

@@ -149,7 +149,7 @@ func start_death_timer(_startTime := 120.0, _reset := false):
 	
 	tmr.start(_startTime, _reset)
 
-func get_camera() -> Camera3D:
+func get_camera() -> Camera:
 	var brd = get_game_board();
 	
 	return brd.get_node_or_null("Camera3D")

@@ -86,31 +86,32 @@ func _on_body_entered(otherBody: Node) -> void:
 	if otherBody.get_name() == "ArenaWall":
 		Hooks.OnWallCollision(%Body);
 		
-func _on_radius_check_area_entered(newNode: AINode) -> void:
-	print("[color=Cyan]area entered[/color]")
-	var nodesInRadius = %RadiusCheck.get_overlapping_areas();
-	var thisBot = get_parent();
-	
-	if nodesInRadius.size() > 1:
-		var closestNode
-		var closestNodePos
-		var distanceSqr
-		var thisPos = thisBot.get_global_body_position();
+func _on_radius_check_area_entered(newNode) -> void:
+	if newNode is AINode:
+		print("[color=Cyan]area entered[/color]")
+		var nodesInRadius = %RadiusCheck.get_overlapping_areas();
+		var thisBot = get_parent();
 		
-		for aiNode in nodesInRadius:
-			if !closestNode:
-				closestNode = aiNode;
-				closestNodePos = closestNode.get_global_position();
-				distanceSqr = closestNodePos.distance_squared_to(thisPos);
-			else:
-				var newPos = aiNode.get_global_position();
-				var newDist = newPos.distance_squared_to(thisPos)
-				if newDist < distanceSqr:
+		if nodesInRadius.size() > 1:
+			var closestNode
+			var closestNodePos
+			var distanceSqr
+			var thisPos = thisBot.get_global_body_position();
+			
+			for aiNode in nodesInRadius:
+				if !closestNode:
 					closestNode = aiNode;
-					closestNodePos = newPos;
-					distanceSqr = newDist;
-		
-		thisBot.closestAiNode = closestNode as AINode;
-	else:
-		thisBot.closestAiNode = newNode as AINode;
+					closestNodePos = closestNode.get_global_position();
+					distanceSqr = closestNodePos.distance_squared_to(thisPos);
+				else:
+					var newPos = aiNode.get_global_position();
+					var newDist = newPos.distance_squared_to(thisPos)
+					if newDist < distanceSqr:
+						closestNode = aiNode;
+						closestNodePos = newPos;
+						distanceSqr = newDist;
+			
+			thisBot.closestAiNode = closestNode as AINode;
+		else:
+			thisBot.closestAiNode = newNode as AINode;
 		
