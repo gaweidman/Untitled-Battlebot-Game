@@ -170,7 +170,6 @@ func enter_state(state:gameState):
 		
 		pass
 	elif state == gameState.PLAY:
-		MUSIC.change_state(MusicHandler.musState.BATTLING);
 		pass
 	elif state == gameState.SHOP:
 		MUSIC.change_state(MusicHandler.musState.SHOP);
@@ -179,7 +178,7 @@ func enter_state(state:gameState):
 		player.enter_shop();
 		pass
 	elif state == gameState.INIT_ROUND:
-		MUSIC.change_state(MusicHandler.musState.SHOP);
+		MUSIC.change_state(MusicHandler.musState.PREGAME);
 		
 		round += 1;
 		set_enemy_spawn_waves(round);
@@ -215,6 +214,7 @@ func _process(delta):
 				#var amtToSpawn = max(0, min(1, 1 - amtAlive))
 				#print(amtToSpawn, amtAlive)
 				spawn_wave(amtToSpawn)
+				MUSIC.change_state(MusicHandler.musState.BATTLING);
 		
 		spawnTimer -= delta;
 		if spawnTimer <= 0:
