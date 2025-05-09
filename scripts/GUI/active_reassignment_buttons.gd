@@ -19,3 +19,7 @@ func _on_slot_1_pressed():
 func _on_slot_2_pressed():
 	reassignment_button_pressed.emit(2);
 	pass # Replace with function body.
+
+func _on_slot_3_pressed():
+	reassignment_button_pressed.emit(3);
+	pass # Replace with function body.

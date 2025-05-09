@@ -13,7 +13,7 @@ var invincibleTimer := 0.0;
 var thisBot : Combatant;
 var body : RigidBody3D;
 
-var activeParts = { 0 : null, 1: null, 2: null}
+var activeParts = { 0 : null, 1: null, 2: null, 3: null}
 
 func _ready():
 	thisBot = get_parent();
@@ -101,7 +101,7 @@ func get_active_part(index) -> PartActive:
 	return null;
 
 func is_active_slot_empty(index):
-	if !(index <= 2 && index >= 0):
+	if !(index <= 3 && index >= 0):
 		return false;
 	if index in activeParts:
 		if activeParts[index] == null:

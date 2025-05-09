@@ -10,6 +10,7 @@ var player;
 @export var activeSlotTab0 : ActiveSlotTab;
 @export var activeSlotTab1 : ActiveSlotTab;
 @export var activeSlotTab2 : ActiveSlotTab;
+@export var activeSlotTab3 : ActiveSlotTab;
 
 var activeSlotTabs := {};
 
@@ -22,6 +23,7 @@ func _ready() -> void:
 		0 : activeSlotTab0,
 		1 : activeSlotTab1,
 		2 : activeSlotTab2,
+		3 : activeSlotTab3,
 	}
 	pass # Replace with function body.
 
@@ -59,6 +61,7 @@ func die():
 	remove_active_part(0);
 	remove_active_part(1);
 	remove_active_part(2);
+	remove_active_part(3);
 	ParticleFX.play("NutsBolts", GameState.get_game_board(), body.global_position);
 	pass;
 
@@ -125,6 +128,8 @@ func check_active_slots_for_part(part:Part, ignoreIndex:int):
 		return true;
 	if get_active_part(2) == part && ignoreIndex != 2: 
 		return true;
+	if get_active_part(3) == part && ignoreIndex != 3: 
+		return true;
 	return false;
 
 func get_next_empty_active_slot():
@@ -137,6 +142,9 @@ func get_next_empty_active_slot():
 	if is_active_slot_empty(1): 
 		print("slot 1 is empty")
 		return 1;
+	if is_active_slot_empty(3): 
+		print("slot 3 is empty")
+		return 3;
 	#print(activeParts)
 	print("No slot is empty")
 	return null;

@@ -12,7 +12,7 @@ meshMaterialOverride0 = ExtResource("3_mgaks")
 
 [node name="CombatHandler" parent="." index="3"]
 scrap_worth = 3
-maxHealth = 1.5
+maxHealth = 1.75
 
 [node name="MotionHandler" parent="." index="4"]
 script = ExtResource("6_02bxe")

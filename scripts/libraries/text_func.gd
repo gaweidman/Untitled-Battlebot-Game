@@ -3,7 +3,7 @@ extends Node
 
 func format_stat(num:float, decimals:int=2):
 	if decimals <= 0:
-		return str(round_to_dec(num, 0));
+		return str(int(round_to_dec(num, 0)));
 	else:
 		return str(round_to_dec(num, decimals));
 

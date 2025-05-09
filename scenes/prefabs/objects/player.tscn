@@ -312,11 +312,12 @@ unique_name_in_owner = true
 
 [node name="Weapon" type="AudioStreamPlayer3D" parent="_AudioStreamPlayers"]
 
-[node name="CombatHandler" parent="." node_paths=PackedStringArray("activeSlotTab0", "activeSlotTab1", "activeSlotTab2") instance=ExtResource("5_8qfif")]
+[node name="CombatHandler" parent="." node_paths=PackedStringArray("activeSlotTab0", "activeSlotTab1", "activeSlotTab2", "activeSlotTab3") instance=ExtResource("5_8qfif")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.388926, 0)
 activeSlotTab0 = NodePath("../Inventory/InventoryControls/ActiveSlot0")
 activeSlotTab1 = NodePath("../Inventory/InventoryControls/ActiveSlot1")
 activeSlotTab2 = NodePath("../Inventory/InventoryControls/ActiveSlot2")
+activeSlotTab3 = NodePath("../Inventory/InventoryControls/ActiveSlot3")
 maxHealth = 3.0
 energyRefreshRate = 1.65
 
@@ -328,7 +329,6 @@ script = ExtResource("7_bdmj6")
 maxSpeed = 13.0
 
 [node name="Inventory" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 7
 anchor_left = 0.5
@@ -362,9 +362,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 53.0
+offset_left = -19.0
 offset_top = -413.002
-offset_right = 127.0
+offset_right = 55.0
 offset_bottom = -298.002
 texture = ExtResource("11_3ki25")
 script = ExtResource("12_maiqi")
@@ -464,6 +464,115 @@ offset_right = 34.0
 offset_bottom = 80.0
 texture = ExtResource("15_maiqi")
 
+[node name="ActiveSlot1" type="TextureRect" parent="Inventory/InventoryControls"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 53.0
+offset_top = -413.002
+offset_right = 127.0
+offset_bottom = -298.002
+texture = ExtResource("11_3ki25")
+script = ExtResource("12_maiqi")
+
+[node name="MouseIndicator" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 24.0
+offset_right = 45.0
+offset_bottom = 44.0
+texture = ExtResource("16_fh32w")
+
+[node name="EnergyCost" type="Label" parent="Inventory/InventoryControls/ActiveSlot1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -67.0
+offset_right = 32.0
+offset_bottom = -47.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="AmmoCounter" type="Label" parent="Inventory/InventoryControls/ActiveSlot1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -51.0
+offset_right = 32.0
+offset_bottom = -31.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "∞"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="PartName" type="Label" parent="Inventory/InventoryControls/ActiveSlot1"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -34.0
+offset_top = -33.0
+offset_right = 34.0
+offset_bottom = 1.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/line_spacing = -6
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 12
+text = "Ranger Gun"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ScreenHolder" type="Control" parent="Inventory/InventoryControls/ActiveSlot1"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_top = -64.0
+offset_right = -2.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ScreenBack" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1/ScreenHolder"]
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 30.0
+texture = ExtResource("14_3ki25")
+
+[node name="PartIcon" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 52.0
+offset_right = 34.0
+offset_bottom = 80.0
+texture = ExtResource("15_maiqi")
+
 [node name="ActiveSlot2" type="TextureRect" parent="Inventory/InventoryControls"]
 layout_mode = 1
 anchors_preset = -1
@@ -484,7 +593,7 @@ offset_left = 29.0
 offset_top = 24.0
 offset_right = 45.0
 offset_bottom = 44.0
-texture = ExtResource("16_fh32w")
+texture = ExtResource("17_58nj6")
 
 [node name="EnergyCost" type="Label" parent="Inventory/InventoryControls/ActiveSlot2"]
 layout_mode = 1
@@ -573,7 +682,7 @@ offset_right = 34.0
 offset_bottom = 80.0
 texture = ExtResource("15_maiqi")
 
-[node name="ActiveSlot1" type="TextureRect" parent="Inventory/InventoryControls"]
+[node name="ActiveSlot3" type="TextureRect" parent="Inventory/InventoryControls"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -581,21 +690,21 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = 197.0
-offset_top = -413.002
+offset_top = -413.0
 offset_right = 271.0
-offset_bottom = -298.002
+offset_bottom = -298.0
 texture = ExtResource("11_3ki25")
 script = ExtResource("12_maiqi")
 
-[node name="MouseIndicator" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1"]
+[node name="MouseIndicator" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot3"]
 layout_mode = 0
 offset_left = 29.0
 offset_top = 24.0
 offset_right = 45.0
 offset_bottom = 44.0
-texture = ExtResource("17_58nj6")
+texture = ExtResource("13_fh32w")
 
-[node name="EnergyCost" type="Label" parent="Inventory/InventoryControls/ActiveSlot1"]
+[node name="EnergyCost" type="Label" parent="Inventory/InventoryControls/ActiveSlot3"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -614,7 +723,7 @@ text = "0"
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="AmmoCounter" type="Label" parent="Inventory/InventoryControls/ActiveSlot1"]
+[node name="AmmoCounter" type="Label" parent="Inventory/InventoryControls/ActiveSlot3"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -633,7 +742,7 @@ text = "∞"
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="PartName" type="Label" parent="Inventory/InventoryControls/ActiveSlot1"]
+[node name="PartName" type="Label" parent="Inventory/InventoryControls/ActiveSlot3"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -653,7 +762,7 @@ text = "Ranger Gun"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="ScreenHolder" type="Control" parent="Inventory/InventoryControls/ActiveSlot1"]
+[node name="ScreenHolder" type="Control" parent="Inventory/InventoryControls/ActiveSlot3"]
 clip_contents = true
 layout_mode = 1
 anchors_preset = 7
@@ -668,13 +777,13 @@ offset_bottom = -34.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="ScreenBack" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1/ScreenHolder"]
+[node name="ScreenBack" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot3/ScreenHolder"]
 layout_mode = 0
 offset_right = 30.0
 offset_bottom = 30.0
 texture = ExtResource("14_3ki25")
 
-[node name="PartIcon" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1"]
+[node name="PartIcon" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot3"]
 layout_mode = 0
 offset_left = 6.0
 offset_top = 52.0
@@ -767,7 +876,7 @@ transparent_bg = true
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
 size = Vector2i(204, 72)
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="BarHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/HealthBar/SubViewport"]
 texture_filter = 1
@@ -854,7 +963,7 @@ transparent_bg = true
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
 size = Vector2i(204, 72)
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="BarHolder" type="Control" parent="Inventory/InventoryControls/BackingTexture/EnergyBar/SubViewport"]
 texture_filter = 1
@@ -1746,10 +1855,20 @@ script = ExtResource("59_kapkf")
 
 [node name="Slot0" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons"]
 layout_mode = 0
+offset_left = -71.0
+offset_top = -2.0332
+offset_right = -5.0
+offset_bottom = 24.9668
+texture_normal = ExtResource("60_8abbg")
+texture_pressed = ExtResource("61_n1h3t")
+texture_disabled = ExtResource("62_ltg8k")
+
+[node name="Slot1" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons"]
+layout_mode = 0
 offset_left = 1.0
-offset_top = -0.0332031
+offset_top = -2.0332
 offset_right = 67.0
-offset_bottom = 26.9668
+offset_bottom = 24.9668
 texture_normal = ExtResource("60_8abbg")
 texture_pressed = ExtResource("61_n1h3t")
 texture_disabled = ExtResource("62_ltg8k")
@@ -1757,24 +1876,25 @@ texture_disabled = ExtResource("62_ltg8k")
 [node name="Slot2" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons"]
 layout_mode = 0
 offset_left = 73.0
-offset_top = -0.0332031
+offset_top = -2.0332
 offset_right = 139.0
-offset_bottom = 26.9668
+offset_bottom = 24.9668
 texture_normal = ExtResource("60_8abbg")
 texture_pressed = ExtResource("61_n1h3t")
 texture_disabled = ExtResource("62_ltg8k")
 
-[node name="Slot1" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons"]
+[node name="Slot3" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons"]
 layout_mode = 0
 offset_left = 145.0
-offset_top = -0.0332031
+offset_top = -2.0332
 offset_right = 211.0
-offset_bottom = 26.9668
+offset_bottom = 24.9668
 texture_normal = ExtResource("60_8abbg")
 texture_pressed = ExtResource("61_n1h3t")
 texture_disabled = ExtResource("62_ltg8k")
 
 [node name="InventoryPanel" type="TextureButton" parent="Inventory/InventoryControls"]
+visible = false
 texture_filter = 1
 layout_mode = 1
 anchors_preset = -1
@@ -1782,10 +1902,11 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -36.0
+offset_left = -212.0
 offset_top = -358.0
-offset_right = 36.0
-offset_bottom = -297.0
+offset_right = -140.0
+offset_bottom = -296.0
+focus_mode = 0
 toggle_mode = true
 texture_normal = ExtResource("20_rl5wq")
 texture_pressed = ExtResource("21_gti27")
@@ -2141,8 +2262,9 @@ coordY = 4
 [connection signal="area_entered" from="Body/RadiusCheck" to="MotionHandler" method="_on_radius_check_area_entered"]
 [connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]
 [connection signal="mouse_entered" from="Inventory/InventoryControls/ActiveSlot0" to="Inventory/InventoryControls/ActiveSlot0" method="_on_mouse_entered"]
-[connection signal="mouse_entered" from="Inventory/InventoryControls/ActiveSlot2" to="Inventory/InventoryControls/ActiveSlot2" method="_on_mouse_entered"]
 [connection signal="mouse_entered" from="Inventory/InventoryControls/ActiveSlot1" to="Inventory/InventoryControls/ActiveSlot1" method="_on_mouse_entered"]
+[connection signal="mouse_entered" from="Inventory/InventoryControls/ActiveSlot2" to="Inventory/InventoryControls/ActiveSlot2" method="_on_mouse_entered"]
+[connection signal="mouse_entered" from="Inventory/InventoryControls/ActiveSlot3" to="Inventory/InventoryControls/ActiveSlot3" method="_on_mouse_entered"]
 [connection signal="sellPart" from="Inventory/InventoryControls/BackingTexture/InfoBox" to="Inventory" method="_on_info_box_sell_part"]
 [connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/InfoBox/SellButton" to="Inventory/InventoryControls/BackingTexture/InfoBox" method="_on_sell_button_pressed"]
 [connection signal="toggled" from="Inventory/InventoryControls/BackingTexture/InfoBox/MoveButton" to="Inventory" method="_on_move_button_toggled"]
@@ -2167,8 +2289,9 @@ coordY = 4
 [connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/EnemyProgressBar/NextWaveButton" to="Inventory/InventoryControls/BackingTexture/EnemyProgressBar" method="_on_next_wave_button_pressed"]
 [connection signal="reassignment_button_pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" to="CombatHandler" method="_on_active_reassignment_buttons_reassignment_button_pressed"]
 [connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot0" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_0_pressed"]
-[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot2" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_2_pressed"]
 [connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot1" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_1_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot2" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_2_pressed"]
+[connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot3" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_3_pressed"]
 [connection signal="inventoryToggle" from="Inventory/InventoryControls/InventoryPanel" to="Inventory" method="_on_inventory_panel_inventory_toggle"]
 [connection signal="toggled" from="Inventory/InventoryControls/InventoryPanel" to="Inventory/InventoryControls/InventoryPanel" method="_on_toggled"]
 [connection signal="buttonPressed" from="Inventory/InventoryControls/PartsHolder_Engine" to="Inventory" method="_on_parts_holder_engine_button_pressed"]

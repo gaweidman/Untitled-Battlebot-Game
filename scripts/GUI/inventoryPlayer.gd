@@ -77,8 +77,8 @@ func all_refs_valid():
 func starting_kit():
 	deselect_part();
 	clear_inventory();
-	add_part_from_scene(1, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
 	add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 0);
+	add_part_from_scene(1, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 2);
 	add_part_from_scene(3, 4, "res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn");
 	
 	#add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sniper.tscn", 0);
@@ -133,7 +133,7 @@ func format_stat_num(_inNum) -> String:
 
 func sell_part(part:Part):
 	remove_part(part, true, true);
-	SND.play_sound_nondirectional("Shop.Chaching");
+	SND.play_sound_nondirectional("Shop.Chaching", 1, randf_range(0.90,1.1));;
 
 func add_scrap(amt):
 	scrap = max(0, scrap + roundi(amt));
@@ -291,7 +291,7 @@ func remove_part_post(part:Part, beingSold := false, beingBought := false):
 	if beingBought:
 		remove_scrap(part._get_buy_price());
 		part.on_bought();
-		SND.play_sound_nondirectional("Shop.Chaching");
+		SND.play_sound_nondirectional("Shop.Chaching", 1, randf_range(0.90,1.1));;
 		if part is PartActive:
 			print("Adding to slot?")
 			combatHandler.set_active_part_to_next_empty_slot(part);
@@ -375,6 +375,6 @@ func get_heal_price():
 func get_heal_amount():
 	return HUD_shop.get_heal_amount();
 func heal_from_shop():
-	HUD_shop._on_heal_button_pressed();
+	HUD_shop._shop_heal();
 
 ###################

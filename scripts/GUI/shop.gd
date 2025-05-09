@@ -30,8 +30,6 @@ func deselect():
 func reset_shop():
 	clear_shop_spawn_list();
 	##passives
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_jank_battery.tscn", 3);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_big_battery.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_coolant.tscn", 2);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn", 2);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_generator.tscn", 1);
@@ -39,6 +37,12 @@ func reset_shop():
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_scrap_plating.tscn", 1);
 	##passives with adjacenty bonuses
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_fan.tscn", 2);
+	##Batteries
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/part_jank_battery.tscn", 3);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x1.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x2.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x3.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_2x3.tscn", 1);
 	##melee
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 2);
 	##ranged
@@ -47,7 +51,7 @@ func reset_shop():
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sniper.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn", 3);
 	##utility
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 1);
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 1);
 	##trap
 		#none yet lol
@@ -55,6 +59,8 @@ func reset_shop():
 	rerollPriceIncrement = 0;
 	healPriceIncrementPermanent = 0;
 	healPriceIncrement = 0;
+	
+	calculate_part_pool();
 	close_up_shop();
 
 func open_up_shop():
@@ -152,8 +158,8 @@ var healPriceIncrement := 0.0;
 var healPriceIncrementPermanent := 0.0;
 
 func update_health_button():
-	$HealButton/TextHolder/HEAL.text = "HEAL\n"+str(get_heal_amount()) + " HP"
-	$HealButton/TextHolder/Price.text = str(get_heal_price());
+	$HealButton/TextHolder/HEAL.text = "HEAL\n"+TextFunc.format_stat(get_heal_amount()) + " HP"
+	$HealButton/TextHolder/Price.text = TextFunc.format_stat(get_heal_price(), 0);
 	if inventory.is_affordable(get_heal_price()) && ! player.at_max_health():
 		TextFunc.set_text_color($HealButton/TextHolder/Price, "scrap");
 	else:
@@ -164,13 +170,19 @@ func get_heal_price():
 	return floori((healPriceBase + healPriceIncrement) * healPriceModifier);
 
 func _on_heal_button_pressed():
+	var healed = _shop_heal();
+	if healed:
+		SND.play_sound_nondirectional("Shop.Chaching", 1, randf_range(0.90,1.1));;
+	pass # Replace with function body.
+
+func _shop_heal():
 	if inventory.is_affordable(get_heal_price()):
 		if ! player.at_max_health():
 			inventory.remove_scrap(get_heal_price());
 			healPriceIncrement += healPricePressIncrement;
 			player.heal(get_heal_amount());
 			healPriceIncrementPermanent += 0.5;
-	pass # Replace with function body.
+			return true;
 
 
 var rerollPriceBase := 5.0;
@@ -180,7 +192,7 @@ var rerollPriceIncrement := 0.0;
 var rerollPriceIncrementPermanent := 0.0;
 
 func update_reroll_button():
-	$RerollButton/TextHolder/Price.text = str(get_reroll_price());
+	$RerollButton/TextHolder/Price.text = TextFunc.format_stat(get_reroll_price(), 0);
 	if inventory.is_affordable(get_reroll_price()):
 		TextFunc.set_text_color($RerollButton/TextHolder/Price, "scrap");
 	else:
@@ -206,29 +218,69 @@ func all_stalls_closed() -> bool:
 
 ##The pool of parts currently available
 var partPool := {};
+var partPoolCalculated := [];
 
 func clear_shop_spawn_list():
 	partPool.clear();
 
-func add_part_to_spawn_list(_scene : String, weight : int):
+func add_part_to_spawn_list(_scene : String, weightOverride : int, recalculate := false):
 	var scene = load(_scene);
-	if scene in partPool.keys():
-		partPool[scene] += weight;
-		if partPool[scene] && partPool[scene] <= 0:
-			partPool.erase(scene);
+	var part = scene.instantiate();
+	var weight = 1;
+	if is_instance_valid(weightOverride):
+		weight = weightOverride;
 	else:
-		partPool[scene] = weight;
+		weight = part.poolWeight;
+	var rarity = part.myPartRarity;
+	if scene in partPool.keys():
+		if partPool[scene]:
+			if partPool[scene]["weight"]:
+				partPool[scene]["weight"] += weight;
+				if partPool[scene]["weight"] && partPool[scene]["weight"]  <= 0:
+					partPool.erase(scene);
+	else:
+		partPool[scene] = {"weight":weight,"rarity":rarity};
+	part.queue_free();
+	if recalculate:
+		calculate_part_pool()
 
-func return_random_part() -> PackedScene:
+func calculate_part_pool():
 	var pool = []
 	var spawnListCopy = partPool.duplicate(true);
 	for scene in spawnListCopy.keys():
-		var weight = spawnListCopy[scene];
+		var weight = spawnListCopy[scene]["weight"];
+		var rarity = spawnListCopy[scene]["rarity"];
+		
+		if rarity == Part.partRarities.COMMON:
+			weight *= 20
+		elif rarity == Part.partRarities.UNCOMMON:
+			weight *= 10
+		elif rarity == Part.partRarities.RARE:
+			weight *= 3
 		
 		while weight > 0:
 			pool.append(scene);
 			weight -= 1;
-	
+	partPoolCalculated = pool;
+	print_rich("[color=yellow]",translated_part_pool());
+
+func translated_part_pool():
+	var poolDict = {}
+	var pool = partPoolCalculated.duplicate();
+	var lastPart;
+	for part in pool:
+		var partInst = part.instantiate();
+		var partName = partInst.partName;
+		if lastPart == part:
+			poolDict[partName] += 1;
+		else:
+			poolDict[partName] = 0;
+		lastPart = part;
+		partInst.queue_free();
+	return poolDict;
+
+func return_random_part() -> PackedScene:
+	var pool = partPoolCalculated.duplicate();
 	var sceneReturn = pool.pick_random();
 	return sceneReturn;
 
@@ -237,6 +289,7 @@ func reroll_shop():
 	var counter = 0;
 	while (inventory.next_empty_shop_stall() != null) and counter < 4:
 		var part: = return_random_part();
-		var sceneString = part.resource_path;
-		inventory.add_part_to_shop(sceneString);
-		counter += 1;
+		if is_instance_valid(part):
+			var sceneString = part.resource_path;
+			inventory.add_part_to_shop(sceneString);
+			counter += 1;

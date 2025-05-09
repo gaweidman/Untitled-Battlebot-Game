@@ -26,7 +26,7 @@ func _physics_process(delta):
 								if thingInRange.get_parent() is Player:
 									noFireTimer -= delta;
 									if noFireTimer <= 0:
-										combatHandler.use_active(InputHandler.FIRE.SLOT1);
+										combatHandler.use_active(InputHandler.FIRE.SLOT0);
 								else: noFireTimer = 0.15;
 							else: noFireTimer = 0.15;
 						else: noFireTimer = 0.15;

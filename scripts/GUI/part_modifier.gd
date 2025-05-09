@@ -7,15 +7,15 @@ class_name PartModifier;
 @export var valueFlatMult : float = 0.0;
 @export var valueTimesMult : float = 1.0;
 @export var modName : StringName;
+@export var modTags : Array[String] = [str(modName)]; ##A list of ID strings for parts to reference. Basically groups.
 @export var offset := Vector2i.ZERO;
 @export var enabled := true;
 @export var myModType : modifierType;
-##The owner of this modifier; AKA the one that applied it. Can be any type that descends from Node.
-var owner : Node;
+
+var owner : Node; ##The owner of this modifier; AKA the one that applied it. Can be any type that descends from Node.
 var target : Part;
 var inventoryNode : Inventory;
 var currentlyApplying := false;
-
 
 func create_modifier(_owner : Node, _inventoryNode: Inventory, _name : StringName, _modType : modifierType, _offset : Vector2i, _priority, _valueAdd := 0.0, _valueFlatMult := 1.0, _valueTimesMult := 1.0, _enabledAtStart := true, ):
 	owner = _owner;
@@ -32,6 +32,11 @@ func create_modifier(_owner : Node, _inventoryNode: Inventory, _name : StringNam
 	valueTimesMult = _valueTimesMult;
 	enabled = _enabledAtStart;
 	return modName;
+
+func edit_stat(propertyName : StringName, value):
+	var property = get(propertyName)
+	if property:
+		set(propertyName, value)
 
 enum modifierType {
 	ENERGY_COST,
@@ -122,3 +127,8 @@ func disable(switch):
 func kill_if_invalid():
 	if ! is_instance_valid(owner) or ! is_instance_valid(inventoryNode):
 		free();
+
+func has_id(id:String):
+	if modTags.has(id):
+		return true;
+	return false;

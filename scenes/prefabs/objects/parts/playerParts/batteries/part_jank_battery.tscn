@@ -1,18 +1,15 @@
 [gd_scene load_steps=3 format=4 uid="uid://bf4hwwpmvd0tu"]
 
-[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_dq51d"]
-[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/Energy.png" id="2_a4ugv"]
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_k7r5e"]
+[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/Energy.png" id="2_1hi21"]
 
-[node name="PartPassive" instance=ExtResource("1_dq51d")]
-bonusEnergy = 0.5
-bonusEnergyRegen = -0.1
-scrapCostBase = 7
+[node name="PartPassive" instance=ExtResource("1_k7r5e")]
+bonusEnergy = 2.0
+bonusEnergyRegen = -0.2
+scrapCostBase = 8
 partName = "Jank Battery"
-partDescription = "[color=f2ec6b]Passive: Increases max Energy by 0.5. Reduces energy refresh rate by 0.1."
-partIcon = ExtResource("2_a4ugv")
-
-[node name="TextureBase" parent="." index="0"]
-visible = false
+partDescription = "[color=f2ec6b]Passive: Increases max Energy by 2. Reduces energy refresh rate by 0.2."
+partIcon = ExtResource("2_1hi21")
 
 [node name="Tilemaps" parent="TextureBase" index="0"]
 offset_right = 1.0

@@ -37,7 +37,7 @@ func fx(player:=false):
 	var parent = GameState.get_game_board()
 	if player:
 		ParticleFX.play("NutsBolts", parent, pos)
-		SND.play_sound_nondirectional("Shop.Chaching")
+		SND.play_sound_nondirectional("Shop.Chaching", 1, randf_range(0.90,1.1));
 	else:
 		ParticleFX.play("NutsBolts", parent, pos)
 		SND.play_sound_at("Shop.Chaching", pos);

@@ -23,6 +23,7 @@ var scrapSellModifierBase := (2.0/3.0);
 @export var dimensions : Array[Vector2i];
 @export var myPartType := partTypes.UNASSIGNED;
 @export var myPartRarity := partRarities.COMMON;
+@export var poolWeight := 1; ##This is multiplied by 3 when Rare, 10 when Uncommon, and 20 when Common.
 
 @export_group("Vanity")
 @export var partName := "Part";
@@ -269,6 +270,7 @@ func mods_disable_outMod(modName : StringName, _enabled := false):
 func mods_distribute():
 	print_debug(partName, " Distributing mods")
 	mods_validate();
+	mods_conditional();
 	if not distributedModsAlready:
 		if not appliedModsAlready_recursion:
 			mods_apply_all();
@@ -277,6 +279,24 @@ func mods_distribute():
 			mod.distribute_modifier();
 			pass;
 		distributedModsAlready = true;
+
+##This function is run before the distribution process. Does nothing at base, must be overwritten to do anything.
+func mods_conditional():
+	#Add stuff in here
+	pass;
+
+##Returns an array of modifiers that fit the given ID.
+func mods_get_all_with_tag(modTag : String, outgoing := true, incoming:=false) -> Array[PartModifier]:
+	var allModifiers : Array[PartModifier] = [];
+	if (outgoing):
+		allModifiers.append_array(outgoingModifiers)
+	if incoming:
+		allModifiers.append_array(incomingModifiers)
+	var mods : Array[PartModifier] = [];
+	for mod in allModifiers:
+		if mod.modTags.has(modTag):
+			mods.append(mod);
+	return mods;
 
 ##Adds a modifier to the part. Called from the modifier.[br]
 ##Will try to call the distribution script.

@@ -1,16 +1,17 @@
 [gd_scene load_steps=3 format=4 uid="uid://syqcc5ife041"]
 
-[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_l4exp"]
-[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/Energy.png" id="2_7vlhw"]
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_1iemh"]
+[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/Energy.png" id="2_4kyv7"]
 
-[node name="PartPassive" instance=ExtResource("1_l4exp")]
-bonusEnergy = 3.0
-scrapCostBase = 13
+[node name="Battery_2x3" instance=ExtResource("1_1iemh")]
+bonusEnergy = 4.5
+scrapCostBase = 20
 dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)])
 myPartRarity = 1
-partName = "Big Battery"
-partDescription = "[color=f2ec6b]Passive: increases max Energy by 3."
-partIcon = ExtResource("2_7vlhw")
+partName = "D Battery"
+partDescription = "[color=f2ec6b]Passive: increases max Energy by 4.5."
+partIcon = ExtResource("2_4kyv7")
+partIconOffset = Vector2(0.5, 1)
 
 [node name="Tilemaps" parent="TextureBase" index="0"]
 mouse_filter = 0
