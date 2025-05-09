@@ -61,8 +61,8 @@ func get_slot_at(x: int, y: int):
 	
 	return pointer
 
+
 func is_slot_free(x: int, y: int, filterPart:Part) -> bool:
-	
 	var index = Vector2i(x, y);
 	
 	if index in slots.keys():
@@ -74,6 +74,20 @@ func is_slot_free(x: int, y: int, filterPart:Part) -> bool:
 				if slotAt == filterPart:
 					return true;
 	return false;
+
+func is_slot_in_bounds(x: int, y: int):
+	var index = Vector2i(x, y);
+	if index in slots.keys():
+		return true;
+	return false;
+
+func is_slot_free_and_in_bounds(x: int, y: int, filterPart:Part, separateIntoDict := false):
+	var free = is_slot_free(x, y, filterPart);
+	var inBounds = is_slot_in_bounds(x, y);
+	if separateIntoDict:
+		return {"free" : free, "inBounds" : inBounds}
+	else:
+		return (free and inBounds);
 
 func get_modified_part_dimensions(part: Part, modifier: Vector2i):
 	var dimensions = part.dimensions;

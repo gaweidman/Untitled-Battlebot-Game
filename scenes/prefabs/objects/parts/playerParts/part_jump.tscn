@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://hak8gdywyhsd"]
+
+[ext_resource type="PackedScene" uid="uid://n5li36gn6xf7" path="res://scenes/prefabs/objects/parts/part_active.tscn" id="1_xuvet"]
+[ext_resource type="Script" uid="uid://bwgul3cp3bcm4" path="res://scripts/GUI/parts/playerParts/part_jump.gd" id="2_8uhe5"]
+[ext_resource type="Texture2D" uid="uid://6dla8kdo4d2f" path="res://graphics/images/HUD/parts/Icons/piston.png" id="3_va8rt"]
+
+[node name="PartJump" instance=ExtResource("1_xuvet")]
+script = ExtResource("2_8uhe5")
+model = null
+modelMaterial = null
+baseEnergyCost = 1.75
+baseFireRate = 1.0
+scrapCostBase = 15
+dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1), Vector2i(0, 2)])
+partName = "Jump Piston"
+partDescription = "[color=e0dede]Fires a piston arm underneath your bot, giving it some [color=aae05b]serious hops.
+
+[color=aae05b]Active: Jump up into the air, gaining invincibility. 
+Height and invincibility time increases the more empty spaces beneath the part."
+partIcon = ExtResource("3_va8rt")
+partIconOffset = Vector2(0, 2)

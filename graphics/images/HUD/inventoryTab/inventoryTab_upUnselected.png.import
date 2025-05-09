@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cqdcnbsr0nwhn"
-path="res://.godot/imported/inventoryTab_downSelected.png-d08063a4d39e1fe0e47daf8c35fc497a.ctex"
+uid="uid://ba0m2y25qqfbe"
+path="res://.godot/imported/inventoryTab_upUnselected.png-2d32e718b1e62b5a15df3c06675ce8d1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/inventoryTab_downSelected.png"
-dest_files=["res://.godot/imported/inventoryTab_downSelected.png-d08063a4d39e1fe0e47daf8c35fc497a.ctex"]
+source_file="res://graphics/images/HUD/inventoryTab/inventoryTab_upUnselected.png"
+dest_files=["res://.godot/imported/inventoryTab_upUnselected.png-2d32e718b1e62b5a15df3c06675ce8d1.ctex"]
 
 [params]
 

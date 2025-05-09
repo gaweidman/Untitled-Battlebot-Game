@@ -33,7 +33,7 @@ script = ExtResource("1_u733l")
 meshMaterialOverride0 = ExtResource("2_uec6s")
 meshMaterialOverride1 = ExtResource("7_uec6s")
 
-[node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Combatant Body", "Damager"]]
+[node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Combatant Body", "Damager", "Driveable"]]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000182867, 0.00276172, 3.8147e-06)
 disable_mode = 2

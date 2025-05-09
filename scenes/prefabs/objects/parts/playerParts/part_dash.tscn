@@ -12,11 +12,12 @@ looksAtMouse = false
 rotateWithPlayer = true
 baseEnergyCost = 1.5
 baseFireRate = 0.75
-dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1), Vector2i(0, 2)])
+scrapCostBase = 15
+dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 0)])
 partName = "Dash Piston"
-partDescription = "[color=e0dede]Shoots a piston arm underneath your bot, giving it some [color=aae05b]serious hops.
+partDescription = "[color=e0dede]Shoots a piston arm underneath your bot, allowing it to make [color=aae05b]quick turns.
 
-[color=aae05b]Active: Quickly dash in the direction of your movement input, becoming invincible for a short time.."
+[color=aae05b]Active: Quickly dash in the direction of your movement input, becoming invincible for a short time."
 partIcon = ExtResource("3_py1gj")
 
 [node name="Tilemaps" parent="TextureBase" index="0"]

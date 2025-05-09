@@ -85,7 +85,8 @@ func starting_kit():
 	#add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 0);
 	#add_part_from_scene(2, 4, "res://scenes/prefabs/objects/parts/playerParts/part_Fan.tscn");
 	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 2);
-	#add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
+	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_jump.tscn", 2);
+	#add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);d
 	
 	$InventoryControls/BackingTexture/Shop.reroll_shop();
 	scrap = 0;
@@ -147,7 +148,8 @@ func update_scrap():
 	$"InventoryControls/BackingTexture/ScrapCounter".text = str(get_scrap_total());
 
 func update_round():
-	$"InventoryControls/BackingTexture/Lbl_Round".text = str(GameState.get_round_number());
+	var roundNum = GameState.get_round_number();
+	$"InventoryControls/BackingTexture/Lbl_Round".text = str(roundNum);
 
 func get_scrap_total():
 	return roundi(scrap);
@@ -158,8 +160,9 @@ func _on_inventory_panel_inventory_toggle(foo):
 
 func inventory_panel_toggle(foo):
 	inventoryUp = foo;
-	if HUD_inventoryPanel.button_pressed != foo:
-		HUD_inventoryPanel.button_pressed = foo;
+	if HUD_inventoryPanel.open != foo:
+		HUD_inventoryPanel.open = foo;
+		HUD_inventoryPanel.change_sprites(foo);
 	if not foo:
 		select_part(selectedPart, false);
 		HUD_engine.disable(true);
@@ -325,7 +328,8 @@ func clear_shop(ignoreFrozen := false, reroll := false):
 
 func new_round():
 	update_round();
-	HUD_shop.close_up_shop();
+	HUD_shop.new_round(GameState.get_round_number());
+	HUD_inventoryPanel.disable(true);
 	for part in listOfPieces:
 		if is_instance_valid(part):
 			if part is Part:
@@ -333,6 +337,7 @@ func new_round():
 
 func end_round():
 	update_round();
+	HUD_inventoryPanel.disable(false);
 	for part in listOfPieces:
 		if is_instance_valid(part):
 			if part is Part:

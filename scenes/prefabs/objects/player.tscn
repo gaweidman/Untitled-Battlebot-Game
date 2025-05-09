@@ -1,10 +1,11 @@
-[gd_scene load_steps=90 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=92 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="2_jy4ju"]
-[ext_resource type="Material" uid="uid://uyr61s32rxaj" path="res://graphics/materials/PlayerBody_Bottom.tres" id="2_slssq"]
+[ext_resource type="Script" uid="uid://caotgm5hf1ikf" path="res://scripts/objects/player/tread.gd" id="2_s6ktd"]
+[ext_resource type="Script" uid="uid://bqpwfw5xvfp2g" path="res://scripts/objects/player/underbellyColliders.gd" id="2_xxsjn"]
+[ext_resource type="Script" uid="uid://dslbjn7emuthd" path="res://scripts/objects/player/contact_point.gd" id="3_xxsjn"]
 [ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="4_nnr5b"]
-[ext_resource type="Material" uid="uid://cbvhbi7cs2id6" path="res://graphics/materials/Treads.tres" id="4_qq3wf"]
 [ext_resource type="PackedScene" uid="uid://dqn5vwvgp6ddp" path="res://scenes/prefabs/utilities/combat_handler.tscn" id="5_8qfif"]
 [ext_resource type="ArrayMesh" uid="uid://bmh1lb7lajb4y" path="res://graphics/models/extracted/bot.res" id="6_oyv14"]
 [ext_resource type="Script" uid="uid://cci5o1ddo6ond" path="res://scripts/objects/player/input_handler.gd" id="6_ui0xh"]
@@ -33,8 +34,6 @@
 [ext_resource type="Texture2D" uid="uid://c1wx7qpxonisn" path="res://graphics/images/HUD/activeTab/mouse2.png" id="17_58nj6"]
 [ext_resource type="Texture2D" uid="uid://b30wj1uakji4q" path="res://graphics/images/HUD/Energy_EmptyOverlay.png" id="18_tkm3v"]
 [ext_resource type="Script" uid="uid://cdymr1vwdiwxo" path="res://scripts/GUI/info_box.gd" id="20_7eoqv"]
-[ext_resource type="Texture2D" uid="uid://ba0m2y25qqfbe" path="res://graphics/images/HUD/inventoryTab_upUnselected.png" id="20_rl5wq"]
-[ext_resource type="Texture2D" uid="uid://nqj4mhvsrlxw" path="res://graphics/images/HUD/inventoryTab_upSelected.png" id="21_gti27"]
 [ext_resource type="Texture2D" uid="uid://drjmrl4v24oq6" path="res://graphics/images/HUD/info_melee.png" id="21_jm810"]
 [ext_resource type="Script" uid="uid://bcatqblb5gdws" path="res://scripts/GUI/inventory_panel.gd" id="22_nha5v"]
 [ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/energyIconStriped.png" id="22_r3ynj"]
@@ -42,6 +41,7 @@
 [ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/cooldownIconStriped.png" id="24_r4qg5"]
 [ext_resource type="Texture2D" uid="uid://djth0eo8kvkcm" path="res://graphics/images/HUD/sell_unselected.png" id="25_jm810"]
 [ext_resource type="Texture2D" uid="uid://btfetdy0ahup8" path="res://graphics/images/HUD/sell_selected.png" id="26_7qptc"]
+[ext_resource type="Texture2D" uid="uid://b3rhnwutddmgf" path="res://graphics/images/HUD/activeTab/key.png" id="26_s6ktd"]
 [ext_resource type="Texture2D" uid="uid://b71g2q13wr7do" path="res://graphics/images/HUD/sell_disabled.png" id="27_k8cvv"]
 [ext_resource type="Texture2D" uid="uid://dsl0x2nq48gga" path="res://graphics/images/HUD/move_unselected.png" id="28_a23h3"]
 [ext_resource type="Texture2D" uid="uid://cxeur7wg8nvq7" path="res://graphics/images/HUD/move_selected.png" id="29_6g8ao"]
@@ -70,6 +70,7 @@
 [ext_resource type="Texture2D" uid="uid://bw5pl1p6bmq61" path="res://graphics/images/HUD/timer_blinky.png" id="49_mh0ri"]
 [ext_resource type="Script" uid="uid://lq2evtwp8bvg" path="res://scripts/GUI/enemy_progress_bar.gd" id="56_n1h3t"]
 [ext_resource type="Texture2D" uid="uid://csqo5aaepfs34" path="res://graphics/images/HUD/nextRound/progressBar.png" id="57_ltg8k"]
+[ext_resource type="Texture2D" uid="uid://ch72j8sw4gtp" path="res://graphics/images/HUD/shop/freeze_disabled.png" id="58_s6ktd"]
 [ext_resource type="Script" uid="uid://dsnvmily8r6us" path="res://scripts/GUI/active_reassignment_buttons.gd" id="59_kapkf"]
 [ext_resource type="Texture2D" uid="uid://bgide8muu6eek" path="res://graphics/images/HUD/nextRound/screen_on.png" id="59_yjpf5"]
 [ext_resource type="Texture2D" uid="uid://bv0l751iv6lau" path="res://graphics/images/HUD/partAssign_unselected.png" id="60_8abbg"]
@@ -78,6 +79,7 @@
 [ext_resource type="Texture2D" uid="uid://baqnprslvvu8t" path="res://graphics/images/HUD/partAssign_selected.png" id="61_n1h3t"]
 [ext_resource type="Texture2D" uid="uid://c17tsbqn3orah" path="res://graphics/images/HUD/partAssign_disabled.png" id="62_ltg8k"]
 [ext_resource type="Texture2D" uid="uid://ckkqo4l53j7nc" path="res://graphics/images/HUD/HudEdge.png" id="69_dbqh0"]
+[ext_resource type="Texture2D" uid="uid://p4kd71ihg6eg" path="res://graphics/images/HUD/inventoryTab/open_unselected.png" id="78_gfej7"]
 [ext_resource type="AudioStream" uid="uid://b7fnytfbwjn5a" path="res://sounds/Movement_Start.ogg" id="78_gyjhe"]
 [ext_resource type="AudioStream" uid="uid://cwlqqaxddwtx7" path="res://sounds/Movement_Drone.ogg" id="79_gfej7"]
 [ext_resource type="AudioStream" uid="uid://bxl753b2duri4" path="res://sounds/Movement_End.ogg" id="80_s6ktd"]
@@ -176,66 +178,8 @@ contact_monitor = true
 max_contacts_reported = 10
 angular_damp_mode = 1
 
-[node name="Bottom" type="CSGBox3D" parent="Body"]
-transform = Transform3D(0.968925, 0, 0, 0, 0.968925, 0, 0, 0, 0.968925, 0, 0.087, 0)
-visible = false
-material_override = ExtResource("2_slssq")
-size = Vector3(1, 0.15, 1)
-material = ExtResource("2_jy4ju")
-
-[node name="TreadL" type="CSGBox3D" parent="Body/Bottom"]
-transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, -0.08, -0.25)
-size = Vector3(0.75, 0.02, 0.09)
-material = ExtResource("4_qq3wf")
-
-[node name="ContactPoint1" type="Node3D" parent="Body/Bottom/TreadL"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, -0.02, 0)
-
-[node name="Raycast1" type="RayCast3D" parent="Body/Bottom/TreadL/ContactPoint1"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
-
-[node name="ContactPoint2" type="Node3D" parent="Body/Bottom/TreadL"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, -0.02, 0)
-
-[node name="Raycast2" type="RayCast3D" parent="Body/Bottom/TreadL/ContactPoint2"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
-
-[node name="TreadR" type="CSGBox3D" parent="Body/Bottom"]
-transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, -0.08, 0.25)
-size = Vector3(0.75, 0.02, 0.09)
-material = ExtResource("4_qq3wf")
-
-[node name="ContactPoint3" type="Node3D" parent="Body/Bottom/TreadR"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, -0.02, 0)
-
-[node name="Raycast3" type="RayCast3D" parent="Body/Bottom/TreadR/ContactPoint3"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
-
-[node name="ContactPoint4" type="Node3D" parent="Body/Bottom/TreadR"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, -0.02, 0)
-
-[node name="Raycast4" type="RayCast3D" parent="Body/Bottom/TreadR/ContactPoint4"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
-
 [node name="Top" type="CSGBox3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.269, 0)
-visible = false
 material_override = ExtResource("2_jy4ju")
 size = Vector3(1, 0.15, 1)
 
@@ -287,6 +231,58 @@ transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 
 mesh = ExtResource("6_oyv14")
 surface_material_override/0 = ExtResource("7_7lyob")
 surface_material_override/1 = ExtResource("8_537hj")
+
+[node name="UnderbellyRaycasts" type="Node3D" parent="Body/BotBody" node_paths=PackedStringArray("underbellyCollider", "rightTread", "leftTread")]
+transform = Transform3D(-8.47061e-08, 0, 1.93785, 0, 1.93785, 0, -1.93785, 0, -8.47061e-08, 0, 0.701972, 0)
+script = ExtResource("2_xxsjn")
+underbellyCollider = NodePath("FloorCheck")
+rightTread = NodePath("TreadR")
+leftTread = NodePath("TreadL")
+
+[node name="TreadL" type="Node3D" parent="Body/BotBody/UnderbellyRaycasts" node_paths=PackedStringArray("contactPointFront", "contactPointBack")]
+transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0.7, -0.4, 0)
+script = ExtResource("2_s6ktd")
+contactPointFront = NodePath("RaycastL1")
+contactPointBack = NodePath("RaycastL2")
+
+[node name="RaycastL2" type="RayCast3D" parent="Body/BotBody/UnderbellyRaycasts/TreadL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00999999, -0.4)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("3_xxsjn")
+
+[node name="RaycastL1" type="RayCast3D" parent="Body/BotBody/UnderbellyRaycasts/TreadL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00999999, 0.4)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("3_xxsjn")
+
+[node name="TreadR" type="Node3D" parent="Body/BotBody/UnderbellyRaycasts" node_paths=PackedStringArray("contactPointFront", "contactPointBack")]
+transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, -0.7, -0.4, 0)
+script = ExtResource("2_s6ktd")
+contactPointFront = NodePath("RaycastR1")
+contactPointBack = NodePath("RaycastR2")
+
+[node name="RaycastR2" type="RayCast3D" parent="Body/BotBody/UnderbellyRaycasts/TreadR"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00999999, -0.4)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("3_xxsjn")
+
+[node name="RaycastR1" type="RayCast3D" parent="Body/BotBody/UnderbellyRaycasts/TreadR"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00999999, 0.4)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("3_xxsjn")
+
+[node name="FloorCheck" type="RayCast3D" parent="Body/BotBody/UnderbellyRaycasts"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+target_position = Vector3(0, -0.35, 0)
+script = ExtResource("3_xxsjn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
 shape = SubResource("SphereShape3D_hnom0")
@@ -372,9 +368,9 @@ script = ExtResource("12_maiqi")
 [node name="MouseIndicator" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot0"]
 layout_mode = 0
 offset_left = 29.0
-offset_top = 24.0
+offset_top = 26.0
 offset_right = 45.0
-offset_bottom = 44.0
+offset_bottom = 46.0
 texture = ExtResource("13_fh32w")
 
 [node name="EnergyCost" type="Label" parent="Inventory/InventoryControls/ActiveSlot0"]
@@ -481,9 +477,9 @@ script = ExtResource("12_maiqi")
 [node name="MouseIndicator" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot1"]
 layout_mode = 0
 offset_left = 29.0
-offset_top = 24.0
+offset_top = 26.0
 offset_right = 45.0
-offset_bottom = 44.0
+offset_bottom = 46.0
 texture = ExtResource("16_fh32w")
 
 [node name="EnergyCost" type="Label" parent="Inventory/InventoryControls/ActiveSlot1"]
@@ -590,9 +586,9 @@ script = ExtResource("12_maiqi")
 [node name="MouseIndicator" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot2"]
 layout_mode = 0
 offset_left = 29.0
-offset_top = 24.0
+offset_top = 26.0
 offset_right = 45.0
-offset_bottom = 44.0
+offset_bottom = 46.0
 texture = ExtResource("17_58nj6")
 
 [node name="EnergyCost" type="Label" parent="Inventory/InventoryControls/ActiveSlot2"]
@@ -699,10 +695,10 @@ script = ExtResource("12_maiqi")
 [node name="MouseIndicator" type="TextureRect" parent="Inventory/InventoryControls/ActiveSlot3"]
 layout_mode = 0
 offset_left = 29.0
-offset_top = 24.0
+offset_top = 26.0
 offset_right = 45.0
-offset_bottom = 44.0
-texture = ExtResource("13_fh32w")
+offset_bottom = 46.0
+texture = ExtResource("26_s6ktd")
 
 [node name="EnergyCost" type="Label" parent="Inventory/InventoryControls/ActiveSlot3"]
 layout_mode = 1
@@ -1316,6 +1312,7 @@ offset_bottom = 185.0
 toggle_mode = true
 texture_normal = ExtResource("38_ufcqf")
 texture_pressed = ExtResource("39_3614p")
+texture_disabled = ExtResource("58_s6ktd")
 
 [node name="BuyButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop/StallA"]
 layout_mode = 0
@@ -1422,6 +1419,7 @@ offset_bottom = 185.0
 toggle_mode = true
 texture_normal = ExtResource("38_ufcqf")
 texture_pressed = ExtResource("39_3614p")
+texture_disabled = ExtResource("58_s6ktd")
 
 [node name="BuyButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop/StallB"]
 layout_mode = 0
@@ -1529,6 +1527,7 @@ offset_bottom = 185.0
 toggle_mode = true
 texture_normal = ExtResource("38_ufcqf")
 texture_pressed = ExtResource("39_3614p")
+texture_disabled = ExtResource("58_s6ktd")
 
 [node name="BuyButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/Shop/StallC"]
 layout_mode = 0
@@ -1801,9 +1800,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -110.0
+offset_left = -125.0
 offset_top = -346.75
-offset_right = -62.0
+offset_right = -77.0
 offset_bottom = -329.75
 theme_override_fonts/font = ExtResource("47_08lav")
 theme_override_font_sizes/font_size = 15
@@ -1818,9 +1817,9 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -108.0
+offset_left = -123.0
 offset_top = -322.75
-offset_right = -60.0
+offset_right = -75.0
 offset_bottom = -305.75
 theme_override_fonts/font = ExtResource("47_08lav")
 theme_override_font_sizes/font_size = 15
@@ -1831,9 +1830,9 @@ script = ExtResource("48_2ma37")
 
 [node name="TimerBlinky" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Lbl_Timer"]
 layout_mode = 0
-offset_left = 54.0
+offset_left = -19.0
 offset_top = 8.0
-offset_right = 64.0
+offset_right = -9.0
 offset_bottom = 19.0
 texture = ExtResource("49_mh0ri")
 
@@ -1894,7 +1893,6 @@ texture_pressed = ExtResource("61_n1h3t")
 texture_disabled = ExtResource("62_ltg8k")
 
 [node name="InventoryPanel" type="TextureButton" parent="Inventory/InventoryControls"]
-visible = false
 texture_filter = 1
 layout_mode = 1
 anchors_preset = -1
@@ -1902,15 +1900,13 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -212.0
-offset_top = -358.0
-offset_right = -140.0
-offset_bottom = -296.0
+offset_left = -65.0
+offset_top = -347.0
+offset_right = -26.0
+offset_bottom = -306.0
 focus_mode = 0
-toggle_mode = true
-texture_normal = ExtResource("20_rl5wq")
-texture_pressed = ExtResource("21_gti27")
-texture_hover = ExtResource("21_gti27")
+disabled = true
+texture_normal = ExtResource("78_gfej7")
 script = ExtResource("22_nha5v")
 
 [node name="PartsHolder_Engine" type="Control" parent="Inventory/InventoryControls"]
@@ -2292,8 +2288,10 @@ coordY = 4
 [connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot1" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_1_pressed"]
 [connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot2" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_2_pressed"]
 [connection signal="pressed" from="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons/Slot3" to="Inventory/InventoryControls/BackingTexture/ActiveReassignmentButtons" method="_on_slot_3_pressed"]
+[connection signal="button_up" from="Inventory/InventoryControls/InventoryPanel" to="Inventory/InventoryControls/InventoryPanel" method="_on_button_up"]
 [connection signal="inventoryToggle" from="Inventory/InventoryControls/InventoryPanel" to="Inventory" method="_on_inventory_panel_inventory_toggle"]
-[connection signal="toggled" from="Inventory/InventoryControls/InventoryPanel" to="Inventory/InventoryControls/InventoryPanel" method="_on_toggled"]
+[connection signal="mouse_entered" from="Inventory/InventoryControls/InventoryPanel" to="Inventory/InventoryControls/InventoryPanel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Inventory/InventoryControls/InventoryPanel" to="Inventory/InventoryControls/InventoryPanel" method="_on_mouse_exited"]
 [connection signal="buttonPressed" from="Inventory/InventoryControls/PartsHolder_Engine" to="Inventory" method="_on_parts_holder_engine_button_pressed"]
 [connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton" method="_on_pressed"]
 [connection signal="pressed" from="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton2" to="Inventory/InventoryControls/PartsHolder_Engine/PartHolderButton2" method="_on_pressed"]

@@ -39,6 +39,7 @@ WorldWall=""
 WorldFloor=""
 Sawblade=""
 Fan="Only for parts that are fans."
+Driveable=""
 
 [importer_defaults]
 

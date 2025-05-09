@@ -28,40 +28,57 @@ func deselect():
 			stall.deselect();
 
 func reset_shop():
-	clear_shop_spawn_list();
-	##passives
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_coolant.tscn", 2);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn", 2);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_generator.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_magnet.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_scrap_plating.tscn", 1);
-	##passives with adjacenty bonuses
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_fan.tscn", 2);
-	##Batteries
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/part_jank_battery.tscn", 3);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x1.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x2.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x3.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_2x3.tscn", 1);
-	##melee
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 2);
-	##ranged
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 2);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sniper.tscn", 1);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn", 3);
-	##utility
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 1);
-	##trap
-		#none yet lol
+	set_item_pool_waves(-1);
 	rerollPriceIncrementPermanent = 0;
 	rerollPriceIncrement = 0;
 	healPriceIncrementPermanent = 0;
 	healPriceIncrement = 0;
-	
-	calculate_part_pool();
 	close_up_shop();
+
+func set_item_pool_waves(inWave:int):
+	print_rich("[b]Setting item pool for wave ", inWave)
+	var changed = false;
+	if inWave == -1:
+		clear_shop_spawn_list();
+		inWave = 0;
+	if inWave == 0:
+		##passives
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn", 2);
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_generator.tscn", 1);
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_magnet.tscn", 1);
+		##passives with adjacenty bonuses
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_fan.tscn", 2);
+		##Batteries
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/part_jank_battery.tscn", 2);
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x1.tscn", 3);
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x2.tscn", 2);
+		##melee
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
+		##ranged
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 1);
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/enemyParts/part_ranger_gun.tscn", 3);
+		##utility
+		##trap
+			#none yet lol
+		changed = true;
+	if inWave == 3:
+		##Passives
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_coolant.tscn");
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_scrap_plating.tscn", 1);
+		##Batteries
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x3.tscn", 1);
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_2x3.tscn", 1);
+		##Ranged
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 1);
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sniper.tscn", 1);
+		##Utility
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn");
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn");
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_jump.tscn");
+		changed = true;
+		
+	if changed: 
+		calculate_part_pool();
 
 func open_up_shop():
 	clopen_door(true);
@@ -77,6 +94,10 @@ func clopen_stalls(open:bool):
 		for stall in get_children():
 			if stall is ShopStall:
 				stall.close_stall();
+
+func new_round(roundNumber:int):
+	set_item_pool_waves(roundNumber);
+	close_up_shop();
 
 func close_up_shop():
 	clopen_door();
@@ -223,11 +244,11 @@ var partPoolCalculated := [];
 func clear_shop_spawn_list():
 	partPool.clear();
 
-func add_part_to_spawn_list(_scene : String, weightOverride : int, recalculate := false):
+func add_part_to_spawn_list(_scene : String, weightOverride := -99, recalculate := false):
 	var scene = load(_scene);
 	var part = scene.instantiate();
 	var weight = 1;
-	if is_instance_valid(weightOverride):
+	if is_instance_valid(weightOverride) && weightOverride != -99:
 		weight = weightOverride;
 	else:
 		weight = part.poolWeight;

@@ -74,10 +74,7 @@ func get_owner_index():
 
 ##Returns the part at the square this modifier is targeting. Might be null.
 func get_part_at_offset():
-	var invPosition = offset;
-	if owner is Part:
-		if owner.invPosition != null:
-			invPosition += owner.invPosition;
+	var invPosition = get_inventory_position();
 	var slot = inventoryNode.get_slot_at(invPosition.x, invPosition.y);
 	if is_instance_valid(slot):
 		if slot is Part:
@@ -86,6 +83,18 @@ func get_part_at_offset():
 			return slot;
 	target = null;
 	return null;
+
+##Returns Inventory.is_slot_free_and_in_bounds() witht he setting to make it a dictionary {"free":bool, "inBounds":bool} turned on.
+func is_slot_free_and_in_bounds():
+	var invPos = get_inventory_position();
+	return inventoryNode.is_slot_free_and_in_bounds(invPos.x, invPos.y, null, true)
+
+func get_inventory_position():
+	var invPosition = offset;
+	if owner is Part:
+		if owner.invPosition != null:
+			invPosition += owner.invPosition;
+	return invPosition;
 
 ##Tries to add itself to the target.
 func distribute_modifier():
