@@ -29,30 +29,30 @@ func update_displays():
 	if is_instance_valid(partRef):
 		##The screen backing/cooldown effect
 		var backTex = backBlank;
-		var textColor = GameState.textColors["grey"];
+		var textColor = TextFunc.textColors["grey"];
 		if partRef._get_part_type() == Part.partTypes.PASSIVE: ##which should be impossible but it's checked anyway
 			backTex = backPassive;
 		if partRef._get_part_type() == Part.partTypes.MELEE: 
 			backTex = backMelee;
-			textColor = GameState.textColors["melee"];
+			textColor = TextFunc.textColors["melee"];
 		if partRef._get_part_type() == Part.partTypes.RANGED: 
 			backTex = backRanged;
-			textColor = GameState.textColors["ranged"];
+			textColor = TextFunc.textColors["ranged"];
 		if partRef._get_part_type() == Part.partTypes.UTILITY: 
 			backTex = backUtility;
-			textColor = GameState.textColors["utility"];
+			textColor = TextFunc.textColors["utility"];
 		if ! partRef.can_fire():
 			backTex = backPassive;
 		$ScreenHolder/ScreenBack.texture = backTex;
 		$ScreenHolder/ScreenBack.position.x = clampf(partRef.get_cooldown() * -30, -30, 0);
 		targetY = clampf(234.0 + (partRef.get_cooldown() * 6), 234.0, 240.0);
 		##Energy cost
-		if $EnergyCost.text != str(partRef.get_energy_cost()):
-			$EnergyCost.text = str(partRef.get_energy_cost());
+		if $EnergyCost.text != format_stat(partRef.get_energy_cost()):
+			$EnergyCost.text = format_stat(partRef.get_energy_cost());
 		if partRef.energy_affordable():
-			GameState.set_text_color($EnergyCost, "ranged");
+			TextFunc.set_text_color($EnergyCost, "ranged");
 		else:
-			GameState.set_text_color($EnergyCost, "unaffordable");
+			TextFunc.set_text_color($EnergyCost, "unaffordable");
 		pass
 		##Magazine counter
 		var magStr = "∞";
@@ -63,18 +63,18 @@ func update_displays():
 			magStr += "/"
 			magStr += str(partRef.get_magazine_size());
 			if magAmt > 0:
-				GameState.set_text_color($AmmoCounter, "ranged")
+				TextFunc.set_text_color($AmmoCounter, "ranged")
 			else:
-				GameState.set_text_color($AmmoCounter, "unaffordable")
+				TextFunc.set_text_color($AmmoCounter, "unaffordable")
 		if partRef.ammoAmountOverride != null and partRef.ammoAmountOverride != "":
 			magStr = str(partRef.ammoAmountOverride);
-			GameState.set_text_color($AmmoCounter, partRef.ammoAmountColorOverride)
+			TextFunc.set_text_color($AmmoCounter, partRef.ammoAmountColorOverride)
 		if $AmmoCounter.text != str(magStr):
 			$AmmoCounter.text = str(magStr);
 		##Name
 		if $PartName.text != str(partRef.partName):
 			$PartName.text = str(partRef.partName);
-		GameState.set_text_color($PartName, textColor);
+		TextFunc.set_text_color($PartName, textColor);
 		##Icon
 		if $PartIcon.texture != partRef.partIcon:
 			$PartIcon.texture = partRef.partIcon;
@@ -86,5 +86,9 @@ func update_displays():
 		$EnergyCost.text = "";
 		$AmmoCounter.text = "";
 		$PartName.text = "Empty";
-		GameState.set_text_color($PartName, "grey");
+		TextFunc.set_text_color($PartName, "grey");
 		$PartIcon.texture = iconBlank;
+
+func format_stat(num:float):
+	var text = str((floor(num * 100.0)) / 100.0)
+	return text;

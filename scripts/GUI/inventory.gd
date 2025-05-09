@@ -273,6 +273,14 @@ func partMods_deploy():
 	for part in listOfPieces:
 		if part is Part:
 			part.mods_apply_all();
+	##Prints the modifiers of the parts as a debug.
+	for part in listOfPieces:
+		if part is Part:
+			print_rich("[color=green]", part.partName, " ", part.incomingModifiers)
+			if part is PartActive:
+				print_rich(part.mod_energyCost);
+				print_rich(part.energyCost);
+				print_rich(part.get_energy_cost());
 	pass
 
 ##Organizes a given list of parts (default [Inventory.listOfPieces]) by the order in which they should be prioritized.[br]

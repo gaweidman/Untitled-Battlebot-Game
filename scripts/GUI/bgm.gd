@@ -69,7 +69,7 @@ func change_state(inState:musState):
 			piano = 0.0;
 			swell = 0.0;
 		elif curState == musState.SHOP:
-			base = 1.0;
+			base = 0.5;
 			guitar = 0.0;
 			slapBass = 1.0;
 			melody = 0.0;

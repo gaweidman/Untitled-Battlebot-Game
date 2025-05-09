@@ -52,6 +52,9 @@ func _ready():
 	if dimensions == null:
 		dimensions = [Vector2i(0,0)]
 	
+	get_age();
+	mods_prepare_innate();
+	
 	##Set part type
 	if myPartType == partTypes.UNASSIGNED:
 		if self is PartActive:
@@ -63,6 +66,10 @@ func _ready():
 				myPartType = partTypes.UTILITY;
 		else:
 			myPartType = partTypes.PASSIVE;
+
+func set_age_and_name():
+	ageOrdering = GameState.get_unique_part_age();
+	set("name", StringName(str(partName, "_", ageOrdering)));
 
 ##Run when the part gets added to the player's inventory via InventoryPlayer.add_part_post().
 func inventory_vanity_setup():
@@ -95,14 +102,14 @@ func _get_sell_price():
 	
 	var sellPrice = discount * scrapCostBase
 	
-	return roundi(max(1, (sellPrice + mod_sellPercent.add)  * (1 + (mod_sellPercent.flat * mod_sellPercent.mult))))
+	return roundi(max(1, (sellPrice + mod_sellPercent.add)  * ((1 + mod_sellPercent.flat) * mod_sellPercent.mult)))
 
 func _get_buy_price(_discount := 0.0, markup:=0.0, fixedDiscount := 0, fixedMarkup := 0):
 	var discount = 1.0 + _discount + markup;
 	
 	var sellPrice = discount * scrapCostBase;
 	
-	return roundi(max(1, (sellPrice + fixedDiscount + fixedMarkup + mod_scrapCost.add) * (1 + (mod_scrapCost.flat * mod_scrapCost.mult))))
+	return roundi(max(1, (sellPrice + fixedDiscount + fixedMarkup + mod_scrapCost.add) * ((1 + mod_scrapCost.flat) * mod_scrapCost.mult)))
 
 func _get_part_bounds() -> Vector2i:
 	var highestX = 1;
@@ -189,6 +196,7 @@ var ageOrdering := 0;
 @export var effectPriority := 0;
 var incomingModifiers : Array[PartModifier];
 @export var outgoingModifiers : Array[PartModifier];
+var outgoingModifiersRef : Array[PartModifier]; ##Saves a backup of the modifiers.
 var appliedModsAlready := false;
 var appliedModsAlready_recursion := false;
 var distributedModsAlready := false;
@@ -202,11 +210,28 @@ var mod_scrapCost := mod_resetValue.duplicate();
 ##Modifies the percentage of scrap you get back from selling. Uses the Mods system.
 var mod_sellPercent := mod_resetValue.duplicate();
 
+
+##Should only be called once at Part._ready(); Prepares all modifiers to amke them unique and have a unique name.
+func mods_prepare_innate():
+	for mod in outgoingModifiers:
+		var newMod = mod.duplicate(true);
+		newMod.owner = mod.owner;
+		newMod.inventoryNode = inventoryNode;
+		var newModName = mod.modName + "_" + str(name);
+		newMod.modName = newModName;
+		print_rich("[color=blue]", partName, " adding ", newModName)
+		outgoingModifiersRef.append(newMod);
+	outgoingModifiers = outgoingModifiersRef.duplicate(true);
+
 ##Resets all modified values back to 0. Extend with mods that are added in later derivative classes.
 func mods_reset(resetArrays := false):
+	print_debug("Resetting Modifiers for ", partName)
 	if resetArrays:
 		distributedModsAlready = false;
-		incomingModifiers = [];
+		incomingModifiers.clear();
+		outgoingModifiers.clear();
+		outgoingModifiers = outgoingModifiersRef.duplicate(true);
+		print_debug("Full Reset");
 	appliedModsAlready = false;
 	appliedModsAlready_recursion = false;
 	mod_scrapCost = mod_resetValue.duplicate();
@@ -228,6 +253,12 @@ func mods_check_outModifier_exists(modName : StringName) -> PartModifier:
 			return mod;
 	return null;
 
+func mods_check_inModifier_exists(modName : StringName) -> PartModifier:
+	for mod in incomingModifiers:
+		if mod.modName == modName:
+			return mod;
+	return null;
+
 ##Tries to fetch and then disable a modifier.
 func mods_disable_outMod(modName : StringName, _enabled := false):
 	var existingMod = mods_check_outModifier_exists(modName);
@@ -236,6 +267,7 @@ func mods_disable_outMod(modName : StringName, _enabled := false):
 
 ##Distributes all outgoing modifiers.
 func mods_distribute():
+	print_debug(partName, " Distributing mods")
 	mods_validate();
 	if not distributedModsAlready:
 		if not appliedModsAlready_recursion:
@@ -249,12 +281,20 @@ func mods_distribute():
 ##Adds a modifier to the part. Called from the modifier.[br]
 ##Will try to call the distribution script.
 func mods_recieve(inMod : PartModifier):
-	incomingModifiers.erase(inMod);
-	incomingModifiers.append(inMod);
+	#var newMod = inMod.duplicate();
+	#newMod.owner = inMod.get_owner();
+	#newMod.inventoryNode = inventoryNode;
+	#incomingModifiers.append(newMod);
+	if mods_check_inModifier_exists(inMod.modName):
+		print(partName, " already has ",  inMod.modName)
+	else:
+		incomingModifiers.append(inMod);
+		print_debug(partName, " Recieving mod ", inMod.modName)
 	pass
 
 ##Applies a given modifier to itself.
 func mods_apply(propertyName : String, add:= 0.0, flat := 0.0, mult := 0.0):
+	print_debug(partName, " applying mod for ", propertyName)
 	var property = get(propertyName)
 	if property:
 		print(property)
@@ -278,18 +318,25 @@ func mods_apply(propertyName : String, add:= 0.0, flat := 0.0, mult := 0.0):
 		
 	return false;
 
+func mods_reset_and_apply_all():
+	print_debug(partName, " resetting all mods and applying them")
+	mods_reset();
+	mods_apply_all();
+
 ##Applies all of the modifiers in priority order gathered from [Part.prioritized_mods].
 func mods_apply_all():
-	mods_reset();
-	print("incoming modifiers: ",incomingModifiers)
+	mods_validate();
+	print(partName, " incoming modifiers: ",incomingModifiers)
 	var inMods = prioritized_mods(incomingModifiers);
 	for mod in incomingModifiers:
 		mod.apply_modifier();
 	appliedModsAlready_recursion = true;
 	mods_distribute();
 	appliedModsAlready = true;
+	mods_validate();
 
 func mods_validate():
+	print(partName, " validating mods")
 	for mod in outgoingModifiers:
 		if mod is PartModifier:
 			if mod.inventoryNode == null:

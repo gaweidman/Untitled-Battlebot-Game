@@ -41,11 +41,11 @@ var baseEnergyCostModifier = baseEnergyCost;
 ##This energy cost modifier interacts with the Mods system.
 var mod_energyCost := mod_resetValue.duplicate();
 
-func get_damage(base:=false):
+func get_energy_cost(base:=false):
 	if !base:
-		return damage;
+		return energyCost;
 	else:
-		return baseDamageModifier * (baseDamage + mod_damage.add) * (mod_damage.mult * mod_damage.flat);
+		return (baseEnergyCost + mod_energyCost.add) * baseEnergyCostModifier * ((1 + mod_energyCost.flat) * mod_energyCost.mult);
 
 ##This is the base fire rate (in seconds) for the part's active ability. Do not modify in code.
 @export var baseFireRate := 0.15;
@@ -62,7 +62,7 @@ func get_fire_rate(base:=false):
 	if !base:
 		return fireRate;
 	else:
-		return baseFireRateModifier * (baseFireRate + mod_fireRate.add) * (mod_fireRate.mult * mod_fireRate.flat);
+		return (baseFireRate + mod_fireRate.add) * baseFireRateModifier * ((1 + mod_fireRate.flat) * mod_fireRate.mult);
 
 ##This is the base damage before any modifiers. Do not modify in code.
 @export var baseDamage := 1.0;
@@ -75,11 +75,11 @@ var damage := baseDamage;
 ##This damage modifier interacts with the Mods system.
 var mod_damage := mod_resetValue.duplicate();
 
-func get_energy_cost(base:=false):
+func get_damage(base:=false):
 	if !base:
-		return energyCost;
+		return damage;
 	else:
-		return baseEnergyCostModifier * (baseEnergyCost + mod_energyCost.add) * (mod_energyCost.mult * mod_energyCost.flat);
+		return (baseDamage + mod_damage.add) * baseDamageModifier * ((1 + mod_damage.flat) * mod_damage.mult);
 
 func mods_reset(foo:=false):
 	super(foo);
@@ -99,6 +99,8 @@ func inventory_vanity_setup():
 	equippedBlinky.set_deferred("position", equippedBlinkyOffset * 48);
 
 func _activate():
+	if thisBot is Player:
+		print_rich("[color=red]" + str( get_energy_cost()))
 	if can_fire():
 		if combatHandler:
 			##Get Inventory's energy total and subtract energyCost from it
@@ -180,10 +182,9 @@ func _process(delta):
 					if meshNode.visible == false:
 						meshNode.show()
 	meshNode.set_deferred("position", modelOffset);
-	damage = (baseDamage + mod_damage.add) * baseDamageModifier * damageModifier * (1 + (mod_damage.flat * mod_damage.mult));
-	fireRate = (baseFireRate + mod_fireRate.add) * baseDamageModifier * (1 + (mod_fireRate.flat * mod_fireRate.mult));
-	energyCost = (baseEnergyCost + mod_energyCost.add) * baseEnergyCostModifier * (1 + (mod_energyCost.flat * mod_energyCost.mult));
-	
+	damage = (baseDamage + mod_damage.add) * baseDamageModifier * damageModifier * ((1.0 + mod_damage.flat) * mod_damage.mult);
+	fireRate = (baseFireRate + mod_fireRate.add) * baseDamageModifier * ((1.0 + mod_fireRate.flat) * mod_fireRate.mult);
+	energyCost = (baseEnergyCost + mod_energyCost["add"]) * baseEnergyCostModifier * ((1.0 + mod_energyCost["flat"]) * mod_energyCost["mult"]);
 
 func _rotate_to_look_at_mouse(delta):
 	prevRot = rot;

@@ -33,11 +33,12 @@ func reset_shop():
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_jank_battery.tscn", 3);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_big_battery.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_coolant.tscn", 2);
-	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_fan.tscn", 2);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn", 2);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_generator.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_magnet.tscn", 1);
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_scrap_plating.tscn", 1);
+	##passives with adjacenty bonuses
+	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_fan.tscn", 2);
 	##melee
 	add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 2);
 	##ranged
@@ -154,9 +155,9 @@ func update_health_button():
 	$HealButton/TextHolder/HEAL.text = "HEAL\n"+str(get_heal_amount()) + " HP"
 	$HealButton/TextHolder/Price.text = str(get_heal_price());
 	if inventory.is_affordable(get_heal_price()) && ! player.at_max_health():
-		GameState.set_text_color($HealButton/TextHolder/Price, "scrap");
+		TextFunc.set_text_color($HealButton/TextHolder/Price, "scrap");
 	else:
-		GameState.set_text_color($HealButton/TextHolder/Price, "unaffordable");
+		TextFunc.set_text_color($HealButton/TextHolder/Price, "unaffordable");
 func get_heal_amount():
 	return (healAmountBase * healAmountModifier) * player._get_combat_handler().get_max_health();
 func get_heal_price():
@@ -181,9 +182,9 @@ var rerollPriceIncrementPermanent := 0.0;
 func update_reroll_button():
 	$RerollButton/TextHolder/Price.text = str(get_reroll_price());
 	if inventory.is_affordable(get_reroll_price()):
-		GameState.set_text_color($RerollButton/TextHolder/Price, "scrap");
+		TextFunc.set_text_color($RerollButton/TextHolder/Price, "scrap");
 	else:
-		GameState.set_text_color($RerollButton/TextHolder/Price, "unaffordable");
+		TextFunc.set_text_color($RerollButton/TextHolder/Price, "unaffordable");
 func get_reroll_price():
 	return floori((rerollPriceBase + rerollPriceIncrement) * rerollPriceModifier);
 

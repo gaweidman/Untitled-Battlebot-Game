@@ -21,9 +21,9 @@ func _process(delta):
 		var health = (floor(combatHandler.health * 100)) / int(100)
 		$Label.text = str(health);
 		if combatHandler.invincible:
-			GameState.set_text_color($Label, "ff6e49");
+			TextFunc.set_text_color($Label, "ff6e49");
 		else:
-			GameState.set_text_color($Label, "grey");
+			TextFunc.set_text_color($Label, "grey");
 		if initialized:
 			if updateTimer > 0:
 				pass;

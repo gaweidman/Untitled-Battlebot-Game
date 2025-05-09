@@ -114,20 +114,20 @@ func is_frozen() -> bool:
 func updatePrice():
 	if is_instance_valid(partRef):
 		if curState == doorState.CLOSED:
-			GameState.set_text_color($BuyButton/TextHolder/Price, "scrap");
+			TextFunc.set_text_color($BuyButton/TextHolder/Price, "scrap");
 			$BuyButton/TextHolder/Price.text = "???";
 		else:
 			var price = partRef._get_buy_price();
 			$BuyButton/TextHolder/Price.text = str(price);
 			if is_affordable():
 				if curState == doorState.FROZEN:
-					GameState.set_text_color($BuyButton/TextHolder/Price, "ranged");
+					TextFunc.set_text_color($BuyButton/TextHolder/Price, "ranged");
 				else:
-					GameState.set_text_color($BuyButton/TextHolder/Price, "scrap");
+					TextFunc.set_text_color($BuyButton/TextHolder/Price, "scrap");
 			else:
-				GameState.set_text_color($BuyButton/TextHolder/Price, "unaffordable");
+				TextFunc.set_text_color($BuyButton/TextHolder/Price, "unaffordable");
 	else:
-		GameState.set_text_color($BuyButton/TextHolder/Price, "unaffordable");
+		TextFunc.set_text_color($BuyButton/TextHolder/Price, "unaffordable");
 		$BuyButton/TextHolder/Price.text = "-/-";
 
 func is_affordable() -> bool:

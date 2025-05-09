@@ -173,30 +173,9 @@ func get_physical_sound_manager() -> SND:
 		return board.get_node_or_null("SoundManager");
 	return null;
 
-# Colors for text.
-const textColors = {
-	"white" : Color("ffffff"),
-	"grey" : Color("e0dede"),
-	"utility" : Color("aae05b"),
-	"ranged" : Color("789be9"),
-	"melee" : Color("ff6e49"),
-	"scrap" : Color("f2ec6b"),
-	"red" : Color("cf2121"),
-	"unaffordable" : Color("ff0000"),
-	"inaffordable" : Color("ff0000"),
-}
+var partAge := 0;
 
-static func set_text_color(node, color):
-	if is_instance_valid(node):
-		if color is Color:
-			if node.get("theme_override_colors/font_color") != color:
-				node.set_deferred("theme_override_colors/font_color", color);
-		else:
-			if color is String:
-				var newCol := Color(textColors["white"]);
-				if color in textColors:
-					newCol = Color(textColors[color]);
-				else:
-					newCol = Color(color);
-				if node.get("theme_override_colors/font_color") != newCol:
-					node.set_deferred("theme_override_colors/font_color", newCol);
+func get_unique_part_age() -> int:
+	var ret = partAge;
+	partAge += 1;
+	return ret;

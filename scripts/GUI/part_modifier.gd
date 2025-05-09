@@ -118,3 +118,7 @@ func disable(switch):
 		enabled = false;
 	if target is Part:
 		distribute_modifier();
+
+func kill_if_invalid():
+	if ! is_instance_valid(owner) or ! is_instance_valid(inventoryNode):
+		free();

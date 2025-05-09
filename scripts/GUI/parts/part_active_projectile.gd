@@ -71,7 +71,7 @@ func fireBullet():
 	if is_instance_valid(bullet):
 		Hooks.OnFireProjectile(self, bullet);
 		firingAngle = Vector3.BACK.rotated(Vector3(0,1,0), aimingRotAngle + deg_to_rad(90));
-		firingAngle += inaccuracy * Vector3(randf_range(-1,1),randf_range(-1,1),randf_range(-1,1));
+		firingAngle += inaccuracy * Vector3(randf_range(-1,1),randf_range(0,0),randf_range(-1,1));
 		firingAngle = firingAngle.normalized();
 		bullet.fire(thisBot, self, positionNode.global_position + firingOffset + modelOffset, firingAngle, fireSpeed, bulletLifetime, get_damage());
 		

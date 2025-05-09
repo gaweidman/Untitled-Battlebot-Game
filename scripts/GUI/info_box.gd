@@ -15,38 +15,38 @@ func populate_info(part:Part):
 	lbl_partName.text = part.partName;
 	if part.ownedByPlayer:
 		$MoveButton.disabled = false;
-		$SellButton/Label.text = "SELL: "+ str(part._get_sell_price());
+		$SellButton/Label.text = "SELL: "+ TextFunc.format_stat(part._get_sell_price(), 0);
 		$SellButton/Label.show();
 		$SellButton.disabled = false;
 	$Description.text = part.partDescription;
 	
 	if part._get_part_type() == Part.partTypes.UTILITY:
-		$EnergyIcon/Label.text = str(part.get_energy_cost(true));
+		$EnergyIcon/Label.text = TextFunc.format_stat(part.get_energy_cost(true));
 		$EnergyIcon.show();
-		$CooldownIcon/Label.text = str(part.get_fire_rate(true));
+		$CooldownIcon/Label.text = TextFunc.format_stat(part.get_fire_rate(true));
 		$CooldownIcon.show();
 		iconBase.texture = load("res://graphics/images/HUD/info_utility.png");
 		
 	elif part._get_part_type() == Part.partTypes.MELEE:
-		$EnergyIcon/Label.text = str(part.get_energy_cost(true));
+		$EnergyIcon/Label.text = TextFunc.format_stat(part.get_energy_cost(true));
 		$EnergyIcon.show();
-		$CooldownIcon/Label.text = str(part.get_fire_rate(true));
+		$CooldownIcon/Label.text = TextFunc.format_stat(part.get_fire_rate(true));
 		$CooldownIcon.show();
 		
 		iconBase.texture = load("res://graphics/images/HUD/info_melee.png");
-		$DamageIcon/Label.text = str(part.get_damage(true));
+		$DamageIcon/Label.text = TextFunc.format_stat(part.get_damage(true));
 		$DamageIcon.show();
 		
 	elif part._get_part_type() == Part.partTypes.RANGED:
-		$EnergyIcon/Label.text = str(part.get_energy_cost(true));
+		$EnergyIcon/Label.text = TextFunc.format_stat(part.get_energy_cost(true));
 		$EnergyIcon.show();
-		$CooldownIcon/Label.text = str(part.get_fire_rate(true));
+		$CooldownIcon/Label.text = TextFunc.format_stat(part.get_fire_rate(true));
 		$CooldownIcon.show();
 		
 		iconBase.texture = load("res://graphics/images/HUD/info_ranged.png");
-		$DamageIcon/Label.text = str(part.get_damage(true));
+		$DamageIcon/Label.text = TextFunc.format_stat(part.get_damage(true));
 		$DamageIcon.show();
-		$MagazineIcon/Label.text = str(part.get_magazine_size(true));
+		$MagazineIcon/Label.text = TextFunc.format_stat(part.get_magazine_size(true), 0);
 		$MagazineIcon.show();
 		
 	elif part._get_part_type() == Part.partTypes.PASSIVE:
@@ -74,5 +74,5 @@ func _on_sell_button_pressed():
 		clear_info();
 	else:
 		areYouSure = true;
-		$SellButton/Label.text = "SURE? "+ str(partRef._get_sell_price());
+		$SellButton/Label.text = "SURE? "+ TextFunc.format_stat(partRef._get_sell_price(), 0);
 	pass # Replace with function body.
