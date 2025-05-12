@@ -8,7 +8,9 @@
 
 [node name="EnemySoldier" instance=ExtResource("1_l6y64")]
 script = ExtResource("2_l6y64")
+sleepTimerLength = 0.0
 meshMaterialOverride0 = ExtResource("3_mgaks")
+AudioSourceType = 0
 
 [node name="CombatHandler" parent="." index="3"]
 scrap_worth = 3

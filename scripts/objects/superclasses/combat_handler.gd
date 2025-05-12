@@ -12,6 +12,7 @@ var invincibleTimer := 0.0;
 @export var maxInvincibleTimer := 0.25;
 var thisBot : Combatant;
 var body : RigidBody3D;
+var alive := true;
 
 var activeParts = { 0 : null, 1: null, 2: null, 3: null}
 
@@ -20,7 +21,11 @@ func _ready():
 
 func die():
 	Hooks.OnDeath(thisBot, GameState.get_player());
+	alive = false;
 	get_parent().queue_free();
+
+func is_alive():
+	return alive;
 
 func take_damage(damage:float):
 	if GameState.get_in_state_of_play():

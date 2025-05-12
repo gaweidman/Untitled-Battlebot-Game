@@ -53,6 +53,7 @@ func get_energy_refresh_rate():
 func die():
 	player.body.hide();
 	player.freeze();
+	alive = false;
 	if GameState.get_in_state_of_play():
 		SND.play_sound_nondirectional("Combatant.Die");
 	GameState.game_over();
@@ -66,6 +67,7 @@ func die():
 	pass;
 
 func live():
+	alive = true;
 	health = maxHealth;
 	energy = maxEnergy;
 	pass;

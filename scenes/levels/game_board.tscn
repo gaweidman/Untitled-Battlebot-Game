@@ -791,7 +791,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "END RUN?"
 
-[node name="Options" type="Control" parent="HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master", "invShooting", "devCheats", "moneyCheat", "invincibleCheat")]
+[node name="Options" type="Control" parent="HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master", "invShooting", "sawbladeDrone", "devCheats", "moneyCheat", "invincibleCheat")]
 visible = false
 layout_mode = 1
 anchor_right = 1.005
@@ -804,6 +804,7 @@ box_UI = NodePath("UIVolume")
 box_world = NodePath("WorldVolume")
 box_master = NodePath("MasterVolume")
 invShooting = NodePath("InvShooting")
+sawbladeDrone = NodePath("sawbladeDrone")
 devCheats = NodePath("DevCheats")
 moneyCheat = NodePath("moneys")
 invincibleCheat = NodePath("godmode")

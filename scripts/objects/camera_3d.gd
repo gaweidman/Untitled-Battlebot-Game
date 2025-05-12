@@ -68,8 +68,8 @@ func _physics_process(delta):
 		var inp = GameState.get_input_handler();
 		var inpVec = inp.get_movement_vector();
 		modInpVec = - Vector3(inpVec.x, 0, inpVec.y);
-		var mousePos = viewport.get_mouse_position();
 		var viewRect = viewport.get_visible_rect();
+		var mousePos = Vector2(clamp(viewport.get_mouse_position().x, 0, viewRect.size.x), clamp(viewport.get_mouse_position().y, 0, viewRect.size.y));
 		var mousePosMoved = (mousePos - (viewRect.size / 2)) / (viewRect.size / 2)
 		var targetInputOffsetX = (-mousePosMoved.x);
 		var targetInputOffsetZ = (-mousePosMoved.y);

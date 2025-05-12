@@ -29,6 +29,11 @@ func get_ammo(integer := true):
 		return int(combatHandler.energy);
 	return combatHandler.energy;
 
+func is_alive():
+	if is_instance_valid(combatHandler):
+		return combatHandler.is_alive();
+	return false;
+
 func take_knockback(_inDir:Vector3):
 	#var inDir = _inDir * 100;
 	#print("Player knockback")

@@ -84,11 +84,11 @@ func starting_kit():
 	#add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sniper.tscn", 0);
 	#add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 0);
 	#add_part_from_scene(2, 4, "res://scenes/prefabs/objects/parts/playerParts/part_Fan.tscn");
-	add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/scrapthirsty.tscn", 1);
+	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/scrapthirsty.tscn", 1);
 	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 1);
-	add_part_from_scene(4, 0, "res://scenes/prefabs/objects/parts/playerParts/part_jump.tscn", 3);
+	#add_part_from_scene(4, 0, "res://scenes/prefabs/objects/parts/playerParts/part_jump.tscn", 3);
 	#add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
-	add_part_from_scene(0, 3, "res://scenes/prefabs/objects/parts/playerParts/turtle_coil.tscn");
+	#add_part_from_scene(0, 3, "res://scenes/prefabs/objects/parts/playerParts/turtle_coil.tscn");
 	
 	$InventoryControls/BackingTexture/Shop.reroll_shop();
 	if typeof(GameState.get_setting("startingScrap")) is int:

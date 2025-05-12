@@ -21,6 +21,8 @@ func reset():
 	box_master.value = 100.0;
 	invShooting.button_pressed = true;
 	devCheats.button_pressed = false;
+	sawbladeDrone.button_pressed = true;
+	#drone
 
 func _on_music_volume_value_changed(value):
 	var vol = (value * 1.3) / 100.0
@@ -53,6 +55,7 @@ func _on_inv_shooting_toggled(toggled_on):
 	pass # Replace with function body.
 
 @export var invShooting : CheckButton;
+@export var sawbladeDrone : CheckButton;
 @export var devCheats : CheckButton;
 @export var moneyCheat : CheckButton;
 @export var invincibleCheat : CheckButton;

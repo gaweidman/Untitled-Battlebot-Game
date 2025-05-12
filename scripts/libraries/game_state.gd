@@ -102,6 +102,13 @@ func is_player_in_range(inGlobalPosition:Vector3, range:float):
 	
 	return lenToPLayer <= range;
 
+func is_player_alive():
+	var CH = get_combat_handler();
+	
+	if is_instance_valid(CH):
+		return CH.is_alive();
+	return false;
+
 func get_player_body_mesh():
 	var bdy = get_player_body();
 	
@@ -116,7 +123,7 @@ func get_input_handler():
 		return ply.get_node_or_null("InputHandler");
 	return null;
 
-func get_combat_handler():
+func get_combat_handler() -> CombatHandlerPlayer:
 	var ply = get_player();
 	
 	if is_instance_valid(ply):

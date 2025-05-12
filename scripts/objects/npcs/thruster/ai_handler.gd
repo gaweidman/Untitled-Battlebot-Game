@@ -13,12 +13,12 @@ func get_movement_vector():
 	var ply = GameState.get_player();
 	var thisBot = get_parent();
 	
-	var posDiff = ply.get_node("Body").get_global_position() - get_parent().get_node("Body").get_global_position();
-	posDiff = posDiff.normalized();
+	if ply && ply.is_alive():
+		var posDiff = ply.get_node("Body").get_global_position() - get_parent().get_node("Body").get_global_position();
+		posDiff = posDiff.normalized();
+			
+		return 120000 * Vector2(posDiff.x, posDiff.z);
 		
-	return 120000 * Vector2(posDiff.x, posDiff.z);
-	
-	if ply:
 		var newTargetNode = get_target_node();
 		
 
@@ -43,6 +43,7 @@ func get_movement_vector():
 			make_link(curTargetPos);
 			
 		var targetPos = get_next_point_on_path();
+	return Vector2.ZERO
 
 
 

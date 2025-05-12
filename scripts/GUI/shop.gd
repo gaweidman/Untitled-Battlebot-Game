@@ -216,21 +216,33 @@ var rerollPriceIncrementPermanent := 0.0;
 
 func update_reroll_button():
 	$RerollButton/TextHolder/Price.text = TextFunc.format_stat(get_reroll_price(), 0);
-	if inventory.is_affordable(get_reroll_price()):
+	if inventory.is_affordable(get_reroll_price()) and not all_stalls_frozen():
 		TextFunc.set_text_color($RerollButton/TextHolder/Price, "scrap");
 	else:
 		TextFunc.set_text_color($RerollButton/TextHolder/Price, "unaffordable");
+
 func get_reroll_price():
 	return floori((rerollPriceBase + rerollPriceIncrement) * rerollPriceModifier);
 
 func _on_reroll_button_pressed():
-	if (inventory.is_affordable(get_reroll_price())) and not awaiting_reroll:
+	if (inventory.is_affordable(get_reroll_price())) and not awaiting_reroll and not all_stalls_frozen():
+		
 		inventory.remove_scrap(get_reroll_price(), "ShopReroll");
 		rerollPriceIncrement += rerollPricePressIncrement;
 		clopen_stalls(false);
 		awaiting_reroll = true;
 		rerollPriceIncrementPermanent += 0.25;
 	pass # Replace with function body.
+
+func all_stalls_frozen() -> bool:
+	var count = 0;
+	for stall in get_children():
+		if stall is ShopStall:
+			if stall.is_frozen():
+				count += 1;
+				if count >= 3:
+					return true;
+	return false;
 
 func all_stalls_closed() -> bool:
 	for stall in get_children():

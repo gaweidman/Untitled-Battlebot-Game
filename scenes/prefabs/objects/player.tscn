@@ -161,7 +161,6 @@ shader_parameter/mask = ExtResource("13_coyr8")
 [node name="Player" type="Node3D" node_paths=PackedStringArray("underbelly") groups=["Player Part"]]
 script = ExtResource("1_u8q0c")
 underbelly = NodePath("Body/BotBody/UnderbellyRaycasts")
-AudioSourceType = null
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant Body", "Player Part"]]
 unique_name_in_owner = true

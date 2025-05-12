@@ -22,7 +22,7 @@ func get_movement_vector():
 	#print(curTime)
 	
 	
-	if ply:
+	if ply and ply.is_alive():
 		var this = self.get_parent()
 		var playerPos = ply.get_global_body_position();
 		var selfPos = this.get_node("Body").get_global_position();
