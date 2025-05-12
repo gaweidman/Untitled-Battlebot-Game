@@ -8,4 +8,4 @@ func take_damage(damage:float):
 	super(damage);
 	if damage > 0:
 		if inventoryNode is InventoryPlayer:
-			inventoryNode.add_scrap(scrapAmount);
+			inventoryNode.add_scrap(scrapAmount, "Part");

@@ -12,9 +12,9 @@ dest_files=["res://.godot/imported/8-segment.png-31f5c6b8ec1b522da4859c25e539d6f
 
 [params]
 
-character_ranges=PackedStringArray("48,58", "32")
+character_ranges=PackedStringArray("48,58", "32", "46", "43", "45")
 kerning_pairs=PackedStringArray()
-columns=12
+columns=15
 rows=1
 image_margin=Rect2i(0, 0, 0, 0)
 character_margin=Rect2i(0, 0, 0, 0)

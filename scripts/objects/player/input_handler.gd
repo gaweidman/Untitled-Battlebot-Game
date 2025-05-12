@@ -27,7 +27,10 @@ func _physics_process(delta):
 	if GameState.get_in_state_of_play():
 		process_movement(get_movement_vector(), delta);
 		
-		if ! player.inventory.inventoryUp:
+		var cantShootWithInventory = GameState.get_setting("inventoryDisableShooting");
+		#print(cantShootWithInventory)
+		if (! player.inventory.inventoryUp) or  (! cantShootWithInventory):
+		#if (canShootWithInventory):
 			if Input.is_action_pressed("Fire0") && combatHandler.can_fire(FIRE.SLOT0):
 				combatHandler.use_active(FIRE.SLOT0);
 			if Input.is_action_pressed("Fire1") && combatHandler.can_fire(FIRE.SLOT1):
@@ -56,7 +59,7 @@ func get_movement_vector() -> Vector2:
 	if Input.is_action_pressed("MoveDown"):
 		movementVector += Vector2.DOWN;
 		
-	return movementVector;
+	return movementVector.normalized();
 
 static func is_inputting_movement() -> bool:
 	if GameState.get_in_state_of_play():

@@ -11,7 +11,7 @@ script = ExtResource("2_5x1qy")
 sleepTimerLength = 2.0
 meshMaterialOverride0 = ExtResource("4_x6ndg")
 
-[node name="BotBody" parent="Body" index="5"]
+[node name="BotBody" parent="Body" index="0"]
 surface_material_override/0 = ExtResource("4_x6ndg")
 
 [node name="CombatHandler" parent="." index="3"]

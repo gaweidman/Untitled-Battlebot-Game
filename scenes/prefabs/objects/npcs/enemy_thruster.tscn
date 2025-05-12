@@ -19,7 +19,7 @@ emission = Color(1, 1, 0, 1)
 [node name="Thruster" instance=ExtResource("1_273iq")]
 script = ExtResource("2_2q850")
 
-[node name="BotBody" parent="Body" index="5"]
+[node name="BotBody" parent="Body" index="0"]
 surface_material_override/0 = ExtResource("3_2q850")
 
 [node name="CombatHandler" parent="." index="3"]

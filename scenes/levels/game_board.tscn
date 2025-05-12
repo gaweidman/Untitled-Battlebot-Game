@@ -565,6 +565,7 @@ text = "in-dev overlay
 not finished"
 
 [node name="MainMenu" type="Control" parent="HUD"]
+visible = false
 layout_mode = 1
 anchor_right = 1.005
 anchor_bottom = 0.997
@@ -741,6 +742,29 @@ text = "[i][b][color=F22]GAME OVER"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="GameOverStats" type="RichTextLabel" parent="HUD/GameOver"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 416.0
+offset_top = 267.0
+offset_right = -401.0
+offset_bottom = -202.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/bold_italics_font_size = 29
+bbcode_enabled = true
+text = "[i][b]STATS[/b]
+Highest Round: BLAhj
+Some other stat:
+ASSSSSSSSSDsdasdasdASDSAF"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Pause" type="Control" parent="HUD"]
 layout_mode = 1
 anchor_left = 0.503
@@ -767,7 +791,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "END RUN?"
 
-[node name="Options" type="Control" parent="HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master")]
+[node name="Options" type="Control" parent="HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master", "invShooting", "devCheats", "moneyCheat", "invincibleCheat")]
 visible = false
 layout_mode = 1
 anchor_right = 1.005
@@ -779,6 +803,10 @@ box_music = NodePath("MusicVolume")
 box_UI = NodePath("UIVolume")
 box_world = NodePath("WorldVolume")
 box_master = NodePath("MasterVolume")
+invShooting = NodePath("InvShooting")
+devCheats = NodePath("DevCheats")
+moneyCheat = NodePath("moneys")
+invincibleCheat = NodePath("godmode")
 
 [node name="Btn_Menu" type="Button" parent="HUD/Options"]
 layout_mode = 1
@@ -799,9 +827,9 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 416.0
-offset_top = 200.0
+offset_top = 113.0
 offset_right = -401.0
-offset_bottom = -360.0
+offset_bottom = -447.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
@@ -830,9 +858,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 472.0
+offset_left = 224.0
 offset_top = 369.0
-offset_right = -471.0
+offset_right = -719.0
 offset_bottom = -248.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -848,9 +876,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 472.0
+offset_left = 224.0
 offset_top = 443.0
-offset_right = -471.0
+offset_right = -719.0
 offset_bottom = -174.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -866,9 +894,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 472.0
+offset_left = 224.0
 offset_top = 406.0
-offset_right = -471.0
+offset_right = -719.0
 offset_bottom = -211.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -884,9 +912,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 472.0
+offset_left = 224.0
 offset_top = 314.0
-offset_right = -471.0
+offset_right = -719.0
 offset_bottom = -303.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -895,6 +923,82 @@ value = 100.0
 alignment = 2
 prefix = "Master Volume: "
 suffix = "%"
+
+[node name="InvShooting" type="CheckButton" parent="HUD/Options"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 686.0
+offset_top = 315.0
+offset_right = -256.0
+offset_bottom = -279.0
+grow_horizontal = 2
+grow_vertical = 2
+button_pressed = true
+text = "Inventory Disables 
+using Active parts"
+alignment = 2
+
+[node name="DevCheats" type="CheckButton" parent="HUD/Options"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 668.0
+offset_top = 371.0
+offset_right = -256.0
+offset_bottom = -246.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Enable dev cheat menu"
+alignment = 2
+
+[node name="moneys" type="CheckButton" parent="HUD/Options"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 649.0
+offset_top = 404.0
+offset_right = -275.0
+offset_bottom = -213.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Bajillion Moneys"
+alignment = 2
+
+[node name="godmode" type="CheckButton" parent="HUD/Options"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 649.0
+offset_top = 437.0
+offset_right = -275.0
+offset_bottom = -180.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Godmode
+"
+alignment = 2
+
+[node name="sawbladeDrone" type="CheckButton" parent="HUD/Options"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 220.0
+offset_top = 481.0
+offset_right = -722.0
+offset_bottom = -136.0
+grow_horizontal = 2
+grow_vertical = 2
+button_pressed = true
+text = "Sawblades drone"
+alignment = 2
 
 [node name="Damage Cube" parent="." instance=ExtResource("8_hfgcm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0834, 3.4556, -4.56467)
@@ -939,3 +1043,8 @@ mesh = ExtResource("5_4jixe")
 [connection signal="value_changed" from="HUD/Options/WorldVolume" to="HUD/Options" method="_on_world_volume_value_changed"]
 [connection signal="value_changed" from="HUD/Options/UIVolume" to="HUD/Options" method="_on_ui_volume_value_changed"]
 [connection signal="value_changed" from="HUD/Options/MasterVolume" to="HUD/Options" method="_on_master_volume_value_changed"]
+[connection signal="toggled" from="HUD/Options/InvShooting" to="HUD/Options" method="_on_inv_shooting_toggled"]
+[connection signal="toggled" from="HUD/Options/DevCheats" to="HUD/Options" method="_on_dev_cheats_toggled"]
+[connection signal="toggled" from="HUD/Options/moneys" to="HUD/Options" method="_on_moneys_toggled"]
+[connection signal="toggled" from="HUD/Options/godmode" to="HUD/Options" method="_on_godmode_toggled"]
+[connection signal="toggled" from="HUD/Options/sawbladeDrone" to="HUD/Options" method="_on_sawblade_drone_toggled"]

@@ -1,7 +1,7 @@
 extends Node
 
 # How quickly the player speeds up
-var PLAYER_ACCELERATION = 5000;
+var PLAYER_ACCELERATION = 6000;
 
 # how fast enemies can go
 var MAX_ENEMY_SPEED = 13
@@ -57,6 +57,12 @@ func set_game_board_state(state : GameBoard.gameState):
 	
 	if board != null:
 		board.change_state(state);
+
+func game_over():
+	var board = get_game_board();
+	
+	if is_instance_valid(board):
+		board.game_over();
 
 func get_player() -> Player:
 	var ply = get_node_or_null("/root/GameBoard/Player")
@@ -179,3 +185,31 @@ func get_unique_part_age() -> int:
 	var ret = partAge;
 	partAge += 1;
 	return ret;
+
+static var settings := {
+	StringName("inventoryDisableShooting") : true,
+	StringName("sawbladeDrone") : true,
+	StringName("devMode") : false,
+	StringName("startingScrap") : 0,
+	StringName("godMode") : false,
+}
+
+func set_setting(settingName : StringName, settinginput : Variant):
+	push_warning("Attempt to set setting ", settingName, " to a value of ", (settinginput));
+	var setting = get_setting(settingName);
+	if setting != null:
+		if typeof(setting) == typeof(settinginput):
+			print (settings.has(StringName(settingName)))
+			settings[settingName] = settinginput;
+			pass
+		else:
+			push_warning("Attempt to set setting ", settingName, " to a value of the invalid type ", type_string(settinginput), ". Should be ", type_string(setting));
+	
+	print(get_setting(settingName));
+
+func get_setting(settingName : StringName):
+	if settings.has(settingName):
+		var setting = settings[settingName];
+		return setting;
+	push_warning("Attempted to access invalid setting ", settingName, " ");
+	return null;

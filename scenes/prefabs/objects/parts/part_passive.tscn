@@ -9,3 +9,4 @@ bonusHP = 0.0
 bonusEnergy = 0.0
 bonusEnergyRegen = 0.0
 myPartType = 1
+partDescription = "[color=f2ec6b]No description given."

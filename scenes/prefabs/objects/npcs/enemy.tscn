@@ -1,12 +1,11 @@
-[gd_scene load_steps=20 format=3 uid="uid://d12ckrvst1osp"]
+[gd_scene load_steps=17 format=3 uid="uid://d12ckrvst1osp"]
 
 [ext_resource type="Script" uid="uid://do7rqw7y5akti" path="res://scripts/objects/npcs/baseEnemy/enemy.gd" id="1_u733l"]
-[ext_resource type="Material" uid="uid://uyr61s32rxaj" path="res://graphics/materials/PlayerBody_Bottom.tres" id="2_u733l"]
 [ext_resource type="Material" uid="uid://cxguwr2myxntx" path="res://graphics/materials/models/bots/thruster.tres" id="2_uec6s"]
-[ext_resource type="Material" uid="uid://b38swtg8yloo4" path="res://graphics/materials/PlayerBody.tres" id="3_uaa5m"]
-[ext_resource type="Material" uid="uid://cbvhbi7cs2id6" path="res://graphics/materials/Treads.tres" id="4_fyoyp"]
-[ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="5_aw2uh"]
+[ext_resource type="Script" uid="uid://bqpwfw5xvfp2g" path="res://scripts/objects/player/underbellyColliders.gd" id="5_sbhyg"]
 [ext_resource type="ArrayMesh" uid="uid://bmh1lb7lajb4y" path="res://graphics/models/extracted/bot.res" id="6_sbhyg"]
+[ext_resource type="Script" uid="uid://caotgm5hf1ikf" path="res://scripts/objects/player/tread.gd" id="6_uec6s"]
+[ext_resource type="Script" uid="uid://dslbjn7emuthd" path="res://scripts/objects/player/contact_point.gd" id="7_02sge"]
 [ext_resource type="PackedScene" uid="uid://dqn5vwvgp6ddp" path="res://scenes/prefabs/utilities/combat_handler.tscn" id="7_nefpp"]
 [ext_resource type="Material" uid="uid://hjfve5f811g3" path="res://graphics/materials/models/bots/tread.tres" id="7_uec6s"]
 [ext_resource type="Script" uid="uid://c25f0pj3y257c" path="res://scripts/objects/npcs/baseEnemy/combat_handler.gd" id="8_uaa5m"]
@@ -16,13 +15,6 @@
 [ext_resource type="Texture2D" uid="uid://oxhe4uwmstjd" path="res://graphics/images/HUD/enemyPing.png" id="12_fc5s6"]
 [ext_resource type="Script" uid="uid://ddmbxvio7xxda" path="res://scripts/GUI/enemyPing.gd" id="13_sbhyg"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_odmbc"]
-size = Vector3(1, 0.333479, 1)
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_fise2"]
-height = 0.021
-radius = 0.95
-
 [sub_resource type="SphereShape3D" id="SphereShape3D_hnom0"]
 radius = 0.611008
 
@@ -30,8 +22,10 @@ radius = 0.611008
 
 [node name="Enemy" type="Node3D" groups=["Combatant"]]
 script = ExtResource("1_u733l")
+sleepTimerLength = null
 meshMaterialOverride0 = ExtResource("2_uec6s")
 meshMaterialOverride1 = ExtResource("7_uec6s")
+AudioSourceType = null
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Combatant Body", "Damager", "Driveable"]]
 unique_name_in_owner = true
@@ -47,106 +41,64 @@ contact_monitor = true
 max_contacts_reported = 10
 angular_damp_mode = 1
 
-[node name="Bottom" type="CSGBox3D" parent="Body"]
-transform = Transform3D(0.968925, 0, 0, 0, 0.968925, 0, 0, 0, 0.968925, 0, 0.087, 0)
-visible = false
-material_override = ExtResource("2_u733l")
-size = Vector3(1, 0.15, 1)
-material = ExtResource("3_uaa5m")
-
-[node name="TreadL" type="CSGBox3D" parent="Body/Bottom"]
-transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, -0.08, -0.25)
-size = Vector3(0.75, 0.02, 0.09)
-material = ExtResource("4_fyoyp")
-
-[node name="ContactPoint1" type="Node3D" parent="Body/Bottom/TreadL"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, -0.02, 0)
-
-[node name="Raycast1" type="RayCast3D" parent="Body/Bottom/TreadL/ContactPoint1"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
-
-[node name="ContactPoint2" type="Node3D" parent="Body/Bottom/TreadL"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, -0.02, 0)
-
-[node name="Raycast2" type="RayCast3D" parent="Body/Bottom/TreadL/ContactPoint2"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
-
-[node name="TreadR" type="CSGBox3D" parent="Body/Bottom"]
-transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, -0.08, 0.25)
-size = Vector3(0.75, 0.02, 0.09)
-material = ExtResource("4_fyoyp")
-
-[node name="ContactPoint3" type="Node3D" parent="Body/Bottom/TreadR"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, -0.02, 0)
-
-[node name="Raycast3" type="RayCast3D" parent="Body/Bottom/TreadR/ContactPoint3"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
-
-[node name="ContactPoint4" type="Node3D" parent="Body/Bottom/TreadR"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, -0.02, 0)
-
-[node name="Raycast4" type="RayCast3D" parent="Body/Bottom/TreadR/ContactPoint4"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-target_position = Vector3(0, -5, 0)
-hit_from_inside = true
-collide_with_areas = true
-
-[node name="Top" type="CSGBox3D" parent="Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.269, 0)
-visible = false
-material_override = ExtResource("3_uaa5m")
-size = Vector3(1, 0.15, 1)
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.179051, 0)
-visible = false
-shape = SubResource("BoxShape3D_odmbc")
-disabled = true
-
-[node name="Sawblade" type="RigidBody3D" parent="Body" groups=["Damager", "MeleeWeapon", "Metal", "Player Part"]]
-unique_name_in_owner = true
-transform = Transform3D(0.999993, 0.00324984, 0.00205345, -0.00324838, 0.999994, -0.000714875, -0.00205576, 0.000708211, 0.999998, 0, 0.179466, 0)
-visible = false
-collision_priority = 3.0
-custom_integrator = true
-contact_monitor = true
-max_contacts_reported = 10
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Body/Sawblade"]
-shape = SubResource("CylinderShape3D_fise2")
-disabled = true
-
-[node name="Mesh" type="CSGCylinder3D" parent="Body/Sawblade"]
-material_override = ExtResource("5_aw2uh")
-radius = 0.95
-height = 0.021
-sides = 32
-
-[node name="HingeJoint3D" type="HingeJoint3D" parent="Body"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
-node_a = NodePath("..")
-node_b = NodePath("../Sawblade")
-motor/target_velocity = 18.8496
-motor/max_impulse = 512.0
-
 [node name="BotBody" type="MeshInstance3D" parent="Body" groups=["Combatant"]]
 unique_name_in_owner = true
 transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 0, -0.263986, 0)
 mesh = ExtResource("6_sbhyg")
 surface_material_override/1 = ExtResource("7_uec6s")
+
+[node name="UnderbellyRaycasts" type="Node3D" parent="Body/BotBody" node_paths=PackedStringArray("underbellyCollider", "rightTread", "leftTread")]
+unique_name_in_owner = true
+transform = Transform3D(-8.47061e-08, 0, 1.93785, 0, 1.93785, 0, -1.93785, 0, -8.47061e-08, 0, 0.701972, 0)
+script = ExtResource("5_sbhyg")
+underbellyCollider = NodePath("FloorCheck")
+rightTread = NodePath("TreadR")
+leftTread = NodePath("TreadL")
+
+[node name="TreadL" type="Node3D" parent="Body/BotBody/UnderbellyRaycasts" node_paths=PackedStringArray("contactPointFront", "contactPointBack")]
+transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0.7, -0.4, 0)
+script = ExtResource("6_uec6s")
+contactPointFront = NodePath("RaycastL1")
+contactPointBack = NodePath("RaycastL2")
+
+[node name="RaycastL2" type="RayCast3D" parent="Body/BotBody/UnderbellyRaycasts/TreadL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00999999, -0.4)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("7_02sge")
+
+[node name="RaycastL1" type="RayCast3D" parent="Body/BotBody/UnderbellyRaycasts/TreadL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00999999, 0.4)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("7_02sge")
+
+[node name="TreadR" type="Node3D" parent="Body/BotBody/UnderbellyRaycasts" node_paths=PackedStringArray("contactPointFront", "contactPointBack")]
+transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, -0.7, -0.4, 0)
+script = ExtResource("6_uec6s")
+contactPointFront = NodePath("RaycastR1")
+contactPointBack = NodePath("RaycastR2")
+
+[node name="RaycastR2" type="RayCast3D" parent="Body/BotBody/UnderbellyRaycasts/TreadR"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00999999, -0.4)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("7_02sge")
+
+[node name="RaycastR1" type="RayCast3D" parent="Body/BotBody/UnderbellyRaycasts/TreadR"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00999999, 0.4)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("7_02sge")
+
+[node name="FloorCheck" type="RayCast3D" parent="Body/BotBody/UnderbellyRaycasts"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+target_position = Vector3(0, -0.35, 0)
+script = ExtResource("7_02sge")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body" groups=["Combatant"]]
 shape = SubResource("SphereShape3D_hnom0")
@@ -222,5 +174,4 @@ offset_bottom = 16.0
 texture = ExtResource("12_fc5s6")
 
 [connection signal="body_entered" from="Body" to="MotionHandler" method="_on_body_entered"]
-[connection signal="body_entered" from="Body/Sawblade" to="." method="_on_sawblade_body_entered"]
 [connection signal="area_entered" from="RadiusCheck" to="MotionHandler" method="_on_radius_check_area_entered"]

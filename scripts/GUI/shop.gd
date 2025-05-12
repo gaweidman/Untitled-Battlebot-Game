@@ -63,6 +63,8 @@ func set_item_pool_waves(inWave:int):
 		changed = true;
 	if inWave == 3:
 		##Passives
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/scrapthirsty.tscn");
+		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/turtle_coil.tscn");
 		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_coolant.tscn");
 		add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_scrap_plating.tscn", 1);
 		##Batteries
@@ -199,7 +201,7 @@ func _on_heal_button_pressed():
 func _shop_heal():
 	if inventory.is_affordable(get_heal_price()):
 		if ! player.at_max_health():
-			inventory.remove_scrap(get_heal_price());
+			inventory.remove_scrap(get_heal_price(), "ShopHeal");
 			healPriceIncrement += healPricePressIncrement;
 			player.heal(get_heal_amount());
 			healPriceIncrementPermanent += 0.5;
@@ -223,7 +225,7 @@ func get_reroll_price():
 
 func _on_reroll_button_pressed():
 	if (inventory.is_affordable(get_reroll_price())) and not awaiting_reroll:
-		inventory.remove_scrap(get_reroll_price());
+		inventory.remove_scrap(get_reroll_price(), "ShopReroll");
 		rerollPriceIncrement += rerollPricePressIncrement;
 		clopen_stalls(false);
 		awaiting_reroll = true;
@@ -273,11 +275,11 @@ func calculate_part_pool():
 		var rarity = spawnListCopy[scene]["rarity"];
 		
 		if rarity == Part.partRarities.COMMON:
-			weight *= 20
+			weight *= 15
 		elif rarity == Part.partRarities.UNCOMMON:
 			weight *= 10
 		elif rarity == Part.partRarities.RARE:
-			weight *= 3
+			weight *= 5
 		
 		while weight > 0:
 			pool.append(scene);

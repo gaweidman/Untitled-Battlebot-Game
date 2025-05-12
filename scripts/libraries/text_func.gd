@@ -1,7 +1,7 @@
 extends Node
 
 
-func format_stat(num:float, decimals:int=2):
+func format_stat(num:float, decimals:int=2) -> String:
 	if decimals <= 0:
 		return str(int(round_to_dec(num, 0)));
 	else:

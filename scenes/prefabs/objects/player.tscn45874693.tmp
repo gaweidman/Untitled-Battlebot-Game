@@ -1,4 +1,4 @@
-[gd_scene load_steps=91 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=90 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Script" uid="uid://caotgm5hf1ikf" path="res://scripts/objects/player/tread.gd" id="2_s6ktd"]
@@ -78,7 +78,6 @@
 [ext_resource type="Texture2D" uid="uid://baqnprslvvu8t" path="res://graphics/images/HUD/partAssign_selected.png" id="61_n1h3t"]
 [ext_resource type="Texture2D" uid="uid://c17tsbqn3orah" path="res://graphics/images/HUD/partAssign_disabled.png" id="62_ltg8k"]
 [ext_resource type="Texture2D" uid="uid://ckkqo4l53j7nc" path="res://graphics/images/HUD/HudEdge.png" id="69_dbqh0"]
-[ext_resource type="Script" uid="uid://c2wmqa0s4f06n" path="res://scripts/GUI/lbl_hp_refresh.gd" id="73_xxsjn"]
 [ext_resource type="Texture2D" uid="uid://p4kd71ihg6eg" path="res://graphics/images/HUD/inventoryTab/open_unselected.png" id="78_gfej7"]
 [ext_resource type="AudioStream" uid="uid://b7fnytfbwjn5a" path="res://sounds/Movement_Start.ogg" id="78_gyjhe"]
 [ext_resource type="AudioStream" uid="uid://cwlqqaxddwtx7" path="res://sounds/Movement_Drone.ogg" id="79_gfej7"]
@@ -161,7 +160,6 @@ shader_parameter/mask = ExtResource("13_coyr8")
 [node name="Player" type="Node3D" node_paths=PackedStringArray("underbelly") groups=["Player Part"]]
 script = ExtResource("1_u8q0c")
 underbelly = NodePath("Body/BotBody/UnderbellyRaycasts")
-AudioSourceType = null
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant Body", "Player Part"]]
 unique_name_in_owner = true
@@ -221,7 +219,6 @@ surface_material_override/0 = ExtResource("7_7lyob")
 surface_material_override/1 = ExtResource("8_537hj")
 
 [node name="UnderbellyRaycasts" type="Node3D" parent="Body/BotBody" node_paths=PackedStringArray("underbellyCollider", "rightTread", "leftTread")]
-unique_name_in_owner = true
 transform = Transform3D(-8.47061e-08, 0, 1.93785, 0, 1.93785, 0, -1.93785, 0, -8.47061e-08, 0, 0.701972, 0)
 script = ExtResource("2_xxsjn")
 underbellyCollider = NodePath("FloorCheck")
@@ -817,6 +814,25 @@ offset_bottom = -9833.43
 mouse_filter = 2
 texture = ExtResource("11_nha5v")
 metadata/_edit_lock_ = true
+
+[node name="Lbl_Energy" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 335.0
+offset_top = -361.0
+offset_right = 576.0
+offset_bottom = -331.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 19
+text = "00/00"
 
 [node name="HealthBar" type="SubViewportContainer" parent="Inventory/InventoryControls/BackingTexture" node_paths=PackedStringArray("emptyBar")]
 unique_name_in_owner = true
@@ -1735,7 +1751,6 @@ script = ExtResource("56_n1h3t")
 layout_mode = 0
 offset_right = 252.0
 offset_bottom = 30.0
-focus_mode = 0
 texture_normal = ExtResource("59_yjpf5")
 texture_pressed = ExtResource("60_vba6s")
 texture_hover = ExtResource("59_yjpf5")
@@ -1771,47 +1786,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -126.0
-offset_top = -345.75
-offset_right = -78.0
-offset_bottom = -328.75
-theme_override_fonts/font = ExtResource("47_08lav")
-theme_override_font_sizes/font_size = 15
-text = "00:00"
-horizontal_alignment = 2
-vertical_alignment = 1
-
-[node name="Lbl_HPRefresh" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -534.0
-offset_top = -320.0
-offset_right = -486.0
-offset_bottom = -303.0
-theme_override_fonts/font = ExtResource("47_08lav")
-theme_override_font_sizes/font_size = 15
-text = "00:00"
-horizontal_alignment = 2
-vertical_alignment = 1
-script = ExtResource("73_xxsjn")
-
-[node name="Lbl_EnergyRefresh" type="Label" parent="Inventory/InventoryControls/BackingTexture"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 482.0
-offset_top = -320.0
-offset_right = 530.0
-offset_bottom = -303.0
+offset_left = -125.0
+offset_top = -346.75
+offset_right = -77.0
+offset_bottom = -329.75
 theme_override_fonts/font = ExtResource("47_08lav")
 theme_override_font_sizes/font_size = 15
 text = "00:00"
@@ -1825,10 +1803,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -124.0
-offset_top = -321.75
-offset_right = -76.0
-offset_bottom = -304.75
+offset_left = -123.0
+offset_top = -322.75
+offset_right = -75.0
+offset_bottom = -305.75
 theme_override_fonts/font = ExtResource("47_08lav")
 theme_override_font_sizes/font_size = 15
 text = "00:00"
@@ -1838,10 +1816,10 @@ script = ExtResource("48_2ma37")
 
 [node name="TimerBlinky" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Lbl_Timer"]
 layout_mode = 0
-offset_left = -18.0
-offset_top = 7.0
-offset_right = -8.0
-offset_bottom = 18.0
+offset_left = -19.0
+offset_top = 8.0
+offset_right = -9.0
+offset_bottom = 19.0
 texture = ExtResource("49_mh0ri")
 
 [node name="ActiveReassignmentButtons" type="Control" parent="Inventory/InventoryControls/BackingTexture"]

@@ -9,6 +9,7 @@ var inventory : Inventory;
 var _partOffset1 := Vector3(0, 0.086, 0.0);
 var _partOffset2 := Vector3(0, 0.172, 0);
 var bodyMesh : MeshInstance3D; 
+var underbelly : UnderbellyContactPoints;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -22,6 +23,8 @@ func assign_refs():
 		if !is_instance_valid(bodyMesh):
 			if is_instance_valid(%BotBody):
 				bodyMesh = %BotBody;
+			if is_instance_valid(%UnderbellyRaycasts):
+				underbelly = %UnderbellyRaycasts;
 	if !is_instance_valid(combatHandler):
 		combatHandler = get_node("CombatHandler");
 	if !is_instance_valid(motionHandler):
@@ -74,7 +77,7 @@ func _get_combat_handler():
 func _get_motion_handler():
 	return get_node_or_null("MotionHandler")
 
-func take_damage(damage):
+func take_damage(damage, ):
 	pass
 	#combatHandler.take_damage(damage);
 

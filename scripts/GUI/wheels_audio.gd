@@ -38,5 +38,5 @@ func _physics_process(delta):
 					switch(moving);
 		if ! GameState.get_in_state_of_play():
 			switch(false);
-		var vol = linear_to_db(db_to_linear(-10.667) * snd.volumelevelWorld);
+		var vol = linear_to_db(db_to_linear(-10.667) * snd.get_volume_world());
 		set_deferred("volume_db", vol)

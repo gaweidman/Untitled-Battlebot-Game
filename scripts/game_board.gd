@@ -17,7 +17,9 @@ var roundEnemies := 0;
 var round := 0;
 var enemiesAlive = [];
 var player : Player;
+
 var enemiesKilled := 0;
+var scrapGained := 0;
 @export_category("HUD nodes")
 #@export var HUD_playerStats : Control;
 @export var HUD_mainMenu : Control;
@@ -28,9 +30,21 @@ var enemiesKilled := 0;
 
 func _ready():
 	spawnPlayer();
-	get_tree().current_scene.ready.connect(_on_scenetree_ready)
+	get_tree().current_scene.ready.connect(_on_scenetree_ready);
 	#return_random_spawn_location()
 func _on_scenetree_ready():
+	Hooks.add(self, "OnDeath", "LifetimeKillCounter", 
+		func(thisBot, killer):
+			if killer is Player:
+				enemiesKilled += 1;
+				print_rich("[color=red][b]Enemies killed: ",enemiesKilled)
+			)
+	Hooks.add(self, "OnGainScrap", "LifetimeScrapCounter", 
+		func(source, amt):
+			if amt > 0:
+				scrapGained += amt;
+				print_rich("[color=yellow][b]Scrap gained: ",scrapGained)
+			)
 	change_state(gameState.MAIN_MENU);
 
 func set_enemy_spawn_waves(inWave:int):
@@ -161,6 +175,8 @@ func enter_state(state:gameState):
 		round = 0;
 		roundEnemiesInit = 1;
 		clear_enemy_spawn_list();
+		scrapGained = 0;
+		enemiesKilled = 0;
 		
 		spawnPlayer(return_random_unoccupied_spawn_location());
 		player.start_new_game();
@@ -315,6 +331,17 @@ func destroy_all_enemies():
 	for enemy in enemiesAlive:
 		if enemy:
 			enemy.call_deferred("die");
+
+func game_over():
+	%GameOverStats.clear();
+	%GameOverStats.append_text("[i][b]STATS[/b]");
+	%GameOverStats.newline();
+	%GameOverStats.append_text("HIGHEST ROUND: " + str(GameState.get_round_number()));
+	%GameOverStats.newline();
+	%GameOverStats.append_text("ENEMIES KILLED: " + str(enemiesKilled));
+	%GameOverStats.newline();
+	%GameOverStats.append_text("SCRAP GAINED: " + str(scrapGained));
+	change_state(gameState.GAME_OVER);
 
 ##Button calls
 func _on_btn_play_pressed():

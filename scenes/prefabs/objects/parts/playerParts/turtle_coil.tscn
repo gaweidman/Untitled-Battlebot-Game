@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://b885xogqv2sid"]
+
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_loga7"]
+[ext_resource type="Script" uid="uid://dpbjoioc4tbcm" path="res://scripts/GUI/parts/playerParts/part_turtleCoil.gd" id="2_uawyq"]
+
+[node name="PartTurtleCoil" instance=ExtResource("1_loga7")]
+script = ExtResource("2_uawyq")
+scrapCostBase = 17
+dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)])
+myPartRarity = 1
+partName = "Turtle Coil"
+partDescription = "[color=f2ec6b]Your bot gains extra [color=789be9]Energy Recharge [color=f2ec6b]when standing still."
+partIconOffset = Vector2(0.5, 0.5)

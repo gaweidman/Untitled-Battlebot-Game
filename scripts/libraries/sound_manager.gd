@@ -26,24 +26,35 @@ enum AudioSrc {
 
 # Volume levels.
 static var volumeLevelMusic := 1.0;
-func set_volume_music(inVol:=1.0):
+static func set_volume_music(inVol:=1.0):
 	var mus = GameState.get_music();
-	mus.set_volume(inVol * volumeLevelMaster);
+	volumeLevelMusic = inVol;
+	mus.set_volume(get_volume_music());
+static func get_volume_music():
+	return volumeLevelMusic * get_volume_master();
 
 static var volumeLevelUI := 1.0;
-func set_volume_UI(inVol:=1.0):
-	volumeLevelUI = inVol * volumeLevelMaster;
 
-static var volumelevelWorld := 1.0;
-func set_volume_world(inVol:=1.0):
-	volumelevelWorld = inVol * volumeLevelMaster;
+static func set_volume_UI(inVol:=1.0):
+	volumeLevelUI = inVol;
+	print_rich("[color=green][b]", volumeLevelUI);
+static func get_volume_UI():
+	return volumeLevelUI * get_volume_master();
+
+static var volumeLevelWorld := 1.0;
+static func set_volume_world(inVol:=1.0):
+	volumeLevelWorld = inVol;
+static func get_volume_world():
+	return volumeLevelWorld * get_volume_master();
 
 static var volumeLevelMaster := 1.0;
-func set_volume_master(inVol:=1.0):
+static func set_volume_master(inVol:=1.0):
 	volumeLevelMaster = inVol;
-	set_volume_music(volumeLevelMusic);
+	set_volume_world(volumeLevelWorld);
 	set_volume_UI(volumeLevelUI);
-	set_volume_world(volumelevelWorld);
+	set_volume_music(volumeLevelMusic);
+static func get_volume_master():
+	return volumeLevelMaster;
 
 
 # All sounds in the game have a type assigned to them. Their type is determined
@@ -334,7 +345,7 @@ static func play_sound_at(inSound, inGlobalPosition:Vector3, parent = GameState.
 	else:
 		return;
 	newSound.global_position = inGlobalPosition;
-	newSound.volume_db = linear_to_db(inVolume * volumelevelWorld);
+	newSound.volume_db = linear_to_db(inVolume * get_volume_world());
 	newSound.pitch_scale = inPitch;
 	newSound.set_and_play_sound(snd);
 	return newSound;
@@ -355,7 +366,7 @@ static func play_sound_2D(inSound, inGlobalPosition:=Vector2(0,0), parent = Game
 	else:
 		return;
 	newSound.global_position = inGlobalPosition;
-	newSound.volume_db = linear_to_db(inVolume * volumeLevelUI);
+	newSound.volume_db = linear_to_db(inVolume * get_volume_UI());
 	newSound.pitch_scale = inPitch;
 	newSound.set_and_play_sound(snd);
 	return newSound;
@@ -377,7 +388,8 @@ static func play_sound_nondirectional(inSound, inVolume := 1.0, inPitch := 1.0):
 	else:
 		return;
 	
-	newSound.volume_db = linear_to_db(inVolume * volumeLevelUI);
+	newSound.volume_db = linear_to_db(inVolume * get_volume_UI());
+	print_rich("[color=green][b]", get_volume_UI());
 	newSound.pitch_scale = inPitch;
 	newSound.set_and_play_sound(snd);
 	return newSound;

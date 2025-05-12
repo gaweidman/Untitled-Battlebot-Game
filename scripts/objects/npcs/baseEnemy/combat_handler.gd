@@ -20,7 +20,7 @@ func use_active(index):
 func die():
 	var inv = GameState.get_inventory();
 	if is_instance_valid(inv):
-		inv.add_scrap(scrap_worth);
+		inv.add_scrap(scrap_worth, "Kill");
 		
 	ParticleFX.play("NutsBolts", GameState.get_game_board(), body.global_position);
 	if GameState.get_in_state_of_play():

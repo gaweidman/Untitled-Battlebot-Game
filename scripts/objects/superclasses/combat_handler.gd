@@ -19,13 +19,15 @@ func _ready():
 	thisBot = get_parent();
 
 func die():
+	Hooks.OnDeath(thisBot, GameState.get_player());
 	get_parent().queue_free();
 
 func take_damage(damage:float):
 	if GameState.get_in_state_of_play():
 		if invincible && damage > 0:
 			return;
-		health -= damage;
+		if !(GameState.get_setting("godMode") == true && thisBot is Player):
+			health -= damage;
 		add_invincibility()
 		if health <= 0.0:
 			die();
@@ -38,6 +40,8 @@ func add_invincibility(_time := maxInvincibleTimer):
 		invincibleTimer = _time;
 
 func get_max_health():
+	if health >= maxHealth:
+		health = maxHealth;
 	return maxHealth;
 
 func get_max_energy():

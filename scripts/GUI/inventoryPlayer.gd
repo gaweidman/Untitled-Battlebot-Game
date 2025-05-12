@@ -79,17 +79,22 @@ func starting_kit():
 	clear_inventory();
 	add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_cannon.tscn", 0);
 	add_part_from_scene(1, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 2);
-	add_part_from_scene(3, 4, "res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn");
+	add_part_from_scene(0, 4, "res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn");
 	
 	#add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_sniper.tscn", 0);
 	#add_part_from_scene(0, 0, "res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 0);
 	#add_part_from_scene(2, 4, "res://scenes/prefabs/objects/parts/playerParts/part_Fan.tscn");
-	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 2);
-	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_jump.tscn", 2);
-	#add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);d
+	add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/scrapthirsty.tscn", 1);
+	#add_part_from_scene(0, 2, "res://scenes/prefabs/objects/parts/playerParts/part_dash.tscn", 1);
+	add_part_from_scene(4, 0, "res://scenes/prefabs/objects/parts/playerParts/part_jump.tscn", 3);
+	#add_part_from_scene(1, 1, "res://scenes/prefabs/objects/parts/playerParts/part_repair.tscn", 2);
+	add_part_from_scene(0, 3, "res://scenes/prefabs/objects/parts/playerParts/turtle_coil.tscn");
 	
 	$InventoryControls/BackingTexture/Shop.reroll_shop();
-	scrap = 0;
+	if typeof(GameState.get_setting("startingScrap")) is int:
+		scrap = GameState.get_setting("startingScrap");
+	else:
+		scrap = 0;
 	
 	startingKitAssigned = true;
 
@@ -111,12 +116,14 @@ func update_stats():
 		var health = combatHandler.health;
 		%Lbl_Health.text = format_stat_num(health) + "/" + format_stat_num(maxHealth);
 		%HealthBar.set_health(health, maxHealth);
+		#%Lbl_HPRefresh.text = format_stat_num(combatHandler.get_)
 		
 		var stringEnergy = "";
 		var maxEnergy = combatHandler.get_max_energy();
 		var energy = combatHandler.energy;
 		%Lbl_Energy.text = format_stat_num(energy) + "/" + format_stat_num(maxEnergy);
 		%EnergyBar.set_health(energy, maxEnergy);
+		%Lbl_EnergyRefresh.text = format_stat_num(combatHandler.get_energy_refresh_rate())
 	
 		update_scrap();
 
@@ -136,12 +143,14 @@ func sell_part(part:Part):
 	remove_part(part, true, true);
 	SND.play_sound_nondirectional("Shop.Chaching", 1, randf_range(0.90,1.1));;
 
-func add_scrap(amt):
+func add_scrap(amt, source:String):
 	scrap = max(0, scrap + roundi(amt));
+	Hooks.OnGainScrap(source, roundi(amt));
 	update_scrap();
 
-func remove_scrap(amt):
+func remove_scrap(amt, source:String):
 	scrap = max(0, scrap - roundi(amt));
+	Hooks.OnGainScrap(source, roundi(amt));
 	update_scrap();
 
 func update_scrap():
@@ -289,10 +298,10 @@ func remove_part_post(part:Part, beingSold := false, beingBought := false):
 	if part.invHolderNode is ShopStall:
 		slots[part.invHolderNode.name] = null;
 	if beingSold:
-		add_scrap(part._get_sell_price());
+		add_scrap(part._get_sell_price(), "PartSold");
 		part.on_sold();
 	if beingBought:
-		remove_scrap(part._get_buy_price());
+		remove_scrap(part._get_buy_price(), "PartBought");
 		part.on_bought();
 		SND.play_sound_nondirectional("Shop.Chaching", 1, randf_range(0.90,1.1));;
 		if part is PartActive:
@@ -348,6 +357,7 @@ func take_damage(damage:float):
 		if is_instance_valid(part):
 			if part is Part:
 				part.take_damage(damage);
+	%Lbl_HPRefresh.ping(damage);
 
 func get_bonus_HP():
 	var bonus = 0.0;

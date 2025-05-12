@@ -287,6 +287,10 @@ func partMods_deploy():
 	for part in listOfPieces:
 		if part is Part:
 			part.mods_apply_all();
+	##Runs mods_conditional_post().
+	for part in listOfPieces:
+		if part is Part:
+			part.mods_conditional_post();
 	##Prints the modifiers of the parts as a debug.
 	for part in listOfPieces:
 		if part is Part:

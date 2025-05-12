@@ -5,15 +5,18 @@ class_name ContactPoint
 func is_on_floor():
 	if is_colliding():
 		var col = get_collider();
-		if col.is_in_group("WorldFloor"):
-			return true;
+		if is_instance_valid(col):
+			if col.is_in_group("WorldFloor"):
+				return true;
 	return false;
 
 func is_on_something_driveable():
 	if is_colliding():
 		var col = get_collider();
-		if col.is_in_group("Driveable") or col.is_in_group("WorldFloor") or col.is_in_group("WorldWall"):
-			return true;
+		if is_instance_valid(col):
+			if col.is_in_group("Driveable") or col.is_in_group("WorldFloor") or col.is_in_group("WorldWall"):
+				return true;
+	return false;
 
 func get_collider_normal() -> Vector3:
 	if is_colliding():

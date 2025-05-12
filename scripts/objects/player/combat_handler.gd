@@ -55,7 +55,7 @@ func die():
 	player.freeze();
 	if GameState.get_in_state_of_play():
 		SND.play_sound_nondirectional("Combatant.Die");
-	GameState.set_game_board_state(GameBoard.gameState.GAME_OVER)
+	GameState.game_over();
 	if is_instance_valid(inventory):
 		inventory.inventory_panel_toggle(false);
 	remove_active_part(0);

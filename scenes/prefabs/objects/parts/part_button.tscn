@@ -11,6 +11,7 @@ offset_right = -1104.0
 offset_bottom = -600.0
 grow_horizontal = 2
 grow_vertical = 2
+focus_mode = 0
 toggle_mode = true
 action_mode = 0
 texture_pressed = ExtResource("2_1j71w")

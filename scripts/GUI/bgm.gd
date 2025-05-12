@@ -129,7 +129,7 @@ func clamp_volume(inVal) -> float:
 
 func lerp_volume(index:int, volume:float, modifier:float, delta:float):
 	var mod = modifier
-	mod = lerp(mod, volume * master_volume, delta * 5);
-	var vol = clamp_volume(modifier)
+	mod = lerp(mod, volume, delta * 5);
+	var vol = clamp_volume(modifier * master_volume)
 	stream.set_sync_stream_volume(index,vol)
 	return mod;

@@ -8,7 +8,7 @@ bonusEnergy = 2.0
 bonusEnergyRegen = -0.2
 scrapCostBase = 8
 partName = "Jank Battery"
-partDescription = "[color=f2ec6b]Passive: Increases max Energy by 2. Reduces energy refresh rate by 0.2."
+partDescription = "[color=f2ec6b]Passive: Increases max Energy by 2. Reduces [color=789be9]Energy Recharge [color=f2ec6b] by 0.2."
 partIcon = ExtResource("2_1hi21")
 
 [node name="Tilemaps" parent="TextureBase" index="0"]

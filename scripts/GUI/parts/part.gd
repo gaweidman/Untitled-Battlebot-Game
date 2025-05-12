@@ -23,7 +23,7 @@ var scrapSellModifierBase := (2.0/3.0);
 @export var dimensions : Array[Vector2i];
 @export var myPartType := partTypes.UNASSIGNED;
 @export var myPartRarity := partRarities.COMMON;
-@export var poolWeight := 1; ##This is multiplied by 3 when Rare, 10 when Uncommon, and 20 when Common.
+@export var poolWeight := 1; ##This is multiplied by 5 when Rare, 10 when Uncommon, and 15 when Common.
 
 @export_group("Vanity")
 @export var partName := "Part";
@@ -280,8 +280,13 @@ func mods_distribute():
 			pass;
 		distributedModsAlready = true;
 
-##This function is run before the distribution process. Does nothing at base, must be overwritten to do anything.
+##This function is run before the mods distribution process. Does nothing at base, must be overwritten to do anything.
 func mods_conditional():
+	#Add stuff in here
+	pass;
+
+##This function is run after the mods distribution process. Does nothing at base, must be overwritten to do anything.
+func mods_conditional_post():
 	#Add stuff in here
 	pass;
 

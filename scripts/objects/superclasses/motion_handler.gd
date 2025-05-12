@@ -7,6 +7,11 @@ var body;
 var botBodyMesh;
 var bodyRotationAngle = Vector2.ZERO;
 var thisBot : Combatant;
+var underbelly : UnderbellyContactPoints;
+var airtime := 0.0;
+var airCheckTimer = 0.0;
+var inAir := false;
+
 
 @export var maxSpeed: float;
 
@@ -16,6 +21,29 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if !thisBot:
 		grab_references();
+	else:
+		airCheckTimer -= delta;
+		if underbelly:
+			if inAir:
+				if airCheckTimer <= 0.0:
+					if underbelly.is_on_floor():
+						print_rich("[color=cyan]Airtime: "+str(airtime));
+						Hooks.OnLand(thisBot, airtime);
+						inAir = false;
+						airtime = 0.0;
+					airCheckTimer = 0.05;
+				else:
+					airtime += delta;
+			else:
+				if airCheckTimer <= 0.0:
+					if underbelly.is_on_floor():
+						pass;
+					else:
+						inAir = true;
+						airtime += delta;
+					airCheckTimer = 0.05;
+		else:
+			grab_references();
 
 func _physics_process(delta):
 	if body:
@@ -28,6 +56,7 @@ func grab_references():
 	if thisBot:
 		body = thisBot.get_node("Body");
 		botBodyMesh = body.get_node("BotBody");
+		underbelly = botBodyMesh.get_node("UnderbellyRaycasts");
 	pass;
 
 static func look_at_safe(node, target):
@@ -51,3 +80,5 @@ func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = %Body
 		#thisBot.play_sound(SND.get_proper_sound(collider, thisComponent))
 	SND.play_collision_sound(thisComponent, collider, Vector3.ZERO, 0.45)
 	Hooks.OnCollision(thisComponent, collider);
+	if collider.is_in_group("World"):
+		airtime = 0.0;

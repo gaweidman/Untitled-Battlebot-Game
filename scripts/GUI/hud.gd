@@ -35,11 +35,3 @@ func _process(_delta: float) -> void:
 
 func update() -> void:
 	var ply = GameState.get_player();
-		#var newPos = $EnemyPings.position.x, $EnemyPings.position.z
-		 #= enemy.global_position;
-		#var screen = 
-	#if ply and %Health and %HealthLabel and %Ammo and %AmmoLabel:
-		#%Health.update(ply.get_health());
-		#%HealthLabel.text = str(ply.get_health(false));
-		#%Ammo.update(ply.get_ammo());
-		#%AmmoLabel.text = str(ply.get_ammo(false));

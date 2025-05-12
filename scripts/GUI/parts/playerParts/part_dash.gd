@@ -14,3 +14,11 @@ func _activate():
 			thisBot.body.linear_velocity.z = 0;
 			thisBot.take_knockback(Vector3(inDir.x * -1300, 600, inDir.y * -1300));
 			thisBot.combatHandler.add_invincibility(0.20);
+
+func can_fire():
+	if super():
+		if thisBot is Player:
+			var under = thisBot.underbelly;
+			if under.is_on_driveable():
+				return true;
+	return false;

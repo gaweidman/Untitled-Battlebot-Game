@@ -7,20 +7,14 @@
 
 [node name="Flash" instance=ExtResource("1_ffw06")]
 script = ExtResource("2_vo1v0")
+sleepTimerLength = 1.5
+meshMaterialOverride0 = ExtResource("4_esomk")
 regularSpeed = 2500.0
 chargeSpeed = 500.0
 chargeDistance = 3.0
 chargeCooldown = 2.5
-sleepTimerLength = 1.5
-meshMaterialOverride0 = ExtResource("4_esomk")
 
-[node name="CollisionShape" parent="Body/Sawblade" index="0"]
-visible = false
-
-[node name="Mesh" parent="Body/Sawblade" index="1"]
-visible = false
-
-[node name="BotBody" parent="Body" index="5"]
+[node name="BotBody" parent="Body" index="0"]
 surface_material_override/0 = ExtResource("4_esomk")
 
 [node name="AIHandler" parent="." index="5"]

@@ -12,10 +12,11 @@ func _activate():
 			var parent = GameState.get_game_board()
 			ParticleFX.play("SmokePuffSingle", parent, pos);
 			SND.play_sound_at("Movement.Dash", pos, parent, 1.0, randf_range(1.3, 1.6));
+			thisBot.body.linear_velocity.y = 0;
 			thisBot.take_knockback(Vector3(0, 700*jumpMod, 0));
 			thisBot.combatHandler.add_invincibility(0.30 * jumpMod);
 
-func mods_conditional():
+func mods_conditional_post():
 	var jumpModNew := 1.0
 	var checkPos1 = Vector2i(0,3) + invPosition;
 	var checkResult1 = inventoryNode.is_slot_free_and_in_bounds(checkPos1.x, checkPos1.y, null, true);
@@ -32,3 +33,11 @@ func mods_conditional():
 		if free2 or (!inBounds2):
 			jumpModNew = 1.5;
 	jumpMod = jumpModNew;
+
+func can_fire():
+	if super():
+		if thisBot is Player:
+			var under = thisBot.underbelly;
+			if under.is_on_floor(true):
+				return true;
+	return false;
