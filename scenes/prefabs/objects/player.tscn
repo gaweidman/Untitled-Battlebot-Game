@@ -1,4 +1,4 @@
-[gd_scene load_steps=91 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=93 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Script" uid="uid://caotgm5hf1ikf" path="res://scripts/objects/player/tread.gd" id="2_s6ktd"]
@@ -77,6 +77,7 @@
 [ext_resource type="Texture2D" uid="uid://okkoo55665rm" path="res://graphics/images/HUD/nextRound/screen_off.png" id="61_dbqh0"]
 [ext_resource type="Texture2D" uid="uid://baqnprslvvu8t" path="res://graphics/images/HUD/partAssign_selected.png" id="61_n1h3t"]
 [ext_resource type="Texture2D" uid="uid://c17tsbqn3orah" path="res://graphics/images/HUD/partAssign_disabled.png" id="62_ltg8k"]
+[ext_resource type="Shader" uid="uid://b3jc31ntkxnwh" path="res://graphics/shaders/wavyButton.gdshader" id="68_kpcco"]
 [ext_resource type="Texture2D" uid="uid://ckkqo4l53j7nc" path="res://graphics/images/HUD/HudEdge.png" id="69_dbqh0"]
 [ext_resource type="Script" uid="uid://c2wmqa0s4f06n" path="res://scripts/GUI/lbl_hp_refresh.gd" id="73_xxsjn"]
 [ext_resource type="Texture2D" uid="uid://p4kd71ihg6eg" path="res://graphics/images/HUD/inventoryTab/open_unselected.png" id="78_gfej7"]
@@ -158,9 +159,11 @@ shader_parameter/mask = ExtResource("13_eakln")
 shader = ExtResource("12_hnom0")
 shader_parameter/mask = ExtResource("13_coyr8")
 
-[node name="Player" type="Node3D" node_paths=PackedStringArray("underbelly") groups=["Player Part"]]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vgsgu"]
+shader = ExtResource("68_kpcco")
+
+[node name="Player" type="Node3D" groups=["Player Part"]]
 script = ExtResource("1_u8q0c")
-underbelly = NodePath("Body/BotBody/UnderbellyRaycasts")
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant Body", "Player Part"]]
 unique_name_in_owner = true
@@ -1731,6 +1734,7 @@ grow_vertical = 0
 script = ExtResource("56_n1h3t")
 
 [node name="NextWaveButton" type="TextureButton" parent="Inventory/InventoryControls/BackingTexture/EnemyProgressBar"]
+material = SubResource("ShaderMaterial_vgsgu")
 layout_mode = 0
 offset_right = 252.0
 offset_bottom = 30.0

@@ -1,0 +1,18 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://bq0jig2pdkgtn"]
+
+[ext_resource type="StyleBox" uid="uid://cdynl8lotjqqj" path="res://graphics/images/HUD/button_styleBoxTexture.tres" id="1_1r0oh"]
+[ext_resource type="StyleBox" uid="uid://b3thaeyvwxcg7" path="res://graphics/images/HUD/buttonUnpressed_styleBoxTexture.tres" id="2_x8ib1"]
+
+[resource]
+Button/colors/font_disabled_color = Color(0.533333, 0.52549, 0.376471, 1)
+Button/styles/disabled = ExtResource("1_1r0oh")
+Button/styles/disabled_mirrored = ExtResource("1_1r0oh")
+Button/styles/focus = ExtResource("2_x8ib1")
+Button/styles/hover = ExtResource("2_x8ib1")
+Button/styles/hover_mirrored = ExtResource("2_x8ib1")
+Button/styles/hover_pressed = ExtResource("1_1r0oh")
+Button/styles/hover_pressed_mirrored = ExtResource("1_1r0oh")
+Button/styles/normal = ExtResource("2_x8ib1")
+Button/styles/normal_mirrored = ExtResource("2_x8ib1")
+Button/styles/pressed = ExtResource("1_1r0oh")
+Button/styles/pressed_mirrored = ExtResource("1_1r0oh")

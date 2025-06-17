@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=32 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena/arena_floor.tres" id="2_4jixe"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://dr0v7dohkt13a" path="res://scripts/objects/camera_3d.gd" id="5_l5xbb"]
 [ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/prefabs/objects/damage_cube.tscn" id="8_hfgcm"]
 [ext_resource type="Script" uid="uid://ct0mq8smfqpjl" path="res://scripts/libraries/sound_manager.gd" id="9_hh74c"]
+[ext_resource type="Theme" uid="uid://bq0jig2pdkgtn" path="res://graphics/images/HUD/UI_theme.tres" id="9_mlcvp"]
 [ext_resource type="Script" uid="uid://bjwlquka60rm4" path="res://scripts/GUI/options.gd" id="9_x282c"]
 [ext_resource type="PackedScene" uid="uid://b2vped1gbe1st" path="res://scenes/prefabs/aimap.tscn" id="11_c2xgd"]
 [ext_resource type="AudioStream" uid="uid://clkb8qmb50nhq" path="res://sounds/music/Battlebot(Base).ogg" id="15_7s7sx"]
@@ -543,6 +544,7 @@ floor = NodePath("../ArenaFloor/StaticBody3D")
 
 [node name="HUD" type="Control" parent="."]
 unique_name_in_owner = true
+texture_filter = 1
 layout_mode = 3
 anchor_left = 0.497
 anchor_top = 0.502
@@ -554,6 +556,7 @@ offset_right = 573.456
 offset_bottom = 324.704
 size_flags_horizontal = 4
 size_flags_vertical = 4
+theme = ExtResource("9_mlcvp")
 script = ExtResource("18_wbopo")
 
 [node name="In-Dev Overlay" type="Label" parent="HUD"]
@@ -798,6 +801,7 @@ anchor_right = 1.005
 anchor_bottom = 0.997
 offset_right = 0.27002
 offset_bottom = -0.0500488
+theme = ExtResource("9_mlcvp")
 script = ExtResource("9_x282c")
 box_music = NodePath("MusicVolume")
 box_UI = NodePath("UIVolume")
@@ -820,6 +824,7 @@ offset_right = -469.0
 offset_bottom = -47.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("9_mlcvp")
 text = "MAIN MENU"
 
 [node name="Label" type="RichTextLabel" parent="HUD/Options"]
@@ -930,8 +935,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 686.0
-offset_top = 315.0
+offset_left = 668.0
+offset_top = 314.0
 offset_right = -256.0
 offset_bottom = -279.0
 grow_horizontal = 2
@@ -947,9 +952,9 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 668.0
-offset_top = 371.0
+offset_top = 369.5
 offset_right = -256.0
-offset_bottom = -246.0
+offset_bottom = -246.5
 grow_horizontal = 2
 grow_vertical = 2
 text = "Enable dev cheat menu"
@@ -961,10 +966,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 649.0
-offset_top = 404.0
-offset_right = -275.0
-offset_bottom = -213.0
+offset_left = 668.0
+offset_top = 401.0
+offset_right = -256.0
+offset_bottom = -215.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Bajillion Moneys"
@@ -976,10 +981,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 649.0
-offset_top = 437.0
-offset_right = -275.0
-offset_bottom = -180.0
+offset_left = 668.0
+offset_top = 433.0
+offset_right = -256.0
+offset_bottom = -183.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Godmode

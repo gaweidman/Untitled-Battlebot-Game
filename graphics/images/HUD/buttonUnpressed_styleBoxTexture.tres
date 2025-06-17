@@ -1,0 +1,17 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://b3thaeyvwxcg7"]
+
+[ext_resource type="Texture2D" uid="uid://cyktnhd6ly7ef" path="res://graphics/images/HUD/buttonBG.png" id="1_w7b13"]
+
+[resource]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 6.0
+texture = ExtResource("1_w7b13")
+texture_margin_left = 5.0
+texture_margin_top = 1.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+region_rect = Rect2(6, 0, 6, 10)
