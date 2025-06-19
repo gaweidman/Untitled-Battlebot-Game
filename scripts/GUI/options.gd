@@ -18,6 +18,9 @@ var snd : SND;
 @export var btn_scoreReset : Button;
 @export var lbl_highScores : RichTextLabel;
 
+
+@export var renderShadows : CheckButton;
+
 var loadingSettings := false;
 
 func load_settings():
@@ -28,6 +31,8 @@ func load_settings():
 	moneyCheat.button_pressed = GameState.get_setting("startingScrap") == 99999999;
 	invincibleCheat.button_pressed = GameState.get_setting("godMode");
 	killAllCheat.button_pressed = GameState.get_setting("killAllKey");
+	renderShadows.button_pressed = GameState.get_setting("renderShadows");
+	
 	loadingSettings = false;
 	
 	devCheats.button_pressed = GameState.get_setting("devMode");
@@ -70,12 +75,13 @@ func reset():
 	invShooting.button_pressed = true;
 	devCheats.button_pressed = false;
 	sawbladeDrone.button_pressed = true;
+	renderShadows.button_pressed = true;
 	#drone
 
 
 func _on_music_volume_value_changed(value):
 	var vol = (value * 1.3) / 100.0
-	print(vol)
+	#print(vol)
 	if is_instance_valid(snd):
 		prints("[color=purple]Music volume being adjusted to "+str(value))
 		snd.set_volume_music(vol);
@@ -166,4 +172,11 @@ func update_score_text():
 func _on_btn_scores_reset_pressed():
 	GameState.reset_data();
 	update_score_text();
+	pass # Replace with function body.
+
+func _on_render_shadows_toggled(toggled_on):
+	if not loadingSettings:
+		GameState.set_setting("renderShadows", toggled_on);
+		var gameBoard = GameState.get_game_board();
+		gameBoard.update_lighting()
 	pass # Replace with function body.

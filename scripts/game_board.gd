@@ -27,6 +27,7 @@ var scrapGained := 0;
 @export var HUD_options : Control;
 @export var HUD_gameOver : Control;
 @export var MUSIC : MusicHandler;
+@export var LIGHT : DirectionalLight3D;
 
 func _ready():
 	spawnPlayer();
@@ -144,8 +145,8 @@ func exit_state(state:gameState):
 		HUD_credits.hide();
 		HUD_gameOver.hide();
 		HUD_options.open_sesame(false);
-		
 		MUSIC.play();
+		update_lighting();
 		pass
 	else:
 		pass
@@ -259,6 +260,9 @@ func _process(delta):
 	else:
 		pass
 	pass
+
+func update_lighting():
+	LIGHT.shadow_enabled = GameState.get_setting("renderShadows");
 
 ##returns true if we're in a state that might be considered a part of the game loop
 func in_state_of_play()->bool:

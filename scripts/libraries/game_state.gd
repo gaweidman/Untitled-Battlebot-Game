@@ -212,6 +212,8 @@ static var settings := {
 	StringName("startingScrap") : 0,
 	StringName("godMode") : false,
 	StringName("killAllKey") : false,
+	
+	StringName("renderShadows") : true,
 }
 
 func set_setting(settingName : StringName, settinginput : Variant):

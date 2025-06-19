@@ -28,7 +28,7 @@ func _physics_process(delta):
 	if not is_instance_valid(camera):
 		camera = GameState.get_camera();
 	if GameState.get_in_state_of_play():
-		process_movement(get_movement_vector(), delta);
+		process_movement(get_movement_vector(true), delta);
 		
 		var cantShootWithInventory = GameState.get_setting("inventoryDisableShooting");
 		#print(cantShootWithInventory)
@@ -47,7 +47,7 @@ func _physics_process(delta):
 func process_movement(movementVector, delta):
 	pass
 	
-func get_movement_vector() -> Vector2:
+func get_movement_vector(rotatedByCamera : bool) -> Vector2:
 	var movementVector = Vector2.ZERO
 		
 	if Input.is_action_pressed("MoveLeft"):
@@ -62,11 +62,14 @@ func get_movement_vector() -> Vector2:
 	if Input.is_action_pressed("MoveDown"):
 		movementVector += Vector2.DOWN;
 	
-	if not is_instance_valid(camera):
-		camera = GameState.get_camera();
+	if rotatedByCamera:
+		if not is_instance_valid(camera):
+			camera = GameState.get_camera();
+		
+		var camRotY = - camera.targetRotationY;
+		
+		movementVector = movementVector.rotated(camRotY);
 	
-	var camRotY = - camera.targetRotationY;
-	movementVector = movementVector.rotated(camRotY);
 	return movementVector.normalized();
 
 static func is_inputting_movement() -> bool:

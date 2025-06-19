@@ -2,6 +2,10 @@ extends Control;
 var TEXTUREPATH = "res://graphics/images/HUD/";
 var gameBoard : GameBoard;
 var refreshTimer = 0;
+var ply : Player;
+@export var MainMenuLogo : TextureRect;
+var logoRotationSwitch = 1;
+var logoRotationTarget = 0.0;
 
 var pauseMenuUp := false;
 
@@ -32,6 +36,20 @@ func _process(_delta: float) -> void:
 	else:
 		$Pause.global_position.y = lerp($Pause.global_position.y, -100.0, _delta * 30);
 		$Pause/Btn_EndRun.disabled = true;
+	
+	if logoRotationSwitch > 0:
+		if MainMenuLogo.rotation < deg_to_rad(4):
+			logoRotationTarget += 0.025 * _delta;
+		else:
+			logoRotationSwitch = -1;
+	else:
+		if MainMenuLogo.rotation > deg_to_rad(-4):
+			logoRotationTarget -= 0.025 * _delta;
+		else:
+			logoRotationSwitch = 1;
+	logoRotationTarget = clamp(logoRotationTarget, -4, 4)
+	MainMenuLogo.rotation = lerp(MainMenuLogo.rotation, logoRotationTarget, _delta * 3)
 
 func update() -> void:
-	var ply = GameState.get_player();
+	if ! is_instance_valid(ply):
+		ply = GameState.get_player();

@@ -82,7 +82,7 @@ func _physics_process(delta):
 	if is_node_ready():
 		if is_instance_valid(playerBody) && is_instance_valid(viewport):
 			var inp = GameState.get_input_handler();
-			var inpVec = inp.get_movement_vector();
+			var inpVec = inp.get_movement_vector(false);
 			modInpVec = - Vector3(inpVec.x, 0, inpVec.y);
 			var viewRect = viewport.get_visible_rect();
 			var mousePos = Vector2(clamp(viewport.get_mouse_position().x, 0, viewRect.size.x), clamp(viewport.get_mouse_position().y, 0, viewRect.size.y));
@@ -145,17 +145,26 @@ func _physics_process(delta):
 		parent.rotation.x = lerp(parent.rotation.x, targetRotationX, delta * 30)
 
 func _input(event):
-	if GameState.get_in_state_of_play():
-		if event is InputEventMouseButton:
-			if event.is_pressed():
+	if event is InputEventMouseButton:
+		if event.is_pressed():
+			if GameState.get_in_state_of_play():
+				if Input.is_key_pressed(KEY_SHIFT):
+					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+						targetRotationX += 0.1
+						# call the zoom function
+					# zoom out
+					if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+						targetRotationX -= 0.1
+						# call the zoom function
+				else:
 				# zoom in
-				if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-					targetRotationY += 0.1
-					# call the zoom function
-				# zoom out
-				if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-					targetRotationY -= 0.1
-					# call the zoom function
+					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+						targetRotationY += 0.1
+						# call the zoom function
+					# zoom out
+					if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+						targetRotationY -= 0.1
+						# call the zoom function
 
 func get_rotation_to_fake_aiming(firingOrigin:=Vector3(0,0,0)):
 	var collisionMask = floor.get_collision_layer() - 1;

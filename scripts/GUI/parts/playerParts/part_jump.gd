@@ -7,7 +7,7 @@ var jumpMod := 1.0;
 func _activate():
 	if thisBot is Player:
 		if super():
-			var inDir = thisBot._get_input_handler().get_movement_vector()
+			var inDir = thisBot._get_input_handler().get_movement_vector(true)
 			var pos = thisBot.body.global_position
 			var parent = GameState.get_game_board()
 			ParticleFX.play("SmokePuffSingle", parent, pos);

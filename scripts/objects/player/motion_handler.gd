@@ -34,7 +34,7 @@ func _physics_process(delta):
 		
 	var movementVector = Vector2.ZERO;
 	if GameState.get_in_state_of_play() and combatHandler.health > 0:
-		movementVector = inputHandler.get_movement_vector();
+		movementVector = inputHandler.get_movement_vector(true);
 	
 	##Rotating the body mesh towards the movement vector
 	var rotatedMV = movementVector.rotated(deg_to_rad(90));
