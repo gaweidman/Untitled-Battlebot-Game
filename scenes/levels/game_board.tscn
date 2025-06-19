@@ -536,11 +536,13 @@ size = Vector3(2.10107, 3.07037, 6.22781)
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.604794, 0.796382, 0, -0.796382, 0.604794, -2.58875, 47.1188, -0.186724)
 
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("floor")]
-transform = Transform3D(-1, 5.35821e-08, -6.90776e-08, -3.9001e-08, 0.433738, 0.901039, 7.82411e-08, 0.901039, -0.433738, 0, 8.3591, -5.84694)
+[node name="CameraPointer" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraPointer" node_paths=PackedStringArray("floor")]
+transform = Transform3D(-1, -7.57103e-08, 4.37114e-08, 0, 0.5, 0.866025, -8.74228e-08, 0.866025, -0.5, 0, 8.3591, -5.84694)
 fov = 90.0
 script = ExtResource("5_l5xbb")
-floor = NodePath("../ArenaFloor/StaticBody3D")
+floor = NodePath("../../ArenaFloor/StaticBody3D")
 
 [node name="HUD" type="Control" parent="."]
 unique_name_in_owner = true
@@ -794,8 +796,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "END RUN?"
 
-[node name="Options" type="Control" parent="HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master", "invShooting", "sawbladeDrone", "devCheats", "moneyCheat", "invincibleCheat")]
-visible = false
+[node name="Options" type="Control" parent="HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master", "invShooting", "sawbladeDrone", "devCheats", "moneyCheat", "invincibleCheat", "killAllCheat", "cheatsControl", "btn_scoreReset", "lbl_highScores")]
 layout_mode = 1
 anchor_right = 1.005
 anchor_bottom = 0.997
@@ -810,8 +811,12 @@ box_master = NodePath("MasterVolume")
 invShooting = NodePath("InvShooting")
 sawbladeDrone = NodePath("sawbladeDrone")
 devCheats = NodePath("DevCheats")
-moneyCheat = NodePath("moneys")
-invincibleCheat = NodePath("godmode")
+moneyCheat = NodePath("DevCheats/Cheats/moneys")
+invincibleCheat = NodePath("DevCheats/Cheats/godmode")
+killAllCheat = NodePath("DevCheats/Cheats/killall")
+cheatsControl = NodePath("DevCheats/Cheats")
+btn_scoreReset = NodePath("Btn_ScoresReset")
+lbl_highScores = NodePath("Btn_ScoresReset/HighScores")
 
 [node name="Btn_Menu" type="Button" parent="HUD/Options"]
 layout_mode = 1
@@ -832,9 +837,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 416.0
+offset_left = 401.0
 offset_top = 113.0
-offset_right = -401.0
+offset_right = -416.0
 offset_bottom = -447.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -952,42 +957,56 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 668.0
-offset_top = 369.5
+offset_top = 369.0
 offset_right = -256.0
-offset_bottom = -246.5
+offset_bottom = -247.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Enable dev cheat menu"
 alignment = 2
 
-[node name="moneys" type="CheckButton" parent="HUD/Options"]
-visible = false
+[node name="Cheats" type="Control" parent="HUD/Options/DevCheats"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 668.0
-offset_top = 401.0
-offset_right = -256.0
-offset_bottom = -215.0
+offset_top = 32.0
+offset_right = -228.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="moneys" type="CheckButton" parent="HUD/Options/DevCheats/Cheats"]
+layout_mode = 1
+offset_right = 169.0
+offset_bottom = 32.0
 text = "Bajillion Moneys"
 alignment = 2
 
-[node name="godmode" type="CheckButton" parent="HUD/Options"]
-visible = false
+[node name="godmode" type="CheckButton" parent="HUD/Options/DevCheats/Cheats"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 668.0
-offset_top = 433.0
-offset_right = -256.0
-offset_bottom = -183.0
+offset_top = 32.0
+offset_right = 169.0
+offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Godmode
+"
+alignment = 2
+
+[node name="killall" type="CheckButton" parent="HUD/Options/DevCheats/Cheats"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 64.0
+offset_right = 169.0
+offset_bottom = 96.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "'K' to kill all
 "
 alignment = 2
 
@@ -1005,6 +1024,26 @@ grow_vertical = 2
 button_pressed = true
 text = "Sawblades drone"
 alignment = 2
+
+[node name="Btn_ScoresReset" type="Button" parent="HUD/Options"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 869.0
+offset_top = 59.0
+offset_right = -69.0
+offset_bottom = -531.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "RESET HIGH SCORES"
+
+[node name="HighScores" type="RichTextLabel" parent="HUD/Options/Btn_ScoresReset"]
+layout_mode = 0
+offset_top = 61.0
+offset_right = 214.0
+offset_bottom = 198.0
+text = "BLASNSA+D"
 
 [node name="Damage Cube" parent="." instance=ExtResource("8_hfgcm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0834, 3.4556, -4.56467)
@@ -1051,6 +1090,8 @@ mesh = ExtResource("5_4jixe")
 [connection signal="value_changed" from="HUD/Options/MasterVolume" to="HUD/Options" method="_on_master_volume_value_changed"]
 [connection signal="toggled" from="HUD/Options/InvShooting" to="HUD/Options" method="_on_inv_shooting_toggled"]
 [connection signal="toggled" from="HUD/Options/DevCheats" to="HUD/Options" method="_on_dev_cheats_toggled"]
-[connection signal="toggled" from="HUD/Options/moneys" to="HUD/Options" method="_on_moneys_toggled"]
-[connection signal="toggled" from="HUD/Options/godmode" to="HUD/Options" method="_on_godmode_toggled"]
+[connection signal="toggled" from="HUD/Options/DevCheats/Cheats/moneys" to="HUD/Options" method="_on_moneys_toggled"]
+[connection signal="toggled" from="HUD/Options/DevCheats/Cheats/godmode" to="HUD/Options" method="_on_godmode_toggled"]
+[connection signal="toggled" from="HUD/Options/DevCheats/Cheats/killall" to="HUD/Options" method="_on_killall_toggled"]
 [connection signal="toggled" from="HUD/Options/sawbladeDrone" to="HUD/Options" method="_on_sawblade_drone_toggled"]
+[connection signal="pressed" from="HUD/Options/Btn_ScoresReset" to="HUD/Options" method="_on_btn_scores_reset_pressed"]

@@ -25,6 +25,7 @@ var list = {
 	"OnDeath": {}, #
 	"OnGainScrap": {}, #
 	"OnLand": {}, #
+	"OnChangeGameState": {}, #
 };
 
 var body;
@@ -91,6 +92,10 @@ func OnGainScrap(source: String, amount:int):
 func OnLand(thisBot: Combatant, airtime: float):
 	for hookFunc in getValidHooks("OnLand"):
 		hookFunc.call(thisBot, airtime);
+
+func OnChangeGameState(oldState: GameBoard.gameState, newState: GameBoard.gameState):
+	for hookFunc in getValidHooks("OnChangeGameState"):
+		hookFunc.call(oldState, newState);
 
 ## Use to add a hook.
 ## To use, we go to any file and call

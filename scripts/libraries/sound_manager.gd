@@ -30,6 +30,8 @@ static func set_volume_music(inVol:=1.0):
 	var mus = GameState.get_music();
 	volumeLevelMusic = inVol;
 	mus.set_volume(get_volume_music());
+	
+	GameState.set_setting("volumeLevelMusic", inVol);
 static func get_volume_music():
 	return volumeLevelMusic * get_volume_master();
 
@@ -38,12 +40,16 @@ static var volumeLevelUI := 1.0;
 static func set_volume_UI(inVol:=1.0):
 	volumeLevelUI = inVol;
 	print_rich("[color=green][b]", volumeLevelUI);
+	
+	GameState.set_setting("volumeLevelUI", inVol);
 static func get_volume_UI():
 	return volumeLevelUI * get_volume_master();
 
 static var volumeLevelWorld := 1.0;
 static func set_volume_world(inVol:=1.0):
 	volumeLevelWorld = inVol;
+	
+	GameState.set_setting("volumeLevelWorld", inVol);
 static func get_volume_world():
 	return volumeLevelWorld * get_volume_master();
 
@@ -53,9 +59,10 @@ static func set_volume_master(inVol:=1.0):
 	set_volume_world(volumeLevelWorld);
 	set_volume_UI(volumeLevelUI);
 	set_volume_music(volumeLevelMusic);
+	
+	GameState.set_setting("volumeLevelMaster", inVol);
 static func get_volume_master():
 	return volumeLevelMaster;
-
 
 # All sounds in the game have a type assigned to them. Their type is determined
 # by what the sounds are of. There are multiple keywords in a type, separated 

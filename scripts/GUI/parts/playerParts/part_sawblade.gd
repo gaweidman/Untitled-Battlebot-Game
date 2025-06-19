@@ -89,7 +89,7 @@ func _physics_process(delta):
 			else:
 				sawSoundVolume = lerp(sawSoundVolume, 0.0, delta * 3);
 					#sawSoundPlayer.stream_paused = true;
-			sawSoundPlayer.volume_db = linear_to_db(sawSoundVolume * snd.get_volume_world());
+			sawSoundPlayer.volume_db = linear_to_db(sawSoundVolume * SND.get_volume_world());
 			sawSoundPlayer.pitch_scale = sawSoundPitch;
 
 func _activate():

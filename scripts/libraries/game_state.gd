@@ -8,11 +8,17 @@ var MAX_ENEMY_SPEED = 13
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	load_settings();
+	load_data();
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+func quit_game():
+	save_settings();
+	get_tree().quit();
 
 func get_game_board() -> GameBoard:
 	var board = get_node_or_null("/root/GameBoard")
@@ -165,7 +171,7 @@ func start_death_timer(_startTime := 120.0, _reset := false):
 func get_camera() -> Camera:
 	var brd = get_game_board();
 	
-	return brd.get_node_or_null("Camera3D")
+	return brd.get_node_or_null("CameraPointer/Camera3D")
 
 func cam_unproject_position(world_point:Vector3) -> Vector2:
 	var cam = get_camera();
@@ -194,11 +200,18 @@ func get_unique_part_age() -> int:
 	return ret;
 
 static var settings := {
+	StringName("volumeLevelMusic") : 1.0,
+	StringName("volumeLevelUI") : 0.8,
+	StringName("volumeLevelWorld") : 0.9,
+	StringName("volumeLevelMaster") : 1.0,
+	
 	StringName("inventoryDisableShooting") : true,
 	StringName("sawbladeDrone") : true,
+	
 	StringName("devMode") : false,
 	StringName("startingScrap") : 0,
 	StringName("godMode") : false,
+	StringName("killAllKey") : false,
 }
 
 func set_setting(settingName : StringName, settinginput : Variant):
@@ -213,6 +226,7 @@ func set_setting(settingName : StringName, settinginput : Variant):
 			push_warning("Attempt to set setting ", settingName, " to a value of the invalid type ", type_string(settinginput), ". Should be ", type_string(setting));
 	
 	print(get_setting(settingName));
+	save_settings();
 
 func get_setting(settingName : StringName):
 	if settings.has(settingName):
@@ -220,3 +234,90 @@ func get_setting(settingName : StringName):
 		return setting;
 	push_warning("Attempted to access invalid setting ", settingName, " ");
 	return null;
+
+func save_settings():
+	var file = FileAccess.open("user://settings.dat", FileAccess.WRITE)
+	file.store_var(settings)
+	file.flush()
+	prints("[b]Saving settings.")
+
+func load_settings():
+	if not FileAccess.file_exists("user://settings.dat"):
+		save_settings()
+	
+	var file = FileAccess.open("user://settings.dat", FileAccess.READ )
+	var content : Dictionary = file.get_var()
+	
+	if content != null:
+		for key in content.keys():
+			if key in settings:
+				settings[key] = content[key]
+				print("setting key found: ", key, " ", content[key])
+			pass
+	file.close()
+	
+	prints("[b]Loading settings: ", settings)
+	return settings
+
+static var saveData = {
+	StringName("Highest Round") : 0,
+	StringName("Most Enemies Killed") : 0,
+	StringName("Most Scrap Earned") : 0,
+	}
+
+func reset_data():
+	saveData = {
+	StringName("Highest Round") : 0,
+	StringName("Most Enemies Killed") : 0,
+	StringName("Most Scrap Earned") : 0,
+	};
+	save_data();
+
+func save_data():
+	var file = FileAccess.open("user://savedata.dat", FileAccess.WRITE)
+	file.store_var(saveData)
+	file.flush()
+
+func save_high_scores(roundNum, enemiesKilled, scrapGained):
+	var highScoreRound = false
+	if saveData[StringName("Highest Round")] < roundNum:
+		saveData[StringName("Highest Round")] = roundNum
+		highScoreRound = true
+	
+	var highScoreKills = false
+	if saveData[StringName("Most Enemies Killed")] < enemiesKilled:
+		saveData[StringName("Most Enemies Killed")] = enemiesKilled
+		highScoreKills = true
+	
+	var highScoreScrap = false
+	if saveData[StringName("Most Scrap Earned")] < scrapGained:
+		saveData[StringName("Most Scrap Earned")] = scrapGained
+		highScoreScrap = true
+	
+	save_data();
+	
+	return { 
+		"highScoreRound":highScoreRound, 
+		"highScoreKills":highScoreKills, 
+		"highScoreScrap":highScoreScrap
+		};
+
+func load_data():
+	if not FileAccess.file_exists("user://savedata.dat"):
+		reset_data()
+	
+	var file = FileAccess.open("user://savedata.dat", FileAccess.READ )
+	var content : Dictionary = file.get_var()
+	
+	if content != null:
+		for key in content.keys():
+			if key in saveData:
+				saveData[key] = content[key]
+				print("data key found: ", key, " ", content[key])
+			pass
+	
+	file.close()
+	
+	prints("[b]Loading data: ", saveData)
+	
+	return saveData

@@ -114,6 +114,7 @@ var curState := gameState.START
 func change_state(newState : gameState):
 	if curState != newState:
 		exit_state(curState);
+		Hooks.OnChangeGameState(curState, newState);
 		curState = newState;
 		enter_state(newState);
 
@@ -129,7 +130,7 @@ func exit_state(state:gameState):
 		HUD_credits.hide();
 		pass
 	elif state == gameState.OPTIONS:
-		HUD_options.hide();
+		HUD_options.open_sesame(false);
 		pass
 	elif state == gameState.PLAY:
 		pass
@@ -138,7 +139,12 @@ func exit_state(state:gameState):
 	elif state == gameState.INIT_ROUND:
 		pass
 	elif state == gameState.START:
-		HUD_options.reset();
+		
+		HUD_mainMenu.hide();
+		HUD_credits.hide();
+		HUD_gameOver.hide();
+		HUD_options.open_sesame(false);
+		
 		MUSIC.play();
 		pass
 	else:
@@ -146,10 +152,11 @@ func exit_state(state:gameState):
 
 func enter_state(state:gameState):
 	if state == gameState.MAIN_MENU:
+		HUD_options.load_settings();
 		MUSIC.change_state(MusicHandler.musState.MENU);
 		
 		destroy_all_enemies();
-		player.body.global_position = Vector3(0,20,0);
+		player.body.global_position = Vector3(0,20,30);
 		player.freeze();
 		HUD_mainMenu.show();
 		pass
@@ -166,7 +173,7 @@ func enter_state(state:gameState):
 	elif state == gameState.OPTIONS:
 		MUSIC.change_state(MusicHandler.musState.OPTIONS);
 		
-		HUD_options.show();
+		HUD_options.open_sesame(true);
 		pass
 	elif state == gameState.INIT_PLAY:
 		MUSIC.change_state(MusicHandler.musState.SHOP);
@@ -216,6 +223,9 @@ func _process(delta):
 	elif curState == gameState.CREDITS:
 		pass
 	elif curState == gameState.PLAY:
+		if GameState.get_setting("killAllKey") and Input.is_action_just_pressed("DBG_KillAll"):
+			destroy_all_enemies()
+		
 		waveTimer -= delta;
 		#print (check_round_completion())
 		#print(roundEnemies, check_alive_enemies(), roundEnemiesInit)
@@ -333,15 +343,35 @@ func destroy_all_enemies():
 			enemy.call_deferred("die");
 
 func game_over():
+	var saveData = GameState.save_high_scores(GameState.get_round_number(), enemiesKilled, scrapGained)
+	var highScoreRound = saveData["highScoreRound"]
+	var highScoreKills = saveData["highScoreKills"]
+	var highScoreScrap = saveData["highScoreScrap"]
 	%GameOverStats.clear();
 	%GameOverStats.append_text("[i][b]STATS[/b]");
 	%GameOverStats.newline();
+	if highScoreRound:
+		%GameOverStats.append_text("[color=ff0000]")
 	%GameOverStats.append_text("HIGHEST ROUND: " + str(GameState.get_round_number()));
+	if highScoreRound:
+		%GameOverStats.append_text(" ![/color]")
 	%GameOverStats.newline();
+	if highScoreKills:
+		%GameOverStats.append_text("[color=ff0000]")
 	%GameOverStats.append_text("ENEMIES KILLED: " + str(enemiesKilled));
+	if highScoreKills:
+		%GameOverStats.append_text(" ![/color]")
 	%GameOverStats.newline();
+	if highScoreScrap:
+		%GameOverStats.append_text("[color=ff0000]")
 	%GameOverStats.append_text("SCRAP GAINED: " + str(scrapGained));
+	if highScoreScrap:
+		%GameOverStats.append_text(" ![/color]")
+	if highScoreRound or highScoreKills or highScoreScrap:
+		%GameOverStats.newline();
+		%GameOverStats.append_text("! NEW HIGH SCORE !");
 	change_state(gameState.GAME_OVER);
+
 
 ##Button calls
 func _on_btn_play_pressed():
@@ -354,7 +384,7 @@ func _on_btn_credits_pressed():
 	change_state(gameState.CREDITS);
 	pass # Replace with function body.
 func _on_btn_exit_pressed():
-	get_tree().quit();
+	GameState.quit_game();
 	pass # Replace with function body.
 func _on_btn_end_run_pressed():
 	player.die();

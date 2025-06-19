@@ -4,6 +4,7 @@ class_name InputHandler;
 
 var player;
 var combatHandler;
+var camera : Camera;
 
 enum FIRE {
 	SLOT0,
@@ -16,6 +17,7 @@ enum FIRE {
 func _ready() -> void:
 	player = GameState.get_player();
 	combatHandler = player.get_node("CombatHandler");
+	camera = GameState.get_camera();
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -23,7 +25,8 @@ func _process(delta: float) -> void:
 	pass
 
 func _physics_process(delta):
-	
+	if not is_instance_valid(camera):
+		camera = GameState.get_camera();
 	if GameState.get_in_state_of_play():
 		process_movement(get_movement_vector(), delta);
 		
@@ -58,7 +61,12 @@ func get_movement_vector() -> Vector2:
 		
 	if Input.is_action_pressed("MoveDown"):
 		movementVector += Vector2.DOWN;
-		
+	
+	if not is_instance_valid(camera):
+		camera = GameState.get_camera();
+	
+	var camRotY = - camera.targetRotationY;
+	movementVector = movementVector.rotated(camRotY);
 	return movementVector.normalized();
 
 static func is_inputting_movement() -> bool:

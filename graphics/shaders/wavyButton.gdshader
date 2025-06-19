@@ -11,6 +11,9 @@ void fragment() {
 	//}
 	//COLOR.r = float(int(UV.x * 100.0) % 20);
 	// Called for every pixel the material is visible on.
+	if (UV.x > 1.0) {
+		COLOR.r = 255.0;
+	}
 }
 
 //void light() {
