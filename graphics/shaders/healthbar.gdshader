@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-//Taken from this tutorial: 
+//Taken from this tutorial:
 //https://www.youtube.com/watch?v=dMzXXqO8kWw&ab_channel=yokcos
 
 uniform sampler2D mask;
@@ -11,10 +11,10 @@ void vertex() {
 
 void fragment() {
 	COLOR = texture(TEXTURE, UV);
-	
+
 	vec2 muv = UV;
 	//muv.y = 1.0 - muv.y;
-	
+
 	COLOR.a = texture(mask, muv).r;
 	// Called for every pixel the material is visible on.
 }

@@ -9,7 +9,7 @@ scrapAmount = 5
 partName = "Impact Magnet"
 partDescription = "It catches flakes of steel from the air as you clash with bots.
 
-[color=f2ec6b]Passive: Gain 5 Scrap when taking damage."
+[color=f2ec6b]Passive: Gain 5 Scrap for each point of damage you take, rounded up, when taking damage."
 
 [node name="Tilemaps" parent="TextureBase" index="0"]
 mouse_filter = 0

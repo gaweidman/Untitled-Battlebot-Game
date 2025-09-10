@@ -39,6 +39,8 @@ func take_damage(damage:float):
 	super(damage);
 	GameState.get_hud().update();
 	inventory.take_damage(damage);
+	if health > get_max_health():
+		health = get_max_health();
 
 
 func get_max_health():

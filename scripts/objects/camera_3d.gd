@@ -31,8 +31,8 @@ func _ready() -> void:
 	Hooks.add(self, "OnChangeGameState", "CameraChangePos", 
 		func(oldState : GameBoard.gameState, newState : GameBoard.gameState) :
 			if newState == GameBoard.gameState.INIT_PLAY:
-				targetRotationX = 0.0;
-				targetRotationY = 0.0;
+				targetRotationX = deg_to_rad(20);
+				#targetRotationY = 0.0;
 			elif newState == GameBoard.gameState.MAIN_MENU:
 				targetRotationX = 0.0;
 	)

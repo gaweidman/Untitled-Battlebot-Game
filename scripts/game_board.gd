@@ -264,9 +264,9 @@ func _process(delta):
 func update_lighting():
 	LIGHT.shadow_enabled = GameState.get_setting("renderShadows");
 
-##returns true if we're in a state that might be considered a part of the game loop
+##returns true if we're in a state that might be considered a part of the game loop.
 func in_state_of_play()->bool:
-	if GameState.get_game_board_state() == GameBoard.gameState.PLAY or GameState.get_game_board_state() == GameBoard.gameState.SHOP or GameState.get_game_board_state() == GameBoard.gameState.INIT_ROUND:
+	if (GameState.get_game_board_state() == GameBoard.gameState.PLAY or GameState.get_game_board_state() == GameBoard.gameState.SHOP or GameState.get_game_board_state() == GameBoard.gameState.INIT_ROUND):
 		return true;
 	return false;
 
@@ -347,33 +347,46 @@ func destroy_all_enemies():
 			enemy.call_deferred("die");
 
 func game_over():
-	var saveData = GameState.save_high_scores(GameState.get_round_number(), enemiesKilled, scrapGained)
-	var highScoreRound = saveData["highScoreRound"]
-	var highScoreKills = saveData["highScoreKills"]
-	var highScoreScrap = saveData["highScoreScrap"]
-	%GameOverStats.clear();
-	%GameOverStats.append_text("[i][b]STATS[/b]");
-	%GameOverStats.newline();
-	if highScoreRound:
-		%GameOverStats.append_text("[color=ff0000]")
-	%GameOverStats.append_text("HIGHEST ROUND: " + str(GameState.get_round_number()));
-	if highScoreRound:
-		%GameOverStats.append_text(" ![/color]")
-	%GameOverStats.newline();
-	if highScoreKills:
-		%GameOverStats.append_text("[color=ff0000]")
-	%GameOverStats.append_text("ENEMIES KILLED: " + str(enemiesKilled));
-	if highScoreKills:
-		%GameOverStats.append_text(" ![/color]")
-	%GameOverStats.newline();
-	if highScoreScrap:
-		%GameOverStats.append_text("[color=ff0000]")
-	%GameOverStats.append_text("SCRAP GAINED: " + str(scrapGained));
-	if highScoreScrap:
-		%GameOverStats.append_text(" ![/color]")
-	if highScoreRound or highScoreKills or highScoreScrap:
+	var devCheatsEnabled = GameState.get_setting("devMode")
+	if not devCheatsEnabled:
+		var saveData = GameState.save_high_scores(GameState.get_round_number(), enemiesKilled, scrapGained)
+		var highScoreRound = saveData["highScoreRound"]
+		var highScoreKills = saveData["highScoreKills"]
+		var highScoreScrap = saveData["highScoreScrap"]
+		%GameOverStats.clear();
+		%GameOverStats.append_text("[i][b]STATS[/b]");
 		%GameOverStats.newline();
-		%GameOverStats.append_text("! NEW HIGH SCORE !");
+		if highScoreRound:
+			%GameOverStats.append_text("[color=ff0000]")
+		%GameOverStats.append_text("HIGHEST ROUND: " + str(GameState.get_round_number()));
+		if highScoreRound:
+			%GameOverStats.append_text(" ![/color]")
+		%GameOverStats.newline();
+		if highScoreKills:
+			%GameOverStats.append_text("[color=ff0000]")
+		%GameOverStats.append_text("ENEMIES KILLED: " + str(enemiesKilled));
+		if highScoreKills:
+			%GameOverStats.append_text(" ![/color]")
+		%GameOverStats.newline();
+		if highScoreScrap:
+			%GameOverStats.append_text("[color=ff0000]")
+		%GameOverStats.append_text("SCRAP GAINED: " + str(scrapGained));
+		if highScoreScrap:
+			%GameOverStats.append_text(" ![/color]")
+		if highScoreRound or highScoreKills or highScoreScrap:
+			%GameOverStats.newline();
+			%GameOverStats.append_text("! NEW HIGH SCORE !");
+	else:
+		%GameOverStats.clear();
+		%GameOverStats.append_text("[i][b]STATS[/b]");
+		%GameOverStats.newline();
+		%GameOverStats.append_text("HIGHEST ROUND: " + str(GameState.get_round_number()));
+		%GameOverStats.newline();
+		%GameOverStats.append_text("ENEMIES KILLED: " + str(enemiesKilled));
+		%GameOverStats.newline();
+		%GameOverStats.append_text("SCRAP GAINED: " + str(scrapGained));
+		%GameOverStats.newline();
+		%GameOverStats.append_text("[color=ff0000]( HIGH SCORES DISABLED BY CHEATS )[/color]");
 	change_state(gameState.GAME_OVER);
 
 

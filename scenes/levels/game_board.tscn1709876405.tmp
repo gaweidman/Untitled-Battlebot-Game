@@ -693,6 +693,7 @@ pivot_offset = Vector2(1489.37, 415.195)
 texture = ExtResource("10_4eh01")
 
 [node name="Credits" type="Control" parent="HUD"]
+visible = false
 layout_mode = 1
 anchor_right = 1.005
 anchor_bottom = 1.0
@@ -705,9 +706,9 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 152.0
-offset_top = 75.0
+offset_top = 203.0
 offset_right = -585.0
-offset_bottom = -320.0
+offset_bottom = -192.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
@@ -759,9 +760,9 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 600.0
-offset_top = 75.0
+offset_top = 203.0
 offset_right = -137.0
-offset_bottom = -320.0
+offset_bottom = -192.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
@@ -777,46 +778,10 @@ Active Part 4 . . . . . Spacebar
 
 Rotate Camera . . . . . Scrollwheel, Q/E
 Tilt Camera . . . . . Shift + Scrollwheel
-End Run menu . . . . . ESC (While In-Game)"
+End Run menu . . . . . ESC"
 horizontal_alignment = 1
 
 [node name="PanelBG" type="NinePatchRect" parent="HUD/Credits/LabelControls"]
-z_index = -1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("11_6fdki")
-region_rect = Rect2(1, 1, 46, 47)
-patch_margin_left = 12
-patch_margin_top = 12
-patch_margin_right = 12
-patch_margin_bottom = 12
-
-[node name="LabelSoundCredits" type="RichTextLabel" parent="HUD/Credits"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 152.0
-offset_top = 381.0
-offset_right = -137.0
-offset_bottom = -152.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
-theme_override_constants/outline_size = 7
-theme_override_font_sizes/bold_italics_font_size = 29
-bbcode_enabled = true
-text = "[i][b]SOUND ATTRIBUTION[/b]
-Bullet_Impact_1 by toxicwafflezz -- https://freesound.org/s/150837/ -- License: Attribution 3.0
-Bullet_Impact_2 by toxicwafflezz -- https://freesound.org/s/150838/ -- License: Attribution 3.0
-Bullet_Impact_3 by toxicwafflezz -- https://freesound.org/s/150839/ -- License: Attribution 3.0"
-horizontal_alignment = 1
-
-[node name="PanelBG" type="NinePatchRect" parent="HUD/Credits/LabelSoundCredits"]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -920,14 +885,52 @@ patch_margin_top = 12
 patch_margin_right = 12
 patch_margin_bottom = 12
 
+[node name="Pause" type="Control" parent="HUD"]
+layout_mode = 1
+anchor_left = 0.503
+anchor_top = -0.154
+anchor_right = 0.503
+anchor_bottom = -0.154
+offset_left = -576.438
+offset_top = 0.100006
+offset_right = 575.562
+offset_bottom = 648.1
+mouse_filter = 2
+
+[node name="Btn_EndRun" type="Button" parent="HUD/Pause"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.407
+anchor_top = 0.035
+anchor_right = 0.593
+anchor_bottom = 0.125
+offset_left = -127.864
+offset_top = 0.32
+offset_right = -128.136
+grow_horizontal = 2
+grow_vertical = 2
+text = "END RUN?"
+
+[node name="Btn_Options" type="Button" parent="HUD/Pause"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 589.0
+offset_top = 23.0
+offset_right = -349.0
+offset_bottom = -567.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "OPTIONS
+"
+
 [node name="Options" type="Control" parent="HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master", "invShooting", "sawbladeDrone", "devCheats", "moneyCheat", "invincibleCheat", "killAllCheat", "cheatsControl", "btn_scoreReset", "lbl_highScores", "renderShadows")]
-visible = false
 layout_mode = 1
 anchor_right = 1.005
 anchor_bottom = 0.997
 offset_right = 0.27002
 offset_bottom = -0.0500488
-mouse_filter = 2
 theme = ExtResource("9_mlcvp")
 script = ExtResource("9_x282c")
 box_music = NodePath("MusicVolume")
@@ -984,12 +987,11 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 469.0
-offset_top = 243.0
+offset_top = 59.0
 offset_right = -469.0
-offset_bottom = -347.0
+offset_bottom = -531.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "Resets all settings to their default values."
 text = "RESET TO DEFAULT"
 
 [node name="MusicVolume" type="SpinBox" parent="HUD/Options"]
@@ -997,13 +999,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 248.0
+offset_left = 224.0
 offset_top = 369.0
-offset_right = -695.0
+offset_right = -719.0
 offset_bottom = -248.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "Controls the volume of the background music."
 max_value = 150.0
 step = 10.0
 value = 100.0
@@ -1016,13 +1017,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 248.0
+offset_left = 224.0
 offset_top = 443.0
-offset_right = -695.0
+offset_right = -719.0
 offset_bottom = -174.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "Controls the volume of in-world actions, such as firing weaponry or hitting a wall."
 max_value = 150.0
 step = 10.0
 value = 80.0
@@ -1035,13 +1035,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 248.0
+offset_left = 224.0
 offset_top = 406.0
-offset_right = -695.0
+offset_right = -719.0
 offset_bottom = -211.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "Controls the volume of UI sounds, such as button clicks."
 max_value = 150.0
 step = 10.0
 value = 90.0
@@ -1054,13 +1053,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 248.0
+offset_left = 224.0
 offset_top = 314.0
-offset_right = -695.0
+offset_right = -719.0
 offset_bottom = -303.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "Controls all volume levels."
 step = 10.0
 value = 100.0
 alignment = 2
@@ -1072,13 +1070,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 692.0
+offset_left = 668.0
 offset_top = 314.0
-offset_right = -232.0
+offset_right = -256.0
 offset_bottom = -279.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "When enabled, Active Parts are unable to be activated while the inventory is open."
 button_pressed = true
 text = "Inventory Disables 
 using Active parts"
@@ -1089,13 +1086,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 692.0
+offset_left = 668.0
 offset_top = 369.0
-offset_right = -232.0
+offset_right = -256.0
 offset_bottom = -247.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "Enables cheats. WARNING: DISABLES SETTING HIGH SCORES!"
 text = "Enable dev cheat menu"
 alignment = 2
 
@@ -1111,10 +1107,8 @@ grow_vertical = 2
 
 [node name="moneys" type="CheckButton" parent="HUD/Options/DevCheats/Cheats"]
 layout_mode = 1
-offset_left = 24.0
-offset_right = 193.0
+offset_right = 169.0
 offset_bottom = 32.0
-tooltip_text = "Starts the player's run with 99999999 scrap instead of 0."
 text = "Bajillion Moneys"
 alignment = 2
 
@@ -1123,13 +1117,11 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 24.0
 offset_top = 32.0
-offset_right = 193.0
+offset_right = 169.0
 offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "Makes the player unable to take damage or die."
 text = "Godmode
 "
 alignment = 2
@@ -1139,13 +1131,11 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 24.0
 offset_top = 64.0
-offset_right = 193.0
+offset_right = 169.0
 offset_bottom = 96.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "Enables pressing 'K' to kill every enemy in the current wave."
 text = "'K' to kill all
 "
 alignment = 2
@@ -1155,13 +1145,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 244.0
-offset_top = 480.5
-offset_right = -698.0
-offset_bottom = -135.5
+offset_left = 220.0
+offset_top = 481.0
+offset_right = -722.0
+offset_bottom = -136.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "While enabled, sawblades passively make a buzzing sound."
 button_pressed = true
 text = "Sawblades drone"
 alignment = 2
@@ -1177,7 +1166,6 @@ offset_right = -69.0
 offset_bottom = -531.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "Resets all high score data."
 text = "RESET HIGH SCORES"
 
 [node name="HighScores" type="RichTextLabel" parent="HUD/Options/Btn_ScoresReset"]
@@ -1209,57 +1197,15 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 470.0
+offset_left = 446.0
 offset_top = 314.0
-offset_right = -472.0
+offset_right = -496.0
 offset_bottom = -302.0
 grow_horizontal = 2
 grow_vertical = 2
-tooltip_text = "Enables shadows to render. Disabling may increase performance."
 button_pressed = true
 text = "Render Shadows"
 alignment = 2
-
-[node name="Pause" type="Control" parent="HUD"]
-z_index = 2
-layout_mode = 1
-anchor_left = 0.503
-anchor_top = -0.154
-anchor_right = 0.503
-anchor_bottom = -0.154
-offset_left = -576.438
-offset_top = 0.100006
-offset_right = 575.562
-offset_bottom = 648.1
-mouse_filter = 2
-
-[node name="Btn_EndRun" type="Button" parent="HUD/Pause"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.407
-anchor_top = 0.035
-anchor_right = 0.593
-anchor_bottom = 0.125
-offset_left = -127.864
-offset_top = 0.32
-offset_right = -128.136
-grow_horizontal = 2
-grow_vertical = 2
-text = "END RUN?"
-
-[node name="Btn_PauseOptions" type="Button" parent="HUD/Pause"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 589.0
-offset_top = 23.0
-offset_right = -349.0
-offset_bottom = -567.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "OPTIONS
-"
 
 [node name="Damage Cube" parent="." instance=ExtResource("8_hfgcm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0834, 3.4556, -4.56467)
@@ -1298,6 +1244,9 @@ mesh = ExtResource("5_4jixe")
 [connection signal="visibility_changed" from="HUD/Credits" to="HUD/Credits" method="_on_visibility_changed"]
 [connection signal="pressed" from="HUD/Credits/Btn_Menu" to="." method="_on_btn_menu_pressed"]
 [connection signal="pressed" from="HUD/GameOver/Btn_Menu" to="." method="_on_btn_menu_pressed"]
+[connection signal="pressed" from="HUD/Pause/Btn_EndRun" to="." method="_on_btn_end_run_pressed"]
+[connection signal="pressed" from="HUD/Pause/Btn_Options" to="." method="_on_btn_options_pressed"]
+[connection signal="visibility_changed" from="HUD/Options" to="HUD/Options" method="_on_visibility_changed"]
 [connection signal="pressed" from="HUD/Options/Btn_Menu" to="." method="_on_btn_menu_pressed"]
 [connection signal="pressed" from="HUD/Options/Btn_Reset" to="HUD/Options" method="_on_btn_reset_pressed"]
 [connection signal="value_changed" from="HUD/Options/MusicVolume" to="HUD/Options" method="_on_music_volume_value_changed"]
@@ -1312,5 +1261,3 @@ mesh = ExtResource("5_4jixe")
 [connection signal="toggled" from="HUD/Options/sawbladeDrone" to="HUD/Options" method="_on_sawblade_drone_toggled"]
 [connection signal="pressed" from="HUD/Options/Btn_ScoresReset" to="HUD/Options" method="_on_btn_scores_reset_pressed"]
 [connection signal="toggled" from="HUD/Options/renderShadows" to="HUD/Options" method="_on_render_shadows_toggled"]
-[connection signal="pressed" from="HUD/Pause/Btn_EndRun" to="." method="_on_btn_end_run_pressed"]
-[connection signal="pressed" from="HUD/Pause/Btn_PauseOptions" to="HUD" method="_on_btn_pause_options_pressed"]

@@ -5,6 +5,8 @@
 
 [resource]
 Button/colors/font_disabled_color = Color(0.533333, 0.52549, 0.376471, 1)
+Button/colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+Button/constants/outline_size = 4
 Button/styles/disabled = ExtResource("1_1r0oh")
 Button/styles/disabled_mirrored = ExtResource("1_1r0oh")
 Button/styles/focus = ExtResource("2_x8ib1")
@@ -16,3 +18,4 @@ Button/styles/normal = ExtResource("2_x8ib1")
 Button/styles/normal_mirrored = ExtResource("2_x8ib1")
 Button/styles/pressed = ExtResource("1_1r0oh")
 Button/styles/pressed_mirrored = ExtResource("1_1r0oh")
+RichTextLabel/colors/font_outline_color = Color(0, 0, 0, 1)

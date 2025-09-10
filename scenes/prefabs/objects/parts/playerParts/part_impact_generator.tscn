@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=4 uid="uid://dw1c4uharxt3u"]
+[gd_scene load_steps=4 format=4 uid="uid://dw1c4uharxt3u"]
 
 [ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_nud80"]
 [ext_resource type="Script" uid="uid://chkqkl5ltikmo" path="res://scripts/GUI/parts/playerParts/part_impact_generator.gd" id="2_w4ulg"]
+[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/Energy.png" id="3_w4ulg"]
 
 [node name="PartImpactGenerator" instance=ExtResource("1_nud80")]
 script = ExtResource("2_w4ulg")
@@ -9,6 +10,7 @@ scrapCostBase = 6
 dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1)])
 partName = "Impact Generator"
 partDescription = "[color=f2ec6b]Passive: Gain 1.5 [color=789be9]Energy Recharge [color=f2ec6b]for a few seconds after taking damage."
+partIcon = ExtResource("3_w4ulg")
 
 [node name="Tilemaps" parent="TextureBase" index="0"]
 mouse_filter = 0

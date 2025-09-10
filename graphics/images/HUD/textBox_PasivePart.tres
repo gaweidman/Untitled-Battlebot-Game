@@ -1,0 +1,10 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://b6u2oheaub6d"]
+
+[ext_resource type="Texture2D" uid="uid://b27r3rshm0ite" path="res://graphics/images/HUD/textBoxBG_partPassive.png" id="1_jhh41"]
+
+[resource]
+texture = ExtResource("1_jhh41")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0

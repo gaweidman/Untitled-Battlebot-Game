@@ -62,6 +62,15 @@ func _process(delta):
 	else:
 		if devCheats.button_pressed == false:
 			cheatsControl.hide();
+	
+	if resettingScoresCheck:
+		$Btn_ScoresReset.text = "!!RESET HIGH SCORES!!";
+		$Btn_ScoresReset.set_deferred("theme_override_colors/font_pressed_color", "FF0000")
+		$Btn_ScoresReset.set_deferred("theme_override_colors/font_hover_color", "FF0000")
+	else:
+		$Btn_ScoresReset.text = "RESET HIGH SCORES"
+		$Btn_ScoresReset.set_deferred("theme_override_colors/font_pressed_color", null)
+		$Btn_ScoresReset.set_deferred("theme_override_colors/font_hover_color", null)
 
 func _on_btn_reset_pressed():
 	reset();
@@ -150,12 +159,17 @@ func _on_sawblade_drone_toggled(toggled_on):
 	pass # Replace with function body.
 
 func open_sesame(toggle):
+	var inPlay = GameState.get_in_state_of_play()
+	##Controls buttons that should or shouldn't be available during Pause.
+	$Btn_Menu.visible = !inPlay;
+	$Btn_Menu.disabled = inPlay;
+	devCheats.disabled = inPlay;
+	
 	if toggle:
 		update_score_text();
 		show();
 	else:
 		hide();
-	pass
 
 func update_score_text():
 	var scores = GameState.load_data();
@@ -168,10 +182,17 @@ func update_score_text():
 	lbl_highScores.append_text("MOST ENEMIES KILLED: " + str(scores[StringName("Most Enemies Killed")]));
 	lbl_highScores.newline();
 	lbl_highScores.append_text("MOST SCRAP GAINED: " + str(scores[StringName("Most Scrap Earned")]));
+	
+	resettingScoresCheck = false;
+
+var resettingScoresCheck := false;
 
 func _on_btn_scores_reset_pressed():
-	GameState.reset_data();
-	update_score_text();
+	if resettingScoresCheck:
+		GameState.reset_data();
+		update_score_text();
+	else:
+		resettingScoresCheck = true;
 	pass # Replace with function body.
 
 func _on_render_shadows_toggled(toggled_on):
