@@ -290,14 +290,14 @@ func move_and_rotate_towards_movement_vector(delta):
 	
 	##Get 
 	if is_inputting_movement():
-		print("HI")
+		#print("HI")
 		var forceVector = Vector3.ZERO
 		forceVector += body.global_transform.basis.x * movementVector.x * -acceleration;
 		forceVector += body.global_transform.basis.z * movementVector.y * -acceleration;
 		#print(forceVector)
 		##Rotate the force vector so the body's rotation doesn't meddle with it.
 		forceVector = forceVector.rotated(Vector3(0,1,0), -body.global_rotation.y);
-		print(forceVector)
+		#print(forceVector)
 		body.apply_central_force(forceVector);
 		#print(movementVector)
 		lastInputtedMV = Vector2(body.linear_velocity.x, body.linear_velocity.z)

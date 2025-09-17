@@ -52,7 +52,7 @@ func _physics_process(delta):
 	if $ShapeCast3D.is_colliding():
 		for item in $ShapeCast3D.collision_result:
 			if item.collider is Bullet:
-				print(item)
+				#print(item)
 				var bullet = item.collider;
 				if bullet.get_attacker() != thisBot:
 					thisBot.call_deferred("take_knockback",(bullet.dir + Vector3(0,0.1,0)) * 1000);
