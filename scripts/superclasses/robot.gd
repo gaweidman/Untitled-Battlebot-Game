@@ -37,7 +37,7 @@ func phys_process_pre(delta):
 		sleepTimer -= delta;
 	pass;
 
-############### STATE CONTROL
+######################### STATE CONTROL
 
 var spawned := false;
 var frozen := false;

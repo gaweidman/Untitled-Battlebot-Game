@@ -42,6 +42,7 @@ func process_draw(delta):
 @export var placementCollisionHolder : Node3D;
 @export var hurtboxCollisionHolder : Area3D;
 @export var hitboxCollisionHolder : Area3D;
+@export var meshesHolder : Node3D;
 #var bodyMeshes : Dictionary[StringName, MeshInstance3D] = {};
 
 ##This function assigns socket data and generates all hitboxes. Should only ever be run once at _ready.
