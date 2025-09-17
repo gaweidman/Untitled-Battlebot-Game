@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://c2nsjhwipqr1m"]
+
+[ext_resource type="Script" uid="uid://cjbf8lwy20s0y" path="res://scripts/superclasses/robot.gd" id="1_ub44i"]
+[ext_resource type="PackedScene" uid="uid://b3n2ijepd0x5b" path="res://scripts/superclasses/piece_bodyCube.tscn" id="2_3l6rt"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scripts/superclasses/socket.tscn" id="2_d1f3u"]
+[ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scripts/superclasses/piece_collision_box.tscn" id="4_f0k1s"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
+friction = 200.0
+bounce = 0.3
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0k1s"]
+radius = 0.75
+
+[node name="Robot" type="Node3D" node_paths=PackedStringArray("body", "meshes")]
+visible = false
+script = ExtResource("1_ub44i")
+body = NodePath("Body")
+meshes = NodePath("Body/Meshes")
+maxSpeed = 1.0
+
+[node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Driveable", "Metal"]]
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 100.0
+physics_material_override = SubResource("PhysicsMaterial_f0k1s")
+
+[node name="Meshes" type="Node3D" parent="Body"]
+transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
+
+[node name="Socket" parent="Body/Meshes" instance=ExtResource("2_d1f3u")]
+transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
+
+[node name="Piece" parent="Body/Meshes/Socket" node_paths=PackedStringArray("hostSocket", "hostPiece", "hostRobot", "placementCollisionHolder") instance=ExtResource("2_3l6rt")]
+hostSocket = NodePath("..")
+hostPiece = NodePath(".")
+hostRobot = NodePath("../../../..")
+placementCollisionHolder = NodePath("PieceCollisionBox")
+
+[node name="PieceCollisionBox" parent="Body" instance=ExtResource("4_f0k1s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CapsuleShape3D_f0k1s")
+disabled = false

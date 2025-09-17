@@ -19,6 +19,7 @@ func _ready() -> void:
 	grab_references();
 
 func _process(delta: float) -> void:
+	return;
 	if !thisBot:
 		grab_references();
 	else:
@@ -28,7 +29,7 @@ func _process(delta: float) -> void:
 				if airCheckTimer <= 0.0:
 					if underbelly.is_on_floor():
 						print_rich("[color=cyan]Airtime: "+str(airtime));
-						Hooks.OnLand(thisBot, airtime);
+						#Hooks.OnLand(thisBot, airtime);
 						inAir = false;
 						airtime = 0.0;
 					airCheckTimer = 0.05;

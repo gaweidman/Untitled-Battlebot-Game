@@ -31,7 +31,7 @@ func _ready() -> void:
 	Hooks.add(self, "OnChangeGameState", "CameraChangePos", 
 		func(oldState : GameBoard.gameState, newState : GameBoard.gameState) :
 			if newState == GameBoard.gameState.INIT_PLAY:
-				targetRotationX = 0.0;
+				targetRotationX = deg_to_rad(20);
 				targetRotationY = 0.0;
 			elif newState == GameBoard.gameState.MAIN_MENU:
 				targetRotationX = 0.0;
@@ -81,7 +81,7 @@ func _process(delta: float) -> void:
 func _physics_process(delta):
 	if is_node_ready():
 		if is_instance_valid(playerBody) && is_instance_valid(viewport):
-			var inp = GameState.get_input_handler();
+			var inp = GameState.get_player();
 			var inpVec = inp.get_movement_vector(false);
 			modInpVec = - Vector3(inpVec.x, 0, inpVec.y);
 			var viewRect = viewport.get_visible_rect();

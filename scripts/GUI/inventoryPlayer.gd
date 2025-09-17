@@ -31,9 +31,12 @@ func _process(delta):
 	test_add_stuff();
 	
 	if Input.is_action_just_pressed("InventoryToggle"):
-		inventory_panel_toggle(!inventoryUp);
+		if not gameBoard.HUD_options.visible:
+			inventory_panel_toggle(!inventoryUp);
 	
 	if GameState.get_in_state_of_play():
+		if gameBoard.HUD_options.visible and inventoryUp:
+			inventory_panel_toggle(false);
 		if inventoryUp:
 			HUD_inventory.position.y = lerp(HUD_inventory.position.y, 0.0, delta * 20);
 		else:

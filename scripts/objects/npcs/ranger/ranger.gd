@@ -13,7 +13,7 @@ func add_gun():
 var noFireTimer := 0.1;
 
 func _physics_process(delta):
-	if not is_asleep():
+	if not is_asleep() and not is_frozen():
 		if GameState.is_player_in_range(body.global_position, 20) and not GameState.is_player_in_range(body.global_position, 5) and GameState.is_player_alive():
 			##This massive daisy chain below checks very meticulously if the gun can fire, then if its raycast is hitting the player's body specifically
 			var gun = combatHandler.get_active_part(0);

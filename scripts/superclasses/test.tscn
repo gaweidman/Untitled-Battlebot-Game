@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://drv88peb4n5r4"]
+
+[ext_resource type="Script" uid="uid://b22dsgbrb4650" path="res://scripts/superclasses/game_board_new.gd" id="1_8kmw2"]
+[ext_resource type="PackedScene" uid="uid://c2nsjhwipqr1m" path="res://scripts/superclasses/robot.tscn" id="1_g8gfh"]
+[ext_resource type="Script" uid="uid://cxrlp6700cj25" path="res://scripts/superclasses/test.gd" id="2_48pq8"]
+[ext_resource type="PackedScene" uid="uid://cfsflls4t0wq6" path="res://scripts/superclasses/robot_player.tscn" id="3_6ggyy"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_48pq8"]
+
+[node name="GameBoardNew" type="Node3D"]
+script = ExtResource("1_8kmw2")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_48pq8")
+
+[node name="Robot" parent="." instance=ExtResource("1_g8gfh")]
+transform = Transform3D(0.842161, 0, 0.539227, 0, 1, 0, -0.539227, 0, 0.842161, 0.313431, 3.75, 0.6799)
+
+[node name="CameraPointer" type="Node3D" parent="."]
+script = ExtResource("2_48pq8")
+
+[node name="Camera3D" type="Camera3D" parent="CameraPointer"]
+transform = Transform3D(1, 0, 0, 0, 0.917678, 0.397324, 0, -0.397324, 0.917678, 0, 5.62742, 5.71853)
+
+[node name="Robot_Player" parent="." instance=ExtResource("3_6ggyy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.84916)
+maxSpeed = 20.0
