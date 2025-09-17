@@ -27,6 +27,7 @@ func process_draw(delta):
 
 @export_category("Piece Management")
 @export var pieceName : StringName = "Piece";
+@export_multiline var partDescription := "No description given.";
 
 @export var hostSocket : Socket;
 @export var hostPiece : Piece;
