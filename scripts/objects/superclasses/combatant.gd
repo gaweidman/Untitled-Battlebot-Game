@@ -10,6 +10,11 @@ var _partOffset1 := Vector3(0, 0.086, 0.0);
 var _partOffset2 := Vector3(0, 0.172, 0);
 var bodyMesh : MeshInstance3D; 
 var underbelly : UnderbellyContactPoints;
+var spawned = false;
+
+func live():
+	spawned;
+	show();
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

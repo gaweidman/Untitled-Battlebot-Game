@@ -5,7 +5,8 @@ class_name GameBoard;
 @export var playerSpawnPosition : Vector3;
 @export var enemySpawnPositions : Node3D;
 @export var enemySpawnList := {};
-@onready var playerScene = preload("res://scenes/prefabs/objects/player.tscn");
+#@onready var playerScene = preload("res://scenes/prefabs/objects/player.tscn");
+@onready var playerScene = preload("res://scripts/superclasses/robot_player.tscn");
 @export var spawnChecker : ShapeCast3D;
 var spawnTimer := 0.0;
 var spawnPool := [];
@@ -16,7 +17,7 @@ var roundEnemiesInit := 1;
 var roundEnemies := 0;
 var round := 0;
 var enemiesAlive = [];
-var player : Player;
+var player : Robot_Player;
 
 var enemiesKilled := 0;
 var scrapGained := 0;
@@ -158,7 +159,7 @@ func enter_state(state:gameState):
 		
 		destroy_all_enemies();
 		player.body.global_position = Vector3(0,20,30);
-		player.freeze();
+		player.freeze(true);
 		HUD_mainMenu.show();
 		pass
 	elif state == gameState.GAME_OVER:
@@ -177,9 +178,11 @@ func enter_state(state:gameState):
 		HUD_options.open_sesame(true);
 		pass
 	elif state == gameState.INIT_PLAY:
+		
 		MUSIC.change_state(MusicHandler.musState.SHOP);
 		
-		GameState.start_death_timer(120.0,true)
+		##TODO: REIMPLEMENT DEATH TIMER
+		#GameState.start_death_timer(120.0,true)
 		round = 0;
 		roundEnemiesInit = 1;
 		clear_enemy_spawn_list();
@@ -188,8 +191,7 @@ func enter_state(state:gameState):
 		
 		spawnPlayer(return_random_unoccupied_spawn_location());
 		player.start_new_game();
-		player.inventory.show();
-		#HUD_playerStats.show();
+		#player.inventory.show();
 		change_state(gameState.INIT_ROUND);
 		
 		pass
@@ -206,7 +208,7 @@ func enter_state(state:gameState):
 		
 		round += 1;
 		set_enemy_spawn_waves(round);
-		player.start_round();
+		#player.start_round();
 		waveTimer = 3;
 		wave = 0;
 		roundEnemiesInit += 2;
@@ -224,6 +226,8 @@ func _process(delta):
 	elif curState == gameState.CREDITS:
 		pass
 	elif curState == gameState.PLAY:
+		#waveTimer = 10
+		#spawnTimer = 10
 		if GameState.get_setting("killAllKey") and Input.is_action_just_pressed("DBG_KillAll"):
 			destroy_all_enemies()
 		
@@ -270,6 +274,12 @@ func in_state_of_play()->bool:
 		return true;
 	return false;
 
+##returns true if we're in a state where build-a-bot mode is activated.
+func in_state_of_building()->bool:
+	if (GameState.get_game_board_state() == GameBoard.gameState.SHOP):
+		return true;
+	return false;
+
 func spawnPlayer(_in_position := playerSpawnPosition) -> Node3D:
 	if player != null:
 		#player.body.position = _in_position;
@@ -279,6 +289,8 @@ func spawnPlayer(_in_position := playerSpawnPosition) -> Node3D:
 		add_child(newPlayer);
 		newPlayer.global_position = _in_position;
 		player = newPlayer;
+	
+	player.live();
 	
 	return player;
 
@@ -307,15 +319,18 @@ func spawn_wave(numOfEnemies := 0):
 		waveSpawnList.append(enemyScene)
 		numOfEnemies -= 1;
 
+var enemySpawnerRef := preload("res://scripts/superclasses/enemy_spawner.tscn");
 func spawn_enemy_from_wave():
 	if waveSpawnList.size() > 0:
 		var pos = return_random_unoccupied_spawn_location();
 		if pos != null:
 			var enemyScene = waveSpawnList.pop_front();
-			var enemy = enemyScene.instantiate();
+			var newEnemySpawner : RobotSpawner = enemySpawnerRef.instantiate();
+			newEnemySpawner.assign_gameBoard(self);
+			add_child(newEnemySpawner);
+			newEnemySpawner.assign_enemy_type_from_resource(enemyScene);
+			var enemy = newEnemySpawner.start_spawn(pos);
 			enemiesAlive.append(enemy);
-			add_child(enemy);
-			enemy.global_position = pos;
 			roundEnemies -= 1;
 
 func check_alive_enemies():
@@ -324,6 +339,10 @@ func check_alive_enemies():
 		if enemy == null && _continue:
 			enemiesAlive.erase(enemy);
 			_continue = false
+		if _continue:
+			var checkedEnemy = get_node_or_null(enemy.get_path())
+			if checkedEnemy.spawned == false:
+				_continue = false;
 		if _continue:
 			var checkedEnemy = get_node_or_null(enemy.get_path())
 			if checkedEnemy == null:

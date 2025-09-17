@@ -10,6 +10,7 @@ var closestAiNode : AINode;
 @export var meshMaterialOverride1 = Material;
 var meshMaterialsSet := false;
 
+
 func _ready():
 	super();
 	set_sleep_timer(sleepTimerLength);
@@ -32,6 +33,10 @@ func set_sleep_timer(inTime:=0.0):
 
 func is_asleep() -> bool:
 	return sleepTimer > 0;
+
+var frozen := false;
+func is_frozen() -> bool:
+	return frozen;
 	
 func get_body_position():
 	return %Body.get_position();

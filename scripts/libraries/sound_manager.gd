@@ -273,6 +273,7 @@ static func pick_sound(soundType:String):
 # Takes two objects that collided with each other, and returns the proper sound
 # that should be played for the collision.
 static func get_proper_collision_sound_string(collider1: Node3D, collider2: Node3D):
+	if not (is_instance_valid(collider1) and is_instance_valid(collider2)): return null;
 	var collider1Audiosrc = "Other";
 	var collider2Audiosrc = "Other";
 	
@@ -325,6 +326,7 @@ static func get_proper_collision_sound_string(collider1: Node3D, collider2: Node
 
 static func get_proper_collision_sound(collider1: Node3D, collider2: Node3D):
 	var sndString = get_proper_collision_sound_string(collider1, collider2);
+	if sndString == null: return;
 	var snd = pick_sound(sndString)
 	if is_instance_valid(snd):
 		return snd;
@@ -402,6 +404,7 @@ static func play_sound_nondirectional(inSound, inVolume := 1.0, inPitch := 1.0):
 	return newSound;
 
 static func play_collision_sound(collider1: Node3D, collider2: Node3D, inGlobalPositionOffset:=Vector3.ZERO, inVolume := 1.0, inPitch := 1.0):
+	if not (is_instance_valid(collider1) and is_instance_valid(collider2)): return null;
 	var sound = get_proper_collision_sound(collider1, collider2);
 	var playPos = ((collider1.global_position + collider2.global_position) / 2) + inGlobalPositionOffset;
 	if collider1 is StaticBody3D:

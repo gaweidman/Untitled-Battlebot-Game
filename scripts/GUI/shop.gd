@@ -3,7 +3,7 @@ extends Control
 class_name Shop
 
 var inventory : InventoryPlayer;
-var player : Player;
+var player : Robot_Player;
 
 var shopDoor : TextureRect;
 var shopDoorVelocity := 0.0;

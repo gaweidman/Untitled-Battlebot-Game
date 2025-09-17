@@ -66,8 +66,9 @@ func _physics_process(delta):
 	# in other words, we take the body's relative front and multiply it by the x component
 	# (left/right) of the movement vector. This gives us how much force and direction the
 	# player will be going side to side.
-	forceVector += body.global_transform.basis.x * movementVector.x;
-	forceVector += body.global_transform.basis.z * movementVector.y;
+	if not thisBot.is_frozen():
+		forceVector += body.global_transform.basis.x * movementVector.x;
+		forceVector += body.global_transform.basis.z * movementVector.y;
 	
 	# move the body in the direction that we have determined we're trying to go in.sa
 	body.apply_central_force(forceVector);

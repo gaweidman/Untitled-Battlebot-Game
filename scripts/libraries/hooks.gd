@@ -79,7 +79,7 @@ func OnActiveUse(activePart: PartActive):
 		activePart;
 
 ## Called when a combatant dies.
-func OnDeath(thisBot : Combatant, killer : Combatant):
+func OnDeath(thisBot : Robot, killer : Robot):
 	for hookFunc in getValidHooks("OnDeath"):
 		hookFunc.call(thisBot, killer);
 
@@ -89,7 +89,7 @@ func OnGainScrap(source: String, amount:int):
 		hookFunc.call(source, amount);
 
 ## Called when a combatant hits the floor.
-func OnLand(thisBot: Combatant, airtime: float):
+func OnLand(thisBot: Robot, airtime: float):
 	for hookFunc in getValidHooks("OnLand"):
 		hookFunc.call(thisBot, airtime);
 

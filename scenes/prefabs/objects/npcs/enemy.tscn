@@ -22,10 +22,8 @@ radius = 0.611008
 
 [node name="Enemy" type="Node3D" groups=["Combatant"]]
 script = ExtResource("1_u733l")
-sleepTimerLength = null
 meshMaterialOverride0 = ExtResource("2_uec6s")
 meshMaterialOverride1 = ExtResource("7_uec6s")
-AudioSourceType = null
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Combatant Body", "Damager", "Driveable"]]
 unique_name_in_owner = true

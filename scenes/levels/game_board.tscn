@@ -92,10 +92,10 @@ script = ExtResource("1_mlcvp")
 playerSpawnPosition = Vector3(0, 0.605191, 0)
 enemySpawnPositions = NodePath("ArenaWall/StaticBody3D/EnemySpawnLocations")
 spawnChecker = NodePath("ArenaWall/StaticBody3D/EnemySpawnLocations/ShapeCast3D")
-HUD_mainMenu = NodePath("HUD/MainMenu")
-HUD_credits = NodePath("HUD/Credits")
-HUD_options = NodePath("HUD/Options")
-HUD_gameOver = NodePath("HUD/GameOver")
+HUD_mainMenu = NodePath("CanvasLayer/HUD/MainMenu")
+HUD_credits = NodePath("CanvasLayer/HUD/Credits")
+HUD_options = NodePath("CanvasLayer/HUD/Options")
+HUD_gameOver = NodePath("CanvasLayer/HUD/GameOver")
 MUSIC = NodePath("BGM2")
 LIGHT = NodePath("DirectionalLight3D")
 
@@ -568,26 +568,28 @@ fov = 90.0
 script = ExtResource("5_l5xbb")
 floor = NodePath("../../ArenaFloor/StaticBody3D")
 
-[node name="HUD" type="Control" parent="." node_paths=PackedStringArray("MainMenuLogo")]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("MainMenuLogo")]
 unique_name_in_owner = true
 z_index = 2
 texture_filter = 1
 layout_mode = 3
-anchor_left = 0.497
-anchor_top = 0.502
-anchor_right = 0.497
-anchor_bottom = 0.502
-offset_left = -572.544
-offset_top = -325.296
-offset_right = 573.456
-offset_bottom = 324.704
-size_flags_horizontal = 4
-size_flags_vertical = 4
+anchor_left = 0.2
+anchor_top = 0.2
+anchor_right = 0.8
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(576, 314)
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme = ExtResource("9_mlcvp")
 script = ExtResource("18_wbopo")
 MainMenuLogo = NodePath("MainMenu/LogoSmall")
+metadata/_edit_use_anchors_ = true
 
-[node name="In-Dev Overlay" type="Label" parent="HUD"]
+[node name="In-Dev Overlay" type="Label" parent="CanvasLayer/HUD"]
 visible = false
 layout_mode = 0
 offset_right = 323.0
@@ -595,78 +597,74 @@ offset_bottom = 105.0
 text = "in-dev overlay
 not finished"
 
-[node name="MainMenu" type="Control" parent="HUD"]
-visible = false
+[node name="MainMenu" type="Control" parent="CanvasLayer/HUD"]
 layout_mode = 1
-anchor_right = 1.005
-anchor_bottom = 0.997
-offset_right = 0.27002
-offset_bottom = -0.0500488
+anchor_left = -0.333333
+anchor_top = -0.333333
+anchor_right = 1.33333
+anchor_bottom = 1.33333
+metadata/_edit_use_anchors_ = true
 
-[node name="Btn_Play" type="Button" parent="HUD/MainMenu"]
+[node name="Btn_Play" type="Button" parent="CanvasLayer/HUD/MainMenu"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 469.0
-offset_top = 287.0
-offset_right = -469.0
-offset_bottom = -303.0
+anchor_left = 0.407118
+anchor_top = 0.442901
+anchor_right = 0.592882
+anchor_bottom = 0.532407
 grow_horizontal = 2
 grow_vertical = 2
 text = "PLAY"
+metadata/_edit_use_anchors_ = true
 
-[node name="Btn_Credits" type="Button" parent="HUD/MainMenu"]
+[node name="Btn_Credits" type="Button" parent="CanvasLayer/HUD/MainMenu"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 469.0
-offset_top = 359.0
-offset_right = -469.0
-offset_bottom = -231.0
+anchor_left = 0.385938
+anchor_top = 0.553704
+anchor_right = 0.614583
+anchor_bottom = 0.643519
+offset_left = 42.0
+offset_right = -42.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("9_mlcvp")
 text = "CREDITS & CONTROLS"
+metadata/_edit_use_anchors_ = true
 
-[node name="Btn_Exit" type="Button" parent="HUD/MainMenu"]
+[node name="Btn_Exit" type="Button" parent="CanvasLayer/HUD/MainMenu"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 469.0
-offset_top = 543.0
-offset_right = -469.0
-offset_bottom = -47.0
+anchor_left = 0.407118
+anchor_top = 0.837963
+anchor_right = 0.592882
+anchor_bottom = 0.927469
 grow_horizontal = 2
 grow_vertical = 2
 text = "EXIT GAME"
+metadata/_edit_use_anchors_ = true
 
-[node name="Btn_Options" type="Button" parent="HUD/MainMenu"]
+[node name="Btn_Options" type="Button" parent="CanvasLayer/HUD/MainMenu"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 469.0
-offset_top = 431.0
-offset_right = -469.0
-offset_bottom = -159.0
+anchor_left = 0.407118
+anchor_top = 0.665123
+anchor_right = 0.592882
+anchor_bottom = 0.75463
 grow_horizontal = 2
 grow_vertical = 2
 text = "OPTIONS
 "
+metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="RichTextLabel" parent="HUD/MainMenu"]
+[node name="Label" type="RichTextLabel" parent="CanvasLayer/HUD/MainMenu"]
 visible = false
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 416.0
-offset_top = 200.0
-offset_right = -401.0
-offset_bottom = -360.0
+anchor_left = 0.361111
+anchor_top = 0.308642
+anchor_right = 0.65191
+anchor_bottom = 0.444444
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
@@ -676,45 +674,51 @@ bbcode_enabled = true
 text = "[i][b]SCRAP BOT SCRAMBLE"
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
 
-[node name="LogoSmall" type="TextureRect" parent="HUD/MainMenu"]
+[node name="LogoSmall" type="TextureRect" parent="CanvasLayer/HUD/MainMenu"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -912.0
-offset_top = -293.0
-offset_right = 942.0
-offset_bottom = -22.9999
+anchors_preset = -1
+anchor_left = 0.155425
+anchor_top = 0.0399304
+anchor_right = 0.847839
+anchor_bottom = 0.415976
+offset_left = -1861.42
+offset_top = -637.125
+offset_right = 1873.15
+offset_bottom = 503.746
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.262527, 0.262527)
-pivot_offset = Vector2(1489.37, 415.195)
+pivot_offset = Vector2(2524.04, 863.93)
 texture = ExtResource("10_4eh01")
+metadata/_edit_use_anchors_ = true
 
-[node name="Credits" type="Control" parent="HUD"]
+[node name="Credits" type="Control" parent="CanvasLayer/HUD"]
+visible = false
 layout_mode = 1
-anchor_right = 1.005
-anchor_bottom = 1.0
-offset_right = 0.27002
-offset_bottom = -2.0
+anchor_left = -0.333333
+anchor_top = -0.333333
+anchor_right = 1.33333
+anchor_bottom = 1.33333
+metadata/_edit_use_anchors_ = true
 
-[node name="LabelCredits" type="RichTextLabel" parent="HUD/Credits"]
+[node name="LabelCredits" type="RichTextLabel" parent="CanvasLayer/HUD/Credits"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 152.0
-offset_top = 75.0
-offset_right = -585.0
-offset_bottom = -320.0
+anchor_left = 0.131944
+anchor_top = 0.115741
+anchor_right = 0.492188
+anchor_bottom = 0.506173
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
 theme_override_constants/outline_size = 7
 theme_override_font_sizes/bold_italics_font_size = 29
 bbcode_enabled = true
-text = "[i][b]CREDITS[/b]
+text = "
+
+[i][b]CREDITS[/b]
 Alancin Wolfe:  Programming, UI design / GFX, Music
 Gabe Weidman:  Programming, 3D Texturing
 Sunny Turner: 3D assets, particles, sound gathering
@@ -724,13 +728,14 @@ Jake Muilenburg:  3D assets, logo graphic
 Prof. Drennen Dooms
 Tyler Kem"
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
-[node name="PanelBG" type="NinePatchRect" parent="HUD/Credits/LabelCredits"]
+[node name="PanelBG" type="NinePatchRect" parent="CanvasLayer/HUD/Credits/LabelCredits"]
 z_index = -1
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = -1
+anchor_right = 1.00048
+anchor_bottom = 0.675889
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("11_6fdki")
@@ -739,36 +744,36 @@ patch_margin_left = 12
 patch_margin_top = 12
 patch_margin_right = 12
 patch_margin_bottom = 12
+metadata/_edit_use_anchors_ = true
 
-[node name="Btn_Menu" type="Button" parent="HUD/Credits"]
+[node name="Btn_Menu" type="Button" parent="CanvasLayer/HUD/Credits"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 469.0
-offset_top = 543.0
-offset_right = -469.0
-offset_bottom = -47.0
+anchor_left = 0.407118
+anchor_top = 0.837963
+anchor_right = 0.592882
+anchor_bottom = 0.927469
 grow_horizontal = 2
 grow_vertical = 2
 text = "MAIN MENU"
+metadata/_edit_use_anchors_ = true
 
-[node name="LabelControls" type="RichTextLabel" parent="HUD/Credits"]
+[node name="LabelControls" type="RichTextLabel" parent="CanvasLayer/HUD/Credits"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 600.0
-offset_top = 75.0
-offset_right = -137.0
-offset_bottom = -320.0
+anchor_left = 0.520833
+anchor_top = 0.115741
+anchor_right = 0.881076
+anchor_bottom = 0.506173
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
 theme_override_constants/outline_size = 7
 theme_override_font_sizes/bold_italics_font_size = 29
 bbcode_enabled = true
-text = "[i][b]CONTROLS[/b]
+text = "
+
+[i][b]CONTROLS[/b]
 Movement . . . . . WASD / Arrow Keys
 Active part 1 . . . . . Left Mouse Click
 Active Part 2 . . . . . Middle Mouse Click
@@ -779,13 +784,14 @@ Rotate Camera . . . . . Scrollwheel, Q/E
 Tilt Camera . . . . . Shift + Scrollwheel
 End Run menu . . . . . ESC (While In-Game)"
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
-[node name="PanelBG" type="NinePatchRect" parent="HUD/Credits/LabelControls"]
+[node name="PanelBG" type="NinePatchRect" parent="CanvasLayer/HUD/Credits/LabelControls"]
 z_index = -1
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = -1
+anchor_right = 1.00048
+anchor_bottom = 0.675889
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("11_6fdki")
@@ -794,29 +800,31 @@ patch_margin_left = 12
 patch_margin_top = 12
 patch_margin_right = 12
 patch_margin_bottom = 12
+metadata/_edit_use_anchors_ = true
 
-[node name="LabelSoundCredits" type="RichTextLabel" parent="HUD/Credits"]
+[node name="LabelSoundCredits" type="RichTextLabel" parent="CanvasLayer/HUD/Credits"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 152.0
-offset_top = 381.0
-offset_right = -137.0
-offset_bottom = -152.0
+anchor_left = 0.131771
+anchor_top = 0.435185
+anchor_right = 0.880729
+anchor_bottom = 0.603704
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
 theme_override_constants/outline_size = 7
 theme_override_font_sizes/bold_italics_font_size = 29
 bbcode_enabled = true
-text = "[i][b]SOUND ATTRIBUTION[/b]
+text = "
+
+[i][b]SOUND ATTRIBUTION[/b]
 Bullet_Impact_1 by toxicwafflezz -- https://freesound.org/s/150837/ -- License: Attribution 3.0
 Bullet_Impact_2 by toxicwafflezz -- https://freesound.org/s/150838/ -- License: Attribution 3.0
 Bullet_Impact_3 by toxicwafflezz -- https://freesound.org/s/150839/ -- License: Attribution 3.0"
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
 
-[node name="PanelBG" type="NinePatchRect" parent="HUD/Credits/LabelSoundCredits"]
+[node name="PanelBG" type="NinePatchRect" parent="CanvasLayer/HUD/Credits/LabelSoundCredits"]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -830,73 +838,66 @@ patch_margin_left = 12
 patch_margin_top = 12
 patch_margin_right = 12
 patch_margin_bottom = 12
+metadata/_edit_use_anchors_ = true
 
-[node name="GameOver" type="Control" parent="HUD"]
+[node name="GameOver" type="Control" parent="CanvasLayer/HUD"]
 visible = false
 layout_mode = 1
-anchor_right = 1.005
-anchor_bottom = 1.0
-offset_right = 0.27002
-offset_bottom = -2.0
+anchor_left = -0.333333
+anchor_top = -0.333333
+anchor_right = 1.33333
+anchor_bottom = 1.33333
+metadata/_edit_use_anchors_ = true
 
-[node name="Btn_Menu" type="Button" parent="HUD/GameOver"]
+[node name="Btn_Menu" type="Button" parent="CanvasLayer/HUD/GameOver"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 469.0
-offset_top = 543.0
-offset_right = -469.0
-offset_bottom = -47.0
+anchor_left = 0.407118
+anchor_top = 0.837963
+anchor_right = 0.592882
+anchor_bottom = 0.927469
 grow_horizontal = 2
 grow_vertical = 2
 text = "MAIN MENU"
+metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="RichTextLabel" parent="HUD/GameOver"]
+[node name="Label2" type="RichTextLabel" parent="CanvasLayer/HUD/GameOver"]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = -0.000173632
+anchor_top = -0.000308623
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 416.0
-offset_top = 200.0
-offset_right = -401.0
-offset_bottom = -360.0
+offset_left = 693.333
+offset_top = 333.333
+offset_right = -667.0
+offset_bottom = -635.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/bold_italics_font_size = 43
+theme = ExtResource("9_mlcvp")
+theme_type_variation = &"GAME OVER"
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_offset_x = 8
+theme_override_constants/shadow_outline_size = 9
+theme_override_font_sizes/bold_italics_font_size = 51
 bbcode_enabled = true
-text = "[i][b][color=000] GAME OVER"
+text = "[i][b][color=F22]GAME OVER  "
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="RichTextLabel" parent="HUD/GameOver/Label"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/bold_italics_font_size = 43
-bbcode_enabled = true
-text = "[i][b][color=F22]GAME OVER"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="GameOverStats" type="RichTextLabel" parent="HUD/GameOver"]
+[node name="GameOverStats" type="RichTextLabel" parent="CanvasLayer/HUD/GameOver"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 416.0
-offset_top = 267.0
-offset_right = -401.0
-offset_bottom = -202.0
+anchor_left = 0.397917
+anchor_top = 0.393519
+anchor_right = 0.600521
+anchor_bottom = 0.669444
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
-theme_override_constants/outline_size = 7
-theme_override_font_sizes/bold_italics_font_size = 29
+theme = ExtResource("9_mlcvp")
 bbcode_enabled = true
 text = "[i][b]STATS[/b]
 Highest Round: BLAhj
@@ -904,8 +905,9 @@ Some other stat:
 ASSSSSSSSSDsdasdasdASDSAF"
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
 
-[node name="PanelBG" type="NinePatchRect" parent="HUD/GameOver/GameOverStats"]
+[node name="PanelBG" type="NinePatchRect" parent="CanvasLayer/HUD/GameOver/GameOverStats"]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -913,20 +915,22 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("9_mlcvp")
 texture = ExtResource("11_6fdki")
 region_rect = Rect2(1, 1, 46, 47)
 patch_margin_left = 12
 patch_margin_top = 12
 patch_margin_right = 12
 patch_margin_bottom = 12
+metadata/_edit_use_anchors_ = true
 
-[node name="Options" type="Control" parent="HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master", "invShooting", "sawbladeDrone", "devCheats", "moneyCheat", "invincibleCheat", "killAllCheat", "cheatsControl", "btn_scoreReset", "lbl_highScores", "renderShadows")]
+[node name="Options" type="Control" parent="CanvasLayer/HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master", "invShooting", "sawbladeDrone", "devCheats", "moneyCheat", "invincibleCheat", "killAllCheat", "cheatsControl", "btn_scoreReset", "lbl_highScores", "renderShadows")]
 visible = false
 layout_mode = 1
-anchor_right = 1.005
-anchor_bottom = 0.997
-offset_right = 0.27002
-offset_bottom = -0.0500488
+anchor_left = -0.333333
+anchor_top = -0.333333
+anchor_right = 1.33333
+anchor_bottom = 1.33333
 mouse_filter = 2
 theme = ExtResource("9_mlcvp")
 script = ExtResource("9_x282c")
@@ -944,63 +948,60 @@ cheatsControl = NodePath("DevCheats/Cheats")
 btn_scoreReset = NodePath("Btn_ScoresReset")
 lbl_highScores = NodePath("Btn_ScoresReset/HighScores")
 renderShadows = NodePath("renderShadows")
+metadata/_edit_use_anchors_ = true
 
-[node name="Btn_Menu" type="Button" parent="HUD/Options"]
+[node name="Btn_Menu" type="Button" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 469.0
-offset_top = 543.0
-offset_right = -469.0
-offset_bottom = -47.0
+anchor_left = 0.407118
+anchor_top = 0.837963
+anchor_right = 0.592882
+anchor_bottom = 0.927469
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("9_mlcvp")
 text = "MAIN MENU"
+metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="RichTextLabel" parent="HUD/Options"]
+[node name="Label" type="RichTextLabel" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 401.0
-offset_top = 113.0
-offset_right = -416.0
-offset_bottom = -447.0
+anchor_left = 0.34809
+anchor_top = 0.174383
+anchor_right = 0.638889
+anchor_bottom = 0.310185
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
 theme_override_constants/outline_size = 8
-theme_override_font_sizes/bold_italics_font_size = 29
+theme_override_font_sizes/bold_italics_font_size = 64
 bbcode_enabled = true
 text = "[i][b]OPTIONS"
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
 
-[node name="Btn_Reset" type="Button" parent="HUD/Options"]
+[node name="Btn_Reset" type="Button" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 469.0
-offset_top = 243.0
-offset_right = -469.0
-offset_bottom = -347.0
+anchor_left = 0.407118
+anchor_top = 0.375
+anchor_right = 0.592882
+anchor_bottom = 0.464506
 grow_horizontal = 2
 grow_vertical = 2
 tooltip_text = "Resets all settings to their default values."
 text = "RESET TO DEFAULT"
+metadata/_edit_use_anchors_ = true
 
-[node name="MusicVolume" type="SpinBox" parent="HUD/Options"]
+[node name="MusicVolume" type="SpinBox" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 248.0
-offset_top = 369.0
-offset_right = -695.0
-offset_bottom = -248.0
+anchors_preset = -1
+anchor_left = 0.215278
+anchor_top = 0.569444
+anchor_right = 0.396701
+anchor_bottom = 0.617284
+offset_top = 3.05176e-05
 grow_horizontal = 2
 grow_vertical = 2
 tooltip_text = "Controls the volume of the background music."
@@ -1008,18 +1009,23 @@ max_value = 150.0
 step = 10.0
 value = 100.0
 alignment = 2
-prefix = "Music Volume: "
 suffix = "%"
+metadata/_edit_use_anchors_ = true
 
-[node name="WorldVolume" type="SpinBox" parent="HUD/Options"]
+[node name="Label" type="Label" parent="CanvasLayer/HUD/Options/MusicVolume"]
+offset_left = 16.0
+offset_right = 121.0
+offset_bottom = 52.0
+text = "Music Volume"
+vertical_alignment = 1
+
+[node name="WorldVolume" type="SpinBox" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 248.0
-offset_top = 443.0
-offset_right = -695.0
-offset_bottom = -174.0
+anchors_preset = -1
+anchor_left = 0.215278
+anchor_top = 0.683642
+anchor_right = 0.396701
+anchor_bottom = 0.731481
 grow_horizontal = 2
 grow_vertical = 2
 tooltip_text = "Controls the volume of in-world actions, such as firing weaponry or hitting a wall."
@@ -1027,18 +1033,25 @@ max_value = 150.0
 step = 10.0
 value = 80.0
 alignment = 2
-prefix = "World Volume: "
 suffix = "%"
+metadata/_edit_use_anchors_ = true
 
-[node name="UIVolume" type="SpinBox" parent="HUD/Options"]
+[node name="Label" type="Label" parent="CanvasLayer/HUD/Options/WorldVolume"]
+layout_mode = 0
+offset_left = 16.0
+offset_right = 121.0
+offset_bottom = 52.0
+text = "World Volume"
+vertical_alignment = 1
+
+[node name="UIVolume" type="SpinBox" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 248.0
-offset_top = 406.0
-offset_right = -695.0
-offset_bottom = -211.0
+anchors_preset = -1
+anchor_left = 0.215278
+anchor_top = 0.626543
+anchor_right = 0.396701
+anchor_bottom = 0.674383
+offset_bottom = 3.05176e-05
 grow_horizontal = 2
 grow_vertical = 2
 tooltip_text = "Controls the volume of UI sounds, such as button clicks."
@@ -1046,150 +1059,167 @@ max_value = 150.0
 step = 10.0
 value = 90.0
 alignment = 2
-prefix = "UI Volume: "
 suffix = "%"
+metadata/_edit_use_anchors_ = true
 
-[node name="MasterVolume" type="SpinBox" parent="HUD/Options"]
+[node name="Label" type="Label" parent="CanvasLayer/HUD/Options/UIVolume"]
+offset_left = 16.0
+offset_right = 121.0
+offset_bottom = 52.0
+text = "UI Volume"
+vertical_alignment = 1
+
+[node name="MasterVolume" type="SpinBox" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 248.0
-offset_top = 314.0
-offset_right = -695.0
-offset_bottom = -303.0
+anchors_preset = -1
+anchor_left = 0.215278
+anchor_top = 0.484568
+anchor_right = 0.396701
+anchor_bottom = 0.532407
 grow_horizontal = 2
 grow_vertical = 2
 tooltip_text = "Controls all volume levels."
 step = 10.0
 value = 100.0
 alignment = 2
-prefix = "Master Volume: "
 suffix = "%"
+metadata/_edit_use_anchors_ = true
 
-[node name="InvShooting" type="CheckButton" parent="HUD/Options"]
+[node name="Label" type="Label" parent="CanvasLayer/HUD/Options/MasterVolume"]
+offset_left = 16.0
+offset_right = 121.0
+offset_bottom = 52.0
+text = "Master Volume"
+vertical_alignment = 1
+
+[node name="InvShooting" type="CheckButton" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 692.0
-offset_top = 314.0
-offset_right = -232.0
-offset_bottom = -279.0
+anchors_preset = -1
+anchor_left = 0.600521
+anchor_top = 0.484259
+anchor_right = 0.798437
+anchor_bottom = 0.546296
+offset_bottom = 3.05176e-05
 grow_horizontal = 2
 grow_vertical = 2
 tooltip_text = "When enabled, Active Parts are unable to be activated while the inventory is open."
 button_pressed = true
-text = "Inventory Disables 
+text = "Open Inventory Disables 
 using Active parts"
 alignment = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="DevCheats" type="CheckButton" parent="HUD/Options"]
+[node name="DevCheats" type="CheckButton" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 692.0
-offset_top = 369.0
-offset_right = -232.0
-offset_bottom = -247.0
+anchors_preset = -1
+anchor_left = 0.600694
+anchor_top = 0.569444
+anchor_right = 0.798611
+anchor_bottom = 0.618827
+offset_top = 3.05176e-05
 grow_horizontal = 2
 grow_vertical = 2
 tooltip_text = "Enables cheats. WARNING: DISABLES SETTING HIGH SCORES!"
 text = "Enable dev cheat menu"
 alignment = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="Cheats" type="Control" parent="HUD/Options/DevCheats"]
+[node name="Cheats" type="Control" parent="CanvasLayer/HUD/Options/DevCheats"]
 layout_mode = 1
-anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 32.0
-offset_right = -228.0
+anchor_bottom = 0.99375
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="moneys" type="CheckButton" parent="HUD/Options/DevCheats/Cheats"]
+[node name="moneys" type="CheckButton" parent="CanvasLayer/HUD/Options/DevCheats/Cheats"]
 layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0754388
+anchor_top = 1.0
+anchor_right = 0.0754388
+anchor_bottom = 1.11321
 offset_left = 24.0
-offset_right = 193.0
+offset_right = 351.0
 offset_bottom = 32.0
 tooltip_text = "Starts the player's run with 99999999 scrap instead of 0."
 text = "Bajillion Moneys"
 alignment = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="godmode" type="CheckButton" parent="HUD/Options/DevCheats/Cheats"]
+[node name="godmode" type="CheckButton" parent="CanvasLayer/HUD/Options/DevCheats/Cheats"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = -1
+anchor_left = 0.0767544
+anchor_top = 1.10672
+anchor_right = 0.458333
+anchor_bottom = 1.21993
 offset_left = 24.0
 offset_top = 32.0
-offset_right = 193.0
+offset_right = 206.0
 offset_bottom = 64.0
-grow_horizontal = 2
-grow_vertical = 2
 tooltip_text = "Makes the player unable to take damage or die."
 text = "Godmode
 "
 alignment = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="killall" type="CheckButton" parent="HUD/Options/DevCheats/Cheats"]
+[node name="killall" type="CheckButton" parent="CanvasLayer/HUD/Options/DevCheats/Cheats"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = -1
+anchor_left = 0.0767544
+anchor_top = 1.21993
+anchor_right = 0.458333
+anchor_bottom = 1.33314
 offset_left = 24.0
 offset_top = 64.0
-offset_right = 193.0
+offset_right = 206.0
 offset_bottom = 96.0
-grow_horizontal = 2
-grow_vertical = 2
 tooltip_text = "Enables pressing 'K' to kill every enemy in the current wave."
 text = "'K' to kill all
 "
 alignment = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="sawbladeDrone" type="CheckButton" parent="HUD/Options"]
+[node name="sawbladeDrone" type="CheckButton" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 244.0
-offset_top = 480.5
-offset_right = -698.0
-offset_bottom = -135.5
+anchors_preset = -1
+anchor_left = 0.211806
+anchor_top = 0.741512
+anchor_right = 0.394097
+anchor_bottom = 0.790895
 grow_horizontal = 2
 grow_vertical = 2
 tooltip_text = "While enabled, sawblades passively make a buzzing sound."
 button_pressed = true
 text = "Sawblades drone"
 alignment = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="Btn_ScoresReset" type="Button" parent="HUD/Options"]
+[node name="Btn_ScoresReset" type="Button" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 869.0
-offset_top = 59.0
-offset_right = -69.0
-offset_bottom = -531.0
+anchor_left = 0.75434
+anchor_top = 0.0910494
+anchor_right = 0.940104
+anchor_bottom = 0.180556
 grow_horizontal = 2
 grow_vertical = 2
 tooltip_text = "Resets all high score data."
 text = "RESET HIGH SCORES"
+metadata/_edit_use_anchors_ = true
 
-[node name="HighScores" type="RichTextLabel" parent="HUD/Options/Btn_ScoresReset"]
+[node name="HighScores" type="RichTextLabel" parent="CanvasLayer/HUD/Options/Btn_ScoresReset"]
 layout_mode = 0
-offset_top = 61.0
-offset_right = 214.0
-offset_bottom = 198.0
+anchor_top = 1.05172
+anchor_right = 1.0
+anchor_bottom = 3.41379
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
 theme_override_constants/outline_size = 5
 text = "BLASNSA+D"
+metadata/_edit_use_anchors_ = true
 
-[node name="PanelBG" type="NinePatchRect" parent="HUD/Options/Btn_ScoresReset/HighScores"]
+[node name="PanelBG" type="NinePatchRect" parent="CanvasLayer/HUD/Options/Btn_ScoresReset/HighScores"]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -1203,63 +1233,61 @@ patch_margin_left = 12
 patch_margin_top = 12
 patch_margin_right = 12
 patch_margin_bottom = 12
+metadata/_edit_use_anchors_ = true
 
-[node name="renderShadows" type="CheckButton" parent="HUD/Options"]
+[node name="renderShadows" type="CheckButton" parent="CanvasLayer/HUD/Options"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 470.0
-offset_top = 314.0
-offset_right = -472.0
-offset_bottom = -302.0
+anchors_preset = -1
+anchor_left = 0.407986
+anchor_top = 0.484568
+anchor_right = 0.590278
+anchor_bottom = 0.533951
 grow_horizontal = 2
 grow_vertical = 2
 tooltip_text = "Enables shadows to render. Disabling may increase performance."
 button_pressed = true
 text = "Render Shadows"
 alignment = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="Pause" type="Control" parent="HUD"]
+[node name="Pause" type="Control" parent="CanvasLayer/HUD"]
 z_index = 2
 layout_mode = 1
-anchor_left = 0.503
-anchor_top = -0.154
-anchor_right = 0.503
-anchor_bottom = -0.154
-offset_left = -576.438
-offset_top = 0.100006
-offset_right = 575.562
-offset_bottom = 648.1
+anchor_left = -0.333333
+anchor_top = -0.333
+anchor_right = 1.333
+anchor_bottom = 1.333
+offset_top = -160.216
+offset_right = 0.383911
+offset_bottom = -159.784
 mouse_filter = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="Btn_EndRun" type="Button" parent="HUD/Pause"]
+[node name="Btn_EndRun" type="Button" parent="CanvasLayer/HUD/Pause"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.407
-anchor_top = 0.035
-anchor_right = 0.593
+anchor_left = 0.296007
+anchor_top = 0.0354938
+anchor_right = 0.481771
 anchor_bottom = 0.125
-offset_left = -127.864
-offset_top = 0.32
-offset_right = -128.136
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("9_mlcvp")
 text = "END RUN?"
+metadata/_edit_use_anchors_ = true
 
-[node name="Btn_PauseOptions" type="Button" parent="HUD/Pause"]
+[node name="Btn_PauseOptions" type="Button" parent="CanvasLayer/HUD/Pause"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 589.0
-offset_top = 23.0
-offset_right = -349.0
-offset_bottom = -567.0
+anchor_left = 0.511285
+anchor_top = 0.0354938
+anchor_right = 0.697049
+anchor_bottom = 0.125
 grow_horizontal = 2
 grow_vertical = 2
 text = "OPTIONS
 "
+metadata/_edit_use_anchors_ = true
 
 [node name="Damage Cube" parent="." instance=ExtResource("8_hfgcm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0834, 3.4556, -4.56467)
@@ -1291,26 +1319,26 @@ material_override = ExtResource("4_jhciq")
 mesh = ExtResource("5_4jixe")
 
 [connection signal="body_entered" from="ArenaFloor/DeathPlane" to="ArenaFloor/DeathPlane" method="_on_body_entered"]
-[connection signal="pressed" from="HUD/MainMenu/Btn_Play" to="." method="_on_btn_play_pressed"]
-[connection signal="pressed" from="HUD/MainMenu/Btn_Credits" to="." method="_on_btn_credits_pressed"]
-[connection signal="pressed" from="HUD/MainMenu/Btn_Exit" to="." method="_on_btn_exit_pressed"]
-[connection signal="pressed" from="HUD/MainMenu/Btn_Options" to="." method="_on_btn_options_pressed"]
-[connection signal="visibility_changed" from="HUD/Credits" to="HUD/Credits" method="_on_visibility_changed"]
-[connection signal="pressed" from="HUD/Credits/Btn_Menu" to="." method="_on_btn_menu_pressed"]
-[connection signal="pressed" from="HUD/GameOver/Btn_Menu" to="." method="_on_btn_menu_pressed"]
-[connection signal="pressed" from="HUD/Options/Btn_Menu" to="." method="_on_btn_menu_pressed"]
-[connection signal="pressed" from="HUD/Options/Btn_Reset" to="HUD/Options" method="_on_btn_reset_pressed"]
-[connection signal="value_changed" from="HUD/Options/MusicVolume" to="HUD/Options" method="_on_music_volume_value_changed"]
-[connection signal="value_changed" from="HUD/Options/WorldVolume" to="HUD/Options" method="_on_world_volume_value_changed"]
-[connection signal="value_changed" from="HUD/Options/UIVolume" to="HUD/Options" method="_on_ui_volume_value_changed"]
-[connection signal="value_changed" from="HUD/Options/MasterVolume" to="HUD/Options" method="_on_master_volume_value_changed"]
-[connection signal="toggled" from="HUD/Options/InvShooting" to="HUD/Options" method="_on_inv_shooting_toggled"]
-[connection signal="toggled" from="HUD/Options/DevCheats" to="HUD/Options" method="_on_dev_cheats_toggled"]
-[connection signal="toggled" from="HUD/Options/DevCheats/Cheats/moneys" to="HUD/Options" method="_on_moneys_toggled"]
-[connection signal="toggled" from="HUD/Options/DevCheats/Cheats/godmode" to="HUD/Options" method="_on_godmode_toggled"]
-[connection signal="toggled" from="HUD/Options/DevCheats/Cheats/killall" to="HUD/Options" method="_on_killall_toggled"]
-[connection signal="toggled" from="HUD/Options/sawbladeDrone" to="HUD/Options" method="_on_sawblade_drone_toggled"]
-[connection signal="pressed" from="HUD/Options/Btn_ScoresReset" to="HUD/Options" method="_on_btn_scores_reset_pressed"]
-[connection signal="toggled" from="HUD/Options/renderShadows" to="HUD/Options" method="_on_render_shadows_toggled"]
-[connection signal="pressed" from="HUD/Pause/Btn_EndRun" to="." method="_on_btn_end_run_pressed"]
-[connection signal="pressed" from="HUD/Pause/Btn_PauseOptions" to="HUD" method="_on_btn_pause_options_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/MainMenu/Btn_Play" to="." method="_on_btn_play_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/MainMenu/Btn_Credits" to="." method="_on_btn_credits_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/MainMenu/Btn_Exit" to="." method="_on_btn_exit_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/MainMenu/Btn_Options" to="." method="_on_btn_options_pressed"]
+[connection signal="visibility_changed" from="CanvasLayer/HUD/Credits" to="CanvasLayer/HUD/Credits" method="_on_visibility_changed"]
+[connection signal="pressed" from="CanvasLayer/HUD/Credits/Btn_Menu" to="." method="_on_btn_menu_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/GameOver/Btn_Menu" to="." method="_on_btn_menu_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/Options/Btn_Menu" to="." method="_on_btn_menu_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/Options/Btn_Reset" to="CanvasLayer/HUD/Options" method="_on_btn_reset_pressed"]
+[connection signal="value_changed" from="CanvasLayer/HUD/Options/MusicVolume" to="CanvasLayer/HUD/Options" method="_on_music_volume_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/HUD/Options/WorldVolume" to="CanvasLayer/HUD/Options" method="_on_world_volume_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/HUD/Options/UIVolume" to="CanvasLayer/HUD/Options" method="_on_ui_volume_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/HUD/Options/MasterVolume" to="CanvasLayer/HUD/Options" method="_on_master_volume_value_changed"]
+[connection signal="toggled" from="CanvasLayer/HUD/Options/InvShooting" to="CanvasLayer/HUD/Options" method="_on_inv_shooting_toggled"]
+[connection signal="toggled" from="CanvasLayer/HUD/Options/DevCheats" to="CanvasLayer/HUD/Options" method="_on_dev_cheats_toggled"]
+[connection signal="toggled" from="CanvasLayer/HUD/Options/DevCheats/Cheats/moneys" to="CanvasLayer/HUD/Options" method="_on_moneys_toggled"]
+[connection signal="toggled" from="CanvasLayer/HUD/Options/DevCheats/Cheats/godmode" to="CanvasLayer/HUD/Options" method="_on_godmode_toggled"]
+[connection signal="toggled" from="CanvasLayer/HUD/Options/DevCheats/Cheats/killall" to="CanvasLayer/HUD/Options" method="_on_killall_toggled"]
+[connection signal="toggled" from="CanvasLayer/HUD/Options/sawbladeDrone" to="CanvasLayer/HUD/Options" method="_on_sawblade_drone_toggled"]
+[connection signal="pressed" from="CanvasLayer/HUD/Options/Btn_ScoresReset" to="CanvasLayer/HUD/Options" method="_on_btn_scores_reset_pressed"]
+[connection signal="toggled" from="CanvasLayer/HUD/Options/renderShadows" to="CanvasLayer/HUD/Options" method="_on_render_shadows_toggled"]
+[connection signal="pressed" from="CanvasLayer/HUD/Pause/Btn_EndRun" to="." method="_on_btn_end_run_pressed"]
+[connection signal="pressed" from="CanvasLayer/HUD/Pause/Btn_PauseOptions" to="CanvasLayer/HUD" method="_on_btn_pause_options_pressed"]

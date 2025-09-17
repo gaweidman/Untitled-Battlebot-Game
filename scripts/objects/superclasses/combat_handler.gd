@@ -20,7 +20,7 @@ func _ready():
 	thisBot = get_parent();
 
 func die():
-	Hooks.OnDeath(thisBot, GameState.get_player());
+	#Hooks.OnDeath(thisBot, GameState.get_player());
 	alive = false;
 	get_parent().queue_free();
 

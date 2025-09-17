@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://kddxgstg8r0e"
-path="res://.godot/imported/Just for Gabe.ttf-a209b814672366a1bf5350b7f507d059.fontdata"
+uid="uid://hie6sxgt8pjd"
+path="res://.godot/imported/Oxanium-Bold.ttf-a948d7db6d285c80e173e26f4fa56b94.fontdata"
 
 [deps]
 
-source_file="res://Just for Gabe.ttf"
-dest_files=["res://.godot/imported/Just for Gabe.ttf-a209b814672366a1bf5350b7f507d059.fontdata"]
+source_file="res://graphics/font/Oxanium/static/Oxanium-Bold.ttf"
+dest_files=["res://.godot/imported/Oxanium-Bold.ttf-a948d7db6d285c80e173e26f4fa56b94.fontdata"]
 
 [params]
 
@@ -16,7 +16,7 @@ Rendering=null
 antialiasing=1
 generate_mipmaps=false
 disable_embedded_bitmaps=true
-multichannel_signed_distance_field=false
+multichannel_signed_distance_field=true
 msdf_pixel_range=8
 msdf_size=48
 allow_system_fallback=true

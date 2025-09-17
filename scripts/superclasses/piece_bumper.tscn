@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3 uid="uid://bvbnk32yrg0yy"]
+
+[ext_resource type="PackedScene" uid="uid://cgcnhigjynv0q" path="res://scripts/superclasses/piece.tscn" id="1_i2hk1"]
+[ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scripts/superclasses/piece_collision_box.tscn" id="2_rahga"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t0t4j"]
+size = Vector3(1.5, 0.5, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_e8cpi"]
+size = Vector3(1.5, 0.34, 0.5)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6jl12"]
+top_radius = 0.15
+bottom_radius = 0.15
+height = 0.25
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_er368"]
+size = Vector3(1.75, 0.625, 1.25)
+
+[node name="Piece" instance=ExtResource("1_i2hk1")]
+pieceName = &"Bumper"
+hurtboxAlwaysEnabled = true
+
+[node name="PieceCollisionBox" parent="." index="5"]
+shape = SubResource("BoxShape3D_t0t4j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.328666, 0)
+mesh = SubResource("BoxMesh_e8cpi")
+skeleton = NodePath("../PieceCollisionBox")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)
+mesh = SubResource("CylinderMesh_6jl12")
+skeleton = NodePath("../PieceCollisionBox")
+
+[node name="PieceCollisionBox2" parent="." index="8" instance=ExtResource("2_rahga")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+shape = SubResource("BoxShape3D_er368")
+identifier = &"BumperHitbox"
+isPlacementBox = false
+isHurtbox = false
+isHitbox = true
