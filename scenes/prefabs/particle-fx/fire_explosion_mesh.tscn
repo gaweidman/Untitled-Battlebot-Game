@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://djmsac0427cw2"]
+
+[ext_resource type="Shader" uid="uid://cymetik4jkp4n" path="res://graphics/shaders/fire_explosion.res" id="1_d454w"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nifs1"]
+render_priority = 0
+shader = ExtResource("1_d454w")
+shader_parameter/FireSpeed = 0.05
+shader_parameter/FirstColor = Color(0.882353, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_2q3tx"]
+
+[node name="fire_sphere_mesh" type="MeshInstance3D"]
+material_override = SubResource("ShaderMaterial_nifs1")
+mesh = SubResource("SphereMesh_2q3tx")
