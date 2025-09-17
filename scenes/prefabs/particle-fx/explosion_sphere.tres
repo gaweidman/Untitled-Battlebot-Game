@@ -1,0 +1,19 @@
+[gd_resource type="SphereMesh" load_steps=4 format=3 uid="uid://c75puuqe6wtlu"]
+
+[ext_resource type="Shader" uid="uid://v0hxxefsdhs7" path="res://graphics/shaders/explosion_sphere.tres" id="1_vkrp6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nfeox"]
+render_priority = 0
+shader = ExtResource("1_vkrp6")
+shader_parameter/CloudSpeed = 0.1
+shader_parameter/ColorParameter = Color(0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aw4cw"]
+next_pass = SubResource("ShaderMaterial_nfeox")
+albedo_color = Color(0.937635, 0.915878, 0.910647, 1)
+albedo_texture_msdf = true
+
+[resource]
+material = SubResource("StandardMaterial3D_aw4cw")
+radius = 2.48
+height = 4.095

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://1nexhtjgl73s"]
+
+[ext_resource type="SphereMesh" uid="uid://c75puuqe6wtlu" path="res://scenes/prefabs/particle-fx/explosion_sphere.tres" id="1_fu486"]
+
+[node name="Sphere_Inst" type="MeshInstance3D"]
+mesh = ExtResource("1_fu486")

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4mkh7dsukkav"]
+
+[ext_resource type="SphereMesh" uid="uid://c75puuqe6wtlu" path="res://scenes/prefabs/particle-fx/explosion_sphere.tres" id="1_k3e33"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_im72i"]
+velocity_pivot = Vector3(0, -2, 0)
+direction = Vector3(1, -1, 0)
+spread = 180.0
+initial_velocity_min = -15.0
+initial_velocity_max = 15.0
+gravity = Vector3(0, 5.52, 0)
+scale_min = 0.5
+
+[node name="Smoke" type="GPUParticles3D"]
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_im72i")
+draw_pass_1 = ExtResource("1_k3e33")
