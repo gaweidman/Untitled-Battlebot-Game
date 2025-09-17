@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://cgcnhigjynv0q"]
+[gd_scene load_steps=10 format=3 uid="uid://cgcnhigjynv0q"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/superclasses/piece.gd" id="1_nsm8r"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="2_snyd7"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="3_27gar"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scripts/superclasses/piece_collision_box.tscn" id="4_27gar"]
+[ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/superclasses/hurtbox_shapes.gd" id="4_g4w8c"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_g4w8c"]
 size = Vector2(0.25, 0.25)
@@ -21,55 +22,13 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("3_27gar")
 
-[node name="Piece" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_nsm8r")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+meshesHolder = NodePath("Meshes")
 femaleSocketHolder = NodePath("FemaleSockets")
-
-[node name="MaleSocket" type="Node3D" parent="."]
-editor_description = "This is purely here as a visual representation of where this thing plugs in. 
-!! Do not move or modify (Unless you have good reason, of course) !!"
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00963242, 0)
-metadata/_edit_lock_ = true
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="MaleSocket"]
-transform = Transform3D(1, 0, 0, 0, -1, -1.50996e-07, 0, 1.50996e-07, -1, 0, 0, 0)
-mesh = SubResource("PlaneMesh_g4w8c")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_sqnxc")
-metadata/_edit_lock_ = true
-
-[node name="Prong1" type="Node3D" parent="MaleSocket"]
-transform = Transform3D(1, 0, 0, 0, -1, -1.50996e-07, 0, 1.50996e-07, -1, 0, 0, 0)
-metadata/_edit_lock_ = true
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="MaleSocket/Prong1"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
-mesh = SubResource("PlaneMesh_kphb4")
-skeleton = NodePath("../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
-
-[node name="Prong2" type="Node3D" parent="MaleSocket"]
-transform = Transform3D(-0.5, -7.57103e-08, -0.866025, 0, -1, 8.74228e-08, -0.866025, 4.37114e-08, 0.5, 0, 0, 0)
-metadata/_edit_lock_ = true
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="MaleSocket/Prong2"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
-mesh = SubResource("PlaneMesh_kphb4")
-skeleton = NodePath("../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
-
-[node name="Prong3" type="Node3D" parent="MaleSocket"]
-transform = Transform3D(-0.5, 7.57103e-08, 0.866025, 0, -1, 8.74228e-08, 0.866025, 4.37114e-08, 0.5, 0, 0, 0)
-metadata/_edit_lock_ = true
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="MaleSocket/Prong3"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
-mesh = SubResource("PlaneMesh_kphb4")
-skeleton = NodePath("../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"
@@ -79,13 +38,60 @@ editor_description = "Leave this node empty. "
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
-collision_layer = 0
+collision_layer = 8
+script = ExtResource("4_g4w8c")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
 
 [node name="PieceCollisionBox" parent="." instance=ExtResource("4_27gar")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+
+[node name="Meshes" type="Node3D" parent="."]
+editor_description = "Put any and all mesh instances in here."
+
+[node name="MaleSocket" type="Node3D" parent="Meshes"]
+editor_description = "This is purely here as a visual representation of where this thing plugs in. 
+!! Do not move or modify (Unless you have good reason, of course) !!"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00963242, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes/MaleSocket"]
+transform = Transform3D(1, 0, 0, 0, -1, -1.50996e-07, 0, 1.50996e-07, -1, 0, 0, 0)
+mesh = SubResource("PlaneMesh_g4w8c")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_sqnxc")
+metadata/_edit_lock_ = true
+
+[node name="Prong1" type="Node3D" parent="Meshes/MaleSocket"]
+transform = Transform3D(1, 0, 0, 0, -1, -1.50996e-07, 0, 1.50996e-07, -1, 0, 0, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes/MaleSocket/Prong1"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
+mesh = SubResource("PlaneMesh_kphb4")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
+
+[node name="Prong2" type="Node3D" parent="Meshes/MaleSocket"]
+transform = Transform3D(-0.5, -7.57103e-08, -0.866025, 0, -1, 8.74228e-08, -0.866025, 4.37114e-08, 0.5, 0, 0, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes/MaleSocket/Prong2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
+mesh = SubResource("PlaneMesh_kphb4")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
+
+[node name="Prong3" type="Node3D" parent="Meshes/MaleSocket"]
+transform = Transform3D(-0.5, 7.57103e-08, 0.866025, 0, -1, 8.74228e-08, 0.866025, 4.37114e-08, 0.5, 0, 0, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes/MaleSocket/Prong3"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
+mesh = SubResource("PlaneMesh_kphb4")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
 
 [connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
 [connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]

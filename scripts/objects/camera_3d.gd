@@ -41,6 +41,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if is_instance_valid(viewport):
 		var mousePos = viewport.get_mouse_position();
+		
+		
 		#project_local_ray_normal()
 		
 		#var proj = project_position(mousePos, 20);
@@ -143,6 +145,13 @@ func _physics_process(delta):
 		parent.rotation.y = lerp(parent.rotation.y, targetRotationY, delta * 30)
 		
 		parent.rotation.x = lerp(parent.rotation.x, targetRotationX, delta * 30)
+	
+	
+	
+	
+	##Selecting pieces.
+	if Input.is_action_just_pressed("Select"):
+		click_on_piece();
 
 func _input(event):
 	if event is InputEventMouseButton:
@@ -190,3 +199,13 @@ func get_rotation_to_fake_aiming(firingOrigin:=Vector3(0,0,0)):
 		
 			return rot;
 	return null;
+
+func click_on_piece():
+	var collisionMask = 8;
+	
+	var raycastHit = RaycastSystem.get_raycast_hit_object(collisionMask);
+	print(raycastHit)
+	if is_instance_valid(raycastHit): 
+		print(raycastHit)
+		if raycastHit is HurtboxHolder:
+			raycastHit.select_piece();

@@ -163,6 +163,7 @@ RotatePiece_CCW={
 
 3d_physics/layer_2="AI Node Setup"
 3d_physics/layer_3="Placement Ray"
+3d_physics/layer_4="Piece Hurtboxes"
 
 [physics]
 

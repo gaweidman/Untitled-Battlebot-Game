@@ -37,7 +37,7 @@ func phys_process_pre(delta):
 		sleepTimer -= delta;
 	pass;
 
-############### STATE CONTROL
+######################### STATE CONTROL
 
 var spawned := false;
 var frozen := false;
@@ -99,6 +99,12 @@ func live():
 	show();
 	spawned = true;
 
+func die():
+	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
+	alive = false;
+	queue_free();
+
+
 ################################# EDITOR MODE
 var pipettePiecePath := "res://scripts/superclasses/piece_bumper_T.tscn";
 var pipettePieceScene := preload("res://scripts/superclasses/piece_bumper_T.tscn");
@@ -150,11 +156,6 @@ func heal(health:float):
 
 func is_alive():
 	return alive;
-
-func die():
-	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
-	alive = false;
-	queue_free();
 
 var invincible := false;
 var invincibleTimer := 0.0;
@@ -289,14 +290,14 @@ func move_and_rotate_towards_movement_vector(delta):
 	
 	##Get 
 	if is_inputting_movement():
-		print("HI")
+		#print("HI")
 		var forceVector = Vector3.ZERO
 		forceVector += body.global_transform.basis.x * movementVector.x * -acceleration;
 		forceVector += body.global_transform.basis.z * movementVector.y * -acceleration;
 		#print(forceVector)
 		##Rotate the force vector so the body's rotation doesn't meddle with it.
 		forceVector = forceVector.rotated(Vector3(0,1,0), -body.global_rotation.y);
-		print(forceVector)
+		#print(forceVector)
 		body.apply_central_force(forceVector);
 		#print(movementVector)
 		lastInputtedMV = Vector2(body.linear_velocity.x, body.linear_velocity.z)

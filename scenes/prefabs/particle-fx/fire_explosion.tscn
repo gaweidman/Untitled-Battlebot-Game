@@ -1,0 +1,3 @@
+[gd_scene load_steps=0 format=3 uid="uid://bkdm2byvq2u0r"]
+
+[node name="fire_sphere" type="MeshInstance3D"]

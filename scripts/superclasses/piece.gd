@@ -18,6 +18,7 @@ func _process(delta):
 
 func process_draw(delta):
 	#return;
+	#print(hurtboxCollisionHolder.get_collision_layer())
 	if not has_host():
 		if visible: hide()
 	else:
@@ -27,6 +28,7 @@ func process_draw(delta):
 
 @export_category("Piece Management")
 @export var pieceName : StringName = "Piece";
+@export_multiline var partDescription := "No description given.";
 
 @export var hostSocket : Socket;
 @export var hostPiece : Piece;
@@ -40,6 +42,7 @@ func process_draw(delta):
 @export var placementCollisionHolder : Node3D;
 @export var hurtboxCollisionHolder : Area3D;
 @export var hitboxCollisionHolder : Area3D;
+@export var meshesHolder : Node3D;
 #var bodyMeshes : Dictionary[StringName, MeshInstance3D] = {};
 
 ##This function assigns socket data and generates all hitboxes. Should only ever be run once at _ready.
@@ -80,7 +83,7 @@ func gather_colliders_and_meshes():
 				##if the PieceCollisionBox is of type HITBOX or HURTBOX then it should copy itself into those.
 				if child.isHurtbox:
 					var dupe = child.duplicate();
-					#dupe.disabled = false;
+					dupe.disabled = false;
 					hurtboxCollisionHolder.add_child(dupe);
 					dupe.debug_color = Color("0099b36b");
 					#dupe.global_position = child.global_position;
@@ -143,6 +146,12 @@ func disable_hurtbox(foo:bool):
 	for child in hurtboxCollisionHolder.get_children():
 		if child is PieceCollisionBox:
 			child.disabled = foo;
+
+##Fired whent he camera finds this piece.
+##TODO: Fancy stuff. 
+func select():
+	print(pieceName)
+	pass;
 
 ##Need to have support for a main 3D model. Sub-models will need to come later.
 ##Position should NEVER be changed from 0,0,0. 0,0,0 Origin is where this thing plugs in.

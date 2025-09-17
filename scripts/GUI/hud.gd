@@ -97,5 +97,5 @@ func resize_window():
 	currentSize = VP.size;
 	var sizeFactor = currentSize / baseSize;
 	scale = sizeFactor;
-	print(scale)
-	print(currentSize, baseSize)
+	#print(scale)
+	#print(currentSize, baseSize)
