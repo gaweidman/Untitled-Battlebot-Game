@@ -99,6 +99,12 @@ func live():
 	show();
 	spawned = true;
 
+func die():
+	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
+	alive = false;
+	queue_free();
+
+
 ################################# EDITOR MODE
 var pipettePiecePath := "res://scripts/superclasses/piece_bumper_T.tscn";
 var pipettePieceScene := preload("res://scripts/superclasses/piece_bumper_T.tscn");
@@ -150,11 +156,6 @@ func heal(health:float):
 
 func is_alive():
 	return alive;
-
-func die():
-	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
-	alive = false;
-	queue_free();
 
 var invincible := false;
 var invincibleTimer := 0.0;

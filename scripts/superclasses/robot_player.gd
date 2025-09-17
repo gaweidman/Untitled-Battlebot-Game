@@ -52,3 +52,10 @@ func is_inputting_movement() -> bool:
 			return inputtingMovementThisFrame;
 	
 	return inputtingMovementThisFrame;
+
+func die():
+	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
+	alive = false;
+	hide();
+	freeze(true, true);
+	#queue_free();

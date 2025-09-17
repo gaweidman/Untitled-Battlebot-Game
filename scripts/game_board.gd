@@ -424,6 +424,7 @@ func _on_btn_exit_pressed():
 	pass # Replace with function body.
 func _on_btn_end_run_pressed():
 	player.die();
+	game_over();
 	pass # Replace with function body.
 func _on_btn_options_pressed():
 	change_state(gameState.OPTIONS);
