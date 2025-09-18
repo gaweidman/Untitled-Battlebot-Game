@@ -1,6 +1,6 @@
 [gd_scene load_steps=25 format=3 uid="uid://d1cqnd70sse5k"]
 
-[ext_resource type="Script" uid="uid://bixet4dmtwy3k" path="res://scripts/objects/particle_fx_killer.gd" id="1_rpg3v"]
+[ext_resource type="Script" uid="uid://bixet4dmtwy3k" path="res://scripts/objects/particle/particle_fx_killer.gd" id="1_rpg3v"]
 [ext_resource type="Shader" uid="uid://cmm5lxlxjlg76" path="res://graphics/materials/particle shaders/HitShader.tres" id="1_rqfb0"]
 [ext_resource type="Texture2D" uid="uid://boisdn6gpbv6p" path="res://graphics/images/particle PNGs/TestHitEffectThree.png" id="2_jiqv2"]
 [ext_resource type="Shader" uid="uid://c6srgtvai4efl" path="res://graphics/materials/particle shaders/SparksShader.tres" id="3_ub272"]

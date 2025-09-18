@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://dkdyfjmpb54su"]
+
+[ext_resource type="PackedScene" uid="uid://cgcnhigjynv0q" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece.tscn" id="1_5xoq4"]
+[ext_resource type="ArrayMesh" uid="uid://cfvtjsean8sey" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="2_f1afw"]
+[ext_resource type="ArrayMesh" uid="uid://dddqhdde83f7e" path="res://graphics/models/obj/botparts/SwivelTop.obj" id="3_yjtb5"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="4_1a8uf"]
+
+[node name="Piece" instance=ExtResource("1_5xoq4")]
+
+[node name="SwivelBottom" type="MeshInstance3D" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+mesh = ExtResource("2_f1afw")
+
+[node name="SwivelTop" type="MeshInstance3D" parent="." index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+mesh = ExtResource("3_yjtb5")
+
+[node name="Socket" parent="SwivelTop" index="0" instance=ExtResource("4_1a8uf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)

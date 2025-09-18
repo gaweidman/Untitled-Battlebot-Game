@@ -6,7 +6,7 @@ class_name GameBoard;
 @export var enemySpawnPositions : Node3D;
 @export var enemySpawnList := {};
 #@onready var playerScene = preload("res://scenes/prefabs/objects/player.tscn");
-@onready var playerScene = preload("res://scripts/superclasses/robot_player.tscn");
+@onready var playerScene = preload("res://scenes/robots/player/robot_player.tscn");
 @export var spawnChecker : ShapeCast3D;
 var spawnTimer := 0.0;
 var spawnPool := [];
@@ -321,7 +321,7 @@ func spawn_wave(numOfEnemies := 0):
 		waveSpawnList.append(enemyScene)
 		numOfEnemies -= 1;
 
-var enemySpawnerRef := preload("res://scripts/superclasses/enemy_spawner.tscn");
+var enemySpawnerRef := preload("res://scenes/prefabs/objects/enemy_spawner.tscn");
 func spawn_enemy_from_wave():
 	if waveSpawnList.size() > 0:
 		var pos = return_random_unoccupied_spawn_location();

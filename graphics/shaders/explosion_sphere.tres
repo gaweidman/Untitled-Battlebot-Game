@@ -1,4 +1,4 @@
-[gd_resource type="VisualShader" load_steps=20 format=3 uid="uid://v0hxxefsdhs7"]
+[gd_resource type="VisualShader" load_steps=20 format=3 uid="uid://dpw1adhul7s07"]
 
 [ext_resource type="Texture2D" uid="uid://c5wnkww76v1ai" path="res://graphics/images/NormalMap_Cloud.jpg" id="1_nx2xk"]
 [ext_resource type="Texture2D" uid="uid://c8f78o4oyk7qg" path="res://graphics/images/particle PNGs/smoke_textures.png" id="2_ntu4w"]

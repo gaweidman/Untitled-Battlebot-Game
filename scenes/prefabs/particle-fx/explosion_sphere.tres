@@ -1,6 +1,6 @@
-[gd_resource type="SphereMesh" load_steps=4 format=3 uid="uid://c75puuqe6wtlu"]
+[gd_resource type="SphereMesh" load_steps=4 format=3 uid="uid://bf66wk3dhnl20"]
 
-[ext_resource type="Shader" uid="uid://v0hxxefsdhs7" path="res://graphics/shaders/explosion_sphere.tres" id="1_vkrp6"]
+[ext_resource type="Shader" uid="uid://dpw1adhul7s07" path="res://graphics/shaders/explosion_sphere.tres" id="1_vkrp6"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nfeox"]
 render_priority = 0

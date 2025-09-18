@@ -1,4 +1,4 @@
-[gd_resource type="VisualShader" load_steps=14 format=3 uid="uid://db583b5sf0it4"]
+[gd_resource type="VisualShader" load_steps=14 format=3 uid="uid://b6fyw320sfx47"]
 
 [sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_fg55a"]
 parameter_name = "FloatParameter"
@@ -75,7 +75,6 @@ void fragment() {
 
 }
 "
-graph_offset = Vector2(-1058.21, -25.7867)
 nodes/vertex/0/position = Vector2(-1280, 80)
 nodes/vertex/2/node = SubResource("VisualShaderNodeInput_yogei")
 nodes/vertex/2/position = Vector2(1320, -440)

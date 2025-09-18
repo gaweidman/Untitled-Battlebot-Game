@@ -1014,6 +1014,7 @@ suffix = "%"
 metadata/_edit_use_anchors_ = true
 
 [node name="Label" type="Label" parent="HUDCanvas/HUD/Options/MusicVolume"]
+layout_mode = 0
 offset_left = 16.0
 offset_right = 121.0
 offset_bottom = 52.0
@@ -1064,6 +1065,7 @@ suffix = "%"
 metadata/_edit_use_anchors_ = true
 
 [node name="Label" type="Label" parent="HUDCanvas/HUD/Options/UIVolume"]
+layout_mode = 0
 offset_left = 16.0
 offset_right = 121.0
 offset_bottom = 52.0
@@ -1087,6 +1089,7 @@ suffix = "%"
 metadata/_edit_use_anchors_ = true
 
 [node name="Label" type="Label" parent="HUDCanvas/HUD/Options/MasterVolume"]
+layout_mode = 0
 offset_left = 16.0
 offset_right = 121.0
 offset_bottom = 52.0

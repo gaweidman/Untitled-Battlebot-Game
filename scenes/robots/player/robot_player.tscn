@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://cfsflls4t0wq6"]
+
+[ext_resource type="PackedScene" uid="uid://c2nsjhwipqr1m" path="res://scenes/robots/buildingBlocks/robot_base.tscn" id="1_f5qxl"]
+[ext_resource type="Script" uid="uid://dx1w5ja65qha1" path="res://scripts/objects/robots/player/robot_player.gd" id="2_u7rvj"]
+[ext_resource type="PackedScene" uid="uid://6eooe8ngl3hu" path="res://scenes/prefabs/objects/pieces/piece_sawblade.tscn" id="3_a63pw"]
+
+[node name="Robot_Player" instance=ExtResource("1_f5qxl")]
+script = ExtResource("2_u7rvj")
+
+[node name="Body" parent="." index="0"]
+can_sleep = false
+
+[node name="Piece" parent="Body/Meshes/Socket" index="4"]
+assignedToSocket = true
+
+[node name="Piece" parent="Body/Meshes/Socket/Piece/FemaleSockets/Socket" index="3" node_paths=PackedStringArray("hostSocket", "hostPiece", "hostRobot") instance=ExtResource("3_a63pw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.38419e-07, 0)
+hostSocket = NodePath("..")
+hostPiece = NodePath("../../..")
+hostRobot = NodePath("../../../../../../..")
+assignedToSocket = true
+
+[node name="HitboxShapes [Leave empty]" parent="Body/Meshes/Socket/Piece" index="1"]
+collision_layer = 1
+collision_mask = 1
+
+[editable path="Body/Meshes/Socket/Piece"]
