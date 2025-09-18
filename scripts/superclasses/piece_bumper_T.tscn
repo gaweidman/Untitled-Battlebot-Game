@@ -78,6 +78,10 @@ transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0.75, 
 [node name="Socket3" parent="FemaleSockets" index="2" instance=ExtResource("2_8x5gi")]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.75, 0.25, 0)
 
+[node name="HitboxShapes [Leave empty]" parent="." index="2"]
+collision_layer = 1
+collision_mask = 1
+
 [node name="HurtboxShapes [Leave empty]" parent="." index="3"]
 collision_layer = 0
 script = null

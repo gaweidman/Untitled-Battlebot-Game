@@ -3,7 +3,7 @@ extends MakesNoise;
 class_name Robot
 
 @export_category("General")
-@export var body : RigidBody3D;
+@export var body : RobotBody;
 @export var meshes : Node3D;
 var bodyPiece : Piece; ##The Piece this Robot is using as the 3D representation of its body.
 var gameBoard : GameBoard;
@@ -311,12 +311,16 @@ func move_and_rotate_towards_movement_vector(delta : float):
 	##Get 
 	if is_inputting_movement():
 		#print("HI")
-		var forceVector = Vector3.ZERO
+		var forceVector = Vector3.ZERO;
+		var bodBasis := body.global_basis;
 		forceVector += body.global_transform.basis.x * movementVector.x * -acceleration;
 		forceVector += body.global_transform.basis.z * movementVector.y * -acceleration;
 		#print(forceVector)
+		var bodBasisRotationOrthonormalized := bodBasis.orthonormalized();
+		var bodBasisRotation = bodBasisRotationOrthonormalized.get_euler();
+
 		##Rotate the force vector so the body's rotation doesn't meddle with it.
-		forceVector = forceVector.rotated(Vector3(0.0,1.0,0.0), float(-body.global_rotation.y));
+		forceVector = forceVector.rotated(Vector3(0.0,1.0,0.0), float(-bodBasisRotation.y));
 		#print(forceVector)
 		body.apply_central_force(forceVector);
 		#print(movementVector)
@@ -342,12 +346,12 @@ func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = body)
 	Hooks.OnCollision(thisComponent, collider);
 
 # make sure the bot's speed doesn't go over its max speed
-##TODO: This breaks movement by making it skewed at weird angles when you rotate the camera.
 func clamp_speed():
+	body.clamp_speed()
 	return;
+	var speedMin = Vector2(maxSpeed, maxSpeed)
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);
 	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed);
-
 
 ##################################################### 3D INVENTORY STUFF
 

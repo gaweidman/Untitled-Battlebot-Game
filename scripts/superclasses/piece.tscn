@@ -35,6 +35,8 @@ editor_description = "Put all female sockets in this box. Make sure they align w
 
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
+collision_layer = 16
+collision_mask = 8
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "

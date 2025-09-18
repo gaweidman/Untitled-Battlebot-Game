@@ -16,11 +16,9 @@ bounce = 0.3
 radius = 0.75
 
 [node name="Robot" type="Node3D" node_paths=PackedStringArray("body", "meshes")]
-visible = false
 script = ExtResource("1_ub44i")
 body = NodePath("Body")
 meshes = NodePath("Body/Meshes")
-maxSpeed = 10.0
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Driveable", "Metal"]]
 axis_lock_angular_x = true

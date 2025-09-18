@@ -9,7 +9,9 @@ var timerLength := 1.0;
 
 func spawn_enemy():
 	#newEnemy.global_position = global_position;
-	newEnemy.live();
+	#if not newEnemy.pr
+	if is_instance_valid(newEnemy):
+		newEnemy.live();
 	queue_free();
 
 func assign_enemy_type_from_string_path(inPath : String):

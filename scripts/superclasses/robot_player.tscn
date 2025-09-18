@@ -1,10 +1,24 @@
-[gd_scene load_steps=3 format=3 uid="uid://cfsflls4t0wq6"]
+[gd_scene load_steps=4 format=3 uid="uid://cfsflls4t0wq6"]
 
 [ext_resource type="PackedScene" uid="uid://c2nsjhwipqr1m" path="res://scripts/superclasses/robot.tscn" id="1_e8kv4"]
 [ext_resource type="Script" uid="uid://dx1w5ja65qha1" path="res://scripts/superclasses/robot_player.gd" id="2_tvnd1"]
+[ext_resource type="PackedScene" uid="uid://6eooe8ngl3hu" path="res://scripts/superclasses/piece_sawblade.tscn" id="3_tvnd1"]
 
 [node name="Robot_Player" instance=ExtResource("1_e8kv4")]
+visible = true
 script = ExtResource("2_tvnd1")
 
 [node name="Body" parent="." index="0"]
 can_sleep = false
+
+[node name="Piece" parent="Body/Meshes/Socket/Piece/FemaleSockets/Socket" index="3" node_paths=PackedStringArray("hostSocket", "hostPiece", "hostRobot") instance=ExtResource("3_tvnd1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.38419e-07, 0)
+hostSocket = NodePath("..")
+hostPiece = NodePath("../../..")
+hostRobot = NodePath("../../../../../../..")
+
+[node name="HitboxShapes [Leave empty]" parent="Body/Meshes/Socket/Piece" index="1"]
+collision_layer = 1
+collision_mask = 1
+
+[editable path="Body/Meshes/Socket/Piece"]
