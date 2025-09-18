@@ -1,10 +1,11 @@
 extends Node3D
 
+##This object hosts Pieces.
 class_name Socket
 
 @export var invisibleInGame := false;
 var occupant : Piece;
-var hostPiece : Piece;
+@export var hostPiece : Piece;
 var hostRobot : Robot;
 var preview : Piece;
 var previewPlaceable := false;
@@ -16,6 +17,11 @@ var previewPlaceable := false;
 func _ready():
 	if invisibleInGame:
 		$FemaleConnector.hide();
+	if is_instance_valid(hostPiece):
+		hostPiece.register_socket(self);
+	else:
+		#queue_free();
+		pass;
 
 func remove_occupant():
 	occupant = null;
@@ -33,7 +39,8 @@ func get_energy_transmitted():
 	return hostPiece.get_outgoing_energy();
 
 func is_available():
-	return GameState.get_in_state_of_building() && occupant == null && is_valid() && get_preview_placeable();
+	#return GameState.get_in_state_of_building() && occupant == null && is_valid() && get_preview_placeable();
+	return occupant == null && is_valid() && get_preview_placeable();
 
 func is_valid():
 	return is_instance_valid(get_robot());

@@ -26,4 +26,5 @@ transform = Transform3D(1, 0, 0, 0, 0.917678, 0.397324, 0, -0.397324, 0.917678, 
 
 [node name="Robot_Player" parent="." instance=ExtResource("3_6ggyy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.84916)
+visible = true
 maxSpeed = 20.0

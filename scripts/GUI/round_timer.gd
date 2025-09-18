@@ -87,3 +87,6 @@ func format_time(_time:float):
 		secondString = str(seconds)
 	
 	return minuteString + ":" + secondString;
+
+func get_time() -> float:
+	return time;

@@ -2,7 +2,7 @@ extends RigidBody3D
 
 class_name RobotBody
 
-var targetPoint := Vector2(0, 1);
+var targetPoint := Vector2(0.0, 1.0);
 var targetRotation := 0.0;
 var currentRotation := 0.0;
 

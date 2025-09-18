@@ -5,6 +5,7 @@ class_name Piece
 ########## STANDARD GODOT PROCESSING FUNCTIONS
 
 func _ready():
+	auto_assign_sockets();
 	gather_colliders_and_meshes();
 
 func _physics_process(delta):
@@ -173,6 +174,16 @@ func select():
 ##Needs ways of pinging 3D spacve when trying to place it with its collision to check where it can be placed.
 ##
 
+##TODO: Functions for assigning the host robot and host piece.
+##When the piece is assigned to a socket or robot, it should reparent itself to it.
+
+@export var femaleSocketHolder : Node3D;
+var allSockets : Array[Socket] = []
+
+func auto_assign_sockets():
+	Utils.append_array_unique(allSockets, Utils.get_all_children_of_type(self, Socket, self));
+	pass;
+
 func assign_socket(socket:Socket):
 	socket.add_occupant(self);
 	hostRobot.reassign_body_collision();
@@ -186,13 +197,11 @@ func remove_from_socket():
 	#ping the
 	pass;
 
-##TODO: Functions for assigning the host robot and host piece.
-##When the piece is assigned to a socket or robot, it should reparent itself to it.
-
-@export var femaleSocketHolder : Node3D;
-
 func get_all_female_sockets():
-	return femaleSocketHolder.get_children();
+	return allSockets;
+
+func register_socket(socket : Socket):
+	Utils.append_unique(allSockets, socket);
 
 func get_specific_female_socket(index):
 	return femaleSocketHolder.get_child(index);

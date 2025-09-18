@@ -13,6 +13,7 @@ var camera : Camera;
 ################################## GODOT PROCESSING FUNCTIONS
 
 func _ready():
+	grab_references();
 	reassign_body_collision();
 	freeze(true, true);
 
@@ -29,13 +30,22 @@ func _physics_process(delta):
 
 ##Process and Physics process that run before anything else.
 func process_pre(delta):
+	grab_references();
 	pass;
 func phys_process_pre(delta):
+	grab_references();
 	##Freeze this bot before it can do physics stuff.
 	if freezeQueued: freeze(true);
 	if not is_frozen():
 		sleepTimer -= delta;
 	pass;
+
+##Grab all variable references to nodes that can't be declared with exports.
+func grab_references():
+	if not is_instance_valid(gameBoard):
+		gameBoard = GameState.get_game_board();
+	if not is_instance_valid(camera):
+		camera = GameState.get_camera();
 
 ######################### STATE CONTROL
 
@@ -103,9 +113,15 @@ func die():
 	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
 	alive = false;
 	queue_free();
+	##Play the death sound
+	if GameState.get_in_state_of_play():
+		SND.play_sound_nondirectional(deathSound);
+	##Play the death particle effects.
+	ParticleFX.play("NutsBolts", GameState.get_game_board(), body.global_position);
 
 
 ################################# EDITOR MODE
+##The path to the scene the Piece placement pipette is using.
 var pipettePiecePath := "res://scripts/superclasses/piece_bumper_T.tscn";
 var pipettePieceScene := preload("res://scripts/superclasses/piece_bumper_T.tscn");
 var pipettePieceInstance : Piece = pipettePieceScene.instantiate();
@@ -126,9 +142,13 @@ func detach_pipette():
 ################################## HEALTH AND LIVING
 
 
+@export_category("Combat Handling")
+
+@export var deathSound := "Combatant.Die";
+
 #TODO: Reimplement all stuff involving taking damage, knockback, and invincibility.
 
-@export_category("Combat Handling")
+@export_category("Health Management")
 ##Game statistics.
 @export var maxHealth := 1.0;
 var health := maxHealth;
@@ -271,19 +291,19 @@ func phys_process_motion(delta):
 	
 	pass;
 
-func move_and_rotate_towards_movement_vector(delta):
+func move_and_rotate_towards_movement_vector(delta : float):
 	#print("MV2",movementVector);
 	##Rotating the body mesh towards the movement vector
-	var rotatedMV = movementVector.rotated(deg_to_rad(90));
+	var rotatedMV = movementVector.rotated(deg_to_rad(90.0));
 	#print("MV3",movementVector);
 
 	if is_inputting_movement():
-		var movementVectorRotated = movementVector.rotated(deg_to_rad(90 + randf()))
+		var movementVectorRotated = movementVector.rotated(deg_to_rad(90.0 + randf()))
 		var vectorToRotTo = Vector2(movementVectorRotated.x, -movementVectorRotated.y)
 		bodyRotationAngle = vectorToRotTo
 		
 	
-	var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + body.global_position
+	var rotateVector = Vector3(bodyRotationAngle.x, 0.0, bodyRotationAngle.y) + body.global_position
 
 	body.update_target_rotation(bodyRotationAngle, delta * bodyRotationSpeed);
 	#Utils.look_at_safe(meshes, rotateVector);
@@ -296,7 +316,7 @@ func move_and_rotate_towards_movement_vector(delta):
 		forceVector += body.global_transform.basis.z * movementVector.y * -acceleration;
 		#print(forceVector)
 		##Rotate the force vector so the body's rotation doesn't meddle with it.
-		forceVector = forceVector.rotated(Vector3(0,1,0), -body.global_rotation.y);
+		forceVector = forceVector.rotated(Vector3(0.0,1.0,0.0), float(-body.global_rotation.y));
 		#print(forceVector)
 		body.apply_central_force(forceVector);
 		#print(movementVector)
@@ -308,7 +328,7 @@ func move_and_rotate_towards_movement_vector(delta):
 
 ##This is empty here, but the Player and Enemy varieties of this should have things for gathering input / getting player location respectively.
 func get_movement_vector(rotatedByCamera : bool = false) -> Vector2:
-	var vectorOut = Vector2(0,0);
+	var vectorOut = Vector2(0.0,0.0);
 	movementVector = vectorOut;
 	movementVectorRotation = movementVector.angle();
 	return movementVector.normalized();
@@ -322,7 +342,9 @@ func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = body)
 	Hooks.OnCollision(thisComponent, collider);
 
 # make sure the bot's speed doesn't go over its max speed
+##TODO: This breaks movement by making it skewed at weird angles when you rotate the camera.
 func clamp_speed():
+	return;
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);
 	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed);
 

@@ -27,8 +27,10 @@ var scrapGained := 0;
 @export var HUD_credits : Control;
 @export var HUD_options : Control;
 @export var HUD_gameOver : Control;
+@export var HUD_player : Control;
 @export var MUSIC : MusicHandler;
 @export var LIGHT : DirectionalLight3D;
+@export var deathTimer : DeathTimer;
 
 func _ready():
 	spawnPlayer();
@@ -182,7 +184,7 @@ func enter_state(state:gameState):
 		MUSIC.change_state(MusicHandler.musState.SHOP);
 		
 		##TODO: REIMPLEMENT DEATH TIMER
-		#GameState.start_death_timer(120.0,true)
+		GameState.start_death_timer(120.0,true)
 		round = 0;
 		roundEnemiesInit = 1;
 		clear_enemy_spawn_list();
@@ -365,6 +367,7 @@ func destroy_all_enemies():
 		if enemy:
 			enemy.call_deferred("die");
 
+##Fired when the game is over.
 func game_over():
 	var devCheatsEnabled = GameState.get_setting("devMode")
 	if not devCheatsEnabled:
@@ -409,7 +412,7 @@ func game_over():
 	change_state(gameState.GAME_OVER);
 
 
-##Button calls
+############## BUTTON CALLS
 func _on_btn_play_pressed():
 	change_state(gameState.INIT_PLAY);
 	pass # Replace with function body.
@@ -424,8 +427,14 @@ func _on_btn_exit_pressed():
 	pass # Replace with function body.
 func _on_btn_end_run_pressed():
 	player.die();
-	game_over();
 	pass # Replace with function body.
 func _on_btn_options_pressed():
 	change_state(gameState.OPTIONS);
 	pass # Replace with function body.
+
+
+######################### DEATH TIMER MGMT
+
+func get_death_timer() -> DeathTimer:
+	##TODO: Finalize the path to this.
+	return deathTimer;

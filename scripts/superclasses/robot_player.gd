@@ -58,4 +58,16 @@ func die():
 	alive = false;
 	hide();
 	freeze(true, true);
-	#queue_free();
+	gameBoard.game_over();
+	
+	##Play the death sound
+	if GameState.get_in_state_of_play():
+		SND.play_sound_nondirectional(deathSound);
+	##Play the death particle effects.
+	ParticleFX.play("NutsBolts", GameState.get_game_board(), body.global_position);
+	
+	
+	
+	print("Searching for Sockets ", Utils.get_all_children(self).size())
+	print("Searching for Sockets, checking ownership ", Utils.get_all_children(self, self).size())
+	print(Utils.get_all_children(self, self))
