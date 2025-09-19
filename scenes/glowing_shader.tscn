@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://brhpcqtfhp1qv"]
+
+[ext_resource type="Shader" uid="uid://uyplmif4aje1" path="res://graphics/shaders/glowing_shader.gdshader" id="1_n7fq7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mwpgc"]
+render_priority = 0
+shader = ExtResource("1_n7fq7")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pgnih"]
+next_pass = SubResource("ShaderMaterial_mwpgc")
+
+[sub_resource type="BoxMesh" id="BoxMesh_fq4k2"]
+material = SubResource("StandardMaterial3D_pgnih")
+
+[node name="GlowingShader" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_fq4k2")
