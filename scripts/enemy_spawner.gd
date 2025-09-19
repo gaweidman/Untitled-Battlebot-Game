@@ -2,14 +2,16 @@ extends Node3D
 
 class_name RobotSpawner
 
-var enemyTypeToSpawn := preload("res://scripts/superclasses/robot.tscn");
+var enemyTypeToSpawn := preload("res://scenes/robots/buildingBlocks/robot_base.tscn");
 var gameBoard : GameBoard;
 var newEnemy : Node3D;
 var timerLength := 1.0;
 
 func spawn_enemy():
 	#newEnemy.global_position = global_position;
-	newEnemy.live();
+	#if not newEnemy.pr
+	if is_instance_valid(newEnemy):
+		newEnemy.live();
 	queue_free();
 
 func assign_enemy_type_from_string_path(inPath : String):

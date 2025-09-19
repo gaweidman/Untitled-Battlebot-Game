@@ -3,7 +3,7 @@ extends MakesNoise;
 class_name Robot
 
 @export_category("General")
-@export var body : RigidBody3D;
+@export var body : RobotBody;
 @export var meshes : Node3D;
 var bodyPiece : Piece; ##The Piece this Robot is using as the 3D representation of its body.
 var gameBoard : GameBoard;
@@ -13,6 +13,7 @@ var camera : Camera;
 ################################## GODOT PROCESSING FUNCTIONS
 
 func _ready():
+	grab_references();
 	reassign_body_collision();
 	freeze(true, true);
 
@@ -29,13 +30,22 @@ func _physics_process(delta):
 
 ##Process and Physics process that run before anything else.
 func process_pre(delta):
+	grab_references();
 	pass;
 func phys_process_pre(delta):
+	grab_references();
 	##Freeze this bot before it can do physics stuff.
 	if freezeQueued: freeze(true);
 	if not is_frozen():
 		sleepTimer -= delta;
 	pass;
+
+##Grab all variable references to nodes that can't be declared with exports.
+func grab_references():
+	if not is_instance_valid(gameBoard):
+		gameBoard = GameState.get_game_board();
+	if not is_instance_valid(camera):
+		camera = GameState.get_camera();
 
 ######################### STATE CONTROL
 
@@ -97,17 +107,25 @@ func enter_shop():
 func live():
 	unfreeze(true);
 	show();
+	body.show();
 	spawned = true;
 
 func die():
 	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
 	alive = false;
 	queue_free();
+	##Play the death sound
+	if GameState.get_in_state_of_play():
+		SND.play_sound_nondirectional(deathSound);
+	##Play the death particle effects.
+	ParticleFX.play("NutsBolts", GameState.get_game_board(), body.global_position);
+	ParticleFX.play("BigBoom", GameState.get_game_board(), body.global_position);
 
 
 ################################# EDITOR MODE
-var pipettePiecePath := "res://scripts/superclasses/piece_bumper_T.tscn";
-var pipettePieceScene := preload("res://scripts/superclasses/piece_bumper_T.tscn");
+##The path to the scene the Piece placement pipette is using.
+var pipettePiecePath := "res://scenes/prefabs/objects/pieces/piece_bumper_T.tscn";
+var pipettePieceScene := preload("res://scenes/prefabs/objects/pieces/piece_bumper_T.tscn");
 var pipettePieceInstance : Piece = pipettePieceScene.instantiate();
 
 func prepare_pipette(scenePath := pipettePiecePath):
@@ -126,9 +144,13 @@ func detach_pipette():
 ################################## HEALTH AND LIVING
 
 
+@export_category("Combat Handling")
+
+@export var deathSound := "Combatant.Die";
+
 #TODO: Reimplement all stuff involving taking damage, knockback, and invincibility.
 
-@export_category("Combat Handling")
+@export_category("Health Management")
 ##Game statistics.
 @export var maxHealth := 1.0;
 var health := maxHealth;
@@ -271,19 +293,19 @@ func phys_process_motion(delta):
 	
 	pass;
 
-func move_and_rotate_towards_movement_vector(delta):
+func move_and_rotate_towards_movement_vector(delta : float):
 	#print("MV2",movementVector);
 	##Rotating the body mesh towards the movement vector
-	var rotatedMV = movementVector.rotated(deg_to_rad(90));
+	var rotatedMV = movementVector.rotated(deg_to_rad(90.0));
 	#print("MV3",movementVector);
 
 	if is_inputting_movement():
-		var movementVectorRotated = movementVector.rotated(deg_to_rad(90 + randf()))
+		var movementVectorRotated = movementVector.rotated(deg_to_rad(90.0 + randf()))
 		var vectorToRotTo = Vector2(movementVectorRotated.x, -movementVectorRotated.y)
 		bodyRotationAngle = vectorToRotTo
 		
 	
-	var rotateVector = Vector3(bodyRotationAngle.x, 0, bodyRotationAngle.y) + body.global_position
+	var rotateVector = Vector3(bodyRotationAngle.x, 0.0, bodyRotationAngle.y) + body.global_position
 
 	body.update_target_rotation(bodyRotationAngle, delta * bodyRotationSpeed);
 	#Utils.look_at_safe(meshes, rotateVector);
@@ -291,12 +313,16 @@ func move_and_rotate_towards_movement_vector(delta):
 	##Get 
 	if is_inputting_movement():
 		#print("HI")
-		var forceVector = Vector3.ZERO
+		var forceVector = Vector3.ZERO;
+		var bodBasis := body.global_basis;
 		forceVector += body.global_transform.basis.x * movementVector.x * -acceleration;
 		forceVector += body.global_transform.basis.z * movementVector.y * -acceleration;
 		#print(forceVector)
+		var bodBasisRotationOrthonormalized := bodBasis.orthonormalized();
+		var bodBasisRotation = bodBasisRotationOrthonormalized.get_euler();
+
 		##Rotate the force vector so the body's rotation doesn't meddle with it.
-		forceVector = forceVector.rotated(Vector3(0,1,0), -body.global_rotation.y);
+		forceVector = forceVector.rotated(Vector3(0.0,1.0,0.0), float(-bodBasisRotation.y));
 		#print(forceVector)
 		body.apply_central_force(forceVector);
 		#print(movementVector)
@@ -308,7 +334,7 @@ func move_and_rotate_towards_movement_vector(delta):
 
 ##This is empty here, but the Player and Enemy varieties of this should have things for gathering input / getting player location respectively.
 func get_movement_vector(rotatedByCamera : bool = false) -> Vector2:
-	var vectorOut = Vector2(0,0);
+	var vectorOut = Vector2(0.0,0.0);
 	movementVector = vectorOut;
 	movementVectorRotation = movementVector.angle();
 	return movementVector.normalized();
@@ -323,9 +349,11 @@ func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = body)
 
 # make sure the bot's speed doesn't go over its max speed
 func clamp_speed():
+	body.clamp_speed()
+	return;
+	var speedMin = Vector2(maxSpeed, maxSpeed)
 	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);
 	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed);
-
 
 ##################################################### 3D INVENTORY STUFF
 

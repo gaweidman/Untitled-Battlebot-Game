@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dckvl43g2kjvx"]
 
-[ext_resource type="Script" uid="uid://cas2ddp8dw5rm" path="res://scripts/superclasses/collisionBox.gd" id="1_l000f"]
+[ext_resource type="Script" uid="uid://cas2ddp8dw5rm" path="res://scripts/objects/pieces/buildingBlocks/collisionBox.gd" id="1_xw1eb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_l000f"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -11,4 +11,4 @@ Edit 'thisColliderType' to have it be copied in as a Hitbox, Hurtbox, Placement 
 shape = SubResource("BoxShape3D_l000f")
 disabled = true
 debug_color = Color(0.686891, 0.499893, 0, 0.42)
-script = ExtResource("1_l000f")
+script = ExtResource("1_xw1eb")

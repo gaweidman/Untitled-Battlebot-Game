@@ -6,7 +6,8 @@ const PFX_LIST = {
 	"SmokePuffSingle": preload("res://scenes/prefabs/particle-fx/SmokePuffSingle.tscn"),
 	"Sparks": preload("res://scenes/prefabs/particle-fx/HitSparksTest.tscn"),
 	"BulletTracer": preload("res://scenes/prefabs/particle-fx/BulletTracer.tscn"),
-	"BulletTracer_small": preload("res://scenes/prefabs/particle-fx/BulletTracer.tscn")
+	"BulletTracer_small": preload("res://scenes/prefabs/particle-fx/BulletTracer.tscn"),
+	"BigBoom": preload("res://scenes/prefabs/particle-fx/big_boom.tscn"),
 }
 
 func _ready():

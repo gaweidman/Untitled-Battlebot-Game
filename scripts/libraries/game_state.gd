@@ -145,7 +145,7 @@ func get_combat_handler() -> CombatHandlerPlayer:
 	return null;
 
 func get_hud():
-	return get_node("/root/GameBoard/HUD");
+	return get_node("/root/GameBoard/HUDCanvas/HUD");
 
 func get_inventory() -> InventoryPlayer:
 	var ply = get_player();
@@ -155,26 +155,36 @@ func get_inventory() -> InventoryPlayer:
 	return null;
 
 func get_death_timer() -> DeathTimer:
-	var ply = get_player();
+	var board = get_game_board();
 	
-	if is_instance_valid(ply):
-		return ply.get_node_or_null("Inventory/InventoryControls/BackingTexture/Lbl_Timer");
+	if board != null:
+		return board.get_death_timer();
 	return null;
 
 func add_death_time(time:float):
 	var tmr = get_death_timer();
 	
-	tmr.add_time(time);
+	if tmr != null:
+		tmr.add_time(time);
 
 func pause_death_timer(paused:=true):
 	var tmr = get_death_timer();
 	
-	tmr.pause(paused);
+	if tmr != null:
+		tmr.pause(paused);
 
 func start_death_timer(_startTime := 120.0, _reset := false):
 	var tmr = get_death_timer();
 	
-	tmr.start(_startTime, _reset)
+	if tmr != null:
+		tmr.start(_startTime, _reset)
+
+func get_death_time() -> float:
+	var tmr = get_death_timer();
+	
+	if tmr != null:
+		tmr.get_time();
+	return -999.0;
 
 func get_camera() -> Camera:
 	var brd = get_game_board();

@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://bkwtxafp63vfm"]
 
 [ext_resource type="Shader" uid="uid://dqmkq07v8t6aj" path="res://graphics/materials/particle shaders/BulletTracer.tres" id="1_1004a"]
-[ext_resource type="Script" uid="uid://c27xqw6qfk580" path="res://scripts/objects/particle_fx_bulletTracer.gd" id="1_vj8st"]
+[ext_resource type="Script" uid="uid://c27xqw6qfk580" path="res://scripts/objects/particle/particle_fx_bulletTracer.gd" id="1_vj8st"]
 [ext_resource type="Texture2D" uid="uid://byb68ghp0s1nc" path="res://graphics/images/particle PNGs/TestTracerOne.png" id="2_nkp01"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_g4stu"]

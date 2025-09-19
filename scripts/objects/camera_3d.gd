@@ -42,7 +42,6 @@ func _process(delta: float) -> void:
 	if is_instance_valid(viewport):
 		var mousePos = viewport.get_mouse_position();
 		
-		
 		#project_local_ray_normal()
 		
 		#var proj = project_position(mousePos, 20);
@@ -152,6 +151,8 @@ func _physics_process(delta):
 	##Selecting pieces.
 	if Input.is_action_just_pressed("Select"):
 		click_on_piece();
+	
+	hover_socket();
 
 func _input(event):
 	if event is InputEventMouseButton:
@@ -204,8 +205,23 @@ func click_on_piece():
 	var collisionMask = 8;
 	
 	var raycastHit = RaycastSystem.get_raycast_hit_object(collisionMask);
-	print(raycastHit)
+	#print(raycastHit)
 	if is_instance_valid(raycastHit): 
-		print(raycastHit)
+		#print(raycastHit)
 		if raycastHit is HurtboxHolder:
 			raycastHit.select_piece();
+
+var socketHovering : Socket;
+func hover_socket():
+	var collisionMask = 32;
+	
+	var raycastHit = RaycastSystem.get_raycast_hit_object(collisionMask);
+	#print(raycastHit)
+	if is_instance_valid(raycastHit): 
+		if raycastHit is Socket:
+			raycastHit.hover_from_camera(self);
+			socketHovering = raycastHit;
+	else:
+		if is_instance_valid(socketHovering):
+			socketHovering.hover(false);
+			socketHovering = null;

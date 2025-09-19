@@ -5,9 +5,11 @@ class_name Piece
 ########## STANDARD GODOT PROCESSING FUNCTIONS
 
 func _ready():
+	autograb_sockets();
 	gather_colliders_and_meshes();
 
 func _physics_process(delta):
+	phys_process_collision(delta);
 	phys_process_abilities(delta);
 
 func _process(delta):
@@ -45,12 +47,28 @@ func process_draw(delta):
 @export var meshesHolder : Node3D;
 #var bodyMeshes : Dictionary[StringName, MeshInstance3D] = {};
 
+##Frame timer that updates scale of hitboxes every 3 frames.
+var hitboxRescaleTimer := 0;
+func phys_process_collision(delta):
+	hitboxRescaleTimer -= 1;
+	if hitboxRescaleTimer <= 0:
+		if has_host():
+			hitboxRescaleTimer = 3;
+			##TODO: Figure out how to scale the hurtboxes vertically real tall...... this ain't it.
+			#hitboxCollisionHolder.scale = Vector3.ONE;
+			#hitboxCollisionHolder.call_deferred("global_scale", Vector3(1, 1000, 1));
+			#hitboxCollisionHolder.set_deferred("global_position", Vector3((get_host_robot().get_global_body_position() + position) * Vector3(1, 0, 1) + Vector3(0,-5,0)));
+			
+			hurtboxCollisionHolder.collision_layer = 8 + 64; #Hurtbox layer and placed layer.
+		else:
+			hurtboxCollisionHolder.collision_layer = 8; #Only hurtbox layer.
+
 ##This function assigns socket data and generates all hitboxes. Should only ever be run once at _ready.
 func gather_colliders_and_meshes():
+	autograb_sockets();
 	#Assign all sockets with this as their host piece.
-	for child in femaleSocketHolder.get_children():
-		if child is Socket:
-			child.hostPiece = self;
+	for child in Utils.get_all_children_of_type(self, Socket, self):
+		child.hostPiece = self;
 	
 	#Clear all colliders from their respective areas.
 	for child in placementCollisionHolder.get_children():
@@ -71,6 +89,7 @@ func gather_colliders_and_meshes():
 				##if the PieceCollisionBox is of type PlACEMENT then it should spawn a shapecast proxy with an identical shape.
 				if child.isPlacementBox:
 					var shapeCastNew = ShapeCast3D.new()
+					placementCollisionHolder.add_child(shapeCastNew);
 					shapeCastNew.set_deferred("target_position", Vector3(0,0,0));
 					shapeCastNew.set_deferred("global_position", child.global_position);
 					shapeCastNew.set_deferred("scale", child.scale * 0.95);
@@ -78,7 +97,6 @@ func gather_colliders_and_meshes():
 					shapeCastNew.set("shape", child.shape);
 					#shapeCastNew.enabled = false;
 					shapeCastNew.enabled = true;
-					placementCollisionHolder.add_child(shapeCastNew);
 					shapeCastNew.debug_shape_custom_color = Color("af7f006b");
 				##if the PieceCollisionBox is of type HITBOX or HURTBOX then it should copy itself into those.
 				if child.isHurtbox:
@@ -89,7 +107,7 @@ func gather_colliders_and_meshes():
 					#dupe.global_position = child.global_position;
 				if child.isHitbox:
 					var dupe = child.duplicate();
-					#dupe.disabled = false;
+					dupe.disabled = false;
 					hitboxCollisionHolder.add_child(dupe);
 					dupe.debug_color = Color("f6007f6b");
 					#dupe.global_position = child.global_position;
@@ -173,26 +191,43 @@ func select():
 ##Needs ways of pinging 3D spacve when trying to place it with its collision to check where it can be placed.
 ##
 
-func assign_socket(socket:Socket):
-	socket.add_occupant(self);
-	hostRobot.reassign_body_collision();
-	pass;
-
-##Removes this piece from its assigned socket.
-func remove_from_socket():
-	hostSocket.remove_occupant();
-	hostSocket = null;
-	hostRobot = null;
-	#ping the
-	pass;
-
 ##TODO: Functions for assigning the host robot and host piece.
 ##When the piece is assigned to a socket or robot, it should reparent itself to it.
 
 @export var femaleSocketHolder : Node3D;
+var allSockets : Array[Socket] = []
 
+func autograb_sockets():
+	Utils.append_array_unique(allSockets, Utils.get_all_children_of_type(self, Socket, self));
+	for socket in allSockets:
+		socket.set_host_piece(self);
+	pass;
+
+##Returns a list of all sockets on this part.
 func get_all_female_sockets():
-	return femaleSocketHolder.get_children();
+	autograb_sockets();
+	return allSockets;
+
+func register_socket(socket : Socket):
+	Utils.append_unique(allSockets, socket);
+
+@export var assignedToSocket := false;
+##Assigns this Piece to a given Socket.
+func assign_socket(socket:Socket):
+	socket.add_occupant(self);
+	hostRobot.reassign_body_collision();
+	assignedToSocket = true;
+	pass;
+
+##Removes this piece from its assigned Socket.
+func remove_from_socket():
+	hostSocket.remove_occupant();
+	hostSocket = null;
+	hostRobot = null;
+	assignedToSocket = false;
+	#ping the
+	pass;
+
 
 func get_specific_female_socket(index):
 	return femaleSocketHolder.get_child(index);
@@ -200,26 +235,27 @@ func get_specific_female_socket(index):
 func disconnect_from_host_socket():
 	hostSocket.remove_occupant();
 
-func get_host_socket():
+func get_host_socket() -> Socket:
 	if is_instance_valid(hostSocket):
 		return hostSocket;
 	else:
 		return null;
 
-func get_host_piece():
+func get_host_piece() -> Piece:
 	if get_host_socket() == null:
 		return null;
 	else:
 		return get_host_socket().get_host_piece();
 
-func get_host_robot():
+func get_host_robot() -> Robot:
 	if get_host_socket() == null:
 		return null;
 	else:
 		return hostRobot;
 
+##Returns true if the part has both a host socket and a host robot.
 func has_host():
-	return hostSocket and hostRobot;
+	return hostSocket and hostRobot and assignedToSocket;
 
 var selectedSocket : Socket;
 func assign_selected_socket(socket):

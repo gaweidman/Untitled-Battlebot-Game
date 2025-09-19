@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://bfg5tgkahtk0p"]
 
 [ext_resource type="Shader" uid="uid://sn4yfw365uhu" path="res://graphics/materials/particle shaders/SmokeShader.tres" id="1_gwlbj"]
-[ext_resource type="Script" uid="uid://bixet4dmtwy3k" path="res://scripts/objects/particle_fx_killer.gd" id="1_lyauj"]
+[ext_resource type="Script" uid="uid://bixet4dmtwy3k" path="res://scripts/objects/particle/particle_fx_killer.gd" id="1_lyauj"]
 [ext_resource type="Texture2D" uid="uid://cqeqv3bh180xs" path="res://graphics/images/particle PNGs/TestSmokeOne.png" id="2_o258a"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ovp0l"]

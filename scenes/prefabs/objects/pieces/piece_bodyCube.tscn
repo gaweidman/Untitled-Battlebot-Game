@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://b3n2ijepd0x5b"]
 
-[ext_resource type="PackedScene" uid="uid://cgcnhigjynv0q" path="res://scripts/superclasses/piece.tscn" id="1_jee1e"]
-[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scripts/superclasses/socket.tscn" id="2_kcjt4"]
+[ext_resource type="PackedScene" uid="uid://cgcnhigjynv0q" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece.tscn" id="1_jee1e"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_kcjt4"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_n78fx"]
 size = Vector3(1.5, 1.5, 1.5)
@@ -12,20 +12,25 @@ size = Vector3(1.5, 1.5, 1.5)
 [node name="Piece" instance=ExtResource("1_jee1e")]
 pieceName = &"BodyCube"
 
-[node name="Socket" parent="FemaleSockets" index="0" instance=ExtResource("2_kcjt4")]
+[node name="Socket" parent="FemaleSockets" index="0" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+hostPiece = NodePath("../..")
 
-[node name="Socket2" parent="FemaleSockets" index="1" instance=ExtResource("2_kcjt4")]
+[node name="Socket2" parent="FemaleSockets" index="1" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.75, 0.75)
+hostPiece = NodePath("../..")
 
-[node name="Socket3" parent="FemaleSockets" index="2" instance=ExtResource("2_kcjt4")]
+[node name="Socket3" parent="FemaleSockets" index="2" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
 transform = Transform3D(-1, 2.98023e-08, 1.77636e-15, 0, -4.37114e-08, -1, -2.98023e-08, -1, 4.37114e-08, 0, 0.75, -0.75)
+hostPiece = NodePath("../..")
 
-[node name="Socket4" parent="FemaleSockets" index="3" instance=ExtResource("2_kcjt4")]
+[node name="Socket4" parent="FemaleSockets" index="3" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
 transform = Transform3D(0.000329311, -1, -0.00082928, -0.000672038, 0.000829069, -0.999999, 1, 0.000329843, -0.000671777, -0.75, 0.750622, 0.000247382)
+hostPiece = NodePath("../..")
 
-[node name="Socket5" parent="FemaleSockets" index="4" instance=ExtResource("2_kcjt4")]
+[node name="Socket5" parent="FemaleSockets" index="4" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
 transform = Transform3D(-0.000329281, 1, -0.000829368, 0.000672038, -0.000829156, -0.999999, -1, -0.000329814, -0.000671777, 0.75, 0.749378, -0.000247382)
+hostPiece = NodePath("../..")
 
 [node name="PieceCollisionBox" parent="." index="4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)

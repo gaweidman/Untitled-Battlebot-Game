@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://ba2ugks261it6"]
 
-[ext_resource type="PackedScene" uid="uid://bvbnk32yrg0yy" path="res://scripts/superclasses/piece_bumper.tscn" id="1_nvd0x"]
-[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scripts/superclasses/socket.tscn" id="2_8x5gi"]
+[ext_resource type="PackedScene" uid="uid://bvbnk32yrg0yy" path="res://scenes/prefabs/objects/pieces/piece_bumper.tscn" id="1_nvd0x"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_8x5gi"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="2_bdx0k"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="3_vga6k"]
 
@@ -78,12 +78,13 @@ transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0.75, 
 [node name="Socket3" parent="FemaleSockets" index="2" instance=ExtResource("2_8x5gi")]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.75, 0.25, 0)
 
+[node name="HitboxShapes [Leave empty]" parent="." index="2"]
+collision_layer = 1
+collision_mask = 1
+
 [node name="HurtboxShapes [Leave empty]" parent="." index="3"]
 collision_layer = 0
 script = null
 
-[node name="PieceCollisionBox" parent="." index="5"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
-
-[node name="Meshes" parent="." index="7"]
+[node name="Meshes" parent="." index="6"]
 editor_description = ""

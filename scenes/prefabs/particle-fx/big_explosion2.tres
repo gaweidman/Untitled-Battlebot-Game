@@ -1,4 +1,4 @@
-[gd_resource type="VisualShader" load_steps=14 format=3 uid="uid://db583b5sf0it4"]
+[gd_resource type="VisualShader" load_steps=14 format=3 uid="uid://b6fyw320sfx47"]
 
 [sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_fg55a"]
 parameter_name = "FloatParameter"

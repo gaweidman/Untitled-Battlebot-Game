@@ -1,10 +1,11 @@
 extends Node3D
 
+##This object hosts Pieces.
 class_name Socket
 
 @export var invisibleInGame := false;
 var occupant : Piece;
-var hostPiece : Piece;
+@export var hostPiece : Piece;
 var hostRobot : Robot;
 var preview : Piece;
 var previewPlaceable := false;
@@ -16,6 +17,11 @@ var previewPlaceable := false;
 func _ready():
 	if invisibleInGame:
 		$FemaleConnector.hide();
+	if is_instance_valid(hostPiece):
+		hostPiece.register_socket(self);
+	else:
+		#queue_free();
+		pass;
 
 func remove_occupant():
 	occupant = null;
@@ -33,14 +39,17 @@ func get_energy_transmitted():
 	return hostPiece.get_outgoing_energy();
 
 func is_available():
-	return GameState.get_in_state_of_building() && occupant == null && is_valid() && get_preview_placeable();
+	#return GameState.get_in_state_of_building() && occupant == null && is_valid() && get_preview_placeable();
+	return occupant == null && is_valid() && get_preview_placeable();
 
 func is_valid():
 	return is_instance_valid(get_robot());
 
+func set_host_piece(piece : Piece):
+	hostPiece = piece;
 func get_host_piece() -> Piece:
 	return hostPiece;
-	
+
 func get_robot() -> Robot:
 	if get_host_piece() == null: return null;
 	var bot = get_host_piece().get_host_robot()
@@ -61,26 +70,28 @@ var selectionCheckLoop = 3;
 func _process(delta):
 	selectionCheckLoop -= 1;
 	if selectionCheckLoop <= 0:
-		selectionCheckLoop = 3;
-		
-		
-		var vp = get_viewport()
-		var cam = vp.get_camera_3d()
-		var mousePos = vp.get_mouse_position()
-		var mousePos3D = cam.unproject_position(global_position)
-		#print(mousePos, mousePos3D)
-		
-		$SelectorRay.target_position = cam.global_position - $SelectorRay.global_position;
-		$SelectorRay.global_rotation = Vector3(0,0,0)
-		
-		hover(is_valid() and (not $SelectorRay.is_colliding()) and mousePos.x - mousePos3D.x < 10 and mousePos.y - mousePos3D.y < 10 and mousePos.x - mousePos3D.x > -10 and mousePos.y - mousePos3D.y > -10);
+		hover(false);
+		#selectionCheckLoop = 3;
+		#
+		#
+		#var vp = get_viewport()
+		#var cam = vp.get_camera_3d()
+		#if is_instance_valid(cam):
+			#var mousePos = vp.get_mouse_position()
+			#var mousePos3D = cam.unproject_position(global_position)
+			##print(mousePos, mousePos3D)
+			#
+			#$SelectorRay.target_position = cam.global_position - $SelectorRay.global_position;
+			#$SelectorRay.global_rotation = Vector3(0,0,0)
+			#
+			#hover(is_valid() and (not $SelectorRay.is_colliding()) and mousePos.x - mousePos3D.x < 10 and mousePos.y - mousePos3D.y < 10 and mousePos.x - mousePos3D.x > -10 and mousePos.y - mousePos3D.y > -10);
 	##Check for selection while hovering, and apply rotations.
 	if hovering:
-		if Input.is_action_just_pressed("RotatePiece_CW"):
-			#print("?")
-			rotate_90(1)
-		if Input.is_action_just_pressed("RotatePiece_CCW"):
-			rotate_90(-1)
+		if selectionCheckLoop >= 3:
+			if Input.is_action_just_pressed("RotatePiece_CW"):
+				rotate_90(1)
+			if Input.is_action_just_pressed("RotatePiece_CCW"):
+				rotate_90(-1)
 		
 		show_preview_of_pipette();
 		
@@ -89,6 +100,7 @@ func _process(delta):
 			hostPiece.assign_selected_socket(self);
 	else:
 		clear_preview();
+	
 	##Check for assignemtn and then for deselection.
 	if selected:
 		set_preview_as_occupant();
@@ -173,3 +185,9 @@ func set_preview_as_occupant():
 
 func set_occupant_as_preview():
 	pass
+
+func hover_from_camera(cam):
+	selectionCheckLoop = 4;
+	$SelectorRay.target_position = cam.global_position - $SelectorRay.global_position;
+	$SelectorRay.global_rotation = Vector3(0,0,0);
+	hover(is_valid() and (not $SelectorRay.is_colliding()));
