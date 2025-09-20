@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://brhpcqtfhp1qv"]
+[gd_scene load_steps=5 format=3 uid="uid://cclnfo6p6f0nx"]
 
 [ext_resource type="Shader" uid="uid://uyplmif4aje1" path="res://graphics/shaders/glowing_shader.gdshader" id="1_n7fq7"]
 
@@ -15,4 +15,5 @@ material = SubResource("StandardMaterial3D_pgnih")
 [node name="GlowingShader" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04782, 0)
 mesh = SubResource("BoxMesh_fq4k2")
