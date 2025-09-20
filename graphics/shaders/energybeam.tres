@@ -1,0 +1,52 @@
+[gd_resource type="VisualShader" load_steps=5 format=3 uid="uid://ebaqxnl6fg1b"]
+
+[ext_resource type="Texture2D" uid="uid://brb0kp1udy7m7" path="res://graphics/images/particle PNGs/NormalMap_EnergyBeam.png" id="1_m65dj"]
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_c78ph"]
+operator = 1
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_8dlk2"]
+output_port_for_preview = 0
+expanded_output_ports = [0]
+texture = ExtResource("1_m65dj")
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_kmlic"]
+input_name = "vertex"
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform sampler2D tex_vtx_3;
+
+
+
+void vertex() {
+// Texture2D:3
+	vec4 n_out3p0 = texture(tex_vtx_3, UV);
+
+
+// Input:4
+	vec3 n_out4p0 = VERTEX;
+
+
+// VectorOp:2
+	vec3 n_out2p0 = vec3(n_out3p0.xyz) - n_out4p0;
+
+
+// Output:0
+	VERTEX = n_out2p0;
+	UV = vec2(n_out2p0.xy);
+
+
+}
+"
+graph_offset = Vector2(-525.584, -210.022)
+nodes/vertex/0/position = Vector2(1720, 40)
+nodes/vertex/2/node = SubResource("VisualShaderNodeVectorOp_c78ph")
+nodes/vertex/2/position = Vector2(680, 180)
+nodes/vertex/3/node = SubResource("VisualShaderNodeTexture_8dlk2")
+nodes/vertex/3/position = Vector2(80, -140)
+nodes/vertex/4/node = SubResource("VisualShaderNodeInput_kmlic")
+nodes/vertex/4/position = Vector2(100, 440)
+nodes/vertex/connections = PackedInt32Array(4, 0, 2, 1, 3, 0, 2, 0, 2, 0, 0, 4, 2, 0, 0, 0)
