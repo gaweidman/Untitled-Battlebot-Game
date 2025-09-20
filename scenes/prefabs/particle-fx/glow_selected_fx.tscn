@@ -1,53 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://cke2uk5j2umo2"]
+[gd_scene load_steps=3 format=3 uid="uid://cke2uk5j2umo2"]
 
-[ext_resource type="Shader" uid="uid://25risycjeffu" path="res://graphics/shaders/Glowing_Lineart.gdshader" id="1_mdc85"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_y5368"]
-invert = true
-
-[sub_resource type="Gradient" id="Gradient_vhu3d"]
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_2wcj0"]
-gradient = SubResource("Gradient_vhu3d")
-fill_from = Vector2(0.247191, 0.893258)
-fill_to = Vector2(0.398876, 0.713483)
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mdc85"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_y5368"]
-render_priority = 0
-shader = ExtResource("1_mdc85")
-shader_parameter/albedo_texture = Color(0, 1, 0, 1)
-shader_parameter/overall_noise_texture = SubResource("NoiseTexture2D_mdc85")
-shader_parameter/char_noise = SubResource("NoiseTexture2D_y5368")
-shader_parameter/color_ramp = SubResource("GradientTexture2D_2wcj0")
-shader_parameter/char_thickness = 0.03
-shader_parameter/speed = -1.4
-shader_parameter/noise_scale = 2.3
-shader_parameter/alpha = 0.405
-shader_parameter/line_color = Color(0.81502, 3.58574e-06, 7.70092e-07, 1)
-shader_parameter/char_angle = 0.0
-shader_parameter/char_fade = 0.049
-shader_parameter/rand_char_thickness = 1.75
-shader_parameter/rand_char_offset = 3.724
-shader_parameter/rand_line_scale = 1.0
-shader_parameter/rand_noise_angle = 118.588
-shader_parameter/fps_speed_strength = 0.155
-shader_parameter/fps_speed = 0.45
-shader_parameter/char_jitter_amount = 0.541
-shader_parameter/overall_noise_scale = 75.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2kwb7"]
-next_pass = SubResource("ShaderMaterial_y5368")
-albedo_color = Color(0.729412, 0, 0, 1)
-emission_enabled = true
-emission = Color(0.427828, 0.231026, 0.0765653, 1)
-emission_energy_multiplier = 16.0
+[ext_resource type="Material" uid="uid://il8ny5x45n6s" path="res://scenes/prefabs/particle-fx/glow_selected_fx.tres" id="1_mdc85"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_mdc85"]
 
 [node name="Glow_Selected_FX" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-material_override = SubResource("StandardMaterial3D_2kwb7")
+material_override = ExtResource("1_mdc85")
 mesh = SubResource("SphereMesh_mdc85")
