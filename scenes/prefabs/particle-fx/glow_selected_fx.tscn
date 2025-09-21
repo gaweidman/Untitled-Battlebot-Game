@@ -1,11 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cke2uk5j2umo2"]
+[gd_scene load_steps=2 format=3 uid="uid://cke2uk5j2umo2"]
 
-[ext_resource type="Material" uid="uid://il8ny5x45n6s" path="res://scenes/prefabs/particle-fx/glow_selected_fx.tres" id="1_mdc85"]
-
-[sub_resource type="SphereMesh" id="SphereMesh_mdc85"]
+[ext_resource type="Script" uid="uid://ccpmc7417k5ro" path="res://scripts/glow_selected_fx.gd" id="1_mdc85"]
 
 [node name="Glow_Selected_FX" type="Node3D"]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-material_override = ExtResource("1_mdc85")
-mesh = SubResource("SphereMesh_mdc85")
+script = ExtResource("1_mdc85")
