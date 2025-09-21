@@ -1,4 +1,4 @@
-extends MakesNoise;
+extends StatHolder3D;
 
 class_name Robot
 
@@ -13,6 +13,7 @@ var camera : Camera;
 ################################## GODOT PROCESSING FUNCTIONS
 
 func _ready():
+	super();
 	grab_references();
 	reassign_body_collision();
 	freeze(true, true);
@@ -46,6 +47,17 @@ func grab_references():
 		gameBoard = GameState.get_game_board();
 	if not is_instance_valid(camera):
 		camera = GameState.get_camera();
+
+func stat_registry():
+	register_stat("HealthMax", maxHealth, statIconDamage);
+	register_stat("Health", maxHealth, statIconDamage, null, func(newValue): return clamp(newValue, 0, get_stat("HealthMax")));
+	register_stat("EnergyMax", maxEnergy, statIconDamage);
+	register_stat("Energy", maxEnergy, statIconEnergy, null, func(newValue): return clamp(newValue, 0, get_stat("EnergyMax")));
+	register_stat("EnergyRefreshRate", energyRefreshRate, statIconEnergy);
+	register_stat("InvincibilityTime", maxInvincibleTimer, statIconCooldown);
+	register_stat("MovementSpeedAcceleration", acceleration, statIconCooldown);
+	register_stat("MovementSpeedMax", maxSpeed, statIconCooldown);
+	pass;
 
 ######################### STATE CONTROL
 
@@ -157,24 +169,25 @@ var health := maxHealth;
 
 func get_max_health():
 	##TODO: Add bonuses into this calc.
-	return maxHealth;
+	return get_stat("HealthMax");
 
 func take_damage(damage:float):
 	if is_playing():
+		var health = get_stat("Health");
 		if invincible && damage > 0:
 			return;
-		#if !(GameState.get_setting("godMode") == true && self is Robot_Player):
-			#health -= damage;
-			##TODO: Make Robot_Player class.
+		if !(GameState.get_setting("godMode") == true && self is Robot_Player):
+			health -= damage;
 		set_invincibility();
 		if health <= 0.0:
-			die();
 			health = 0.0;
+			die();
 		if health > get_max_health():
 			health = get_max_health();
+		set_stat("Health", health);
 
 func heal(health:float):
-	take_damage(-health)
+	take_damage(-health);
 
 func is_alive():
 	return alive;
@@ -201,21 +214,21 @@ func phys_process_combat(delta):
 
 @export_category("Energy Management")
 @export var maxEnergy := 3.0;
-var energy := maxEnergy;
-@export var energyRefreshRate := 2.0;
+@export var energyRefreshRate := 1.65;
 
 ##Returns available power. Whenever something is used in a frame, it should detract from the energy variable.
 func get_available_energy() -> float:
-	return energy;
+	return get_stat("Energy");
 
 func get_maximum_energy() -> float:
-	##TODO: Reimplement max Energy bonuses and stuff.
-	return maxEnergy;
+	return get_stat("EnergyMax");
 
 ##Returns true or false depending on whether the sap would work or not.
 func try_sap_energy(amount):
-	if amount <= get_available_energy():
+	var energy = get_available_energy();
+	if amount <= energy:
 		energy -= amount;
+		set_stat("Energy", energy);
 		return true;
 	else:
 		return false;
@@ -224,11 +237,13 @@ func try_sap_energy(amount):
 ##If told to "cap at max" it will not add energy if it is above or at the current maximum, and will clamp it at the max. 
 ##If told NOT to "cap at max" it will just flat add the energy amount. 
 func generate_energy(amount, capAtMax := true):
+	var energy = get_available_energy();
 	if capAtMax: 
 		if energy < get_maximum_energy():
 			energy = clamp(energy + amount, 0, get_maximum_energy());
 	else:
 		energy += amount;
+	set_stat("Energy", energy);
 
 ################################# MOTION HANDLER STUFF
 
@@ -312,11 +327,12 @@ func move_and_rotate_towards_movement_vector(delta : float):
 	
 	##Get 
 	if is_inputting_movement():
+		var accel = get_stat("MovementSpeedAcceleration")
 		#print("HI")
 		var forceVector = Vector3.ZERO;
 		var bodBasis := body.global_basis;
-		forceVector += body.global_transform.basis.x * movementVector.x * -acceleration;
-		forceVector += body.global_transform.basis.z * movementVector.y * -acceleration;
+		forceVector += body.global_transform.basis.x * movementVector.x * -accel;
+		forceVector += body.global_transform.basis.z * movementVector.y * -accel;
 		#print(forceVector)
 		var bodBasisRotationOrthonormalized := bodBasis.orthonormalized();
 		var bodBasisRotation = bodBasisRotationOrthonormalized.get_euler();
@@ -351,14 +367,17 @@ func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = body)
 func clamp_speed():
 	body.clamp_speed()
 	return;
-	var speedMin = Vector2(maxSpeed, maxSpeed)
-	body.linear_velocity.x = clamp(body.linear_velocity.x, -maxSpeed, maxSpeed);
-	body.linear_velocity.z = clamp(body.linear_velocity.z, -maxSpeed, maxSpeed);
 
 ##################################################### 3D INVENTORY STUFF
 
 @export_category("Piece Management")
-var active_pieces := []
+var active_pieces : Dictionary[int, AbilityManager] = {
+	0 : null,
+	1 : null,
+	2 : null,
+	3 : null,
+	4 : null,
+}
 
 ##Whenever a new piece is added, add it to the list.
 ##There needs to be UI for all pieces you have active.
@@ -367,8 +386,7 @@ var active_pieces := []
 ##Returns a freshly gathered array of all pieces attached to this Robot.
 func get_all_pieces() -> Array[Piece]:
 	var piecesGathered : Array[Piece] = [];
-	for child in Utils.get_all_children(body):
-		if child is Piece:
-			if child.hostRobot == self:
-				piecesGathered.append(child);
+	for child in Utils.get_all_children_of_type(body, Piece):
+		if child.hostRobot == self:
+			piecesGathered.append(child);
 	return piecesGathered;
