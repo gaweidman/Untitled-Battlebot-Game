@@ -3,15 +3,15 @@ extends Node
 ##Returns an array of every single child and grandchild of a Node.
 func get_all_children(node, ownerToCheck : Node = null) -> Array:
 	var nodes : Array = [];
-	print(node.owner)
+	#print(node.owner)
 	for N in node.get_children():
 		##In theory this bit here will allow to check only nodes from the thing's original scene...
 		if ownerToCheck != null:
-			print("Checking if " , ownerToCheck ," is owner of ", N)
+			#print("Checking if " , ownerToCheck ," is owner of ", N)
 			if N.owner != ownerToCheck:
-				print("Not owner, returning")
+				#print("Not owner, returning")
 				return nodes;
-			print("Is owner, continuing")
+			#print("Is owner, continuing")
 		
 		if N.get_child_count() > 0:
 			nodes.append(N);
@@ -25,7 +25,7 @@ func get_all_children(node, ownerToCheck : Node = null) -> Array:
 func get_all_children_of_type(node, type : Object = Node, ownerToCheck : Node = null) -> Array:
 	var nodes : Array = [];
 	var all = get_all_children(node, ownerToCheck);
-	print(all)
+	#print(all)
 	for child in all:
 		if is_instance_of(child, type):
 			nodes.append(child);

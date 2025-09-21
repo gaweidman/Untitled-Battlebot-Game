@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cnfat2kqvmdcd"
-path="res://.godot/imported/damageIconStriped.png-da6994d14c87c63c6936bf41b7fab9c4.ctex"
+path="res://.godot/imported/damageIconStriped.png-318aa572d101bebeca8de8444173b2a6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/damageIconStriped.png"
-dest_files=["res://.godot/imported/damageIconStriped.png-da6994d14c87c63c6936bf41b7fab9c4.ctex"]
+source_file="res://graphics/images/HUD/statIcons/damageIconStriped.png"
+dest_files=["res://.godot/imported/damageIconStriped.png-318aa572d101bebeca8de8444173b2a6.ctex"]
 
 [params]
 

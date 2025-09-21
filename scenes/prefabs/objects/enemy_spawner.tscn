@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://c376rebc8xgj3"]
 
-[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/cooldownIconStriped.png" id="1_arqg6"]
+[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="1_arqg6"]
 [ext_resource type="Script" uid="uid://bt47l4pgnfr4m" path="res://scripts/enemy_spawner.gd" id="2_jff6l"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_ge6f6"]

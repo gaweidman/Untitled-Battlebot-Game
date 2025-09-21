@@ -25,7 +25,7 @@ func _integrate_forces(state):
 		"Rotation":
 			rotation.y = currentRotation;
 		"Speed Clamp":
-			var max_speed = get_parent().maxSpeed;
+			var max_speed = get_parent().get_stat("MovementSpeedMax");
 			var current_velocity = linear_velocity;
 			var current_speed = current_velocity.length();
 

@@ -1,10 +1,12 @@
-extends MakesNoise
+extends StatHolder3D
 
 class_name Piece
 
 ########## STANDARD GODOT PROCESSING FUNCTIONS
 
 func _ready():
+	ability_registry();
+	super(); #Stat registry.
 	autograb_sockets();
 	gather_colliders_and_meshes();
 
@@ -15,6 +17,16 @@ func _physics_process(delta):
 func _process(delta):
 	process_draw(delta);
 
+func stat_registry():
+	if energyDrawPassive > 0:
+		register_stat("PassiveEnergyDraw", energyDrawPassive, statIconEnergy);
+	if energyDrawPassive < 0:
+		register_stat("PassiveEnergyRegeneration", energyDrawPassive, statIconEnergy);
+	
+	#Stats that only matter if the thing has abilities.
+	if activeAbilities.size() > 0:
+		register_stat("ActiveEnergyDraw", energyDrawActive, statIconEnergy);
+		register_stat("ActiveCooldown", activeCooldownTime, statIconCooldown);
 
 #################### VISUALS AND TRANSFORM
 
@@ -268,19 +280,29 @@ func deselect_all_sockets():
 	for socket in get_all_female_sockets():
 		socket.select(false);
 
+
 ####################### ABILITY AND ENERGY MANAGEMENT
 
 @export_category("Ability")
 @export var hurtboxAlwaysEnabled := false;
 
 @export var input : InputEvent;
-@export var energyDrawPassive := 0.0; #power drawn each frame, multiplied by time delta.
-@export var energyDrawActive := 0.0; #power drawn when you use this part's active ability, given that it has one.
-var energyDrawCurrent := 0.0; #updated each frame.
+@export var energyDrawPassive := 0.0; ##power drawn each frame, multiplied by time delta. If this is negative, it is instead power being generated each frame.
+@export var energyDrawActive := 0.0; ##power drawn when you use any this piece's active abilities, given that it has any.
+var energyDrawCurrent := 0.0; ##Recalculated and updated each frame.
 
 var incomingPower := 0.0;
 var hasIncomingPower := true;
 var transmittingPower := true; ##While false, no power is transmitted from this piece.
+
+##The amount of time needed between uses of this Piece's Active Abilities.
+@export var activeCooldownTime := 0.5;
+var activeCooldownTimer := 0.0;
+func set_cooldown():
+	set_deferred("activeCooldownTimer", get_stat("ActiveCooldown"));
+
+func on_cooldown():
+	return activeCooldownTimer > 0;
 
 ##Physics process step for abilities.
 func phys_process_abilities(delta):
@@ -325,16 +347,57 @@ func get_passive_energy_cost():
 	##TODO: Bonuses
 	return ( energyDrawPassive * get_physics_process_delta_time() );
 
-func can_use_active():
-	return  ( get_current_energy_draw() + energyDrawActive ) <= get_incoming_energy();
+##Returns true if the actionSlot has an ability assigned and energy draw post-use would not exceed the incoming energy pool.
+func can_use_active(actionSlot : int): 
+	if get_active_ability(actionSlot) == null:
+		return false;
+	return (not on_cooldown()) and (( get_current_energy_draw() + get_active_energy_cost() ) <= get_incoming_energy());
 
+##Returns true if energyDrawPassive is 0, or if the power draw would not exceed incoming power.
 func can_use_passive():
-	return (energyDrawPassive > 0) and (get_passive_energy_cost() <= get_incoming_energy());
+	if energyDrawPassive == 0:
+		return true;
+	return (energyDrawPassive != 0) and (( get_current_energy_draw() + get_passive_energy_cost() ) <= get_incoming_energy());
 
-##Extend with a super().
-func use_active():
-	if can_use_active():
+var activeAbilities : Dictionary[int, AbilityManager] = {}
+
+## Where any and all register_active_ability() or related calls should go. Runs at _ready().
+func ability_registry():
+	pass;
+
+func get_next_available_ability_slot():
+	var num := 0;
+	while activeAbilities.keys().has(num):
+		num += 1;
+	return num;
+
+## This should be run in ability_registry() only.
+## abilityName = name of ability.
+## abilityDescription = name of ability.
+## functionWhenUsed = the function that gets called when this ability is called for.
+## statsUsed = an Array of strings. This should hold any and all stats you want to have displayed on this ability's card.
+## slotOverride is if you want to have this ability use a specific numbered slot.
+func register_active_ability(abilityName : String = "Active Ability", abilityDescription : String = "No Description Found.", functionWhenUsed : Callable = func(): pass, statsUsed : Array = [], slotOverride = null):
+	var newAbility = AbilityManager.new();
+	var slot = slotOverride;
+	if slot == null: slot = get_next_available_ability_slot();
+	newAbility.register(self, slot, abilityName, abilityDescription, functionWhenUsed, statsUsed);
+	activeAbilities[slot] = newAbility;
+	pass;
+
+func get_active_ability(actionSlot : int) -> AbilityManager:
+	if activeAbilities.keys().has(actionSlot):
+		return activeAbilities[actionSlot];
+	return null;
+
+##Calls the ability in the given slot if it's able to do so.
+func use_active(actionSlot : int):
+	if can_use_active(actionSlot):
 		energyDrawCurrent += get_active_energy_cost();
+		set_cooldown();
+		var activeAbility = get_active_ability(actionSlot);
+		var call = activeAbility.functionWhenUsed;
+		call.call();
 	pass
 
 func use_passive():
@@ -344,3 +407,23 @@ func use_passive():
 
 func is_transmitting():
 	return hasIncomingPower and transmittingPower;
+
+
+################# SCRAP
+@export_category( "monaaaay $$$$" )
+@export var scrapCostBase : int;
+var scrapSellModifier := 1.0;
+var scrapSellModifierBase := (2.0/3.0);
+#func _get_sell_price():
+	#var discount = (1.0) * scrapSellModifier * scrapSellModifierBase;
+	#
+	#var sellPrice = discount * scrapCostBase
+	#
+	#return roundi(max(1, (sellPrice + mod_sellPercent.add)  * ((1 + mod_sellPercent.flat) * mod_sellPercent.mult)))
+#
+#func _get_buy_price(_discount := 0.0, markup:=0.0, fixedDiscount := 0, fixedMarkup := 0):
+	#var discount = 1.0 + _discount + markup;
+	#
+	#var sellPrice = discount * scrapCostBase;
+	#
+	#return roundi(max(1, (sellPrice + fixedDiscount + fixedMarkup + mod_scrapCost.add) * ((1 + mod_scrapCost.flat) * mod_scrapCost.mult)))
