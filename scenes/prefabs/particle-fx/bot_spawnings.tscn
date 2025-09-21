@@ -1,5 +1,6 @@
-[gd_scene load_steps=23 format=3 uid="uid://om8iyd2ym7vp"]
+[gd_scene load_steps=24 format=3 uid="uid://om8iyd2ym7vp"]
 
+[ext_resource type="Script" uid="uid://lmofd5yxqeuy" path="res://scripts/bot_spawnings.gd" id="1_hpcb0"]
 [ext_resource type="Shader" uid="uid://b4rq7x3s7e1gi" path="res://rubble.tres" id="1_kv702"]
 [ext_resource type="Shader" uid="uid://ebaqxnl6fg1b" path="res://graphics/shaders/energybeam.tres" id="2_0rnhr"]
 [ext_resource type="Texture2D" uid="uid://cjemx5gc4kbeh" path="res://graphics/images/particle PNGs/FireNormalMaps.png" id="2_4es52"]
@@ -76,11 +77,12 @@ point_count = 2
 curve = SubResource("Curve_1kh7e")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_kv702"]
-lifetime_randomness = 0.53
 particle_flag_align_y = true
 particle_flag_rotate_y = true
 emission_shape_offset = Vector3(0, -2, 0)
 emission_shape_scale = Vector3(1, -2, 0)
+emission_shape = 1
+emission_sphere_radius = 0.01
 angle_min = -57.9
 angle_max = 720.0
 angle_curve = SubResource("CurveTexture_4es52")
@@ -123,6 +125,7 @@ radius = 0.25
 curve = SubResource("Curve_4es52")
 
 [node name="BotSpawnings" type="Node3D"]
+script = ExtResource("1_hpcb0")
 
 [node name="Rubble" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.50897, 0)
@@ -138,8 +141,7 @@ material_override = SubResource("StandardMaterial3D_kv702")
 transparency = 0.45
 amount_ratio = 0.7027
 speed_scale = 0.3
-explosiveness = 1.0
-randomness = 1.0
+randomness = 0.67
 trail_enabled = true
 process_material = SubResource("ParticleProcessMaterial_kv702")
 draw_pass_1 = SubResource("TubeTrailMesh_0rnhr")

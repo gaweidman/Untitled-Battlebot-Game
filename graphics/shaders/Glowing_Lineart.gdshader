@@ -3,11 +3,11 @@ shader_type spatial;
 render_mode cull_front, world_vertex_coords, unshaded;
 // DECLARE VARIABLES
 // declare textures
-uniform vec4 albedo_texture : source_color;
-uniform sampler2D roughness_texture : source_color;
 uniform sampler2D overall_noise_texture : source_color;
 uniform sampler2D char_noise : source_color, repeat_enable;
 uniform sampler2D color_ramp : source_color, repeat_enable, filter_linear_mipmap;
+// edit line color
+
 // declare attributes
 // edit line thickness
 uniform float char_thickness = 0.4;
@@ -17,9 +17,6 @@ uniform float speed = 0.01;
 uniform float noise_scale = 2.0;
 // edit line transparency
 uniform float alpha = 1.0;
-// edit lines
-// line color
-uniform vec4 line_color : source_color = vec4(1.0, 1.0, 1.0, 1.0);
 // edit line angel
 uniform float char_angle : hint_range(0,270.0) = 90.0;
 // edit line fade
@@ -58,27 +55,22 @@ void fragment(){
 	
 	vec3 char_pos = (VIEW_MATRIX * vec4(VERTEX,1)).xyz;
 	vec2 char_uv = char_pos.xz * 0.25 + vec2(TIME * speed, 0.0);
-	float char_noise_4 = texture(overall_noise_texture, UV * overall_noise_scale).r;
-	
+
 	float char_noise_1 = animated_noise(char_uv);
-	float char_noise_2 = animated_noise(char_uv * 0.23 + vec2(0.001));
-	float char_noise_3 = animated_noise(char_uv * 0.00003 - vec2(TIME * 0.0025));
+	float char_noise_2 = animated_noise(char_uv * 2.0+ vec2(0.2));
+	float char_noise_3 = animated_noise(char_uv * 0.5 - vec2(TIME * 0.5));
 	float combined_noise = clamp((char_noise_1 * 0.6 + char_noise_2 * 0.3 + char_noise_3 * 0.1), 0.0, 1.0);
 	
-	float frame_time = floor(TIME * fps_speed / 0.2) *0.2;
-	float fps_variation = sin(frame_time * 4.0 ) * fps_speed_strength;
-	float rand_angle = char_angle + (char_noise_1 -0.4) * rand_noise_angle + fps_variation * 3.5 * char_jitter_amount;
-	float rand_offset = (char_noise_1 - 3.25) * rand_char_offset + fps_variation * 1.5 * char_jitter_amount;
 	
-	
-	vec3 char_color = texture(color_ramp, vec2(combined_noise, 0.01)).rgb;
+	vec3 char_color = texture(color_ramp, vec2(combined_noise, 0.0)).rgb;
 	float ramp_pos = smoothstep(0.1, 0.6, combined_noise);
-	char_color = texture(color_ramp, vec2(ramp_pos, 0.01)).rgb;
+	char_color = texture(color_ramp, vec2(ramp_pos, 0.0)).rgb;
 	float char_mask = step(0.5, combined_noise);
-	char_color *= 0.7 + char_mask *1.9;
+	char_color *= 1.0 + char_mask *1.9;
 	
-	ALPHA = smoothstep(0.2, 0.6, combined_noise) * alpha;
+	ALPHA = smoothstep(0.2, 0.8, combined_noise) * alpha;
 	
 	EMISSION = char_color * (1.0 + sin(TIME * 5.0) * 0.24);
-	ALBEDO = char_color; 
+	ALBEDO = char_color;
+
 }

@@ -5,19 +5,18 @@
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_y5368"]
 invert = true
 
-[sub_resource type="Gradient" id="Gradient_vhu3d"]
+[sub_resource type="Gradient" id="Gradient_ibrpo"]
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_2wcj0"]
-gradient = SubResource("Gradient_vhu3d")
-fill_from = Vector2(0.247191, 0.893258)
-fill_to = Vector2(0.398876, 0.713483)
+gradient = SubResource("Gradient_ibrpo")
+fill_from = Vector2(0.364198, 0.648148)
+fill_to = Vector2(0, 1)
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mdc85"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y5368"]
 render_priority = 0
 shader = ExtResource("1_l8rql")
-shader_parameter/albedo_texture = Color(0, 1, 0, 1)
 shader_parameter/overall_noise_texture = SubResource("NoiseTexture2D_mdc85")
 shader_parameter/char_noise = SubResource("NoiseTexture2D_y5368")
 shader_parameter/color_ramp = SubResource("GradientTexture2D_2wcj0")
@@ -25,7 +24,6 @@ shader_parameter/char_thickness = 0.03
 shader_parameter/speed = 0.1
 shader_parameter/noise_scale = 2.965
 shader_parameter/alpha = 0.215
-shader_parameter/line_color = Color(0.81502, 3.58574e-06, 7.70092e-07, 1)
 shader_parameter/char_angle = 34.942
 shader_parameter/char_fade = 0.065
 shader_parameter/rand_char_thickness = 1.221

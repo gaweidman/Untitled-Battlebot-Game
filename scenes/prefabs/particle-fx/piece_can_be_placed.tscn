@@ -1,3 +1,6 @@
-[gd_scene load_steps=0 format=3 uid="uid://0ccrblrjcwop"]
+[gd_scene load_steps=2 format=3 uid="uid://0ccrblrjcwop"]
+
+[ext_resource type="Script" uid="uid://bcsre6cfc130e" path="res://scripts/piece_can_be_placed.gd" id="1_3ymw8"]
 
 [node name="PieceCanBePlaced" type="Node3D"]
+script = ExtResource("1_3ymw8")

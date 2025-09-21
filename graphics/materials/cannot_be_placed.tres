@@ -1,0 +1,46 @@
+[gd_resource type="StandardMaterial3D" load_steps=7 format=3 uid="uid://b334vl7qgbx5n"]
+
+[ext_resource type="Shader" uid="uid://16jrda8wnpdx" path="res://graphics/shaders/piece_cannot_be_placed.gdshader" id="2_2uos7"]
+[ext_resource type="Texture2D" uid="uid://brb0kp1udy7m7" path="res://graphics/images/particle PNGs/NormalMap_EnergyBeam.png" id="3_e36qd"]
+
+[sub_resource type="Gradient" id="Gradient_girts"]
+offsets = PackedFloat32Array(0.4, 5.47)
+colors = PackedColorArray(1, 0, 0, 1, 0.652226, 7.82606e-05, 0.547683, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_e36qd"]
+gradient = SubResource("Gradient_girts")
+fill_from = Vector2(0.593407, 0.324176)
+fill_to = Vector2(0.296703, 0.664835)
+
+[sub_resource type="CurveTexture" id="CurveTexture_f26la"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_07ocn"]
+render_priority = 0
+shader = ExtResource("2_2uos7")
+shader_parameter/color_ramp = SubResource("GradientTexture2D_e36qd")
+shader_parameter/outline_noise_tex = ExtResource("3_e36qd")
+shader_parameter/falloff_curve = SubResource("CurveTexture_f26la")
+shader_parameter/outline_size = -0.185
+shader_parameter/offset_fres = 0.3
+shader_parameter/FPS = 6.385
+shader_parameter/fps_strength = -7.17
+shader_parameter/speed = 1.0
+shader_parameter/noise_scale = 5.965
+shader_parameter/line_jitter_amt = 8.0
+shader_parameter/alpha = 1.0
+shader_parameter/line_angle = 45.0
+shader_parameter/rand_line_angle = 75.0
+shader_parameter/rand_noise_offset = 30.0
+
+[resource]
+next_pass = SubResource("ShaderMaterial_07ocn")
+albedo_color = Color(0.259759, 0.106079, 0.134317, 1)
+metallic_specular = 0.0
+roughness = 0.0
+emission_enabled = true
+emission = Color(0.203922, 0, 0, 1)
+anisotropy = -1.0
+heightmap_scale = 5.295
+texture_repeat = false
+grow_amount = -0.893
+proximity_fade_distance = 0.01
