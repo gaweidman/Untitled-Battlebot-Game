@@ -5,6 +5,7 @@ class_name EnemyProgressBar
 var updateTimer := 0.0;
 var progress := 0.0;
 var progressBarTargetX := 24;
+var length := size.x;
 
 var buttonModeSwitchCounter = 0;
 var buttonMode:= true;
@@ -20,29 +21,34 @@ func _process(delta):
 	$ProgressBar.position.x = move_toward($ProgressBar.position.x, progressBarTargetX, delta * 340)
 
 func update():
-	progress = GameState.get_round_completion();
-	progressBarTargetX = (1 - progress) * -252
-	var enemiesLeft = GameState.get_wave_enemies_left();
-	$ProgressBar/Lbl_EnemiesLeft.text = str(enemiesLeft);
-	
-	if enemiesLeft > 0 or not is_equal_approx($ProgressBar.position.x, -252):
-		$NextWaveButton.disabled = true;
-	else:
-		$NextWaveButton.disabled = false;
+	if GameState.get_in_state_of_play():
+		if not $ProgressBar.visible:
+			$ProgressBar.show()
+		progress = GameState.get_round_completion();
+		progressBarTargetX = (1 - progress) * -length
+		var enemiesLeft = GameState.get_wave_enemies_left();
+		$ProgressBar/Lbl_EnemiesLeft.text = str(enemiesLeft);
 		
-		##Makes the 'go' button flash fancy-like
-		if buttonModeSwitchCounter >= 2:
-			if buttonMode:
-				$NextWaveButton.set_deferred("texture_normal", buttonScreenOnB)
-				buttonMode = false;
-			else:
-				$NextWaveButton.set_deferred("texture_normal", buttonScreenOnA)
-				buttonMode = true;
-			buttonModeSwitchCounter = 0;
+		if enemiesLeft > 0 or not is_equal_approx($ProgressBar.position.x, -length):
+			$NextWaveButton.disabled = true;
 		else:
-			buttonModeSwitchCounter +=1;
-	
-
+			$NextWaveButton.disabled = false;
+			
+			##Makes the 'go' button flash fancy-like
+			if buttonModeSwitchCounter >= 2:
+				if buttonMode:
+					$NextWaveButton.set_deferred("texture_normal", buttonScreenOnB)
+					buttonMode = false;
+				else:
+					$NextWaveButton.set_deferred("texture_normal", buttonScreenOnA)
+					buttonMode = true;
+				buttonModeSwitchCounter = 0;
+			else:
+				buttonModeSwitchCounter +=1;
+	else:
+		$NextWaveButton.disabled = true;
+		if $ProgressBar.visible:
+			$ProgressBar.hide()
 
 func _on_next_wave_button_pressed():
 	var board = GameState.get_game_board();

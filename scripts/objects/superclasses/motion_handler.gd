@@ -6,7 +6,7 @@ var raycasts;
 var body;
 var botBodyMesh;
 var bodyRotationAngle = Vector2.ZERO;
-var thisBot : Combatant;
+var thisBot : MakesNoise;
 var underbelly : UnderbellyContactPoints;
 var airtime := 0.0;
 var airCheckTimer = 0.0;

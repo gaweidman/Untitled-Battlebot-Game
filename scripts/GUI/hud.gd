@@ -4,6 +4,7 @@ var gameBoard : GameBoard;
 var refreshTimer = 0;
 var ply : Robot_Player;
 @export var MainMenuLogo : TextureRect;
+@export var gameHud : GameHUD;
 var logoRotationSwitch = 1;
 var logoRotationTarget = 0.0;
 
@@ -20,9 +21,9 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if refreshTimer <= 0:
-		refreshTimer = 0.5;
+		refreshTimer = 0.25;
 		if is_instance_valid(gameBoard):
-			update();
+			slow_update();
 		else:
 			gameBoard = GameState.get_game_board();
 		resize_window();
@@ -47,9 +48,12 @@ func _process(_delta: float) -> void:
 	
 	#if is_instance_valid($Pause) and is_instance_valid($Pause/Btn_EndRun) and is_instance_valid($Pause/Btn_Options):
 	if pauseMenuUp:
-		$Pause.global_position.y = lerp($Pause.global_position.y, 0.0, _delta * 30);
+		if pauseOptionsUp:
+			$Pause.global_position.y = move_toward($Pause.global_position.y, -30, _delta * 1300);
+		else:
+			$Pause.global_position.y = move_toward($Pause.global_position.y, 100, _delta * 1300);
 	else:
-		$Pause.global_position.y = lerp($Pause.global_position.y, -400.0, _delta * 30);
+		$Pause.global_position.y = move_toward($Pause.global_position.y, -400.0, _delta * 1300);
 	
 	if logoRotationSwitch > 0:
 		if MainMenuLogo.rotation < deg_to_rad(4):
@@ -65,9 +69,10 @@ func _process(_delta: float) -> void:
 	logoRotationTarget = clamp(logoRotationTarget, -4, 4)
 	MainMenuLogo.rotation = lerp(MainMenuLogo.rotation, logoRotationTarget, _delta * 3)
 
-func update() -> void:
+func slow_update() -> void:
 	if ! is_instance_valid(ply):
 		ply = GameState.get_player();
+	gameHud.slow_update();
 
 func _on_btn_pause_options_pressed():
 	toggle_pause_options(!pauseOptionsUp)
@@ -85,8 +90,8 @@ func toggle_pause_options(toggle):
 
 func toggle_pause(toggle):
 	pauseMenuUp = toggle;
-	$Pause/Btn_EndRun.disabled = !toggle;
-	$Pause/Btn_PauseOptions.disabled = !toggle;
+	$Pause/BG/Btn_EndRun.disabled = !toggle;
+	$Pause/BG/Btn_PauseOptions.disabled = !toggle;
 	if toggle:
 		pass;
 	else:

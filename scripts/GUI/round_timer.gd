@@ -12,37 +12,43 @@ func _process(delta):
 	
 	text = format_time(time);
 	
-	if not paused:
-		if time > 0:
-			if GameState.get_game_board_state() == GameBoard.gameState.PLAY: ##This time it's specific
-				time -= delta;
-		else:
-			time = 0.0;
-		
-		if blinkTimer > 0:
-			blinkTimer -= delta;
-			$TimerBlinky.show();
-		else:
-			$TimerBlinky.hide();
-		
-		blinkCycle -= delta;
-		if blinkCycle < 0:
-			if time <= 90.0:
-				blink();
-				blinkCycle = max(0.1, time / 60)
-				#if time <= 91.0:
-					#blinkCycle = 5.0;
-				#if time <= 61.0:
-					#blinkCycle = 1.0;
-				#if time <= 31.0:
-					#blinkCycle = 0.5;
-				#if time <= 11.0:
-					#blinkCycle = 0.25;
-				#if time <= 6:
-					#blinkCycle = 0.15;
-				if time <= 0:
-					GameState.get_player().die();
-					pause();
+	if GameState.get_in_state_of_play():
+		if not visible:
+			show();
+		if not paused:
+			if time > 0:
+				if GameState.get_game_board_state() == GameBoard.gameState.PLAY: ##This time it's specific
+					time -= delta;
+			else:
+				time = 0.0;
+			
+			if blinkTimer > 0:
+				blinkTimer -= delta;
+				$TimerBlinky.show();
+			else:
+				$TimerBlinky.hide();
+			
+			blinkCycle -= delta;
+			if blinkCycle < 0:
+				if time <= 90.0:
+					blink();
+					blinkCycle = max(0.1, time / 60)
+					#if time <= 91.0:
+						#blinkCycle = 5.0;
+					#if time <= 61.0:
+						#blinkCycle = 1.0;
+					#if time <= 31.0:
+						#blinkCycle = 0.5;
+					#if time <= 11.0:
+						#blinkCycle = 0.25;
+					#if time <= 6:
+						#blinkCycle = 0.15;
+					if time <= 0:
+						GameState.get_player().die();
+						pause();
+	else:
+		if visible:
+			hide();
 
 func blink():
 	if GameState.get_in_state_of_play():

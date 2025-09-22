@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=76 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena/arena_floor.tres" id="2_4jixe"]
@@ -15,18 +15,49 @@
 [ext_resource type="Texture2D" uid="uid://b27r3rshm0ite" path="res://graphics/images/HUD/textBoxBG_partPassive.png" id="11_6fdki"]
 [ext_resource type="PackedScene" uid="uid://b2vped1gbe1st" path="res://scenes/prefabs/aimap.tscn" id="11_c2xgd"]
 [ext_resource type="FontFile" uid="uid://s3k2ji7jxshs" path="res://graphics/images/HUD/8-segment.png" id="13_6c18d"]
+[ext_resource type="Script" uid="uid://mlxpf3keq86q" path="res://scripts/GUI/game_hud.gd" id="13_s0uw0"]
 [ext_resource type="Script" uid="uid://b6qoved8v8p2v" path="res://scripts/GUI/round_timer.gd" id="14_ei0j6"]
+[ext_resource type="Texture2D" uid="uid://cvnlt28sqm5g7" path="res://graphics/images/HUD/hudNew.png" id="14_m488k"]
 [ext_resource type="AudioStream" uid="uid://clkb8qmb50nhq" path="res://sounds/music/Battlebot(Base).ogg" id="15_7s7sx"]
+[ext_resource type="Script" uid="uid://lq2evtwp8bvg" path="res://scripts/GUI/enemy_progress_bar.gd" id="15_7w2xj"]
 [ext_resource type="Texture2D" uid="uid://bw5pl1p6bmq61" path="res://graphics/images/HUD/timer_blinky.png" id="15_s0uw0"]
+[ext_resource type="Shader" uid="uid://b3jc31ntkxnwh" path="res://graphics/shaders/wavyButton.gdshader" id="16_1s3sj"]
 [ext_resource type="AudioStream" uid="uid://dod8lqc5mj6gd" path="res://sounds/music/Battlebot(Bass).ogg" id="16_l8dsy"]
 [ext_resource type="AudioStream" uid="uid://xudb8rpoft5g" path="res://sounds/music/Battlebot(Melody).ogg" id="17_gj52v"]
+[ext_resource type="Texture2D" uid="uid://bgide8muu6eek" path="res://graphics/images/HUD/nextRound/screen_on.png" id="17_pwbo8"]
 [ext_resource type="AudioStream" uid="uid://cx04f0djaxqys" path="res://sounds/music/Battlebot(Piano).ogg" id="18_7s7sx"]
 [ext_resource type="AudioStream" uid="uid://d4i6k0bsc36q3" path="res://sounds/music/Battlebot(Perc1).ogg" id="18_mlcvp"]
+[ext_resource type="Texture2D" uid="uid://o4glpuf2dmah" path="res://graphics/images/HUD/nextRound/screen_hover.png" id="18_q68mx"]
 [ext_resource type="Script" uid="uid://6rlmlcy2eex2" path="res://scripts/GUI/hud.gd" id="18_wbopo"]
+[ext_resource type="Texture2D" uid="uid://okkoo55665rm" path="res://graphics/images/HUD/nextRound/screen_off.png" id="19_3a6ea"]
 [ext_resource type="AudioStream" uid="uid://uqulgohxvrq4" path="res://sounds/music/Battlebot(Perc2).ogg" id="19_4eh01"]
 [ext_resource type="AudioStream" uid="uid://bgos1qoehfh6w" path="res://sounds/music/Battlebot(Guitar).ogg" id="19_l8dsy"]
 [ext_resource type="AudioStream" uid="uid://criotxml8rknj" path="res://sounds/music/Battlebot(Swell).ogg" id="20_gj52v"]
 [ext_resource type="Script" uid="uid://dxmqurrcqgdl7" path="res://scripts/GUI/bgm.gd" id="20_l8dsy"]
+[ext_resource type="Texture2D" uid="uid://csqo5aaepfs34" path="res://graphics/images/HUD/nextRound/progressBar.png" id="20_ridgm"]
+[ext_resource type="Script" uid="uid://cdymr1vwdiwxo" path="res://scripts/GUI/info_box.gd" id="21_n0uq6"]
+[ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="21_sb58i"]
+[ext_resource type="Texture2D" uid="uid://24e2n07ox528" path="res://graphics/images/HUD/Energy_EmptyOverlayMask.png" id="22_dcin4"]
+[ext_resource type="Texture2D" uid="uid://drjmrl4v24oq6" path="res://graphics/images/HUD/info_melee.png" id="22_t18ps"]
+[ext_resource type="Script" uid="uid://bfml2ah2jiuo4" path="res://scripts/GUI/health_bar.gd" id="23_hi0i4"]
+[ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="23_sb58i"]
+[ext_resource type="Texture2D" uid="uid://db7xxix2ub0ai" path="res://graphics/images/HUD/Energy_FullOverlay.png" id="24_4upc1"]
+[ext_resource type="Texture2D" uid="uid://cnfat2kqvmdcd" path="res://graphics/images/HUD/statIcons/damageIconStriped.png" id="24_dcin4"]
+[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="25_hi0i4"]
+[ext_resource type="Texture2D" uid="uid://b30wj1uakji4q" path="res://graphics/images/HUD/Energy_EmptyOverlay.png" id="25_iqmcf"]
+[ext_resource type="Texture2D" uid="uid://djth0eo8kvkcm" path="res://graphics/images/HUD/sell_unselected.png" id="26_4upc1"]
+[ext_resource type="Texture2D" uid="uid://btfetdy0ahup8" path="res://graphics/images/HUD/sell_selected.png" id="27_iqmcf"]
+[ext_resource type="Texture2D" uid="uid://b71g2q13wr7do" path="res://graphics/images/HUD/sell_disabled.png" id="28_2kc6q"]
+[ext_resource type="Texture2D" uid="uid://dsl0x2nq48gga" path="res://graphics/images/HUD/move_unselected.png" id="29_o0v2b"]
+[ext_resource type="Texture2D" uid="uid://cxeur7wg8nvq7" path="res://graphics/images/HUD/move_selected.png" id="30_lb2e7"]
+[ext_resource type="Texture2D" uid="uid://dnu6ivnxlduxo" path="res://graphics/images/HUD/move_hover.png" id="31_vehjn"]
+[ext_resource type="Texture2D" uid="uid://dyotls8fcbklx" path="res://graphics/images/HUD/move_disabled.png" id="32_u76c3"]
+[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="33_k23rv"]
+[ext_resource type="Texture2D" uid="uid://c5asvsgahkx0d" path="res://graphics/images/HUD/Health_EmptyOverlayMask.png" id="39_2kc6q"]
+[ext_resource type="Texture2D" uid="uid://2lfl5febi3py" path="res://graphics/images/HUD/Health_FullOverlay.png" id="40_o0v2b"]
+[ext_resource type="Texture2D" uid="uid://dw41lyw5ke54n" path="res://graphics/images/HUD/Health_EmptyOverlay.png" id="41_lb2e7"]
+[ext_resource type="Texture2D" uid="uid://dsvo7y55d6y8p" path="res://graphics/images/HUD/pauseBG.png" id="45_hi0i4"]
+[ext_resource type="Texture2D" uid="uid://cp8nheutmloep" path="res://graphics/images/HUD/chain.png" id="46_4upc1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4eh01"]
 sky_top_color = Color(0.0910561, 0.0229013, 0, 1)
@@ -66,6 +97,25 @@ data = PackedVector3Array(-2.0005, 5.0276, -2.0005, -2.0005, 5.0276, -0.0004, -3
 [sub_resource type="SphereShape3D" id="SphereShape3D_jhciq"]
 radius = 1.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_p8hek"]
+atlas = ExtResource("14_m488k")
+region = Rect2(960, 0, 960, 1080)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8hspa"]
+shader = ExtResource("16_1s3sj")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vehjn"]
+shader = ExtResource("21_sb58i")
+shader_parameter/mask = ExtResource("22_dcin4")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kjpyk"]
+atlas = ExtResource("14_m488k")
+region = Rect2(0, 0, 960, 1080)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u76c3"]
+shader = ExtResource("21_sb58i")
+shader_parameter/mask = ExtResource("39_2kc6q")
+
 [sub_resource type="AudioStreamSynchronized" id="AudioStreamSynchronized_6fdki"]
 stream_count = 8
 stream_0/stream = ExtResource("15_7s7sx")
@@ -102,7 +152,7 @@ HUD_gameOver = NodePath("HUDCanvas/HUD/GameOver")
 HUD_player = NodePath("HUDCanvas/HUD/GameHud")
 MUSIC = NodePath("BGM2")
 LIGHT = NodePath("DirectionalLight3D")
-deathTimer = NodePath("HUDCanvas/HUD/GameHud/Lbl_Timer")
+deathTimer = NodePath("HUDCanvas/HUD/GameHud/RightSide/Lbl_Timer")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_fpy0w")
@@ -568,14 +618,14 @@ size = Vector3(2.10107, 3.07037, 6.22781)
 [node name="CameraPointer" type="Node3D" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="CameraPointer" node_paths=PackedStringArray("floor")]
-transform = Transform3D(-1, -7.57103e-08, 4.37114e-08, 0, 0.5, 0.866025, -8.74228e-08, 0.866025, -0.5, 0, 8.3591, -5.84694)
+transform = Transform3D(-1, -7.57104e-08, 4.37114e-08, 0, 0.5, 0.866025, -8.74228e-08, 0.866025, -0.5, 0, 15.3591, -9.84694)
 fov = 90.0
 script = ExtResource("5_l5xbb")
 floor = NodePath("../../ArenaFloor/StaticBody3D")
 
 [node name="HUDCanvas" type="CanvasLayer" parent="."]
 
-[node name="HUD" type="Control" parent="HUDCanvas" node_paths=PackedStringArray("MainMenuLogo")]
+[node name="HUD" type="Control" parent="HUDCanvas" node_paths=PackedStringArray("MainMenuLogo", "gameHud")]
 unique_name_in_owner = true
 z_index = 2
 texture_filter = 1
@@ -592,6 +642,7 @@ size_flags_vertical = 3
 theme = ExtResource("9_mlcvp")
 script = ExtResource("18_wbopo")
 MainMenuLogo = NodePath("MainMenu/LogoSmall")
+gameHud = NodePath("GameHud")
 metadata/_edit_use_anchors_ = true
 
 [node name="In-Dev Overlay" type="Label" parent="HUDCanvas/HUD"]
@@ -601,6 +652,511 @@ offset_right = 323.0
 offset_bottom = 105.0
 text = "in-dev overlay
 not finished"
+
+[node name="GameHud" type="Control" parent="HUDCanvas/HUD" node_paths=PackedStringArray("panelLeft", "panelRight")]
+layout_mode = 1
+anchor_left = -0.333
+anchor_top = -0.333
+anchor_right = 1.333
+anchor_bottom = 1.333
+offset_left = -0.384003
+offset_top = -0.216003
+offset_right = 0.383911
+offset_bottom = 0.215942
+mouse_filter = 2
+script = ExtResource("13_s0uw0")
+panelLeft = NodePath("LeftSide")
+panelRight = NodePath("RightSide")
+
+[node name="Shops" type="Control" parent="HUDCanvas/HUD/GameHud"]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -0.00012207
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+metadata/_edit_group_ = true
+metadata/_edit_use_anchors_ = true
+
+[node name="PanelBG" type="NinePatchRect" parent="HUDCanvas/HUD/GameHud/Shops"]
+visible = false
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_6fdki")
+region_rect = Rect2(1, 1, 46, 47)
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12
+metadata/_edit_use_anchors_ = true
+
+[node name="RightSide" type="TextureRect" parent="HUDCanvas/HUD/GameHud"]
+z_index = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 960.0
+offset_right = 0.00012207
+offset_bottom = 0.00012207
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_p8hek")
+
+[node name="Lbl_Timer" type="Label" parent="HUDCanvas/HUD/GameHud/RightSide"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 380.0
+offset_top = -995.0
+offset_right = 428.0
+offset_bottom = -978.0
+theme_override_fonts/font = ExtResource("13_6c18d")
+theme_override_font_sizes/font_size = 15
+text = "00:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("14_ei0j6")
+
+[node name="TimerBlinky" type="TextureRect" parent="HUDCanvas/HUD/GameHud/RightSide/Lbl_Timer"]
+layout_mode = 0
+offset_left = -18.0
+offset_top = 7.0
+offset_right = -8.0
+offset_bottom = 18.0
+texture = ExtResource("15_s0uw0")
+
+[node name="EnemyProgressBar" type="Control" parent="HUDCanvas/HUD/GameHud/RightSide"]
+clip_contents = true
+layout_mode = 1
+anchor_left = 0.7125
+anchor_top = 0.0222222
+anchor_right = 0.975
+anchor_bottom = 0.05
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("15_7w2xj")
+metadata/_edit_use_anchors_ = true
+
+[node name="NextWaveButton" type="TextureButton" parent="HUDCanvas/HUD/GameHud/RightSide/EnemyProgressBar"]
+material = SubResource("ShaderMaterial_8hspa")
+layout_mode = 0
+offset_right = 252.0
+offset_bottom = 30.0
+focus_mode = 0
+texture_normal = ExtResource("17_pwbo8")
+texture_pressed = ExtResource("18_q68mx")
+texture_hover = ExtResource("17_pwbo8")
+texture_disabled = ExtResource("19_3a6ea")
+
+[node name="ProgressBar" type="TextureRect" parent="HUDCanvas/HUD/GameHud/RightSide/EnemyProgressBar"]
+layout_mode = 0
+offset_right = 252.0
+offset_bottom = 30.0
+texture = ExtResource("20_ridgm")
+
+[node name="Lbl_EnemiesLeft" type="Label" parent="HUDCanvas/HUD/GameHud/RightSide/EnemyProgressBar/ProgressBar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -24.0
+offset_right = 121.0
+offset_bottom = -7.0
+theme_override_fonts/font = ExtResource("13_6c18d")
+theme_override_font_sizes/font_size = 15
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="EnergyBar" type="SubViewportContainer" parent="HUDCanvas/HUD/GameHud/RightSide" node_paths=PackedStringArray("emptyBar")]
+unique_name_in_owner = true
+texture_filter = 1
+material = SubResource("ShaderMaterial_vehjn")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 121.0
+offset_top = -153.0
+offset_right = 325.0
+offset_bottom = -81.0
+stretch = true
+script = ExtResource("23_hi0i4")
+fromRight = false
+emptyBar = NodePath("SubViewport/BarHolder/Empty")
+width = 164.0
+
+[node name="SubViewport" type="SubViewport" parent="HUDCanvas/HUD/GameHud/RightSide/EnergyBar"]
+transparent_bg = true
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(204, 72)
+render_target_update_mode = 4
+
+[node name="BarHolder" type="Control" parent="HUDCanvas/HUD/GameHud/RightSide/EnergyBar/SubViewport"]
+texture_filter = 1
+clip_contents = true
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -102.0
+offset_top = -72.0
+offset_right = 102.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Full" type="TextureRect" parent="HUDCanvas/HUD/GameHud/RightSide/EnergyBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("24_4upc1")
+
+[node name="Empty" type="TextureRect" parent="HUDCanvas/HUD/GameHud/RightSide/EnergyBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("25_iqmcf")
+
+[node name="Lbl_Energy" type="Label" parent="HUDCanvas/HUD/GameHud/RightSide/EnergyBar/SubViewport/BarHolder"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -74.0
+offset_top = -49.0
+offset_right = 87.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 19
+text = "00/00"
+
+[node name="LeftSide" type="TextureRect" parent="HUDCanvas/HUD/GameHud"]
+z_index = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -960.0
+offset_bottom = 0.00012207
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_kjpyk")
+
+[node name="InfoBox" type="Control" parent="HUDCanvas/HUD/GameHud/LeftSide" node_paths=PackedStringArray("iconBase", "lbl_partName")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -456.0
+offset_top = -720.0
+offset_right = -192.0
+offset_bottom = -528.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("21_n0uq6")
+iconBase = NodePath("InfoIconBase")
+lbl_partName = NodePath("Name")
+
+[node name="InfoIconBase" type="TextureRect" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 208.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -136.0
+texture = ExtResource("22_t18ps")
+
+[node name="Name" type="Label" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.16602
+offset_right = 113.0
+offset_bottom = 35.166
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 24
+text = "No Part Selected"
+
+[node name="Description" type="RichTextLabel" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 40.0
+offset_right = 262.0
+offset_bottom = 151.0
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 13
+bbcode_enabled = true
+text = "[color=e0dede]No [color=ffffff]description [color=e0dede]given."
+
+[node name="EnergyIcon" type="TextureRect" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = -25.834
+offset_right = 27.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("23_sb58i")
+
+[node name="Label" type="Label" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox/EnergyIcon"]
+layout_mode = 0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
+
+[node name="DamageIcon" type="TextureRect" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 73.0
+offset_top = -25.834
+offset_right = 93.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("24_dcin4")
+
+[node name="Label" type="Label" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox/DamageIcon"]
+layout_mode = 0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(1, 0.431373, 0.286275, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
+
+[node name="CooldownIcon" type="TextureRect" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -25.834
+offset_right = 60.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("25_hi0i4")
+
+[node name="Label" type="Label" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox/CooldownIcon"]
+layout_mode = 0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(0.666667, 0.878431, 0.356863, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
+
+[node name="SellButton" type="TextureButton" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -94.0
+offset_top = -35.834
+offset_right = -2.0
+offset_bottom = -1.83398
+grow_horizontal = 0
+grow_vertical = 0
+texture_normal = ExtResource("26_4upc1")
+texture_pressed = ExtResource("27_iqmcf")
+texture_hover = ExtResource("27_iqmcf")
+texture_disabled = ExtResource("28_2kc6q")
+
+[node name="Label" type="Label" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox/SellButton"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 8.0
+offset_right = 67.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0.94902, 0.92549, 0.419608, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "SELL: "
+horizontal_alignment = 1
+
+[node name="MoveButton" type="TextureButton" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox"]
+layout_mode = 0
+offset_left = 131.0
+offset_top = 156.0
+offset_right = 165.0
+offset_bottom = 190.0
+toggle_mode = true
+texture_normal = ExtResource("29_o0v2b")
+texture_pressed = ExtResource("30_lb2e7")
+texture_hover = ExtResource("31_vehjn")
+texture_disabled = ExtResource("32_u76c3")
+
+[node name="MagazineIcon" type="TextureRect" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 104.0
+offset_top = -25.834
+offset_right = 124.0
+offset_bottom = -2.83398
+grow_vertical = 0
+texture = ExtResource("33_k23rv")
+
+[node name="Label" type="Label" parent="HUDCanvas/HUD/GameHud/LeftSide/InfoBox/MagazineIcon"]
+layout_mode = 0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 2.0
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+text = "0"
+horizontal_alignment = 1
+
+[node name="HealthBar" type="SubViewportContainer" parent="HUDCanvas/HUD/GameHud/LeftSide" node_paths=PackedStringArray("emptyBar")]
+unique_name_in_owner = true
+texture_filter = 1
+material = SubResource("ShaderMaterial_u76c3")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -325.0
+offset_top = -152.0
+offset_right = -121.0
+offset_bottom = -80.0
+stretch = true
+script = ExtResource("23_hi0i4")
+emptyBar = NodePath("SubViewport/BarHolder/Empty")
+width = 164.0
+
+[node name="SubViewport" type="SubViewport" parent="HUDCanvas/HUD/GameHud/LeftSide/HealthBar"]
+transparent_bg = true
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(204, 72)
+render_target_update_mode = 4
+
+[node name="BarHolder" type="Control" parent="HUDCanvas/HUD/GameHud/LeftSide/HealthBar/SubViewport"]
+texture_filter = 1
+clip_contents = true
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -102.0
+offset_top = -72.0
+offset_right = 102.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Full" type="TextureRect" parent="HUDCanvas/HUD/GameHud/LeftSide/HealthBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("40_o0v2b")
+
+[node name="Empty" type="TextureRect" parent="HUDCanvas/HUD/GameHud/LeftSide/HealthBar/SubViewport/BarHolder"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+offset_right = 204.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("41_lb2e7")
+
+[node name="Lbl_Health" type="Label" parent="HUDCanvas/HUD/GameHud/LeftSide/HealthBar/SubViewport/BarHolder"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -87.0
+offset_top = -49.0
+offset_right = 74.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.431373, 0.286275, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 19
+text = "00/00"
+horizontal_alignment = 2
 
 [node name="MainMenu" type="Control" parent="HUDCanvas/HUD"]
 visible = false
@@ -615,9 +1171,9 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.407118
-anchor_top = 0.442901
+anchor_top = 0.472531
 anchor_right = 0.592882
-anchor_bottom = 0.532407
+anchor_bottom = 0.562037
 grow_horizontal = 2
 grow_vertical = 2
 text = "PLAY"
@@ -626,12 +1182,10 @@ metadata/_edit_use_anchors_ = true
 [node name="Btn_Credits" type="Button" parent="HUDCanvas/HUD/MainMenu"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.385938
-anchor_top = 0.553704
-anchor_right = 0.614583
-anchor_bottom = 0.643519
-offset_left = 42.0
-offset_right = -42.0
+anchor_left = 0.407813
+anchor_top = 0.568519
+anchor_right = 0.592708
+anchor_bottom = 0.658334
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("9_mlcvp")
@@ -686,9 +1240,9 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.155425
-anchor_top = 0.0399304
+anchor_top = 0.0769675
 anchor_right = 0.847839
-anchor_bottom = 0.415976
+anchor_bottom = 0.453013
 offset_left = -1861.42
 offset_top = -637.125
 offset_right = 1873.15
@@ -927,6 +1481,7 @@ patch_margin_bottom = 12
 metadata/_edit_use_anchors_ = true
 
 [node name="Options" type="Control" parent="HUDCanvas/HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master", "invShooting", "sawbladeDrone", "devCheats", "moneyCheat", "invincibleCheat", "killAllCheat", "cheatsControl", "btn_scoreReset", "lbl_highScores", "renderShadows")]
+z_index = 1
 layout_mode = 1
 anchor_left = -0.333333
 anchor_top = -0.333333
@@ -1192,10 +1747,10 @@ metadata/_edit_use_anchors_ = true
 [node name="Btn_ScoresReset" type="Button" parent="HUDCanvas/HUD/Options"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.75434
-anchor_top = 0.0910494
-anchor_right = 0.940104
-anchor_bottom = 0.180556
+anchor_left = 0.608855
+anchor_top = 0.165124
+anchor_right = 0.794619
+anchor_bottom = 0.25463
 grow_horizontal = 2
 grow_vertical = 2
 tooltip_text = "Resets all high score data."
@@ -1244,82 +1799,103 @@ alignment = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="Pause" type="Control" parent="HUDCanvas/HUD"]
-visible = false
-z_index = 2
+z_index = 3
 layout_mode = 1
 anchor_left = -0.333333
-anchor_top = -0.333
+anchor_top = -0.357691
 anchor_right = 1.333
-anchor_bottom = 1.333
+anchor_bottom = 1.30831
 offset_top = -160.216
 offset_right = 0.383911
 offset_bottom = -159.784
 mouse_filter = 2
 metadata/_edit_use_anchors_ = true
 
-[node name="Btn_EndRun" type="Button" parent="HUDCanvas/HUD/Pause"]
+[node name="BG" type="TextureRect" parent="HUDCanvas/HUD/Pause"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -436.0
+offset_right = 436.0
+offset_bottom = 172.0
+grow_horizontal = 2
+texture = ExtResource("45_hi0i4")
+
+[node name="Btn_EndRun" type="Button" parent="HUDCanvas/HUD/Pause/BG"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.296007
-anchor_top = 0.0354938
-anchor_right = 0.481771
-anchor_bottom = 0.125
+anchor_left = 0.0412844
+anchor_top = 0.215116
+anchor_right = 0.449541
+anchor_bottom = 0.77907
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("9_mlcvp")
 text = "END RUN?"
 metadata/_edit_use_anchors_ = true
 
-[node name="Btn_PauseOptions" type="Button" parent="HUDCanvas/HUD/Pause"]
+[node name="Btn_PauseOptions" type="Button" parent="HUDCanvas/HUD/Pause/BG"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.511285
-anchor_top = 0.0354938
-anchor_right = 0.697049
-anchor_bottom = 0.125
+anchor_left = 0.550458
+anchor_top = 0.215116
+anchor_right = 0.958715
+anchor_bottom = 0.77907
 grow_horizontal = 2
 grow_vertical = 2
 text = "OPTIONS
 "
 metadata/_edit_use_anchors_ = true
 
-[node name="GameHud" type="Control" parent="HUDCanvas/HUD"]
-layout_mode = 1
-anchor_left = -0.333
-anchor_top = -0.333
-anchor_right = 1.333
-anchor_bottom = 1.333
-offset_left = -0.384003
-offset_top = -0.216003
-offset_right = 0.383911
-offset_bottom = 0.215942
-mouse_filter = 2
+[node name="TextureRect" type="TextureRect" parent="HUDCanvas/HUD/Pause/BG"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="Lbl_Timer" type="Label" parent="HUDCanvas/HUD/GameHud"]
+[node name="Chain" type="NinePatchRect" parent="HUDCanvas/HUD/Pause/BG"]
+layout_mode = 0
+anchor_left = 0.111239
+anchor_top = -1.13953
+anchor_right = 0.170872
+anchor_bottom = 0.0116279
+offset_top = -1.52588e-05
+texture = ExtResource("46_4upc1")
+region_rect = Rect2(0, 0, 52, 82)
+patch_margin_top = 12
+patch_margin_bottom = 12
+axis_stretch_vertical = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Chain2" type="NinePatchRect" parent="HUDCanvas/HUD/Pause/BG"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -124.0
-offset_top = -321.75
-offset_right = -76.0
-offset_bottom = -304.75
-theme_override_fonts/font = ExtResource("13_6c18d")
-theme_override_font_sizes/font_size = 15
-text = "00:00"
-horizontal_alignment = 1
-vertical_alignment = 1
-script = ExtResource("14_ei0j6")
+anchor_left = 0.470183
+anchor_top = -1.13953
+anchor_right = 0.529816
+anchor_bottom = 0.0116279
+offset_top = -1.52588e-05
+texture = ExtResource("46_4upc1")
+region_rect = Rect2(0, 0, 52, 82)
+patch_margin_top = 12
+patch_margin_bottom = 12
+axis_stretch_vertical = 1
+metadata/_edit_use_anchors_ = true
 
-[node name="TimerBlinky" type="TextureRect" parent="HUDCanvas/HUD/GameHud/Lbl_Timer"]
-layout_mode = 0
-offset_left = -18.0
-offset_top = 7.0
-offset_right = -8.0
-offset_bottom = 18.0
-texture = ExtResource("15_s0uw0")
+[node name="Chain3" type="NinePatchRect" parent="HUDCanvas/HUD/Pause/BG"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.829128
+anchor_top = -1.13953
+anchor_right = 0.888761
+anchor_bottom = 0.0116279
+offset_top = -1.52588e-05
+texture = ExtResource("46_4upc1")
+region_rect = Rect2(0, 0, 52, 82)
+patch_margin_top = 12
+patch_margin_bottom = 12
+axis_stretch_vertical = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="Damage Cube" parent="." instance=ExtResource("8_hfgcm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0834, 3.4556, -4.56467)
@@ -1351,6 +1927,8 @@ material_override = ExtResource("4_jhciq")
 mesh = ExtResource("5_4jixe")
 
 [connection signal="body_entered" from="ArenaFloor/DeathPlane" to="ArenaFloor/DeathPlane" method="_on_body_entered"]
+[connection signal="pressed" from="HUDCanvas/HUD/GameHud/RightSide/EnemyProgressBar/NextWaveButton" to="HUDCanvas/HUD/GameHud/RightSide/EnemyProgressBar" method="_on_next_wave_button_pressed"]
+[connection signal="pressed" from="HUDCanvas/HUD/GameHud/LeftSide/InfoBox/SellButton" to="HUDCanvas/HUD/GameHud/LeftSide/InfoBox" method="_on_sell_button_pressed"]
 [connection signal="pressed" from="HUDCanvas/HUD/MainMenu/Btn_Play" to="." method="_on_btn_play_pressed"]
 [connection signal="pressed" from="HUDCanvas/HUD/MainMenu/Btn_Credits" to="." method="_on_btn_credits_pressed"]
 [connection signal="pressed" from="HUDCanvas/HUD/MainMenu/Btn_Exit" to="." method="_on_btn_exit_pressed"]
@@ -1372,5 +1950,5 @@ mesh = ExtResource("5_4jixe")
 [connection signal="toggled" from="HUDCanvas/HUD/Options/sawbladeDrone" to="HUDCanvas/HUD/Options" method="_on_sawblade_drone_toggled"]
 [connection signal="pressed" from="HUDCanvas/HUD/Options/Btn_ScoresReset" to="HUDCanvas/HUD/Options" method="_on_btn_scores_reset_pressed"]
 [connection signal="toggled" from="HUDCanvas/HUD/Options/renderShadows" to="HUDCanvas/HUD/Options" method="_on_render_shadows_toggled"]
-[connection signal="pressed" from="HUDCanvas/HUD/Pause/Btn_EndRun" to="." method="_on_btn_end_run_pressed"]
-[connection signal="pressed" from="HUDCanvas/HUD/Pause/Btn_PauseOptions" to="HUDCanvas/HUD" method="_on_btn_pause_options_pressed"]
+[connection signal="pressed" from="HUDCanvas/HUD/Pause/BG/Btn_EndRun" to="." method="_on_btn_end_run_pressed"]
+[connection signal="pressed" from="HUDCanvas/HUD/Pause/BG/Btn_PauseOptions" to="HUDCanvas/HUD" method="_on_btn_pause_options_pressed"]
