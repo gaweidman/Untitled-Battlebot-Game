@@ -4,6 +4,8 @@ extends Node
 func get_all_children(node, ownerToCheck : Node = null) -> Array:
 	var nodes : Array = [];
 	#print(node.owner)
+	if node is not Node: return [];
+	
 	for N in node.get_children():
 		##In theory this bit here will allow to check only nodes from the thing's original scene...
 		if ownerToCheck != null:
@@ -77,3 +79,18 @@ func fix_angle_rad_to_rad(inAngle : float) -> float:
 func look_at_safe(node : Node3D, target : Vector3):
 	if node.global_transform.origin.is_equal_approx(target): return;
 	node.look_at(target);
+
+## Returns a string to be used for stats  
+func format_stat_num(_inNum, decimals : int = 2) -> String:
+	var factor = 10^decimals;
+	var inNum = (floor(_inNum*factor))/factor
+	
+	var outString = ""
+	if inNum >= 10:
+		outString = str(inNum);
+	else:
+		outString = " " + str(inNum);
+	
+	if outString.length() < 5:
+		outString += "0";
+	return outString;

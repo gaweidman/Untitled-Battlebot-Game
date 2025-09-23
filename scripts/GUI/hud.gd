@@ -89,7 +89,9 @@ func toggle_pause_options(toggle):
 		$Options.open_sesame(false);
 
 func toggle_pause(toggle):
+	print("Toggling pause. New: ", str(toggle))
 	pauseMenuUp = toggle;
+	GameState.pause(toggle);
 	$Pause/BG/Btn_EndRun.disabled = !toggle;
 	$Pause/BG/Btn_PauseOptions.disabled = !toggle;
 	if toggle:

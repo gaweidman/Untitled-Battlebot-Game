@@ -145,7 +145,31 @@ func get_combat_handler() -> CombatHandlerPlayer:
 	return null;
 
 func get_hud():
-	return get_node("/root/GameBoard/HUDCanvas/HUD");
+	var board = get_game_board();
+	
+	if board != null:
+		return board.get_node_or_null("HUDCanvas/HUD");
+
+func get_game_hud() -> GameHUD:
+	var hud = get_hud();
+	
+	if hud != null:
+		return hud.get_node_or_null("GameHud");
+	return null;
+
+func get_bar_hp() -> healthBar:
+	var ghud = get_game_hud();
+	
+	if ghud != null:
+		return ghud.get_node_or_null("LeftSide/HealthBar");
+	return null;
+
+func get_bar_energy() -> healthBar:
+	var ghud = get_game_hud();
+	
+	if ghud != null:
+		return ghud.get_node_or_null("RightSide/EnergyBar");
+	return null;
 
 func get_inventory() -> InventoryPlayer:
 	var ply = get_player();
@@ -216,6 +240,8 @@ func get_unique_part_age() -> int:
 	var ret = partAge;
 	partAge += 1;
 	return ret;
+
+############ SETTINGS AND SAVE DATA
 
 static var settings := {
 	StringName("volumeLevelMusic") : 1.0,
@@ -341,3 +367,18 @@ func load_data():
 	prints("[b]Loading data: ", saveData)
 	
 	return saveData
+
+############ STATE CONTROL
+var paused := false;
+
+func pause(foo : bool = not paused):
+	print("GameState.pause() attempt. New: ", str(foo), " Old: ", str(paused))
+	if paused == foo: return;
+	print("GameState.pause() attempt was successful.")
+	paused = foo;
+	var board = get_game_board();
+	print(board)
+	if board != null: board.pause(paused);
+
+func is_paused():
+	return paused;

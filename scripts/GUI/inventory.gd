@@ -117,7 +117,7 @@ func add_part(part: Part, invPosition : Vector2i, noisy := false):
 	var coordsToCheck = get_modified_part_dimensions(part, invPosition);
 	
 	if check_coordinate_table_is_free(coordsToCheck, part):
-		print("Coord table is free... somehow ", coordsToCheck)
+		#print("Coord table is free... somehow ", coordsToCheck)
 		for index in coordsToCheck:
 			set_slot_at(index.x, index.y, part);
 		listOfPieces.append(part);

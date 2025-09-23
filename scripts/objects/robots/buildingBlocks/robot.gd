@@ -1,9 +1,10 @@
 extends StatHolder3D;
 
+##This entity can be frozen and paused, and can hold stats.
+##This entity is a Robot.
 class_name Robot
 
 @export_category("General")
-@export var body : RobotBody;
 @export var meshes : Node3D;
 var bodyPiece : Piece; ##The Piece this Robot is using as the 3D representation of its body.
 var gameBoard : GameBoard;
@@ -24,7 +25,7 @@ func _process(delta):
 
 func _physics_process(delta):
 	#motion_process()
-	phys_process_pre(delta);
+	super(delta);
 	phys_process_motion(delta);
 	phys_process_combat(delta);
 	pass
@@ -33,10 +34,11 @@ func _physics_process(delta):
 func process_pre(delta):
 	grab_references();
 	pass;
+
 func phys_process_pre(delta):
+	super(delta);
 	grab_references();
 	##Freeze this bot before it can do physics stuff.
-	if freezeQueued: freeze(true);
 	if not is_frozen():
 		sleepTimer -= delta;
 	pass;
@@ -50,9 +52,9 @@ func grab_references():
 
 func stat_registry():
 	register_stat("HealthMax", maxHealth, statIconDamage);
-	register_stat("Health", maxHealth, statIconDamage, null, func(newValue): return clamp(newValue, 0, get_stat("HealthMax")));
+	register_stat("Health", maxHealth, statIconDamage, null, func(newValue): health_or_energy_changed.emit(); return clamp(newValue, 0, get_stat("HealthMax")));
 	register_stat("EnergyMax", maxEnergy, statIconDamage);
-	register_stat("Energy", maxEnergy, statIconEnergy, null, func(newValue): return clamp(newValue, 0, get_stat("EnergyMax")));
+	register_stat("Energy", maxEnergy, statIconEnergy, null, func(newValue): health_or_energy_changed.emit(); return clamp(newValue, 0, get_stat("EnergyMax")));
 	register_stat("EnergyRefreshRate", energyRefreshRate, statIconEnergy);
 	register_stat("InvincibilityTime", maxInvincibleTimer, statIconCooldown);
 	register_stat("MovementSpeedAcceleration", acceleration, statIconCooldown);
@@ -62,46 +64,19 @@ func stat_registry():
 ######################### STATE CONTROL
 
 var spawned := false;
-var frozen := false;
 @export var sleepTimerLength := 0.0;
 var sleepTimer := sleepTimerLength; ## An amount of time in which this robot isn't allowed to do anything after spawning.
 func is_asleep() -> bool:
 	return sleepTimer > 0;
-var linearVelocityBeforeFreeze := Vector3.ZERO
-func freeze(doFreeze := not frozen, force := false):
-	freezeQueued = false; ##Cancel the freeze queue.
-	if not force: if frozen == doFreeze: return;
-	frozen = doFreeze;
-	
-	##If freezing, save previous linear velocity.
-	if doFreeze:
-		linearVelocityBeforeFreeze = body.linear_velocity;
-		body.gravity_scale = 0;
-	
-	##Lock up linear velocities while frozen.
-	body.freeze_mode = RigidBody3D.FREEZE_MODE_STATIC;
-	body.set_freeze_enabled(doFreeze);
-	
-	##If unfreezing, add an impule for the velocity we had before.
-	if not doFreeze:
-		body.apply_central_impulse(linearVelocityBeforeFreeze)
-		body.gravity_scale = 1;
-	pass;
-func unfreeze(force := false):
-	freeze(false, force);
-func is_frozen(): return frozen;
-var freezeQueued := false;
-##This function sets a flag to freeze the robot during the next frame.
-func queue_freeze_next_frame():
-	freezeQueued = true;
-##This function returns true only if the bot is spawned in, alive, awake, and not frozen.
+
+##This function returns true only if the game is not paused, and the bot is spawned in, alive, awake, and not frozen.
 func is_conscious():
-	return spawned and (not is_asleep()) and (not is_frozen()) and is_alive();
+	return (not paused) and spawned and (not is_asleep()) and (not is_frozen()) and is_alive();
 
-
+##This function returns true only if the game is not paused, the bot is not frozen, alive, and we're in a game state of play.
 func is_playing():
-	return true;
-	#return (not get_frozen()) and (is_alive()) and GameState.get_in_state_of_play();
+	#return true;
+	return (not paused) and (not is_frozen()) and (is_alive()) and GameState.get_in_state_of_play();
 func is_building(): return GameState.get_in_state_of_building();
 
 ##Fired by the gameboard when a new game starts.
@@ -158,14 +133,19 @@ func detach_pipette():
 
 @export_category("Combat Handling")
 
+## Emitted when Health or Energy are changed.
+signal health_or_energy_changed();
+
 @export var deathSound := "Combatant.Die";
 
 #TODO: Reimplement all stuff involving taking damage, knockback, and invincibility.
 
 @export_category("Health Management")
 ##Game statistics.
-@export var maxHealth := 1.0;
-var health := maxHealth;
+@export var maxHealth := 3.0;
+
+func get_health():
+	return get_stat("Health");
 
 func get_max_health():
 	##TODO: Add bonuses into this calc.
@@ -173,7 +153,7 @@ func get_max_health():
 
 func take_damage(damage:float):
 	if is_playing():
-		var health = get_stat("Health");
+		var health = get_health();
 		if invincible && damage > 0:
 			return;
 		if !(GameState.get_setting("godMode") == true && self is Robot_Player):

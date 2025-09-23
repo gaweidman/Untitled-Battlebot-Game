@@ -670,6 +670,7 @@ panelRight = NodePath("RightSide")
 
 [node name="Shops" type="Control" parent="HUDCanvas/HUD/GameHud"]
 layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -0.00012207
@@ -782,7 +783,7 @@ text = "0"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="EnergyBar" type="SubViewportContainer" parent="HUDCanvas/HUD/GameHud/RightSide" node_paths=PackedStringArray("emptyBar")]
+[node name="EnergyBar" type="SubViewportContainer" parent="HUDCanvas/HUD/GameHud/RightSide" node_paths=PackedStringArray("emptyBar", "label")]
 unique_name_in_owner = true
 texture_filter = 1
 material = SubResource("ShaderMaterial_vehjn")
@@ -801,6 +802,7 @@ script = ExtResource("23_hi0i4")
 fromRight = false
 emptyBar = NodePath("SubViewport/BarHolder/Empty")
 width = 164.0
+label = NodePath("SubViewport/BarHolder/Lbl_Energy")
 
 [node name="SubViewport" type="SubViewport" parent="HUDCanvas/HUD/GameHud/RightSide/EnergyBar"]
 transparent_bg = true
@@ -1072,7 +1074,7 @@ theme_override_font_sizes/font_size = 14
 text = "0"
 horizontal_alignment = 1
 
-[node name="HealthBar" type="SubViewportContainer" parent="HUDCanvas/HUD/GameHud/LeftSide" node_paths=PackedStringArray("emptyBar")]
+[node name="HealthBar" type="SubViewportContainer" parent="HUDCanvas/HUD/GameHud/LeftSide" node_paths=PackedStringArray("emptyBar", "label")]
 unique_name_in_owner = true
 texture_filter = 1
 material = SubResource("ShaderMaterial_u76c3")
@@ -1090,6 +1092,7 @@ stretch = true
 script = ExtResource("23_hi0i4")
 emptyBar = NodePath("SubViewport/BarHolder/Empty")
 width = 164.0
+label = NodePath("SubViewport/BarHolder/Lbl_Health")
 
 [node name="SubViewport" type="SubViewport" parent="HUDCanvas/HUD/GameHud/LeftSide/HealthBar"]
 transparent_bg = true

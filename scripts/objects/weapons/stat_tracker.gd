@@ -3,13 +3,13 @@ extends Resource
 ##A resource used for keeping track of stats on Parts and Pieces.
 class_name StatTracker
 
-@export var statName : StringName;
+@export var statName : String;
 @export var statIcon : Texture2D = preload("res://graphics/images/HUD/statIcons/magazineIconStriped.png");
 @export var baseStat : float = 0.0;
 var currentValue : float = baseStat;
-var bonusMult_Flat : float = 0.0;
-var bonusMult_Mult : float = 1.0;
-var bonusAdd : float = 1.0;
+var bonusAdd : float = 0.0; ##Adds this value to baseStat.
+var bonusMult_Flat : float = 0.0; ##Multiplies the total value after baseStat + bonusAdd.
+var bonusMult_Mult : float = 1.0; ##Multiplies bonusMult_Flat by this number before multiplying.
 enum roundingModes {
 	None,
 	Floor,
@@ -39,7 +39,9 @@ func return_rounded_stat(stat, roundingModeOverride : roundingModes = roundingMo
 			return roundi(stat);
 		roundingModes.Ceil:
 			return ceili(stat);
-		_: ##Both Float and NoOverride should return just the base value without any rounding.
+		roundingModes.None: ##Both None and NoOverride should return just the base value without any rounding.
+			return stat;
+		roundingModes.NoOverride: ##Both None and NoOverride should return just the base value without any rounding.
 			return stat;
 
 ##Sets the stat by calling its set function (setFunc).

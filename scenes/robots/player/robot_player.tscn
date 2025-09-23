@@ -24,4 +24,6 @@ assignedToSocket = true
 collision_layer = 1
 collision_mask = 1
 
+[connection signal="health_or_energy_changed" from="." to="." method="_on_health_or_energy_changed"]
+
 [editable path="Body/Meshes/Socket/Piece"]

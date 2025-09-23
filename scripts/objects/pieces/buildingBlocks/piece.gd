@@ -153,8 +153,9 @@ func get_all_hitboxes():
 
 ##TODO: Figure out what this is even useful for. Damaging stuff? 
 ##Figure out how to know the body is a Robot.
-func on_hitbox_collision(body : CollisionObject3D):
+func on_hurtbox_collision(body : CollisionObject3D):
 	##TODO: Add a Hook here.
+	GameState
 	#if body :
 		#hostRobot.on_hitbox_collision(body, self);
 	pass
@@ -164,11 +165,11 @@ func get_all_hurtboxes():
 
 func _on_hitbox_shapes_body_entered(body):
 	if body != self:
-		on_hitbox_collision(body);
+		on_hurtbox_collision(body);
 	pass # Replace with function body.
 
 func _on_hitbox_shapes_area_entered(area):
-	on_hitbox_collision(area);
+	on_hurtbox_collision(area);
 	pass # Replace with function body.
 
 var hitboxEnabled = false;
@@ -280,6 +281,10 @@ func deselect_all_sockets():
 	for socket in get_all_female_sockets():
 		socket.select(false);
 
+################# MELEE 
+##Empty. If the thing is meant to do something upon making contact with another Robot, put what happens in here.
+func contact_damage(collider: Node):
+	pass;
 
 ####################### ABILITY AND ENERGY MANAGEMENT
 

@@ -367,6 +367,19 @@ func destroy_all_enemies():
 		if enemy:
 			enemy.call_deferred("die");
 
+##Run only when GameState.pause() is called.
+func pause(foo : bool):
+	pause_all_robots_and_projectiles(foo);
+	##TODO: Add in other pause functions for things like projectiles and stuff.
+
+##Pauses all robots specifically.
+func pause_all_robots_and_projectiles(foo : bool):
+	print("Pausing all FreezableEntities: ", str(foo))
+	for robot in Utils.get_all_children_of_type(self, FreezableEntity):
+		print(robot)
+		if robot is FreezableEntity:
+			robot.pause(foo);
+
 ##Fired when the game is over.
 func game_over():
 	var devCheatsEnabled = GameState.get_setting("devMode")
