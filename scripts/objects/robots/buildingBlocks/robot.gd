@@ -154,12 +154,14 @@ func get_max_health():
 	return get_stat("HealthMax");
 
 func take_damage(damage:float):
+	print("ASASASSA")
 	if is_playing():
 		var health = get_health();
-		if invincible && damage > 0:
-			return;
-		if !(GameState.get_setting("godMode") == true && self is Robot_Player):
-			health -= damage;
+		#if invincible && damage > 0:
+			#return;
+		#if !(GameState.get_setting("godMode") == true && self is Robot_Player):
+			#health -= damage;
+		health -= damage;
 		set_invincibility();
 		if health <= 0.0:
 			health = 0.0;

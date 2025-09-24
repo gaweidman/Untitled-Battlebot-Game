@@ -74,7 +74,7 @@ func fireBullet():
 		firingAngle += inaccuracy * Vector3(randf_range(-1,1),randf_range(0,0),randf_range(-1,1));
 		firingAngle = firingAngle.normalized();
 		bullet.fire(thisBot, self, positionNode.global_position + firingOffset + modelOffset, firingAngle, fireSpeed, bulletLifetime, get_damage());
-		
+		thisBot.combatHandler.get_damage();
 		SND.play_sound_at(firingSoundString, positionNode.global_position + firingOffset + modelOffset, GameState.get_game_board(), firingSoundVolumeAdjust, randf_range(firingSoundPitchAdjust * 1.15, firingSoundPitchAdjust * 0.85))
 	
 	leakTimer.start();

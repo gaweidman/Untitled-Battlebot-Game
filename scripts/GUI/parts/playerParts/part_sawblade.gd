@@ -33,7 +33,25 @@ func contact_damage(collider: Node) -> void:
 				#print("Damage dealt: ", damage)
 				pass;
 			else:
-				return;
+				if par is Robot:
+					##Particles!!!
+					var particlePos = Vector3(randf_range(0.25,-0.25), 0, randf_range(0.25,-0.25))
+					particlePos += (positionNode.global_position + par.body.global_position) / 2
+					ParticleFX.play("Sparks", GameState.get_game_board(), particlePos)
+					
+					par.take_damage(get_damage());
+					var distanceDif = par.body.global_position - thisBot.body.global_position;
+					var thatBotVelocity = par.body.linear_velocity;
+					var thisBotVelocity = thisBot.body.linear_velocity;
+					par.take_knockback(((distanceDif + Vector3(0,0.1,0)) * 1000) + thisBotVelocity - thatBotVelocity);
+					thisBot.body.linear_velocity = Vector3(thisBotVelocity.x * -1, thisBotVelocity.y, thisBotVelocity.z * -1)
+					thisBot.take_knockback(((-distanceDif + Vector3(0,0.1,0)) * 1000) - thisBotVelocity + thatBotVelocity);
+					modelScaleOffset /= 1.5;
+					#print("Damage dealt: ", damage)
+					thisBot.combatHandler.take_damage(get_damage());
+					pass;
+				else:
+					return;
 		else:
 			return;
 

@@ -79,7 +79,7 @@ func _process(delta):
 		valid = is_valid();
 		selectionCheckLoop = 3;
 		if hoverResetFrameCounter <= 0:
-			print("timer reset")
+			#print("timer reset")
 			hover(false);
 		#
 		#var vp = get_viewport()
