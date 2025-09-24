@@ -18,9 +18,9 @@ var frozen := false;
 var frozenBeforePaused := false;
 var paused := false;
 func pause(foo: bool, force := false):
-	print("Pause attempt for ",name,", foo:", str(foo));
+	#print("Pause attempt for ",name,", foo:", str(foo));
 	if not force: if paused == foo: return;
-	print("Pause attempt for ",name," successful.")
+	#print("Pause attempt for ",name," successful.")
 	if foo: ##If pausing:
 		## Mark down whether the bot was frozen before pausing.
 		frozenBeforePaused = frozen;
@@ -35,21 +35,22 @@ func is_paused():
 	pause(isPaused, true);
 	return paused;
 
-var linearVelocityBeforeFreeze := Vector3.ZERO;
+var linearVelocityBeforeFreeze = null;
 func freeze(doFreeze := (not frozen), force := false):
-	print("Freeze attempt for ",name,", doFreeze:", str(doFreeze), " force:", str(force), " frozen already:", str(frozen));
+	#print("Freeze attempt for ",name,", doFreeze:", str(doFreeze), " force:", str(force), " frozen already:", str(frozen));
 	freezeQueued = false; ##Cancel the freeze queue.
 	if not force: if frozen == doFreeze: return;
 	var preFreezevalue = frozen;
 	frozen = doFreeze;
 	var wasFrozenSame = frozen == preFreezevalue;
-	print("Freeze attempt for ",name," successful.")
+	#print("Freeze attempt for ",name," successful.")
 	
 	##If there's a valid body, do stuff to it.
 	if is_instance_valid(body):
 		##If freezing, save previous linear velocity.
 		if frozen:
-			if not wasFrozenSame: ##Only If becoming frozen this frame, save the velocity.
+			#if not preFreezevalue: ##Only If becoming frozen this frame, save the velocity.
+			if linearVelocityBeforeFreeze == null:
 				linearVelocityBeforeFreeze = body.linear_velocity;
 			if is_instance_valid(body):
 				body.gravity_scale = 0;
@@ -60,10 +61,14 @@ func freeze(doFreeze := (not frozen), force := false):
 	
 		##If unfreezing, add an impulse for the velocity we had before.
 		if not frozen:
-			if not wasFrozenSame: ##Only If becoming unfrozen this frame, apply the impulse.
-				body.apply_central_impulse(linearVelocityBeforeFreeze)
+			if preFreezevalue: ##Only If becoming unfrozen this frame, apply the impulse.
+				print("Unpause velocity:", linearVelocityBeforeFreeze)
+				if get_physics_process_delta_time() > 0:
+					body.call("apply_impulse", linearVelocityBeforeFreeze * 1 / (get_physics_process_delta_time()));
+					linearVelocityBeforeFreeze = null;
 			body.gravity_scale = 1;
 	pass;
+
 ## Convenience function to specifically unfreeze.
 func unfreeze(force := false):
 	freeze(false, force);

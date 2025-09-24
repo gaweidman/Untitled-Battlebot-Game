@@ -14,7 +14,7 @@ var assignedActionSlot;
 func assign_robot(robot : Robot):
 	assignedRobot = robot;
 
-func unassign_robot(robot : Robot):
+func unassign_robot():
 	assignedRobot = null;
 
 func register(partOrPiece : Node, actionSlot : int, _abilityName : String = "Active Ability", _abilityDescription : String = "No Description Found.", _functionWhenUsed : Callable = func(): pass, _statsUsed : Array[String] = []):

@@ -51,3 +51,4 @@ collide_with_areas = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_2fwr3")
+disabled = true

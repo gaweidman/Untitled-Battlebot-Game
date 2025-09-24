@@ -1,0 +1,28 @@
+[gd_scene load_steps=7 format=3 uid="uid://bragsw24ec8ny"]
+
+[ext_resource type="PackedScene" uid="uid://cgcnhigjynv0q" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece.tscn" id="1_nmrvr"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_mjslu"]
+[ext_resource type="PackedScene" uid="uid://dvpf7su0nddfa" path="res://graphics/models/obj/cannon.obj" id="3_p8bmc"]
+[ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="4_2wxbf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8itgo"]
+size = Vector3(0.5, 0.5, 1.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_52v1y"]
+size = Vector3(1, 0.5, 1)
+
+[node name="Piece_Cannon" instance=ExtResource("1_nmrvr")]
+
+[node name="Socket" parent="FemaleSockets" index="0" instance=ExtResource("2_mjslu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="PieceCollisionBox" parent="." index="4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.5)
+shape = SubResource("BoxShape3D_8itgo")
+
+[node name="cannon" parent="." index="6" instance=ExtResource("3_p8bmc")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, -0.25, 0)
+
+[node name="PieceCollisionBox2" parent="." index="7" instance=ExtResource("4_2wxbf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("BoxShape3D_52v1y")

@@ -11,8 +11,9 @@ func _ready():
 	gather_colliders_and_meshes();
 
 func _physics_process(delta):
-	phys_process_collision(delta);
-	phys_process_abilities(delta);
+	if not is_paused():
+		phys_process_collision(delta);
+		phys_process_abilities(delta);
 
 func _process(delta):
 	process_draw(delta);
@@ -33,10 +34,42 @@ func stat_registry():
 func process_draw(delta):
 	#return;
 	#print(hurtboxCollisionHolder.get_collision_layer())
-	if not has_host():
+	if not has_host(true, false, false):
 		if visible: hide()
 	else:
 		if not visible: show()
+
+enum selectionModes {
+	NOT_SELECTED,
+	SELECTED,
+	PLACEABLE,
+	NOT_PLACEABLE,
+}
+var selectionModeMaterials = {
+	selectionModes.NOT_SELECTED : null,
+	selectionModes.SELECTED : preload("res://graphics/materials/glow_selected_fx.tres"),
+	selectionModes.PLACEABLE : preload("res://graphics/materials/CanPlace.tres"),
+	selectionModes.NOT_PLACEABLE : preload("res://graphics/materials/cannot_be_placed.tres"),
+}
+var selectionMode := selectionModes.NOT_SELECTED;
+func set_selection_mode(mode : selectionModes = selectionModes.NOT_SELECTED):
+	if selectionMode == mode: return;
+	selectionMode = mode;
+	if mode == selectionModes.NOT_SELECTED:
+		for mesh in get_all_meshes():
+			mesh.set_surface_override_material(0, meshMaterials[mesh]);
+	else:
+		for mesh in get_all_meshes():
+			mesh.set_surface_override_material(0, selectionModeMaterials[mode]);
+	pass;
+var meshMaterials = {};
+#var meshMaterials = Dictionary[MeshInstance3D, StandardMaterial3D] = {};
+func get_all_mesh_init_materials():
+	for mesh in get_all_meshes():
+		meshMaterials[mesh] = mesh.get_active_material(0);
+func get_all_meshes() -> Array:
+	var meshes = Utils.get_all_children_of_type(self, MeshInstance3D, self);
+	return meshes;
 
 ################ PIECE MANAGEMENT
 
@@ -64,7 +97,7 @@ var hitboxRescaleTimer := 0;
 func phys_process_collision(delta):
 	hitboxRescaleTimer -= 1;
 	if hitboxRescaleTimer <= 0:
-		if has_host():
+		if has_host(true, true, true):
 			hitboxRescaleTimer = 3;
 			##TODO: Figure out how to scale the hurtboxes vertically real tall...... this ain't it.
 			#hitboxCollisionHolder.scale = Vector3.ONE;
@@ -73,11 +106,12 @@ func phys_process_collision(delta):
 			
 			hurtboxCollisionHolder.collision_layer = 8 + 64; #Hurtbox layer and placed layer.
 		else:
-			hurtboxCollisionHolder.collision_layer = 8; #Only hurtbox layer.
+			hurtboxCollisionHolder.collision_layer = 8; #Hurtbox layer and hover layer.
 
 ##This function assigns socket data and generates all hitboxes. Should only ever be run once at _ready.
 func gather_colliders_and_meshes():
 	autograb_sockets();
+	get_all_mesh_init_materials();
 	#Assign all sockets with this as their host piece.
 	for child in Utils.get_all_children_of_type(self, Socket, self):
 		child.hostPiece = self;
@@ -94,6 +128,7 @@ func gather_colliders_and_meshes():
 	for child in get_children():
 		if child is PieceCollisionBox:
 			child.originalHost = self;
+			child.originalOffset = child.global_position - global_position;
 			if child.identifier == null:
 				child.identifier = str(identifyingNum)
 				identifyingNum += 1;
@@ -103,7 +138,8 @@ func gather_colliders_and_meshes():
 					var shapeCastNew = ShapeCast3D.new()
 					placementCollisionHolder.add_child(shapeCastNew);
 					shapeCastNew.set_deferred("target_position", Vector3(0,0,0));
-					shapeCastNew.set_deferred("global_position", child.global_position);
+					var globalPosNew = child.position;
+					shapeCastNew.set_deferred("position", globalPosNew);
 					shapeCastNew.set_deferred("scale", child.scale * 0.95);
 					shapeCastNew.set_deferred("rotation", child.rotation);
 					shapeCastNew.set("shape", child.shape);
@@ -146,6 +182,8 @@ func ping_placement_validation():
 					if collider.is_in_group("Piece") or collider.is_in_group("Combatant"):
 						collided = true;
 	#print(collided)
+	if collided: set_selection_mode(selectionModes.NOT_PLACEABLE);
+	else: set_selection_mode(selectionModes.PLACEABLE);
 	return collided;
 
 func get_all_hitboxes():
@@ -180,7 +218,12 @@ func disable_hurtbox(foo:bool):
 
 ##Fired whent he camera finds this piece.
 ##TODO: Fancy stuff. 
-func select():
+var selected := false;
+func select(foo := not selected):
+	if foo == selected: return;
+	selected = foo;
+	if selected: set_selection_mode(selectionModes.SELECTED);
+	else: set_selection_mode(selectionModes.NOT_SELECTED);
 	print(pieceName)
 	pass;
 
@@ -230,7 +273,12 @@ func assign_socket(socket:Socket):
 	socket.add_occupant(self);
 	hostRobot.reassign_body_collision();
 	assignedToSocket = true;
+	hurtboxCollisionHolder.set_collision_mask_value(8, false);
+	#set_selection_mode(selectionModes.NOT_SELECTED);
 	pass;
+
+func is_assigned() -> bool:
+	return assignedToSocket;
 
 ##Removes this piece from its assigned Socket.
 func remove_from_socket():
@@ -240,7 +288,6 @@ func remove_from_socket():
 	assignedToSocket = false;
 	#ping the
 	pass;
-
 
 func get_specific_female_socket(index):
 	return femaleSocketHolder.get_child(index);
@@ -266,9 +313,24 @@ func get_host_robot() -> Robot:
 	else:
 		return hostRobot;
 
+func has_socket_host():
+	return is_instance_valid(get_host_socket());
+func is_assigned_to_socket():
+	return has_socket_host() and assignedToSocket;
+func has_robot_host():
+	return is_instance_valid(get_host_robot());
+func equipped_by_player():
+	return has_robot_host() and (get_host_robot() is Robot_Player);
+
 ##Returns true if the part has both a host socket and a host robot.
-func has_host():
-	return hostSocket and hostRobot and assignedToSocket;
+func has_host(getSocket := true, getRobot := true, getSocketAssigned := true):
+	if getSocketAssigned and (not is_assigned_to_socket()):
+		return false;
+	if getSocket and (not has_socket_host()):
+		return false;
+	if getRobot and (not has_robot_host()):
+		return false;
+	return true;
 
 var selectedSocket : Socket;
 func assign_selected_socket(socket):

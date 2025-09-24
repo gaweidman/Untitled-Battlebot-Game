@@ -9,7 +9,7 @@ size = Vector3(1.5, 1.5, 1.5)
 [sub_resource type="BoxMesh" id="BoxMesh_e2238"]
 size = Vector3(1.5, 1.5, 1.5)
 
-[node name="Piece" instance=ExtResource("1_jee1e")]
+[node name="Piece_BodyCube" instance=ExtResource("1_jee1e")]
 pieceName = &"BodyCube"
 
 [node name="Socket" parent="FemaleSockets" index="0" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]

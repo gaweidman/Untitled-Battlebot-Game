@@ -26,6 +26,7 @@ func _process(delta):
 func _physics_process(delta):
 	#motion_process()
 	super(delta);
+	phys_process_collision(delta);
 	phys_process_motion(delta);
 	phys_process_combat(delta);
 	pass
@@ -66,6 +67,7 @@ func stat_registry():
 var spawned := false;
 @export var sleepTimerLength := 0.0;
 var sleepTimer := sleepTimerLength; ## An amount of time in which this robot isn't allowed to do anything after spawning.
+##Returns true if there's an active sleep timer going. Sleep should be used to prevent actions for a bit on enemies, and maybe "stun" status effects in the future.
 func is_asleep() -> bool:
 	return sleepTimer > 0;
 
@@ -187,8 +189,9 @@ func take_knockback(inDir:Vector3):
 
 ##Physics process for combat. 
 func phys_process_combat(delta):
-	if invincibleTimer > 0:
-		invincibleTimer -= delta;
+	if not is_frozen():
+		if invincibleTimer > 0:
+			invincibleTimer -= delta;
 
 ################################## ENERGY
 
@@ -267,28 +270,35 @@ var movementVector := Vector2.ZERO;
 var movementVectorRotation := 0.0;
 var bodyRotationAngle = Vector2.ZERO;
 @export var bodyRotationSpeed := 10;
-@export var speedReductionWhileNoInput := 0.9; ##Slipperiness.
+@export var speedReductionWhileNoInput := 0.9; ##Slipperiness, basically.
 var lastInputtedMV = Vector2.ZERO;
 
-##Physics process step for motion.
+##Physics process step to adjust collision box positions according to the parts they're attached to.
+func phys_process_collision(delta):
+	for box in get_all_gathered_hurtboxes():
+		var boxOrigin = box.originalHost;
+		box.position = boxOrigin.global_position - get_global_body_position() + box.originalOffset;
+		box.global_rotation = boxOrigin.global_rotation;
 
+##Physics process step for motion.
 # custom physics handling for player movement. regular movement feels flat and boring.
 func phys_process_motion(delta):
-	##Reset movement vector for the frame.
-	movementVector = Vector2.ZERO;
-	
-	##If conscious, get the current movement vector.
-	if is_conscious():
-		movementVector = get_movement_vector(true);
-	
-	##If not frozen, apply the current movement vector.
 	if not is_frozen():
+		##Reset movement vector for the frame.
+		movementVector = Vector2.ZERO;
+	
+		##If conscious, get the current movement vector.
+		if is_conscious():
+			movementVector = get_movement_vector(true);
+	
+		##Apply the current movement vector.
 		#print("MV",movementVector);
 		move_and_rotate_towards_movement_vector(delta)
 	
 	pass;
 
 func move_and_rotate_towards_movement_vector(delta : float):
+	if is_paused(): return;
 	#print("MV2",movementVector);
 	##Rotating the body mesh towards the movement vector
 	var rotatedMV = movementVector.rotated(deg_to_rad(90.0));
@@ -359,14 +369,65 @@ var active_pieces : Dictionary[int, AbilityManager] = {
 	4 : null,
 }
 
-##Whenever a new piece is added, add it to the list.
-##There needs to be UI for all pieces you have active.
+##TODO: There needs to be UI for all pieces you have active, as well as pieces generally in your tree.
 
-
-##Returns a freshly gathered array of all pieces attached to this Robot.
+##Returns a freshly gathered array of all pieces attached to this Robot and whih have it set as their host.
 func get_all_pieces() -> Array[Piece]:
 	var piecesGathered : Array[Piece] = [];
 	for child in Utils.get_all_children_of_type(body, Piece):
 		if child.hostRobot == self:
 			piecesGathered.append(child);
 	return piecesGathered;
+
+##Returns an array of all PieceCollisionBox nodes that are direct children of the body.
+func get_all_gathered_hurtboxes():
+	return Utils.get_all_children_of_type(body, PieceCollisionBox, body);
+
+##Adds an AbilityManager to the given slot index in active_pieces.
+func assign_ability_to_slot(slotNum : int, abilityManager : AbilityManager):
+	if slotNum in active_pieces.keys():
+		if is_instance_valid(abilityManager):
+			abilityManager.assign_robot(self);
+			active_pieces[slotNum] = abilityManager;
+
+##Turns the given slot null and unassigns this robot from that ability on the resource.
+func unassign_ability_slot(slotNum : int):
+	if slotNum in active_pieces.keys():
+		if active_pieces[slotNum] is AbilityManager: 
+			var abilityManager = active_pieces[slotNum];
+			if is_instance_valid(abilityManager):
+				abilityManager.unassign_robot();
+	active_pieces[slotNum] = null;
+
+##Runs thru active_pieces and deletes AbilityManager resources that no longer have a valid Piece or Part reference.
+func check_abilities_are_valid():
+	for slot in active_pieces.keys():
+		var ability = active_pieces[slot];
+		if ability is AbilityManager:
+			if !is_instance_valid(ability.assignedPieceOrPart):
+				unassign_ability_slot(ability);
+
+##Attempts to fire the active ability in the given slot, if that slot has one.
+func fire_active(slotNum):
+	check_abilities_are_valid();
+	if slotNum in active_pieces.keys():
+		var ability = active_pieces[slotNum];
+		if ability is AbilityManager:
+			ability.call_ability();
+
+##Grabs the next ability slot that is currently null.
+func get_next_available_active_slot():
+	check_abilities_are_valid();
+	var allKeys = active_pieces.keys().duplicate(true);
+	while allKeys.size() > 0:
+		var slotNum = allKeys.pop_front();
+		var ability = active_pieces[slotNum];
+		if ability == null:
+			return slotNum;
+	return null;
+
+##Assigns an ability to the next available slot, if there are any.
+func assign_ability_to_next_active_slot(abilityManager : AbilityManager):
+	var slot = get_next_available_active_slot();
+	if slot == null: return;
+	assign_ability_to_slot(slot, abilityManager);

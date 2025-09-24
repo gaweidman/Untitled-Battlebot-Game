@@ -212,15 +212,21 @@ func click_on_piece():
 			raycastHit.select_piece();
 
 var socketHovering : Socket;
+var pieceHovering : Piece;
 func hover_socket():
-	var collisionMask = 32;
+	var collisionMask = 32 + 128;
 	
 	var raycastHit = RaycastSystem.get_raycast_hit_object(collisionMask);
 	#print(raycastHit)
 	if is_instance_valid(raycastHit): 
-		if raycastHit is Socket:
-			raycastHit.hover_from_camera(self);
-			socketHovering = raycastHit;
+		print(raycastHit, pieceHovering)
+		if raycastHit is Socket and raycastHit.is_valid():
+			pieceHovering = raycastHit.hover_from_camera(self);
+			if pieceHovering != null:
+				socketHovering = raycastHit;
+		if raycastHit == pieceHovering and is_instance_valid(socketHovering): 
+			socketHovering.hover_from_camera(self);
+			
 	else:
 		if is_instance_valid(socketHovering):
 			socketHovering.hover(false);

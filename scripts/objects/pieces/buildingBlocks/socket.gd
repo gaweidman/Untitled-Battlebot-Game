@@ -38,12 +38,18 @@ func add_occupant(newPiece : Piece):
 func get_energy_transmitted():
 	return hostPiece.get_outgoing_energy();
 
+var available := false;
 func is_available():
 	#return GameState.get_in_state_of_building() && occupant == null && is_valid() && get_preview_placeable();
-	return occupant == null && is_valid() && get_preview_placeable();
+	
+	available = occupant == null and is_valid() and get_preview_placeable() and (get_host_piece() != null) and (get_host_piece().is_assigned());
+	return available;
 
+var valid := false;
 func is_valid():
-	return is_instance_valid(get_robot());
+	#print(is_instance_valid(get_robot()), get_host_piece() != null, get_host_piece().is_assigned());
+	valid = is_instance_valid(get_robot()) and get_host_piece() != null and get_host_piece().is_assigned()
+	return valid;
 
 func set_host_piece(piece : Piece):
 	hostPiece = piece;
@@ -70,9 +76,11 @@ var selectionCheckLoop = 3;
 func _process(delta):
 	selectionCheckLoop -= 1;
 	if selectionCheckLoop <= 0:
-		hover(false);
-		#selectionCheckLoop = 3;
-		#
+		valid = is_valid();
+		selectionCheckLoop = 3;
+		if hoverResetFrameCounter <= 0:
+			print("timer reset")
+			hover(false);
 		#
 		#var vp = get_viewport()
 		#var cam = vp.get_camera_3d()
@@ -85,14 +93,10 @@ func _process(delta):
 			#$SelectorRay.global_rotation = Vector3(0,0,0)
 			#
 			#hover(is_valid() and (not $SelectorRay.is_colliding()) and mousePos.x - mousePos3D.x < 10 and mousePos.y - mousePos3D.y < 10 and mousePos.x - mousePos3D.x > -10 and mousePos.y - mousePos3D.y > -10);
-	##Check for selection while hovering, and apply rotations.
+	
+	##Check for selection while hovering.
 	if hovering:
-		if selectionCheckLoop >= 3:
-			if Input.is_action_just_pressed("RotatePiece_CW"):
-				rotate_90(1)
-			if Input.is_action_just_pressed("RotatePiece_CCW"):
-				rotate_90(-1)
-		
+		hoverResetFrameCounter -= 1;
 		show_preview_of_pipette();
 		
 		if Input.is_action_just_pressed("Select"):
@@ -108,14 +112,26 @@ func _process(delta):
 		if Input.is_action_just_pressed("Unselect"):
 			hostPiece.deselect_all_sockets();
 		
-	##Change size based on selected state.
-	if selected:
+		##Change size based on selected state.
 		$Selector.mesh.size = Vector2(0.75, 0.75);
 	else:
+		##Change size based on selected state.
 		$Selector.mesh.size = Vector2(0.5, 0.5);
+	
+	##Change collision based on validity.
+	$CollisionShape3D.disabled = not valid;
+	
+	##Rotate the preview if there is one and the button is pressed to do so.
+	if has_preview():
+		if Input.is_action_just_pressed("RotatePiece_CW"):
+			rotate_90(1)
+		if Input.is_action_just_pressed("RotatePiece_CCW"):
+			rotate_90(-1)
 
 func _physics_process(delta):
 	calc_preview_placeable();
+
+var hoverResetFrameCounter := 0;
 
 func hover(foo):
 	if foo == hovering: return;
@@ -123,11 +139,12 @@ func hover(foo):
 	if foo:
 		if is_available():
 			hovering = true;
-			$Selector.show();
+			#$Selector.show();
+			hoverResetFrameCounter = 5;
 			return;
 	if not selected:
 		hovering = false;
-		$Selector.hide();
+		#$Selector.hide();
 		return;
 
 func select(foo:=true):
@@ -155,6 +172,8 @@ func show_preview_of_pipette():
 				pipetteInstance.reparent(self);
 			preview = pipetteInstance;
 			preview.hostSocket = self;
+			preview.hurtboxCollisionHolder.set_collision_mask_value(8, true);
+	return preview;
 
 func calc_preview_placeable():
 	previewPlaceable = false;
@@ -168,6 +187,14 @@ func calc_preview_placeable():
 
 func get_preview_placeable():
 	return previewPlaceable;
+
+func get_preview_or_null():
+	if is_instance_valid(preview) and preview is Piece:
+		return preview;
+	return null;
+
+func has_preview():
+	return get_preview_or_null() != null;
 
 func clear_preview():
 	if preview != null:
@@ -186,8 +213,11 @@ func set_preview_as_occupant():
 func set_occupant_as_preview():
 	pass
 
-func hover_from_camera(cam):
+func hover_from_camera(cam) -> Piece:
 	selectionCheckLoop = 4;
 	$SelectorRay.target_position = cam.global_position - $SelectorRay.global_position;
 	$SelectorRay.global_rotation = Vector3(0,0,0);
 	hover(is_valid() and (not $SelectorRay.is_colliding()));
+	if is_instance_valid(preview):
+		return preview;
+	return null;

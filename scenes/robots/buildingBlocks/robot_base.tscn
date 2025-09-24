@@ -35,7 +35,7 @@ transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
 [node name="Socket" parent="Body/Meshes" instance=ExtResource("3_bj2qy")]
 transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
 
-[node name="Piece" parent="Body/Meshes/Socket" node_paths=PackedStringArray("hostSocket", "hostPiece", "hostRobot", "placementCollisionHolder") instance=ExtResource("4_py6jp")]
+[node name="PieceBodyCube" parent="Body/Meshes/Socket" node_paths=PackedStringArray("hostSocket", "hostPiece", "hostRobot", "placementCollisionHolder") instance=ExtResource("4_py6jp")]
 hostSocket = NodePath("..")
 hostPiece = NodePath(".")
 hostRobot = NodePath("../../../..")

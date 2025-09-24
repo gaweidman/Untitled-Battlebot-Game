@@ -179,6 +179,7 @@ Unselect={
 3d_physics/layer_5="Piece Hitboxes"
 3d_physics/layer_6="Socket"
 3d_physics/layer_7="Placed Piece Hurtboxes"
+3d_physics/layer_8="Preview Piece Hurtboxes"
 
 [physics]
 

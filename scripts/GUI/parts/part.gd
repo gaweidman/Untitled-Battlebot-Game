@@ -113,7 +113,7 @@ func _get_buy_price(_discount := 0.0, markup:=0.0, fixedDiscount := 0, fixedMark
 	return roundi(max(1, (sellPrice + fixedDiscount + fixedMarkup + mod_scrapCost.add) * ((1 + mod_scrapCost.flat) * mod_scrapCost.mult)))
 
 func _get_part_bounds() -> Vector2i:
-	var highestX = 1;
+	var highestX = 1; 
 	var lowestX = 0;
 	var highestY = 1;
 	var lowestY = 0;
