@@ -2,28 +2,37 @@ extends Camera3D
 
 class_name Camera
 
-var playerBody : RigidBody3D;
+@export_category("Adjustables and Stats")
+@export var XRotInPlay = 20.0;
+@export var rotXspeed := 0.0;
+@export var rotYspeed := 0.0;
 var cameraOffset;
 var targetPosition : Vector3;
 var playerPosition : Vector3;
 var targetRotationX := 0.0;
-var rotXspeed := 0.0;
 var targetRotationY := 0.0;
-var rotYspeed := 0.0;
+var currentRotationY := 0.0;
 var targetRotationZ := 0.0;
+@export var VOffsetInBuild := 6.0;
+var vOffset := 0.0;
+@export var zoomLevelBase := 1.0;
+var targetZoomLevel := zoomLevelBase;
+var currentZoomLevel := zoomLevelBase;
+
 var inputOffset : Vector3;
 var targetInputOffset : Vector3;
 var modInpVec : Vector3;
 var modMouseVec : Vector3;
+@export_category("Node Refs")
+var playerBody : RigidBody3D;
 var viewport : Viewport;
-@export var marker : MeshInstance3D;
-@export var ray : RayCast3D;
+@export var marker : MeshInstance3D; ## @experimental: Used for showing where the mouse projection is landing while experimenting.
+@export var ray : RayCast3D; ## @deprecated: Used to have a ray attached to the camera at all times. Don't now. May again, who knows.
 @export var floor : StaticBody3D;
-var parent : Node;
+@export var positionParent : Node;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	parent = get_parent();
 	cameraOffset = global_position; # the player always starts at 0, 0, 0 so we don't do any subtraction here
 	position = Vector3(0,0,0)
 	playerBody = GameState.get_player_body();
@@ -31,7 +40,7 @@ func _ready() -> void:
 	Hooks.add(self, "OnChangeGameState", "CameraChangePos", 
 		func(oldState : GameBoard.gameState, newState : GameBoard.gameState) :
 			if newState == GameBoard.gameState.INIT_PLAY:
-				targetRotationX = deg_to_rad(20);
+				targetRotationX = deg_to_rad(XRotInPlay);
 				targetRotationY = 0.0;
 			elif newState == GameBoard.gameState.MAIN_MENU:
 				targetRotationX = 0.0;
@@ -42,6 +51,11 @@ func _process(delta: float) -> void:
 	if is_instance_valid(viewport):
 		var mousePos = viewport.get_mouse_position();
 		
+		## Offset the camera when in the shop.
+		if GameState.get_in_state_of_building(): ##TODO: Come up with a better, more exact state for this to happen.
+			v_offset = lerp(v_offset, VOffsetInBuild, delta * 7.0);
+		else:
+			v_offset = lerp(v_offset, 0.0, delta * 7.0);
 		#project_local_ray_normal()
 		
 		#var proj = project_position(mousePos, 20);
@@ -98,13 +112,13 @@ func _physics_process(delta):
 			targetInputOffset = modMouseVec + modInpVec;
 			inputOffset = lerp (inputOffset, targetInputOffset, delta * 5)
 			playerPosition = playerBody.get_global_position()
-			targetPosition = cameraOffset + inputOffset;
+			targetPosition = get_camera_offset() + inputOffset + get_v_offset_vector();
 		else:
 			viewport = get_viewport();
 			playerBody = GameState.get_player_body();
 		
 		position = lerp(position, targetPosition, delta * 10);
-		parent.position = lerp(parent.position, playerPosition, delta * 10);
+		positionParent.position = lerp(positionParent.position, playerPosition, delta * 10);
 		
 			#list[hookName][instanceName] = null;
 		
@@ -127,38 +141,60 @@ func _physics_process(delta):
 				if rotYspeed > 0: 
 					rotYspeed /= 3
 			
-			if Input.is_action_pressed("CameraPitchUp"):
-				targetRotationX += rotXspeed * delta
-			if Input.is_action_pressed("CameraPitchDown"):
-				targetRotationX += -rotXspeed * delta
+			if Input.is_action_pressed("CameraZoomIn"):
+				targetZoomLevel -= 0.1;
+			if Input.is_action_pressed("CameraZoomOut"):
+				targetZoomLevel += 0.1;
+			
+			if in_camera_tilt_state():
+				if Input.is_action_pressed("CameraPitchUp"):
+					targetRotationX += rotXspeed * delta
+				if Input.is_action_pressed("CameraPitchDown"):
+					targetRotationX += -rotXspeed * delta
+			else:
+				targetRotationX = lerp_angle(targetRotationX, XRotInPlay, 15.0 * delta);
+			
 			if Input.is_action_pressed("CameraYawLeft"):
 				targetRotationY += rotYspeed * delta
 			if Input.is_action_pressed("CameraYawRight"):
 				targetRotationY += -rotYspeed * delta
 		else:
 			targetRotationY += 0.1 * delta;
-			targetRotationX = lerp(targetRotationX, 0.0, 5.0 * delta);
+			targetRotationX = lerp_angle(targetRotationX, 0.0, 5.0 * delta);
 		
 		targetRotationX = clamp(targetRotationX, deg_to_rad(-30), deg_to_rad(30))
 		
-		parent.rotation.y = lerp(parent.rotation.y, targetRotationY, delta * 30)
+		positionParent.rotation.y = lerp_angle(positionParent.rotation.y, targetRotationY, delta * 30)
+		currentRotationY = positionParent.rotation.y;
 		
-		parent.rotation.x = lerp(parent.rotation.x, targetRotationX, delta * 30)
+		positionParent.rotation.x = lerp_angle(positionParent.rotation.x, targetRotationX, delta * 30)
+		
+		
+		targetZoomLevel = clamp(targetZoomLevel, 0.5, 1.15);
+		currentZoomLevel = lerp(currentZoomLevel, targetZoomLevel, delta * 30);
 	
 	
 	
 	
-	##Selecting pieces.
-	if Input.is_action_just_pressed("Select"):
-		click_on_piece();
-	
-	hover_socket();
+		##Selecting pieces.
+		if Input.is_action_just_pressed("Select"):
+			click_on_piece();
+		
+		hover_socket();
 
 func _input(event):
 	if event is InputEventMouseButton:
 		if event.is_pressed():
 			if GameState.get_in_state_of_play():
-				if Input.is_key_pressed(KEY_SHIFT):
+				if Input.is_action_pressed("CameraZoomModeKey"):
+					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+						targetZoomLevel -= 0.1
+						# call the zoom function
+					# zoom out
+					if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+						targetZoomLevel += 0.1
+						# call the zoom function
+				elif Input.is_action_pressed("CameraTiltModeKey") and in_camera_tilt_state():
 					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 						targetRotationX += 0.1
 						# call the zoom function
@@ -167,7 +203,7 @@ func _input(event):
 						targetRotationX -= 0.1
 						# call the zoom function
 				else:
-				# zoom in
+				# rotate around the Y
 					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 						targetRotationY += 0.1
 						# call the zoom function
@@ -231,3 +267,12 @@ func hover_socket():
 		if is_instance_valid(socketHovering):
 			socketHovering.hover(false);
 			socketHovering = null;
+
+func in_camera_tilt_state():
+	return GameState.get_in_state_of_building();
+
+func get_camera_offset():
+	return cameraOffset * currentZoomLevel;
+
+func get_v_offset_vector():
+	return Vector3(vOffset, 0.0, 0.0).rotated(Vector3(0,1,0), currentRotationY);

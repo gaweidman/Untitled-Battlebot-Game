@@ -57,8 +57,6 @@ func get_in_state_of_play() ->bool:
 		return board.in_state_of_play();
 	else:
 		return false;
-
-
 func get_in_state_of_building() ->bool:
 	var board = get_game_board();
 	if is_instance_valid(board):
@@ -213,7 +211,7 @@ func get_death_time() -> float:
 func get_camera() -> Camera:
 	var brd = get_game_board();
 	
-	return brd.get_node_or_null("CameraPointer/Camera3D")
+	return brd.get_main_camera();
 
 func cam_unproject_position(world_point:Vector3) -> Vector2:
 	var cam = get_camera();
@@ -382,3 +380,12 @@ func pause(foo : bool = not paused):
 
 func is_paused():
 	return paused;
+
+
+
+
+
+
+
+func editor_mode_start():
+	get_tree().change_scene_to_file("res://makers/piece_helper.tscn");

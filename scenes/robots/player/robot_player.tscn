@@ -12,19 +12,20 @@ script = ExtResource("2_u7rvj")
 [node name="Body" parent="." index="0"]
 can_sleep = false
 
-[node name="Piece_Sawblade" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket" index="4" node_paths=PackedStringArray("hostSocket", "hostPiece", "hostRobot") instance=ExtResource("3_a63pw")]
-hostSocket = NodePath("..")
+[node name="PieceBodyCube" parent="Body/Meshes/Socket" index="4"]
+assignedToSocket = true
+
+[node name="Piece_Sawblade" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket" index="4" node_paths=PackedStringArray("hostPiece", "hostRobot", "hostSocket") instance=ExtResource("3_a63pw")]
 hostPiece = NodePath("../../..")
 hostRobot = NodePath("../../../../../../..")
+hostSocket = NodePath("..")
 assignedToSocket = true
 
-[node name="Piece_Cannon" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_Sawblade/Socket" index="4" node_paths=PackedStringArray("hostSocket", "hostPiece", "hostRobot") instance=ExtResource("4_u7rvj")]
-hostSocket = NodePath("..")
+[node name="Piece_Cannon" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_Sawblade/Socket" index="4" node_paths=PackedStringArray("hostPiece", "hostRobot", "hostSocket") instance=ExtResource("4_u7rvj")]
 hostPiece = NodePath("../..")
 hostRobot = NodePath("../../../../../../../../..")
+hostSocket = NodePath("..")
 assignedToSocket = true
-
-[connection signal="health_or_energy_changed" from="." to="." method="_on_health_or_energy_changed"]
 
 [editable path="Body/Meshes/Socket/PieceBodyCube"]
 [editable path="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_Sawblade"]

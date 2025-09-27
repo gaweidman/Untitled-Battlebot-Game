@@ -1,10 +1,41 @@
-[gd_scene load_steps=10 format=3 uid="uid://cgcnhigjynv0q"]
+[gd_scene load_steps=17 format=3 uid="uid://cgcnhigjynv0q"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_rh04g"]
+[ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_3xiip"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="2_wwjov"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="3_22kji"]
+[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_h3ost"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="4_1tr1y"]
+[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_7nxtg"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="5_s5jac"]
+
+[sub_resource type="Resource" id="Resource_xxf1u"]
+script = ExtResource("2_3xiip")
+statName = "ScrapCost"
+statIcon = ExtResource("3_h3ost")
+baseStat = 0.0
+roundingMode = 6
+
+[sub_resource type="Resource" id="Resource_x7xa2"]
+script = ExtResource("2_3xiip")
+statName = "ScrapSellModifier"
+statIcon = ExtResource("3_h3ost")
+baseStat = 0.666667
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_8crb0"]
+script = ExtResource("2_3xiip")
+statName = "ScrapSalvageModifier"
+statIcon = ExtResource("3_h3ost")
+baseStat = 0.666667
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_8wfwi"]
+script = ExtResource("2_3xiip")
+statName = "Weight"
+statIcon = ExtResource("4_7nxtg")
+baseStat = 1.0
+roundingMode = 0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_g4w8c"]
 size = Vector2(0.25, 0.25)
@@ -23,12 +54,14 @@ cull_mode = 2
 albedo_texture = ExtResource("5_s5jac")
 
 [node name="Piece" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
+visible = false
 script = ExtResource("1_rh04g")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 meshesHolder = NodePath("Meshes")
 femaleSocketHolder = NodePath("FemaleSockets")
+statCollection = Array[ExtResource("2_3xiip")]([SubResource("Resource_xxf1u"), SubResource("Resource_x7xa2"), SubResource("Resource_8crb0"), SubResource("Resource_8wfwi")])
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"

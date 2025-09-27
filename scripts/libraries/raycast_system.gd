@@ -26,7 +26,8 @@ func _do_raycast_on_mouse_position(collision_mask: int = 0b00000000_00000000_000
 	# Raycast related code
 	var space_state = get_world_3d().get_direct_space_state()
 	if is_instance_valid(space_state):
-		var cam = get_viewport().get_camera_3d()
+		var cam = get_viewport().get_camera_3d(); 
+		if !is_instance_valid(cam) : return null;
 		var mousepos : Vector2;
 		if override_position != Vector2(0,0):
 			mousepos = override_position;

@@ -90,9 +90,11 @@ func die():
 	
 	##Play the death sound
 	if GameState.get_in_state_of_play():
-		SND.play_sound_nondirectional(deathSound);
+		#SND.play_sound_nondirectional(deathSound);
+		SND.play_sound_nondirectional("Combatant.Die");
 	##Play the death particle effects.
-	ParticleFX.play("NutsBolts", GameState.get_game_board(), body.global_position);
+	ParticleFX.play("NutsBolts", GameState.get_game_board(), get_global_body_position());
+	ParticleFX.play("BigBoom", GameState.get_game_board(), get_global_body_position());
 	
 	print("Searching for Sockets ", Utils.get_all_children(self).size())
 	print("Searching for Sockets, checking ownership ", Utils.get_all_children(self, self).size())
@@ -111,5 +113,6 @@ func update_bars():
 		barEnergy.set_health(currentEnergy, currentEnergyMax);
 
 func _on_health_or_energy_changed():
-	call_deferred("update_bars");
+	super();
+	update_bars();
 	pass # Replace with function body.

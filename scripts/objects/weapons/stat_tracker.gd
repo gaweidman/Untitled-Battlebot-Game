@@ -15,13 +15,16 @@ enum roundingModes {
 	Floor,
 	Round,
 	Ceil,
+	Floori,
+	Roundi,
+	Ceili,
 	NoOverride,
 }
-@export var roundingMode := roundingModes.None; ## Float means no modifications to the number when getting. Floor, Round, and Ceil will perform those mathematic functions on the number. NoOverride is used in the StatHolder register_stat() function as a default value; should not be used as the rounding mode.
+@export var roundingMode := roundingModes.None; ##Keeps track of the current [enum roundingModes] value.[br][br][enum roundingMode.None] means no modifications to the number when getting it; it will remain an unrounded [float]. [br][enum roundingMode.Floor], [enum roundingMode.Round], and [enum roundingMode.Ceil] will perform those mathematic functions on the number, to the appropriate nearest [float].[br][enum roundingMode.Floori], [enum roundingMode.Roundi], and [enum roundingMode.Ceili] will perform those mathematic functions on the number, to the appropriate nearest [int]. [br][enum roundingMode.NoOverride] is used in the StatHolder register_stat() function as a default value; should not be used as the rounding mode, but will behave the same as [enum roundingMode.None].
 
-##This StatTracker's get function.
+##This [StatTracker]'s get function.
 var getFunc := func (): var stat = (baseStat + bonusAdd)  * (((1 + bonusMult_Flat) * bonusMult_Mult)); return stat;
-##This StatTracker's set function.
+##This [StatTracker]'s set function.
 var setFunc := func (newValue): return newValue;
 
 ##Gets the stat by calling its get function (getFunc)
@@ -34,16 +37,23 @@ func get_stat(roundingModeOverride : roundingModes = roundingMode):
 func return_rounded_stat(stat, roundingModeOverride : roundingModes = roundingMode):
 	match roundingModeOverride:
 		roundingModes.Floor:
-			return floori(stat);
+			return floorf(stat);
 		roundingModes.Round:
-			return roundi(stat);
+			return roundf(stat);
 		roundingModes.Ceil:
+			return ceilf(stat);
+		roundingModes.Floori:
+			return floori(stat);
+		roundingModes.Roundi:
+			return roundi(stat);
+		roundingModes.Ceili:
 			return ceili(stat);
 		roundingModes.None: ##Both None and NoOverride should return just the base value without any rounding.
 			return stat;
 		roundingModes.NoOverride: ##Both None and NoOverride should return just the base value without any rounding.
 			return stat;
+	return stat;
 
-##Sets the stat by calling its set function (setFunc).
+##Sets the stat by calling [param setFunc].
 func set_stat(newValue):
-	set_deferred("currentValue", setFunc.call(newValue));
+	set("currentValue", setFunc.call(newValue));

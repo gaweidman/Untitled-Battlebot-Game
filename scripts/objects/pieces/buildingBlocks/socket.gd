@@ -23,7 +23,8 @@ func _ready():
 		#queue_free();
 		pass;
 
-func remove_occupant():
+func remove_occupant(delete := false):
+	if delete and is_instance_valid(occupant): occupant.queue_free();
 	occupant = null;
 	pass
 
@@ -32,7 +33,7 @@ func add_occupant(newPiece : Piece):
 		occupant = newPiece;
 		occupant.reparent(self, false)
 		occupant.hostPiece = hostPiece;
-		occupant.hostRobot = hostPiece.hostRobot;
+		occupant.hostRobot = get_robot();
 		$Selector.hide();
 
 func get_energy_transmitted():
@@ -210,7 +211,7 @@ func set_preview_as_occupant():
 		preview = null;
 		select(false);
 
-func set_occupant_as_preview():
+func set_occupant_as_preview(): ##TODO: This.
 	pass
 
 func hover_from_camera(cam) -> Piece:

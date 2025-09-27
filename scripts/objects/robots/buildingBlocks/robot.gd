@@ -53,9 +53,19 @@ func grab_references():
 
 func stat_registry():
 	register_stat("HealthMax", maxHealth, statIconDamage);
-	register_stat("Health", maxHealth, statIconDamage, null, func(newValue): health_or_energy_changed.emit(); return clamp(newValue, 0, get_stat("HealthMax")));
+	register_stat(
+		"Health", 
+		maxHealth, 
+		statIconDamage, 
+		null, 
+		(
+			func(newValue): 
+				health_or_energy_changed.emit(); 
+				var newValFixed = clampf(newValue, 0.0, get_stat("HealthMax")); 
+				print(newValFixed); return newValFixed)
+		);
 	register_stat("EnergyMax", maxEnergy, statIconDamage);
-	register_stat("Energy", maxEnergy, statIconEnergy, null, func(newValue): health_or_energy_changed.emit(); return clamp(newValue, 0, get_stat("EnergyMax")));
+	register_stat("Energy", maxEnergy, statIconEnergy, null, (func(newValue): health_or_energy_changed.emit(); return clampf(newValue, 0.0, get_stat("EnergyMax"))));
 	register_stat("EnergyRefreshRate", energyRefreshRate, statIconEnergy);
 	register_stat("InvincibilityTime", maxInvincibleTimer, statIconCooldown);
 	register_stat("MovementSpeedAcceleration", acceleration, statIconCooldown);
@@ -98,6 +108,7 @@ func live():
 	show();
 	body.show();
 	spawned = true;
+	alive = true;
 
 func die():
 	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
@@ -107,8 +118,8 @@ func die():
 	if GameState.get_in_state_of_play():
 		SND.play_sound_nondirectional(deathSound);
 	##Play the death particle effects.
-	ParticleFX.play("NutsBolts", GameState.get_game_board(), body.global_position);
-	ParticleFX.play("BigBoom", GameState.get_game_board(), body.global_position);
+	ParticleFX.play("NutsBolts", GameState.get_game_board(), get_global_body_position());
+	ParticleFX.play("BigBoom", GameState.get_game_board(), get_global_body_position());
 
 
 ################################# EDITOR MODE
@@ -138,6 +149,9 @@ func detach_pipette():
 ## Emitted when Health or Energy are changed.
 signal health_or_energy_changed();
 
+func _on_health_or_energy_changed():
+	pass # Replace with function body.
+
 @export var deathSound := "Combatant.Die";
 
 #TODO: Reimplement all stuff involving taking damage, knockback, and invincibility.
@@ -156,6 +170,7 @@ func get_max_health():
 func take_damage(damage:float):
 	print("ASASASSA")
 	if is_playing():
+		print(damage," damage being taken.")
 		var health = get_health();
 		#if invincible && damage > 0:
 			#return;
@@ -179,7 +194,7 @@ func is_alive():
 var invincible := false;
 var invincibleTimer := 0.0;
 @export var maxInvincibleTimer := 0.25; #TODO: Add in bonuses for this.
-var alive := true;
+var alive := false;
 
 ##Replaces the invincible timer with the value given (Or maxInvincibleTimer by default) if that value is greater than the current invincibility timer.
 func set_invincibility(amountOverride : float = maxInvincibleTimer):
@@ -271,7 +286,8 @@ func reassign_body_collision():
 var movementVector := Vector2.ZERO;
 var movementVectorRotation := 0.0;
 var bodyRotationAngle = Vector2.ZERO;
-@export var bodyRotationSpeed := 10;
+@export var bodyRotationSpeedBase := 0.80;
+var bodyRotationSpeed := bodyRotationSpeedBase;
 @export var speedReductionWhileNoInput := 0.9; ##Slipperiness, basically.
 var lastInputtedMV = Vector2.ZERO;
 
@@ -313,7 +329,9 @@ func move_and_rotate_towards_movement_vector(delta : float):
 		
 	
 	var rotateVector = Vector3(bodyRotationAngle.x, 0.0, bodyRotationAngle.y) + body.global_position
-
+	
+	bodyRotationSpeed = get_rotation_speed();
+	
 	body.update_target_rotation(bodyRotationAngle, delta * bodyRotationSpeed);
 	#Utils.look_at_safe(meshes, rotateVector);
 	
@@ -350,6 +368,12 @@ func get_movement_vector(rotatedByCamera : bool = false) -> Vector2:
 var inputtingMovementThisFrame := false; ##This should be set by AI bots before phys_process_motion is called to notify whether to update their position or not this frame.
 func is_inputting_movement():
 	return inputtingMovementThisFrame;
+func get_movement_speed_length():
+	return body.linear_velocity.length();
+
+func get_rotation_speed():
+	var spd = get_movement_speed_length();
+	return bodyRotationSpeedBase * spd;
 
 func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = body):
 	SND.play_collision_sound(thisComponent, collider, Vector3.ZERO, 0.45)
@@ -433,3 +457,17 @@ func assign_ability_to_next_active_slot(abilityManager : AbilityManager):
 	var slot = get_next_available_active_slot();
 	if slot == null: return;
 	assign_ability_to_slot(slot, abilityManager);
+
+func deselect_all_pieces(ignoredPiece : Piece):
+	for piece in get_all_pieces():
+		if piece != ignoredPiece:
+			piece.deselect();
+	pass;
+
+func select_piece(piece : Piece):
+	if is_instance_valid(piece):
+		deselect_all_pieces(piece);
+		piece.select(true);
+
+func select_part(part : Part):
+	part.select(true);

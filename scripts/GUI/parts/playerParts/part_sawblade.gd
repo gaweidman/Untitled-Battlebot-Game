@@ -48,6 +48,7 @@ func contact_damage(collider: Node) -> void:
 					thisBot.take_knockback(((-distanceDif + Vector3(0,0.1,0)) * 1000) - thisBotVelocity + thatBotVelocity);
 					modelScaleOffset /= 1.5;
 					#print("Damage dealt: ", damage)
+					
 					thisBot.combatHandler.take_damage(get_damage());
 					pass;
 				else:

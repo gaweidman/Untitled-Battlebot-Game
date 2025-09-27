@@ -6,6 +6,7 @@ class_name PartHolderButton
 @export var coordY : int;
 var inventory : InventoryPlayer;
 var parent : PartsHolder_Engine;
+var available := true;
 
 func _ready():
 	parent = get_parent();
@@ -15,13 +16,22 @@ func _on_pressed():
 	parent.buttonPressed.emit(coordX,coordY);
 	pass # Replace with function body.
 
+func set_availability(foo):
+	available = foo;
+	disable(!foo)
+	update_gfx();
+
+@export var GFX_selected : Texture2D = preload("res://graphics/images/HUD/engine/inv_selectedPlugIn.png");
+@export var GFX_unselected : Texture2D = preload("res://graphics/images/HUD/engine/inv_unselectedPlugIn.png");
+@export var GFX_unselectable : Texture2D = preload("res://graphics/images/HUD/engine/inv_unselectablePlugIn.png");
+
 ##True makes it visible and fancy, False makes it invisible
 func set_textures(selectable:bool): 
-	if selectable:
-		texture_normal = load("res://graphics/images/HUD/inv_unselectedPlugIn.png");
-		texture_pressed = load("res://graphics/images/HUD/inv_selectedPlugIn.png");
-		texture_hover = load("res://graphics/images/HUD/inv_selectedPlugIn.png");
-		texture_disabled = load("res://graphics/images/HUD/inv_unselectablePlugIn.png");
+	if selectable and available:
+		texture_normal = GFX_unselected;
+		texture_pressed = GFX_selected;
+		texture_hover = GFX_selected;
+		texture_disabled = GFX_unselectable;
 	else:
 		texture_normal = null;
 		texture_pressed = null;
@@ -54,10 +64,13 @@ func disable(_disabled:bool):
 
 func update_gfx():
 	var hideme := false;
-	if ! disabled:
+	if (! disabled) and available:
 		inventory = GameState.get_inventory(); #gets the inventory
-		var space = inventory.is_there_space_for_part(inventory.selectedPart, Vector2i(coordX,coordY));
-		var free = inventory.is_slot_free(coordX, coordY, inventory.selectedPart);
+		var space = true;
+		var free = true;
+		if is_instance_valid(inventory): ##TODO: Set this up to work with Pieces instead.
+			space = inventory.is_there_space_for_part(inventory.selectedPart, Vector2i(coordX,coordY));
+			free = inventory.is_slot_free(coordX, coordY, inventory.selectedPart);
 		
 		##Always visible if there's space. If there's no space, it 
 		if space:

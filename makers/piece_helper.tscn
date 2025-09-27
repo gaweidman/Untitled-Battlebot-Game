@@ -1,0 +1,788 @@
+[gd_scene load_steps=14 format=4 uid="uid://bhhd443ej7smu"]
+
+[ext_resource type="Script" uid="uid://4xlbt5q5d03h" path="res://makers/piece_deets_helper.gd" id="1_kgy3g"]
+[ext_resource type="Texture2D" uid="uid://b27r3rshm0ite" path="res://graphics/images/HUD/textBoxBG_partPassive.png" id="2_26mwm"]
+[ext_resource type="Texture2D" uid="uid://nywg1mmjv2qm" path="res://graphics/images/HUD/engine/engineBack.png" id="2_bl5bc"]
+[ext_resource type="Script" uid="uid://b1r88r130d6k2" path="res://scripts/GUI/parts_holder_engine.gd" id="3_00eor"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="3_b8eto"]
+[ext_resource type="Texture2D" uid="uid://da5mwa6pcphjl" path="res://graphics/images/HUD/engine/inv_selectedPlugIn.png" id="5_26mwm"]
+[ext_resource type="TileSet" uid="uid://dicxuohkdpmlx" path="res://graphics/images/HUD/engine/engineTileMap.tres" id="5_u3p13"]
+[ext_resource type="Script" uid="uid://bpnwpequ3dde0" path="res://scripts/GUI/part_holder_button.gd" id="6_u3p13"]
+[ext_resource type="Script" uid="uid://t4858sodg0x3" path="res://makers/makerCam.gd" id="7_00eor"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_b8eto"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_00eor"]
+sky_top_color = Color(0.0910561, 0.0229013, 0, 1)
+sky_horizon_color = Color(0.244366, 0.229288, 0.222582, 1)
+ground_bottom_color = Color(0.172549, 0.180392, 0.176471, 1)
+ground_horizon_color = Color(0.244366, 0.229288, 0.222582, 1)
+energy_multiplier = 0.5
+
+[sub_resource type="Sky" id="Sky_6fdki"]
+sky_material = SubResource("ProceduralSkyMaterial_00eor")
+
+[sub_resource type="Environment" id="Environment_b8eto"]
+background_mode = 2
+sky = SubResource("Sky_6fdki")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="PieceHelper" type="Control" node_paths=PackedStringArray("A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "C5", "D1", "D2", "D3", "D4", "D5", "E1", "E2", "E3", "E4", "E5", "engine", "pieceHolder")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_kgy3g")
+A1 = NodePath("EngineBlockCustomizer/A1")
+A2 = NodePath("EngineBlockCustomizer/A2")
+A3 = NodePath("EngineBlockCustomizer/A3")
+A4 = NodePath("EngineBlockCustomizer/A4")
+A5 = NodePath("EngineBlockCustomizer/A5")
+B1 = NodePath("EngineBlockCustomizer/B1")
+B2 = NodePath("EngineBlockCustomizer/B2")
+B3 = NodePath("EngineBlockCustomizer/B3")
+B4 = NodePath("EngineBlockCustomizer/B4")
+B5 = NodePath("EngineBlockCustomizer/B5")
+C1 = NodePath("EngineBlockCustomizer/C1")
+C2 = NodePath("EngineBlockCustomizer/C2")
+C3 = NodePath("EngineBlockCustomizer/C3")
+C4 = NodePath("EngineBlockCustomizer/C4")
+C5 = NodePath("EngineBlockCustomizer/C5")
+D1 = NodePath("EngineBlockCustomizer/D1")
+D2 = NodePath("EngineBlockCustomizer/D2")
+D3 = NodePath("EngineBlockCustomizer/D3")
+D4 = NodePath("EngineBlockCustomizer/D4")
+D5 = NodePath("EngineBlockCustomizer/D5")
+E1 = NodePath("EngineBlockCustomizer/E1")
+E2 = NodePath("EngineBlockCustomizer/E2")
+E3 = NodePath("EngineBlockCustomizer/E3")
+E4 = NodePath("EngineBlockCustomizer/E4")
+E5 = NodePath("EngineBlockCustomizer/E5")
+engine = NodePath("PartsHolder_Engine")
+pieceHolder = NodePath("Socket")
+
+[node name="Engine Block Coordinates" type="Label" parent="."]
+layout_mode = 0
+offset_left = 487.0
+offset_top = 42.0
+offset_right = 683.0
+offset_bottom = 65.0
+text = "Engine Block Coordinates"
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 0
+offset_left = 723.0
+offset_top = 24.0
+offset_right = 919.0
+offset_bottom = 47.0
+text = "Engine Block Preview"
+
+[node name="EngineBlockCustomizer" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 514.0
+offset_top = 62.0
+offset_right = 643.0
+offset_bottom = 194.0
+
+[node name="PanelBG" type="NinePatchRect" parent="EngineBlockCustomizer"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_26mwm")
+region_rect = Rect2(1, 1, 46, 47)
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12
+
+[node name="A1" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 6.0
+offset_right = 29.0
+offset_bottom = 30.0
+
+[node name="A2" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 6.0
+offset_right = 53.0
+offset_bottom = 30.0
+
+[node name="A3" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 6.0
+offset_right = 77.0
+offset_bottom = 30.0
+
+[node name="A4" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 6.0
+offset_right = 101.0
+offset_bottom = 30.0
+
+[node name="A5" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 6.0
+offset_right = 125.0
+offset_bottom = 30.0
+
+[node name="B1" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 30.0
+offset_right = 29.0
+offset_bottom = 54.0
+
+[node name="B2" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 30.0
+offset_right = 53.0
+offset_bottom = 54.0
+
+[node name="B3" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 30.0
+offset_right = 77.0
+offset_bottom = 54.0
+
+[node name="B4" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 30.0
+offset_right = 101.0
+offset_bottom = 54.0
+
+[node name="B5" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 30.0
+offset_right = 125.0
+offset_bottom = 54.0
+
+[node name="C1" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 54.0
+offset_right = 29.0
+offset_bottom = 78.0
+
+[node name="C2" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 54.0
+offset_right = 53.0
+offset_bottom = 78.0
+
+[node name="C3" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 54.0
+offset_right = 77.0
+offset_bottom = 78.0
+
+[node name="C4" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 54.0
+offset_right = 101.0
+offset_bottom = 78.0
+
+[node name="C5" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 54.0
+offset_right = 125.0
+offset_bottom = 78.0
+
+[node name="D1" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 78.0
+offset_right = 29.0
+offset_bottom = 102.0
+
+[node name="D2" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 78.0
+offset_right = 53.0
+offset_bottom = 102.0
+
+[node name="D3" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 78.0
+offset_right = 77.0
+offset_bottom = 102.0
+
+[node name="D4" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 78.0
+offset_right = 101.0
+offset_bottom = 102.0
+
+[node name="D5" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 78.0
+offset_right = 125.0
+offset_bottom = 102.0
+
+[node name="E1" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 102.0
+offset_right = 29.0
+offset_bottom = 126.0
+
+[node name="E2" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 102.0
+offset_right = 53.0
+offset_bottom = 126.0
+
+[node name="E3" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 102.0
+offset_right = 77.0
+offset_bottom = 126.0
+
+[node name="E4" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 102.0
+offset_right = 101.0
+offset_bottom = 126.0
+
+[node name="E5" type="CheckBox" parent="EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 102.0
+offset_right = 125.0
+offset_bottom = 126.0
+
+[node name="Tree" type="Tree" parent="."]
+layout_mode = 0
+offset_right = 471.0
+offset_bottom = 245.0
+allow_reselect = true
+
+[node name="PartsHolder_Engine" type="TextureRect" parent="." node_paths=PackedStringArray("bgTiles")]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -258.0
+offset_top = -1031.0
+offset_right = 30.0
+offset_bottom = -743.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("2_bl5bc")
+script = ExtResource("3_00eor")
+bgTiles = NodePath("Background")
+metadata/_edit_group_ = true
+
+[node name="Background" type="TileMapLayer" parent="PartsHolder_Engine"]
+position = Vector2(24, 24)
+tile_map_data = PackedByteArray("AAAGAAAAAAABAAEAAAAFAAAAAAACAAEAAAAEAAAAAAABAAEAAAAHAAAAAAACAAEAAAAFAAEAAAACAAIAAAAEAAEAAAABAAIAAAAGAAEAAAABAAIAAAAHAAEAAAACAAIAAAAHAAIAAAACAAEAAAAGAAIAAAABAAEAAAAFAAIAAAACAAEAAAAHAAMAAAACAAIAAAAGAAMAAAABAAIAAAAFAAMAAAACAAIAAAAEAAMAAAABAAIAAAAEAAIAAAABAAEAAAADAAEAAAACAAIAAAADAAAAAAACAAEAAAAAAAIAAAABAAEAAAABAAIAAAACAAEAAAABAAMAAAACAAIAAAAAAAMAAAABAAIAAAAAAAEAAAABAAIAAAABAAEAAAACAAIAAAABAAQAAAACAAEAAAAAAAQAAAABAAEAAAACAAMAAAABAAIAAAACAAQAAAABAAEAAAACAAIAAAABAAEAAAACAAEAAAABAAIAAAAAAAUAAAABAAIAAAABAAUAAAACAAIAAAABAAYAAAACAAEAAAAAAAYAAAABAAEAAAABAAcAAAACAAIAAAAAAAcAAAABAAIAAAABAAgAAAACAAEAAAAAAAgAAAABAAEAAAABAAkAAAACAAIAAAAAAAkAAAABAAIAAAABAAoAAAABAAMAAAAAAAoAAAABAAMAAAACAAkAAAABAAIAAAACAAoAAAABAAMAAAACAAgAAAABAAEAAAADAAkAAAACAAIAAAADAAoAAAACAAMAAAADAAgAAAACAAEAAAAEAAkAAAABAAIAAAAEAAoAAAABAAMAAAAEAAgAAAABAAEAAAAFAAkAAAACAAIAAAAFAAoAAAACAAMAAAAFAAgAAAACAAEAAAAGAAkAAAABAAIAAAAGAAoAAAABAAMAAAAGAAgAAAABAAEAAAAHAAkAAAACAAIAAAAHAAoAAAABAAMAAAAHAAgAAAACAAEAAAAIAAkAAAABAAIAAAAIAAoAAAACAAMAAAAIAAgAAAABAAEAAAAJAAkAAAACAAIAAAAJAAoAAAACAAMAAAAJAAgAAAACAAEAAAAIAAcAAAABAAIAAAAJAAcAAAACAAIAAAAIAAYAAAABAAEAAAAJAAYAAAACAAEAAAAIAAUAAAABAAIAAAAJAAUAAAACAAIAAAAIAAQAAAABAAEAAAAJAAQAAAACAAEAAAAIAAMAAAABAAIAAAAJAAMAAAACAAIAAAAIAAIAAAABAAEAAAAJAAIAAAACAAEAAAAIAAEAAAABAAIAAAAJAAEAAAACAAIAAAAIAAAAAAABAAEAAAAJAAAAAAACAAEAAAACAAAAAAABAAEAAAABAAAAAAACAAEAAAAAAAAAAAABAAEAAAADAAIAAAACAAEAAAACAAUAAAABAAIAAAACAAYAAAABAAEAAAACAAcAAAABAAIAAAADAAcAAAACAAIAAAAEAAcAAAABAAIAAAAFAAcAAAACAAIAAAAGAAcAAAABAAIAAAAHAAcAAAACAAIAAAAHAAYAAAACAAEAAAAHAAUAAAACAAIAAAAHAAQAAAACAAEAAAADAAMAAAACAAIAAAADAAQAAAACAAEAAAADAAYAAAACAAEAAAAEAAYAAAABAAEAAAAFAAYAAAACAAEAAAAGAAYAAAABAAEAAAAEAAUAAAABAAIAAAAFAAUAAAACAAIAAAAGAAUAAAABAAIAAAAEAAQAAAABAAEAAAAFAAQAAAACAAEAAAAGAAQAAAABAAEAAAADAAUAAAACAAIAAAD//wIAAAAAAAIAAAD//wMAAAAAAAEAAAD//wQAAAAAAAIAAAD//wUAAAAAAAIAAAD//wYAAAAAAAEAAAD//wcAAAAAAAIAAAD//wgAAAAAAAIAAAD//wkAAAAAAAIAAAD//woAAAAAAAMAAAD//wEAAAAAAAIAAAD//wAAAAAAAAIAAAD/////AAAAAAAAAAAAAP//AAACAAAAAAABAP//AAABAAAAAAACAP//AAABAAAAAAADAP//AAACAAAAAAAEAP//AAACAAAAAAAFAP//AAACAAAAAAAGAP//AAACAAAAAAAHAP//AAACAAAAAAAIAP//AAABAAAAAAAJAP//AAABAAAAAAAKAP//AAADAAAAAAAKAAAAAAADAAIAAAAKAAEAAAADAAEAAAAKAAIAAAADAAIAAAAKAAMAAAADAAEAAAAKAAQAAAADAAIAAAAKAAUAAAADAAIAAAAKAAYAAAADAAEAAAAKAAcAAAADAAIAAAAKAAgAAAADAAIAAAAKAAkAAAADAAEAAAAKAAoAAAADAAMAAAA=")
+tile_set = ExtResource("5_u3p13")
+
+[node name="Edge" type="TileMapLayer" parent="PartsHolder_Engine"]
+position = Vector2(24, 24)
+tile_map_data = PackedByteArray("AAD/////AAAEAAAAAAD//wAAAAAEAAEAAAD//wEAAAAEAAEAAAD//wIAAAAEAAEAAAD//wMAAAAEAAEAAAD//wQAAAAEAAEAAAD//wUAAAAEAAEAAAD//wYAAAAEAAEAAAD//wcAAAAEAAEAAAD//wgAAAAEAAEAAAD//wkAAAAEAAEAAAD//woAAAAEAAMAAAAAAP//AAAFAAAAAAAAAAoAAAAGAAMAAAABAP//AAAFAAAAAAABAAoAAAAGAAMAAAACAP//AAAFAAAAAAACAAoAAAAGAAMAAAADAP//AAAFAAAAAAADAAoAAAAGAAMAAAAEAP//AAAFAAAAAAAEAAoAAAAGAAMAAAAFAP//AAAFAAAAAAAFAAoAAAAGAAMAAAAGAP//AAAFAAAAAAAGAAoAAAAGAAMAAAAHAP//AAAFAAAAAAAHAAoAAAAGAAMAAAAIAP//AAAFAAAAAAAIAAoAAAAGAAMAAAAJAP//AAAFAAAAAAAJAAoAAAAGAAMAAAAKAP//AAAHAAAAAAAKAAAAAAAHAAIAAAAKAAEAAAAHAAIAAAAKAAIAAAAHAAIAAAAKAAMAAAAHAAIAAAAKAAQAAAAHAAIAAAAKAAUAAAAHAAIAAAAKAAYAAAAHAAIAAAAKAAcAAAAHAAIAAAAKAAgAAAAHAAIAAAAKAAkAAAAHAAIAAAAKAAoAAAAHAAMAAAA=")
+tile_set = ExtResource("5_u3p13")
+
+[node name="PartHolderButton" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 72.0
+offset_bottom = 72.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+
+[node name="PartHolderButton2" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 24.0
+offset_right = 120.0
+offset_bottom = 72.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 1
+
+[node name="PartHolderButton3" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 24.0
+offset_right = 168.0
+offset_bottom = 72.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 2
+
+[node name="PartHolderButton4" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 24.0
+offset_right = 216.0
+offset_bottom = 72.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 3
+
+[node name="PartHolderButton5" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 24.0
+offset_right = 264.0
+offset_bottom = 72.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 4
+
+[node name="PartHolderButton6" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 72.0
+offset_right = 72.0
+offset_bottom = 120.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordY = 1
+
+[node name="PartHolderButton7" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 72.0
+offset_right = 120.0
+offset_bottom = 120.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 1
+coordY = 1
+
+[node name="PartHolderButton8" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 72.0
+offset_right = 168.0
+offset_bottom = 120.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 2
+coordY = 1
+
+[node name="PartHolderButton9" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 72.0
+offset_right = 216.0
+offset_bottom = 120.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 3
+coordY = 1
+
+[node name="PartHolderButton10" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 72.0
+offset_right = 264.0
+offset_bottom = 120.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 4
+coordY = 1
+
+[node name="PartHolderButton11" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 120.0
+offset_right = 72.0
+offset_bottom = 168.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordY = 2
+
+[node name="PartHolderButton12" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 120.0
+offset_right = 120.0
+offset_bottom = 168.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 1
+coordY = 2
+
+[node name="PartHolderButton13" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 120.0
+offset_right = 168.0
+offset_bottom = 168.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 2
+coordY = 2
+
+[node name="PartHolderButton14" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 120.0
+offset_right = 216.0
+offset_bottom = 168.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 3
+coordY = 2
+
+[node name="PartHolderButton15" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 120.0
+offset_right = 264.0
+offset_bottom = 168.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 4
+coordY = 2
+
+[node name="PartHolderButton16" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 168.0
+offset_right = 72.0
+offset_bottom = 216.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordY = 3
+
+[node name="PartHolderButton17" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 168.0
+offset_right = 120.0
+offset_bottom = 216.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 1
+coordY = 3
+
+[node name="PartHolderButton18" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 168.0
+offset_right = 168.0
+offset_bottom = 216.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 2
+coordY = 3
+
+[node name="PartHolderButton19" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 168.0
+offset_right = 216.0
+offset_bottom = 216.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 3
+coordY = 3
+
+[node name="PartHolderButton20" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 168.0
+offset_right = 264.0
+offset_bottom = 216.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 4
+coordY = 3
+
+[node name="PartHolderButton21" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 216.0
+offset_right = 72.0
+offset_bottom = 264.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordY = 4
+
+[node name="PartHolderButton22" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 216.0
+offset_right = 120.0
+offset_bottom = 264.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 1
+coordY = 4
+
+[node name="PartHolderButton23" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 216.0
+offset_right = 168.0
+offset_bottom = 264.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 2
+coordY = 4
+
+[node name="PartHolderButton24" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 216.0
+offset_right = 216.0
+offset_bottom = 264.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 3
+coordY = 4
+
+[node name="PartHolderButton25" type="TextureButton" parent="PartsHolder_Engine"]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 216.0
+offset_right = 264.0
+offset_bottom = 264.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_26mwm")
+texture_pressed = ExtResource("5_26mwm")
+texture_hover = ExtResource("5_26mwm")
+script = ExtResource("6_u3p13")
+coordX = 4
+coordY = 4
+
+[node name="TextEdit" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 492.0
+offset_top = 253.0
+offset_right = 666.0
+offset_bottom = 291.0
+placeholder_text = "Piece Name"
+
+[node name="Reset Tree" type="Button" parent="."]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 255.0
+offset_right = 13.0
+offset_bottom = 263.0
+text = "Refresh Tree"
+
+[node name="Clear Preview" type="Button" parent="."]
+layout_mode = 0
+offset_left = 496.0
+offset_top = 212.0
+offset_right = 655.0
+offset_bottom = 243.0
+text = "Clear Piece Preview"
+
+[node name="camHolder" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="camHolder" node_paths=PackedStringArray("cyube")]
+script = ExtResource("7_00eor")
+cyube = NodePath("MeshInstance3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="camHolder/Camera3D"]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, -0.117, -0.194)
+visible = false
+sorting_offset = 20.0
+mesh = SubResource("BoxMesh_b8eto")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_b8eto")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.97435, -0.181686, 0.132784, -1.0149e-08, 0.590056, 0.807362, -0.225036, -0.786654, 0.574921, -2.58875, 47.1188, -0.186724)
+shadow_enabled = true
+shadow_opacity = 0.62
+
+[node name="Socket" parent="." instance=ExtResource("3_b8eto")]
+invisibleInGame = true
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 704.0
+offset_right = 245.0
+offset_bottom = 1013.0
+text = "A/D - Yaw (Y rotation)
+W/S - Pitch (X rotation)
+Q/E - Zoom in/out
+
+Shift + A/D - X Offset
+Shift + W/S - Y Offset
+Shift + Q/E - Roll (Z rotation)
+
+Ctrl + A/D - Save/Load Rotation
+Ctrl + W/S - Save/Load Position
+Ctrl + Q - Reset Position
+Ctrl + E - Reset Rotation"
+vertical_alignment = 2
+
+[node name="SaveChanges" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1682.0
+offset_top = 4.0
+offset_right = 1912.0
+offset_bottom = 35.0
+text = "SAVE CHANGES (OVERWRITE)"
+alignment = 2
+
+[node name="SaveChangesAs" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1682.0
+offset_top = 41.0
+offset_right = 1912.0
+offset_bottom = 72.0
+text = "SAVE CHANGES AS NEW"
+alignment = 2
+
+[node name="Exit" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1842.0
+offset_top = 136.0
+offset_right = 1915.0
+offset_bottom = 167.0
+text = "EXIT"
+
+[node name="Select_Unselect All" type="Button" parent="."]
+layout_mode = 0
+offset_left = 502.0
+offset_top = 8.0
+offset_right = 653.0
+offset_bottom = 39.0
+text = "Select/Unselect All"
+
+[connection signal="button_clicked" from="Tree" to="." method="_on_tree_button_clicked"]
+[connection signal="item_activated" from="Tree" to="." method="_on_tree_item_activated"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton" to="PartsHolder_Engine/PartHolderButton" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton2" to="PartsHolder_Engine/PartHolderButton2" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton3" to="PartsHolder_Engine/PartHolderButton3" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton4" to="PartsHolder_Engine/PartHolderButton4" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton5" to="PartsHolder_Engine/PartHolderButton5" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton6" to="PartsHolder_Engine/PartHolderButton6" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton7" to="PartsHolder_Engine/PartHolderButton7" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton8" to="PartsHolder_Engine/PartHolderButton8" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton9" to="PartsHolder_Engine/PartHolderButton9" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton10" to="PartsHolder_Engine/PartHolderButton10" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton11" to="PartsHolder_Engine/PartHolderButton11" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton12" to="PartsHolder_Engine/PartHolderButton12" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton13" to="PartsHolder_Engine/PartHolderButton13" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton14" to="PartsHolder_Engine/PartHolderButton14" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton15" to="PartsHolder_Engine/PartHolderButton15" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton16" to="PartsHolder_Engine/PartHolderButton16" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton17" to="PartsHolder_Engine/PartHolderButton17" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton18" to="PartsHolder_Engine/PartHolderButton18" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton19" to="PartsHolder_Engine/PartHolderButton19" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton20" to="PartsHolder_Engine/PartHolderButton20" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton21" to="PartsHolder_Engine/PartHolderButton21" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton22" to="PartsHolder_Engine/PartHolderButton22" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton23" to="PartsHolder_Engine/PartHolderButton23" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton24" to="PartsHolder_Engine/PartHolderButton24" method="_on_pressed"]
+[connection signal="pressed" from="PartsHolder_Engine/PartHolderButton25" to="PartsHolder_Engine/PartHolderButton25" method="_on_pressed"]
+[connection signal="pressed" from="Reset Tree" to="." method="_on_reset_tree_pressed"]
+[connection signal="pressed" from="Clear Preview" to="." method="_on_clear_preview_pressed"]
+[connection signal="pressed" from="Clear Preview" to="camHolder/Camera3D" method="_on_clear_preview_pressed"]
+[connection signal="pressed" from="SaveChanges" to="." method="_on_save_changes_pressed"]
+[connection signal="pressed" from="SaveChangesAs" to="." method="_on_save_changes_as_pressed"]
+[connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="Select_Unselect All" to="." method="_on_select_unselect_all_pressed"]

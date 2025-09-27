@@ -30,7 +30,6 @@ var scrapGained := 0;
 @export var HUD_player : Control;
 @export var MUSIC : MusicHandler;
 @export var LIGHT : DirectionalLight3D;
-@export var deathTimer : DeathTimer;
 
 func _ready():
 	spawnPlayer();
@@ -50,6 +49,12 @@ func _on_scenetree_ready():
 				print_rich("[color=yellow][b]Scrap gained: ",scrapGained)
 			)
 	change_state(gameState.MAIN_MENU);
+
+func _process(delta):
+	process_state(delta, curState);
+
+
+############################ WAVES SETUP     TODO: Move a lot of the waves setup code to the individual game maps, when those exist.
 
 func set_enemy_spawn_waves(inWave:int):
 	var changed = false;
@@ -102,6 +107,8 @@ func return_random_enemy():
 	var sceneReturn = pool.pick_random();
 	return sceneReturn;
 
+################### STATE CONTROL
+
 ##Controls the state of the game.
 enum gameState {
 	START,
@@ -113,36 +120,57 @@ enum gameState {
 	OPTIONS,
 	SHOP,
 	INIT_ROUND,
+	BUILD_MODE,
 }
 var curState := gameState.START
-func change_state(newState : gameState):
-	if curState != newState:
-		exit_state(curState);
-		Hooks.OnChangeGameState(curState, newState);
-		curState = newState;
-		enter_state(newState);
 
-func exit_state(state:gameState):
-	if state == gameState.MAIN_MENU:
+var play_states = [
+	GameBoard.gameState.INIT_ROUND,
+	GameBoard.gameState.PLAY,
+	GameBoard.gameState.SHOP,
+]
+var build_states = [
+	GameBoard.gameState.SHOP,
+	GameBoard.gameState.BUILD_MODE,
+]
+var camera_tilt_states = [
+	GameBoard.gameState.SHOP,
+	GameBoard.gameState.BUILD_MODE,
+]
+@export var camera : Camera;
+func get_main_camera():
+	return camera;
+
+func change_state(newState : gameState):
+	var changeToDefer = func change(newState):
+		if curState != newState:
+			exit_state(curState);
+			Hooks.OnChangeGameState(curState, newState);
+			curState = newState;
+			enter_state(newState);
+	changeToDefer.call_deferred(newState);
+
+func exit_state(oldState:gameState):
+	if oldState == gameState.MAIN_MENU:
 		HUD_mainMenu.hide();
 		pass
-	elif state == gameState.GAME_OVER:
+	elif oldState == gameState.GAME_OVER:
 		#HUD_playerStats.hide();
 		HUD_gameOver.hide();
 		pass
-	elif state == gameState.CREDITS:
+	elif oldState == gameState.CREDITS:
 		HUD_credits.hide();
 		pass
-	elif state == gameState.OPTIONS:
+	elif oldState == gameState.OPTIONS:
 		HUD_options.open_sesame(false);
 		pass
-	elif state == gameState.PLAY:
+	elif oldState == gameState.PLAY:
 		pass
-	elif state == gameState.SHOP:
+	elif oldState == gameState.SHOP:
 		pass
-	elif state == gameState.INIT_ROUND:
+	elif oldState == gameState.INIT_ROUND:
 		pass
-	elif state == gameState.START:
+	elif oldState == gameState.START:
 		
 		HUD_mainMenu.hide();
 		HUD_credits.hide();
@@ -154,8 +182,8 @@ func exit_state(state:gameState):
 	else:
 		pass
 
-func enter_state(state:gameState):
-	if state == gameState.MAIN_MENU:
+func enter_state(newState:gameState):
+	if newState == gameState.MAIN_MENU:
 		HUD_options.load_settings();
 		MUSIC.change_state(MusicHandler.musState.MENU);
 		
@@ -164,22 +192,22 @@ func enter_state(state:gameState):
 		player.freeze(true);
 		HUD_mainMenu.show();
 		pass
-	elif state == gameState.GAME_OVER:
+	elif newState == gameState.GAME_OVER:
 		MUSIC.change_state(MusicHandler.musState.GAME_OVER);
 		
 		HUD_gameOver.show();
 		pass
-	elif state == gameState.CREDITS:
+	elif newState == gameState.CREDITS:
 		MUSIC.change_state(MusicHandler.musState.CREDITS);
 		
 		HUD_credits.show();
 		pass
-	elif state == gameState.OPTIONS:
+	elif newState == gameState.OPTIONS:
 		MUSIC.change_state(MusicHandler.musState.OPTIONS);
 		
 		HUD_options.open_sesame(true);
 		pass
-	elif state == gameState.INIT_PLAY:
+	elif newState == gameState.INIT_PLAY:
 		
 		MUSIC.change_state(MusicHandler.musState.SHOP);
 		
@@ -197,15 +225,15 @@ func enter_state(state:gameState):
 		change_state(gameState.INIT_ROUND);
 		
 		pass
-	elif state == gameState.PLAY:
+	elif newState == gameState.PLAY:
 		pass
-	elif state == gameState.SHOP:
+	elif newState == gameState.SHOP:
 		MUSIC.change_state(MusicHandler.musState.SHOP);
 		
 		player.end_round();
 		player.enter_shop();
 		pass
-	elif state == gameState.INIT_ROUND:
+	elif newState == gameState.INIT_ROUND:
 		MUSIC.change_state(MusicHandler.musState.PREGAME);
 		
 		round += 1;
@@ -220,7 +248,7 @@ func enter_state(state:gameState):
 	else:
 		pass
 
-func _process(delta):
+func process_state(delta : float, state : gameState):
 	if curState == gameState.MAIN_MENU:
 		pass
 	elif curState == gameState.GAME_OVER:
@@ -272,15 +300,18 @@ func update_lighting():
 
 ##returns true if we're in a state that might be considered a part of the game loop.
 func in_state_of_play()->bool:
-	if (GameState.get_game_board_state() == GameBoard.gameState.PLAY or GameState.get_game_board_state() == GameBoard.gameState.SHOP or GameState.get_game_board_state() == GameBoard.gameState.INIT_ROUND):
-		return true;
-	return false;
+	return in_one_of_given_states(play_states);
 
 ##returns true if we're in a state where build-a-bot mode is activated.
 func in_state_of_building()->bool:
-	if (GameState.get_game_board_state() == GameBoard.gameState.SHOP):
-		return true;
-	return false;
+	return in_one_of_given_states(build_states);
+
+func in_one_of_given_states(states:Array)->bool:
+	var currentState = GameState.get_game_board_state();
+	return currentState in states;
+
+
+#################### ENTITY SPAWNING 
 
 func spawnPlayer(_in_position := playerSpawnPosition) -> Node3D:
 	if player != null:
@@ -447,7 +478,12 @@ func _on_btn_options_pressed():
 
 
 ######################### DEATH TIMER MGMT
+@export var deathTimer : DeathTimer;
 
 func get_death_timer() -> DeathTimer:
-	##TODO: Finalize the path to this.
 	return deathTimer;
+
+
+func _on_btn_editor_pressed():
+	GameState.editor_mode_start();
+	pass # Replace with function body.

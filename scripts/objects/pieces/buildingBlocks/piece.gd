@@ -28,13 +28,21 @@ func stat_registry():
 	if activeAbilities.size() > 0:
 		register_stat("ActiveEnergyDraw", energyDrawActive, statIconEnergy);
 		register_stat("ActiveCooldown", activeCooldownTime, statIconCooldown);
+	
+	#Stats regardig Scrap Cost.
+	register_stat("ScrapCost", scrapCostBase, statIconMagazine, null, null, StatTracker.roundingModes.Ceili);
+	register_stat("ScrapSellModifier", scrapSellModifierBase, statIconMagazine);
+	register_stat("ScrapSalvageModifier", scrapSellModifierBase, statIconMagazine);
+	register_stat("Weight", weightBase, statIconCooldown);
 
 #################### VISUALS AND TRANSFORM
+
+@export var force_visibility := false; 
 
 func process_draw(delta):
 	#return;
 	#print(hurtboxCollisionHolder.get_collision_layer())
-	if not has_host(true, false, false):
+	if not has_host(true, false, false) and not force_visibility:
 		if visible: hide()
 	else:
 		if not visible: show()
@@ -73,15 +81,32 @@ func get_all_meshes() -> Array:
 
 ################ PIECE MANAGEMENT
 
-@export_category("Piece Management")
+@export_category("Piece Data")
 @export var pieceName : StringName = "Piece";
 @export_multiline var partDescription := "No description given.";
+@export var weightBase := 1.0;
 
-@export var hostSocket : Socket;
-@export var hostPiece : Piece;
-@export var hostRobot : Robot;
+@export var scrapCostBase : int;
+@export var scrapSellModifierBase := (2.0/3.0);
+@export var scrapSalvageModifierBase := (1.0/6.0);
 
+##TODO: Scrap sell/buy/salvage functions for when this has Parts inside of it.
+##Gets the Scrap amount for when you sell this Piece. Does not take into account the price of any Parts inside its Engine.
+##discountMultiplier is multiplied by the price.
+func get_sell_price_piece_only(discountMultiplier := 1.0):
+	return max(0, ceili(get_stat("ScrapCost") * get_stat("ScrapSellModifier") * discountMultiplier));
 
+##Gets the Scrap amount for when the Robot this is attached to dies and you're awarded Scrap. Does not take into account the price of any Parts inside its Engine.
+##discountMultiplier is multiplied by the price.
+func get_salvage_price_piece_only(discountMultiplier := 1.0):
+	return max(0, ceili(get_stat("ScrapCost") * get_stat("ScrapSalvageModifier") * discountMultiplier));
+
+##Gets the Scrap amount for attempting to buy this Piece.
+##discountMultiplier is multiplied by the price.
+##fixedMarkup is added to the price.
+func get_buy_price_piece_only(discountMultiplier := 1.0, fixedMarkup := 0):
+	var currentPrice = maxi(0, ceili(get_stat("ScrapCost") * discountMultiplier))
+	return currentPrice + fixedMarkup;
 
 ################### COLLISION
 
@@ -189,7 +214,7 @@ func ping_placement_validation():
 func get_all_hitboxes():
 	return hitboxCollisionHolder.get_children();
 
-##TODO: Figure out what this is even useful for. Damaging stuff? 
+##TODO: Figure out what this is even useful for. Taking damage? 
 ##Figure out how to know the body is a Robot.
 func on_hurtbox_collision(body : CollisionObject3D):
 	##TODO: Add a Hook here.
@@ -220,6 +245,7 @@ func disable_hurtbox(foo:bool):
 ##TODO: Fancy stuff. 
 var selected := false;
 func select(foo := not selected):
+	deselect_other_pieces(self);
 	if foo == selected: return;
 	selected = foo;
 	if selected: set_selection_mode(selectionModes.SELECTED);
@@ -227,21 +253,17 @@ func select(foo := not selected):
 	print(pieceName)
 	pass;
 
+func deselect():
+	deselect_all_sockets();
+	select(false);
+
+func deselect_other_pieces(filterPiece := self):
+	if has_host(false, true, false):
+		var bot = get_host_robot();
+		bot.deselect_all_pieces(filterPiece);
+
 ##Need to have support for a main 3D model. Sub-models will need to come later.
 ##Position should NEVER be changed from 0,0,0. 0,0,0 Origin is where this thing plugs in.
-
-####################### INVENTORY STUFF
-
-@export_category("Engine")
-#var pieceBonusOut : Array[PartModifier] = [] ##TODO: MAKE A PIECE BONUS THING
-
-##TODO:
-##Copy from the original 2D inventories. 
-##Needs ways of transmitting bonus data to the main body.
-##Needs ways of storing bonus data in a concise way.
-
-
-
 
 ####################### CHAIN MANAGEMENT
 ##Needs ways of pinging 3D spacve when trying to place it with its collision to check where it can be placed.
@@ -249,8 +271,13 @@ func select(foo := not selected):
 
 ##TODO: Functions for assigning the host robot and host piece.
 ##When the piece is assigned to a socket or robot, it should reparent itself to it.
+@export_category("Chain Management")
+@export var hostPiece : Piece;
+@export var hostRobot : Robot;
 
 @export var femaleSocketHolder : Node3D;
+@export var hostSocket : Socket;
+@export var assignedToSocket := false;
 var allSockets : Array[Socket] = []
 
 func autograb_sockets():
@@ -267,7 +294,6 @@ func get_all_female_sockets():
 func register_socket(socket : Socket):
 	Utils.append_unique(allSockets, socket);
 
-@export var assignedToSocket := false;
 ##Assigns this Piece to a given Socket.
 func assign_socket(socket:Socket):
 	socket.add_occupant(self);
@@ -344,8 +370,9 @@ func deselect_all_sockets():
 		socket.select(false);
 
 ################# MELEE 
-##Empty. If the thing is meant to do something upon making contact with another Robot, put what happens in here.
-func contact_damage(collider: Node):
+##If the thing is meant to do something upon making contact with another Robot, put what happens in here.
+##Empty at base, and isn't called.
+func contact_damage(robot: Robot) -> void:
 	pass;
 
 ####################### ABILITY AND ENERGY MANAGEMENT
@@ -382,6 +409,9 @@ func phys_process_abilities(delta):
 func get_outgoing_energy():
 	if not is_transmitting(): return 0.0;
 	return max(0.0, get_incoming_energy() - energyDrawCurrent);
+
+func is_transmitting():
+	return hasIncomingPower and transmittingPower;
 
 ##If this part is plugged into a socket, returns that socket's power.
 ##If not, then it's probably a robot body or not plugged in, and returns 0.
@@ -472,25 +502,51 @@ func use_passive():
 		energyDrawCurrent += get_passive_energy_cost();
 		pass
 
-func is_transmitting():
-	return hasIncomingPower and transmittingPower;
 
+####################### INVENTORY STUFF
 
-################# SCRAP
-@export_category( "monaaaay $$$$" )
-@export var scrapCostBase : int;
-var scrapSellModifier := 1.0;
-var scrapSellModifierBase := (2.0/3.0);
-#func _get_sell_price():
-	#var discount = (1.0) * scrapSellModifier * scrapSellModifierBase;
-	#
-	#var sellPrice = discount * scrapCostBase
-	#
-	#return roundi(max(1, (sellPrice + mod_sellPercent.add)  * ((1 + mod_sellPercent.flat) * mod_sellPercent.mult)))
-#
-#func _get_buy_price(_discount := 0.0, markup:=0.0, fixedDiscount := 0, fixedMarkup := 0):
-	#var discount = 1.0 + _discount + markup;
-	#
-	#var sellPrice = discount * scrapCostBase;
-	#
-	#return roundi(max(1, (sellPrice + fixedDiscount + fixedMarkup + mod_scrapCost.add) * ((1 + mod_scrapCost.flat) * mod_scrapCost.mult)))
+@export_category("Engine")
+#var pieceBonusOut : Array[PartModifier] = [] ##TODO: MAKE A PIECE BONUS THING
+
+##TODO:
+##Copy from the original 2D inventories. 
+##Needs ways of transmitting bonus data to the main body.
+##Needs ways of storing bonus data in a concise way.
+
+@export var engineSlots := {
+	## Row 0
+	Vector2i(0,0) : null,
+	Vector2i(1,0) : null,
+	Vector2i(2,0) : null,
+	Vector2i(3,0) : null,
+	Vector2i(4,0) : null,
+	## Row 1
+	Vector2i(0,1) : null,
+	Vector2i(1,1) : null,
+	Vector2i(2,1) : null,
+	Vector2i(3,1) : null,
+	Vector2i(4,1) : null,
+	## Row 2
+	Vector2i(0,2) : null,
+	Vector2i(1,2) : null,
+	Vector2i(2,2) : null, 
+	Vector2i(3,2) : null,
+	Vector2i(4,2) : null,
+	## Row 3
+	Vector2i(0,3) : null,
+	Vector2i(1,3) : null,
+	Vector2i(2,3) : null,
+	Vector2i(3,3) : null,
+	Vector2i(4,3) : null,
+	## Row 4
+	Vector2i(0,4) : null,
+	Vector2i(1,4) : null,
+	Vector2i(2,4) : null,
+	Vector2i(3,4) : null,
+	Vector2i(4,4) : null,
+	
+	##Shop stalls
+	"StallA" : null,
+	"StallB" : null,
+	"StallC" : null,
+}

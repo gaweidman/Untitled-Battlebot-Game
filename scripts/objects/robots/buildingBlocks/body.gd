@@ -11,9 +11,9 @@ func _ready():
 	currentRotation = global_rotation.y;
 
 func update_target_rotation(inRot, rotationSpeed):
+	rotationSpeed = clamp(rotationSpeed, 0.0, 1.0);
 	targetPoint = inRot;
 	targetRotation = targetPoint.angle();
-	#print("Getting target rotation:",targetRotation)
 	currentRotation = lerp_angle(currentRotation, targetRotation, rotationSpeed);
 	_integrate_forces("Rotation");
 
