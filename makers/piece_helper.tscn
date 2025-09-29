@@ -72,7 +72,7 @@ offset_right = 683.0
 offset_bottom = 65.0
 text = "Engine Block Coordinates"
 
-[node name="Label2" type="Label" parent="."]
+[node name="Engine Block Preview" type="Label" parent="."]
 layout_mode = 0
 offset_left = 723.0
 offset_top = 24.0
@@ -651,13 +651,20 @@ script = ExtResource("6_u3p13")
 coordX = 4
 coordY = 4
 
-[node name="TextEdit" type="TextEdit" parent="."]
+[node name="PieceName" type="TextEdit" parent="."]
 layout_mode = 0
 offset_left = 492.0
 offset_top = 253.0
 offset_right = 666.0
 offset_bottom = 291.0
 placeholder_text = "Piece Name"
+
+[node name="FilepathName" type="Label" parent="."]
+layout_mode = 0
+offset_left = 1206.0
+offset_top = 1.0
+offset_right = 1676.0
+offset_bottom = 34.0
 
 [node name="Reset Tree" type="Button" parent="."]
 layout_mode = 0
@@ -727,15 +734,6 @@ offset_bottom = 35.0
 text = "SAVE CHANGES (OVERWRITE)"
 alignment = 2
 
-[node name="SaveChangesAs" type="Button" parent="."]
-layout_mode = 0
-offset_left = 1682.0
-offset_top = 41.0
-offset_right = 1912.0
-offset_bottom = 72.0
-text = "SAVE CHANGES AS NEW"
-alignment = 2
-
 [node name="Exit" type="Button" parent="."]
 layout_mode = 0
 offset_left = 1842.0
@@ -751,6 +749,119 @@ offset_top = 8.0
 offset_right = 653.0
 offset_bottom = 39.0
 text = "Select/Unselect All"
+
+[node name="ConfirmSavePopup" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1383.0
+offset_top = 100.0
+offset_right = -115.0
+offset_bottom = -648.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelBG" type="NinePatchRect" parent="ConfirmSavePopup"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.071
+anchor_right = 1.083
+anchor_bottom = 1.0
+offset_left = -0.0379982
+offset_right = -0.0260315
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_26mwm")
+region_rect = Rect2(1, 1, 46, 47)
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12
+
+[node name="Label" type="Label" parent="ConfirmSavePopup"]
+layout_mode = 0
+offset_left = -61.0
+offset_top = 10.0
+offset_right = 505.0
+offset_bottom = 59.0
+text = "Save this Piece? 
+(Changes may not be viewable until you reset the editor.)
+Old path:"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 122.0
+offset_right = 405.0
+offset_bottom = 171.0
+text = "New path:"
+horizontal_alignment = 1
+
+[node name="tscn" type="Label" parent="ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 233.0
+offset_top = 158.0
+offset_right = 614.0
+offset_bottom = 207.0
+text = ".tscn
+"
+horizontal_alignment = 1
+
+[node name="newPathPrefix" type="Label" parent="ConfirmSavePopup"]
+layout_mode = 0
+offset_left = -65.0
+offset_top = 157.0
+offset_right = 316.0
+offset_bottom = 206.0
+text = "res://scenes/prefabs/objects/pieces/"
+horizontal_alignment = 1
+
+[node name="NewPath" type="TextEdit" parent="ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 150.0
+offset_right = 404.0
+offset_bottom = 188.0
+text = "piece_test"
+
+[node name="OldPath" type="TextEdit" parent="ConfirmSavePopup"]
+layout_mode = 0
+offset_left = -24.0
+offset_top = 86.0
+offset_right = 447.0
+offset_bottom = 124.0
+editable = false
+
+[node name="SaveChangesAs" type="Button" parent="ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 91.0
+offset_top = 245.0
+offset_right = 321.0
+offset_bottom = 276.0
+text = "CONFIRM SAVE"
+
+[node name="CancelSave" type="Button" parent="ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 289.0
+offset_right = 322.0
+offset_bottom = 321.0
+text = "CANCEL SAVE"
+
+[node name="Success" type="Label" parent="ConfirmSavePopup"]
+layout_mode = 0
+offset_left = -27.0
+offset_top = 187.0
+offset_right = 451.0
+offset_bottom = 236.0
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+text = "Save Successful
+"
+horizontal_alignment = 1
+autowrap_mode = 3
 
 [connection signal="button_clicked" from="Tree" to="." method="_on_tree_button_clicked"]
 [connection signal="item_activated" from="Tree" to="." method="_on_tree_item_activated"]
@@ -779,10 +890,14 @@ text = "Select/Unselect All"
 [connection signal="pressed" from="PartsHolder_Engine/PartHolderButton23" to="PartsHolder_Engine/PartHolderButton23" method="_on_pressed"]
 [connection signal="pressed" from="PartsHolder_Engine/PartHolderButton24" to="PartsHolder_Engine/PartHolderButton24" method="_on_pressed"]
 [connection signal="pressed" from="PartsHolder_Engine/PartHolderButton25" to="PartsHolder_Engine/PartHolderButton25" method="_on_pressed"]
+[connection signal="mouse_entered" from="PieceName" to="." method="_on_piece_name_mouse_entered"]
+[connection signal="mouse_exited" from="PieceName" to="." method="_on_piece_name_mouse_exited"]
+[connection signal="text_changed" from="PieceName" to="." method="_on_piece_name_text_changed"]
 [connection signal="pressed" from="Reset Tree" to="." method="_on_reset_tree_pressed"]
 [connection signal="pressed" from="Clear Preview" to="." method="_on_clear_preview_pressed"]
 [connection signal="pressed" from="Clear Preview" to="camHolder/Camera3D" method="_on_clear_preview_pressed"]
 [connection signal="pressed" from="SaveChanges" to="." method="_on_save_changes_pressed"]
-[connection signal="pressed" from="SaveChangesAs" to="." method="_on_save_changes_as_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="Select_Unselect All" to="." method="_on_select_unselect_all_pressed"]
+[connection signal="pressed" from="ConfirmSavePopup/SaveChangesAs" to="." method="_on_save_changes_as_pressed"]
+[connection signal="pressed" from="ConfirmSavePopup/CancelSave" to="." method="_on_cancel_save_pressed"]

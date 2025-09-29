@@ -39,17 +39,32 @@ extends Control
 @export var engine : PartsHolder_Engine;
 @export var pieceHolder : Socket;
 
+var pieceSceneFilePath : String;
 var pieceSceneBeingInspected : PackedScene;
 var pieceBeingInspected : Piece;
 
-func set_inspected_piece(inScene : PackedScene):
-	var newPiece = inScene.instantiate();
+func set_inspected_piece(data):
+	
+	open_save_popup(false);
+	
+	var pieceRef = data.node;
+	var pieceFilePath = data.filepath;
+	if ! pieceRef is PackedScene: return;
+	
+	var newPiece = pieceRef.instantiate();
 	if newPiece is Piece:
 		clear_inspected_piece();
 		
 		##Set the new scene and piece.
-		pieceSceneBeingInspected = inScene;
+		pieceSceneBeingInspected = pieceRef;
 		pieceBeingInspected = newPiece;
+		pieceSceneFilePath = pieceFilePath;
+		
+		##Change the filepath text.
+		$FilepathName.text = pieceFilePath;
+		
+		##Change the piece name text.
+		$PieceName.text = newPiece.pieceName;
 		
 		pieceHolder.add_child(pieceBeingInspected);
 		pieceHolder.add_occupant(pieceBeingInspected);
@@ -66,11 +81,33 @@ func clear_inspected_piece():
 	clear_coordinates();
 	if is_instance_valid(pieceBeingInspected):
 		pieceBeingInspected.queue_free();
+	pieceSceneBeingInspected = null;
+	$FilepathName.text = "[No Piece selected]";
 
+var filepathPrefix = "res://scenes/prefabs/objects/pieces/"
+
+
+func _on_piece_name_text_changed():
+	if is_instance_valid(pieceBeingInspected):
+		var text = $PieceName.text;
+		pieceBeingInspected.name = "Piece_" + text;
+		pieceBeingInspected.pieceName = text;
+	pass # Replace with function body.
+
+func _on_piece_name_mouse_entered():
+	$PieceName.editable = true;
+	pass # Replace with function body.
+func _on_piece_name_mouse_exited():
+	$PieceName.editable = false;
+	pass # Replace with function body.
+
+##Resets the list of viewed Pieces.
 func get_pieces():
 	$Tree.clear();
+	var child = $Tree.create_item()
+	child.set_text(0, "Pieces")
 	
-	var prefix = "res://scenes/prefabs/objects/pieces/"
+	var prefix = filepathPrefix
 	var dir = DirAccess.open(prefix)
 	var dirBase = DirAccess.open("res://")
 	if dir:
@@ -87,7 +124,7 @@ func get_pieces():
 				print(fullName)
 				if FileAccess.file_exists(fullName):
 					var loadedFile = load(fullName);
-					add_to_tree(file_name, loadedFile)
+					add_to_tree(file_name, loadedFile, fullName);
 			file_name = dir.get_next()
 			
 	else:
@@ -95,7 +132,8 @@ func get_pieces():
 
 
 func _ready():
-	get_pieces()
+	open_save_popup(false);
+	get_pieces();
 	##var tree = Tree.new()
 	#var tree = $Tree
 	#var root = tree.create_item()
@@ -105,9 +143,9 @@ func _ready():
 	#var subchild1 = tree.create_item(child1)
 	#subchild1.set_text(0, "Subchild1")
 
-func add_to_tree(text, node):
+func add_to_tree(text, node, filepath):
 	var child = $Tree.create_item()
-	child.set_metadata(0, node)
+	child.set_metadata(0, {"node" : node, "filepath" : filepath});
 	child.set_text(0, str(text));
 
 
@@ -121,8 +159,9 @@ func _on_tree_item_activated():
 	var itemAtPos : TreeItem = $Tree.get_item_at_position(mousePos);
 	print(itemAtPos.get_text(0))
 	print(itemAtPos.get_metadata(0))
-	var pieceRef = itemAtPos.get_metadata(0)
-	set_inspected_piece(pieceRef);
+	var data = itemAtPos.get_metadata(0)
+	if data is Dictionary:
+		set_inspected_piece(data);
 	pass # Replace with function body.
 
 
@@ -189,7 +228,7 @@ func _process(delta):
 		frameCounter = 15;
 		var checks = check_and_get_checks();
 		#print(checks)
-		engine.set_pattern(checks);
+		set_engine_pattern(checks);
 
 func check_and_get_checks()->Array[Vector2i]:
 	var checkedButtonArray : Array[Vector2i] = [];
@@ -212,16 +251,64 @@ func _on_clear_preview_pressed():
 	clear_inspected_piece();
 	pass # Replace with function body.
 
-##"Save" function.
+##"Save" button. Opens a confirmation popup.
 func _on_save_changes_pressed():
+	open_save_popup(true);
 	pass # Replace with function body.
 
 
-##"Save As" function.
+##Actually saves the stuff.
 func _on_save_changes_as_pressed():
+	var savedPath = filepathPrefix + $ConfirmSavePopup/NewPath.text + ".tscn"
+	if pieceBeingInspected != null && pieceSceneFilePath != null:
+		var saveNode = PackedScene.new()
+		saveNode.pack(pieceBeingInspected);
+		
+		
+		ResourceSaver.save(saveNode, savedPath);
+		
+		get_pieces();
+		TextFunc.set_text_color($ConfirmSavePopup/Success, "utility");
+		$ConfirmSavePopup/Success.text = "Saved Successfully to " + savedPath
+		$ConfirmSavePopup/Success.show();
+	else:
+		TextFunc.set_text_color($ConfirmSavePopup/Success, "melee");
+		$ConfirmSavePopup/Success.text = "Saved Unsuccessfully to " + savedPath
+		$ConfirmSavePopup/Success.show();
 	pass # Replace with function body.
 
 
 func _on_exit_pressed():
 	get_tree().quit();
 	pass # Replace with function body.
+
+var savePopupIsOpen
+
+func open_save_popup(open : bool):
+	savePopupIsOpen = open;
+	if open:
+		##Old path text
+		$ConfirmSavePopup/OldPath.text = pieceSceneFilePath;
+		##New path text
+		$ConfirmSavePopup/newPathPrefix.text = filepathPrefix;
+		$ConfirmSavePopup/NewPath.text = "piece_test";
+		$ConfirmSavePopup/CancelSave.disabled = false;
+		$ConfirmSavePopup/SaveChangesAs.disabled = false;
+		$ConfirmSavePopup.show();
+		$ConfirmSavePopup/Success.hide();
+	else:
+		$ConfirmSavePopup.hide();
+		$ConfirmSavePopup/Success.hide();
+		$ConfirmSavePopup/CancelSave.disabled = true;
+		$ConfirmSavePopup/SaveChangesAs.disabled = true;
+
+func _on_cancel_save_pressed():
+	open_save_popup(false);
+	pass # Replace with function body.
+
+func set_engine_pattern(tilesArray : Array[Vector2i]):
+	engine.set_pattern(tilesArray);
+	if is_instance_valid(pieceBeingInspected):
+		pieceBeingInspected.engineSlots = {}
+		for tile in tilesArray:
+			pieceBeingInspected.engineSlots[tile] = null;

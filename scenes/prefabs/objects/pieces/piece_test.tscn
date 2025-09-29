@@ -1,42 +1,43 @@
-[gd_scene load_steps=20 format=3 uid="uid://cxabnbeq8wy53"]
+[gd_scene load_steps=21 format=3]
 
-[ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_k1jne"]
-[ext_resource type="ArrayMesh" uid="uid://cfvtjsean8sey" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="2_584uk"]
-[ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_erqxd"]
-[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_8yny5"]
-[ext_resource type="ArrayMesh" uid="uid://q6bj0b082swx" path="res://graphics/models/obj/blade2.obj" id="3_omexb"]
-[ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="4_584uk"]
-[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_j66hk"]
-[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="5_gfg0o"]
-[ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_kb5ak"]
-[ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="6_r0nuw"]
-[ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="7_3l8sh"]
+[ext_resource type="Script" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_jca88"]
+[ext_resource type="Script" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_8se50"]
+[ext_resource type="Texture2D" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_soava"]
+[ext_resource type="Texture2D" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_0ojr0"]
+[ext_resource type="PackedScene" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="5_0ojr0"]
+[ext_resource type="Script" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_uuld8"]
+[ext_resource type="Texture2D" path="res://graphics/images/models/sockets/socketM.png" id="6_r26v0"]
+[ext_resource type="Script" path="res://scripts/objects/pieces/buildingBlocks/socket.gd" id="6_uuld8"]
+[ext_resource type="Texture2D" path="res://graphics/images/models/sockets/prong.png" id="7_3vnpp"]
+[ext_resource type="ArrayMesh" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="8_r26v0"]
+[ext_resource type="ArrayMesh" path="res://graphics/models/obj/blade2.obj" id="9_3vnpp"]
+[ext_resource type="Material" path="res://graphics/materials/Sawblade.tres" id="10_fcxei"]
 
 [sub_resource type="Resource" id="Resource_xxf1u"]
-script = ExtResource("2_erqxd")
+script = ExtResource("2_8se50")
 statName = "ScrapCost"
-statIcon = ExtResource("3_8yny5")
+statIcon = ExtResource("3_soava")
 baseStat = 0.0
 roundingMode = 6
 
 [sub_resource type="Resource" id="Resource_x7xa2"]
-script = ExtResource("2_erqxd")
+script = ExtResource("2_8se50")
 statName = "ScrapSellModifier"
-statIcon = ExtResource("3_8yny5")
+statIcon = ExtResource("3_soava")
 baseStat = 0.666667
 roundingMode = 0
 
 [sub_resource type="Resource" id="Resource_8crb0"]
-script = ExtResource("2_erqxd")
+script = ExtResource("2_8se50")
 statName = "ScrapSalvageModifier"
-statIcon = ExtResource("3_8yny5")
+statIcon = ExtResource("3_soava")
 baseStat = 0.666667
 roundingMode = 0
 
 [sub_resource type="Resource" id="Resource_8wfwi"]
-script = ExtResource("2_erqxd")
+script = ExtResource("2_8se50")
 statName = "Weight"
-statIcon = ExtResource("4_j66hk")
+statIcon = ExtResource("4_0ojr0")
 baseStat = 1.0
 roundingMode = 0
 
@@ -46,7 +47,7 @@ size = Vector2(0.25, 0.25)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sqnxc"]
 transparency = 1
 cull_mode = 2
-albedo_texture = ExtResource("6_r0nuw")
+albedo_texture = ExtResource("6_r26v0")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_kphb4"]
 size = Vector2(0.1, 0.15)
@@ -54,10 +55,10 @@ size = Vector2(0.1, 0.15)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t8ht0"]
 transparency = 1
 cull_mode = 2
-albedo_texture = ExtResource("7_3l8sh")
+albedo_texture = ExtResource("7_3vnpp")
 
 [node name="Piece_Sawblade" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
-script = ExtResource("1_k1jne")
+script = ExtResource("1_jca88")
 force_visibility = true
 pieceName = &"Sawblade"
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
@@ -75,7 +76,7 @@ Vector2i(3, 1): null,
 Vector2i(3, 2): null,
 Vector2i(3, 3): null
 }
-statCollection = Array[ExtResource("2_erqxd")]([SubResource("Resource_xxf1u"), SubResource("Resource_x7xa2"), SubResource("Resource_8crb0"), SubResource("Resource_8wfwi")])
+statCollection = Array[ExtResource("2_8se50")]([SubResource("Resource_xxf1u"), SubResource("Resource_x7xa2"), SubResource("Resource_8crb0"), SubResource("Resource_8wfwi")])
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"
@@ -88,7 +89,7 @@ collision_mask = 8
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
 collision_layer = 8
-script = ExtResource("5_kb5ak")
+script = ExtResource("5_uuld8")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
@@ -141,19 +142,22 @@ surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
 
 [node name="SwivelBottom" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
-mesh = ExtResource("2_584uk")
+mesh = ExtResource("8_r26v0")
 
 [node name="SwivelBottom2" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.25, 0)
-mesh = ExtResource("2_584uk")
+mesh = ExtResource("8_r26v0")
 
 [node name="Blade2" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.7128, 0, 0, 0, 0.7128, 0, 0, 0, 0.7128, 0, 0.0425063, 0)
-mesh = ExtResource("3_omexb")
-surface_material_override/0 = ExtResource("4_584uk")
+mesh = ExtResource("9_3vnpp")
+surface_material_override/0 = ExtResource("10_fcxei")
 
-[node name="Socket" parent="." node_paths=PackedStringArray("hostPiece") instance=ExtResource("5_gfg0o")]
+[node name="Socket" type="Area3D" parent="." node_paths=PackedStringArray("hostPiece") instance=ExtResource("5_0ojr0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("6_uuld8")
 hostPiece = NodePath("..")
 
 [connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]

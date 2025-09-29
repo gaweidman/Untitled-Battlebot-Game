@@ -78,9 +78,9 @@ func _process(delta):
 			load_position();
 		## A/D - Save and load rotation
 		if Input.is_action_pressed("MoveRight"):
-			save_position();
+			save_rotation();
 		if Input.is_action_pressed("MoveLeft"):
-			load_position();
+			load_rotation();
 	else:
 		var moveVector = Vector3.ZERO;
 		## Q/E - Zoom
@@ -119,8 +119,8 @@ var savedRot : Vector3;
 func save_position():
 	savedPos = get_parent().position;
 func load_position():
-	savedPos = get_parent().position;
+	get_parent().position = savedPos;
 func save_rotation():
-	savedPos = get_parent().position;
+	savedRot = get_parent().position;
 func load_rotation():
-	savedPos = get_parent().position;
+	get_parent().rotation = savedRot;
