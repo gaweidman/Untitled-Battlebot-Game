@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://chyoepmh0d8ul"]
+[gd_scene load_steps=25 format=3 uid="uid://bretkiyuy4fah"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_lmodm"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_8x5gi"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_pmqmd"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="3_vga6k"]
 [ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_05rox"]
+[ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="8_lmodm"]
 
 [sub_resource type="Resource" id="Resource_xxf1u"]
 script = ExtResource("2_u5m20")
@@ -76,6 +77,12 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("3_vga6k")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_u5m20"]
+size = Vector3(1.5, 0.5, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pmqmd"]
+size = Vector3(1.75, 0.625, 1.25)
+
 [node name="Piece_Bumper" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_lmodm")
 force_visibility = true
@@ -86,6 +93,12 @@ hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 meshesHolder = NodePath("Meshes")
 femaleSocketHolder = NodePath("FemaleSockets")
 hurtboxAlwaysEnabled = true
+engineSlots = {
+Vector2i(1, 2): null,
+Vector2i(2, 2): null,
+Vector2i(2, 3): null,
+Vector2i(3, 2): null
+}
 statCollection = Array[ExtResource("2_u5m20")]([SubResource("Resource_xxf1u"), SubResource("Resource_x7xa2"), SubResource("Resource_8crb0"), SubResource("Resource_8wfwi")])
 
 [node name="MaleSocket" type="Node3D" parent="."]
@@ -211,6 +224,20 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.0
 mesh = SubResource("PlaneMesh_k8cvo")
 skeleton = NodePath("../../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_ts5ym")
+
+[node name="PieceCollisionBox" parent="." instance=ExtResource("8_lmodm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("BoxShape3D_u5m20")
+debug_color = Color(0, 0.6, 0.701961, 0.419608)
+
+[node name="PieceCollisionBox2" parent="." instance=ExtResource("8_lmodm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+shape = SubResource("BoxShape3D_pmqmd")
+debug_color = Color(0.964706, 0, 0.498039, 0.419608)
+identifier = &"BumperHitbox"
+isPlacementBox = false
+isHurtbox = false
+isHitbox = true
 
 [connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
 [connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]

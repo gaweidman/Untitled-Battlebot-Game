@@ -1,16 +1,16 @@
-[gd_scene load_steps=20 format=3 uid="uid://cxabnbeq8wy53"]
+[gd_scene load_steps=23 format=3 uid="uid://cxabnbeq8wy53"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_k1jne"]
 [ext_resource type="ArrayMesh" uid="uid://cfvtjsean8sey" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="2_584uk"]
 [ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_erqxd"]
 [ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_8yny5"]
-[ext_resource type="ArrayMesh" uid="uid://q6bj0b082swx" path="res://graphics/models/obj/blade2.obj" id="3_omexb"]
-[ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="4_584uk"]
+[ext_resource type="ArrayMesh" uid="uid://q6bj0b082swx" path="res://graphics/models/obj/botparts/blade2.obj" id="3_omexb"]
 [ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_j66hk"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="5_gfg0o"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_kb5ak"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="6_r0nuw"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="7_3l8sh"]
+[ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="12_k1jne"]
 
 [sub_resource type="Resource" id="Resource_xxf1u"]
 script = ExtResource("2_erqxd")
@@ -55,6 +55,17 @@ size = Vector2(0.1, 0.15)
 transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("7_3l8sh")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_erqxd"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_8yny5"]
+height = 0.5
+radius = 1.125
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_j66hk"]
+height = 0.6875
+radius = 1.625
 
 [node name="Piece_Sawblade" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_k1jne")
@@ -150,11 +161,27 @@ mesh = ExtResource("2_584uk")
 [node name="Blade2" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.7128, 0, 0, 0, 0.7128, 0, 0, 0, 0.7128, 0, 0.0425063, 0)
 mesh = ExtResource("3_omexb")
-surface_material_override/0 = ExtResource("4_584uk")
 
 [node name="Socket" parent="." node_paths=PackedStringArray("hostPiece") instance=ExtResource("5_gfg0o")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 hostPiece = NodePath("..")
+
+[node name="PieceCollisionBox" parent="." instance=ExtResource("12_k1jne")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("BoxShape3D_erqxd")
+identifier = &"axle holder"
+
+[node name="PieceCollisionBox2" parent="." instance=ExtResource("12_k1jne")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("CylinderShape3D_8yny5")
+identifier = &"sawblade hurtbox"
+
+[node name="PieceCollisionBox3" parent="." instance=ExtResource("12_k1jne")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.28125, 0)
+shape = SubResource("CylinderShape3D_j66hk")
+isPlacementBox = false
+isHurtbox = false
+isHitbox = true
 
 [connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
 [connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]

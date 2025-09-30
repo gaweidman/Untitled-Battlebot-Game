@@ -43,6 +43,7 @@ var pieceSceneFilePath : String;
 var pieceSceneBeingInspected : PackedScene;
 var pieceBeingInspected : Piece;
 
+## Given a [Dictionary]. Format is { "node" : [PackedScene], "filepath" : original filepath }
 func set_inspected_piece(data):
 	
 	open_save_popup(false);
@@ -53,6 +54,7 @@ func set_inspected_piece(data):
 	
 	var newPiece = pieceRef.instantiate();
 	if newPiece is Piece:
+		##Clear out the old.
 		clear_inspected_piece();
 		
 		##Set the new scene and piece.
@@ -60,11 +62,15 @@ func set_inspected_piece(data):
 		pieceBeingInspected = newPiece;
 		pieceSceneFilePath = pieceFilePath;
 		
+		##Show the thing.
+		pieceBeingInspected.show();
+		
 		##Change the filepath text.
 		$FilepathName.text = pieceFilePath;
 		
 		##Change the piece name text.
-		$PieceName.text = newPiece.pieceName;
+		$PieceData/PieceName.text = newPiece.pieceName;
+		$PieceData/PieceDescription.text = newPiece.pieceDescription;
 		
 		pieceHolder.add_child(pieceBeingInspected);
 		pieceHolder.add_occupant(pieceBeingInspected);
@@ -89,23 +95,49 @@ var filepathPrefix = "res://scenes/prefabs/objects/pieces/"
 
 func _on_piece_name_text_changed():
 	if is_instance_valid(pieceBeingInspected):
-		var text = $PieceName.text;
+		var text = $PieceData/PieceName.text;
 		pieceBeingInspected.name = "Piece_" + text;
 		pieceBeingInspected.pieceName = text;
+		
+		var desc = $PieceData/PieceDescription.text;
+		if desc == "":
+			desc = "No Description Found.";
+		pieceBeingInspected.pieceDescription = desc;
 	pass # Replace with function body.
 
+var cameraControlIsOn = true;
+func is_camera_control_on():
+	return $camHolder/Camera3D.enabled;
+func enable_camera():
+	cameraControlIsOn  = true;
+	$camHolder/Camera3D.enable()
+func disable_camera():
+	cameraControlIsOn = false;
+	$camHolder/Camera3D.disable()
+
 func _on_piece_name_mouse_entered():
-	$PieceName.editable = true;
+	disable_camera();
+	
+	$PieceData/PieceName.editable = true;
+	$PieceData/PieceDescription.editable = true;
 	pass # Replace with function body.
 func _on_piece_name_mouse_exited():
-	$PieceName.editable = false;
+	enable_camera();
+	
+	$PieceData/PieceName.editable = false;
+	
+	$PieceData/PieceDescription.editable = false;
+	var desc = $PieceData/PieceDescription.text;
+	if desc == "":
+		$PieceData/PieceDescription.text = "No Description Found.";
 	pass # Replace with function body.
 
 ##Resets the list of viewed Pieces.
 func get_pieces():
 	$Tree.clear();
-	var child = $Tree.create_item()
-	child.set_text(0, "Pieces")
+	var child = $Tree.create_item();
+	child.set_text(0, "Pieces");
+	child.set_metadata(0, generate_new_piece());
 	
 	var prefix = filepathPrefix
 	var dir = DirAccess.open(prefix)
@@ -143,6 +175,8 @@ func _ready():
 	#var subchild1 = tree.create_item(child1)
 	#subchild1.set_text(0, "Subchild1")
 
+
+##Adds a Piece node to the tree. Needs the text, the node's PackedScene, and the original filepath.
 func add_to_tree(text, node, filepath):
 	var child = $Tree.create_item()
 	child.set_metadata(0, {"node" : node, "filepath" : filepath});
@@ -155,7 +189,7 @@ func _on_tree_button_clicked(item, column, id, mouse_button_index):
 
 
 func _on_tree_item_activated():
-	var mousePos = get_viewport().get_mouse_position()
+	var mousePos = get_viewport().get_mouse_position() - $Tree.position
 	var itemAtPos : TreeItem = $Tree.get_item_at_position(mousePos);
 	print(itemAtPos.get_text(0))
 	print(itemAtPos.get_metadata(0))
@@ -199,9 +233,9 @@ func _on_tree_item_activated():
 }
 
 func clear_coordinates():
-	var array : Array[Vector2i] = []
-	engine.set_pattern(array);
+	engine.close_and_clear();
 
+##Fills the engine with the piece's engine slots.
 func generate_coordinates_from_piece(inPiece : Piece):
 
 	var tilesArray : Array[Vector2i] = [];
@@ -217,19 +251,20 @@ func generate_coordinates_from_piece(inPiece : Piece):
 	##pieceRef.
 	
 	##Engine setup.
-	engine.set_pattern(tilesArray);
+	engine.open_with_new_piece(inPiece);
 	pass;
 
-var frameCounter = 15;
+var frameCounter = 5;
 func _process(delta):
 	if frameCounter > 0:
 		frameCounter -= 1;
 	else:
-		frameCounter = 15;
+		frameCounter = 5;
 		var checks = check_and_get_checks();
 		#print(checks)
 		set_engine_pattern(checks);
 
+## Returns an array of all the coordinates currently checked by the engine checkboxes.
 func check_and_get_checks()->Array[Vector2i]:
 	var checkedButtonArray : Array[Vector2i] = [];
 	for slot in coordinateMapper.keys():
@@ -240,8 +275,6 @@ func check_and_get_checks()->Array[Vector2i]:
 				checkedButtonArray.append(coord);
 	return checkedButtonArray;
 
-
-
 func _on_reset_tree_pressed():
 	get_pieces();
 	pass # Replace with function body.
@@ -249,6 +282,7 @@ func _on_reset_tree_pressed():
 
 func _on_clear_preview_pressed():
 	clear_inspected_piece();
+	engine.close();
 	pass # Replace with function body.
 
 ##"Save" button. Opens a confirmation popup.
@@ -257,15 +291,25 @@ func _on_save_changes_pressed():
 	pass # Replace with function body.
 
 
-##Actually saves the stuff.
+##Actually saves the stuff. Saves the scene as a Piece; deletes all Collision copies, hides it, saves it, then regenerates collision and shows it again.
 func _on_save_changes_as_pressed():
 	var savedPath = filepathPrefix + $ConfirmSavePopup/NewPath.text + ".tscn"
 	if pieceBeingInspected != null && pieceSceneFilePath != null:
 		var saveNode = PackedScene.new()
+		
+		pieceBeingInspected.reset_collision_helpers();
+		pieceBeingInspected.hide();
+		pieceBeingInspected.name = "Piece_" + $PieceData/PieceName.text;
+		
+		
 		saveNode.pack(pieceBeingInspected);
 		
 		
 		ResourceSaver.save(saveNode, savedPath);
+		
+		
+		pieceBeingInspected.show();
+		pieceBeingInspected.refresh_and_gather_collision_helpers();
 		
 		get_pieces();
 		TextFunc.set_text_color($ConfirmSavePopup/Success, "utility");
@@ -307,8 +351,36 @@ func _on_cancel_save_pressed():
 	pass # Replace with function body.
 
 func set_engine_pattern(tilesArray : Array[Vector2i]):
-	engine.set_pattern(tilesArray);
+	engine.queue_pattern(tilesArray);
 	if is_instance_valid(pieceBeingInspected):
 		pieceBeingInspected.engineSlots = {}
 		for tile in tilesArray:
 			pieceBeingInspected.engineSlots[tile] = null;
+
+@onready var newPieceRef = preload("res://scenes/prefabs/objects/pieces/buildingBlocks/piece.tscn")
+
+##Creates a new piece from the void.
+func _on_new_piece_pressed():
+	set_inspected_piece(generate_new_piece());
+	pass # Replace with function body.
+
+func generate_new_piece():
+	var newData = {
+		"node" : newPieceRef,
+		"filepath" : "res://scenes/prefabs/objects/pieces/piece_test.tscn",
+	}
+	return newData;
+
+
+func _on_select_unselect_all_pressed():
+	var check = check_and_get_checks();
+	if len(check) > 0:
+		for slot in coordinateMapper.keys():
+			if slot is CheckBox:
+				slot.button_pressed = false;
+	else:
+		for slot in coordinateMapper.keys():
+			if slot is CheckBox:
+				slot.button_pressed = true;
+		
+	pass # Replace with function body.

@@ -42,25 +42,6 @@ func disable(_disabled:bool):
 	disabled = _disabled;
 	if disabled: button_pressed = false;
 	update_gfx();
-#
-#func update_gfx():
-	#if ! disabled:
-		#inventory = GameState.get_inventory();
-		#if inventory.is_slot_free(coordX, coordY, inventory.selectedPart):
-			#z_index = 100;
-			#set_textures(true);
-			#if inventory.is_there_space_for_part(inventory.selectedPart, Vector2i(coordX,coordY)):
-				#mouse_filter = Control.MOUSE_FILTER_STOP;
-			#else:
-				#mouse_filter = Control.MOUSE_FILTER_IGNORE;
-				#disabled = true;
-		#else:
-			#disabled = true;
-	#else:
-		#set_textures(false);
-		#mouse_filter = Control.MOUSE_FILTER_IGNORE;
-		#z_index = 0;
-
 
 func update_gfx():
 	var hideme := false;
@@ -89,7 +70,21 @@ func update_gfx():
 		hideme = true;
 	
 	if hideme:
+		hide()
 		disabled = true;
 		set_textures(false); #Sets the sprite invisible
 		mouse_filter = Control.MOUSE_FILTER_IGNORE; #makes the mouse not wanna click it
 		z_index = 0; #makes it not draw over other stuff
+
+func _process(delta):
+	if is_instance_valid(parent):
+		if parent.check_in_state([PartsHolder_Engine.doorStates.OPEN]):
+			if ! visible:
+				show();
+		else:
+			if visible:
+				hide();
+				disabled = true;
+	else:
+		hide();
+		disabled = true;

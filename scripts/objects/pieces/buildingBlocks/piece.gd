@@ -5,6 +5,7 @@ class_name Piece
 ########## STANDARD GODOT PROCESSING FUNCTIONS
 
 func _ready():
+	hide();
 	ability_registry();
 	super(); #Stat registry.
 	autograb_sockets();
@@ -83,7 +84,7 @@ func get_all_meshes() -> Array:
 
 @export_category("Piece Data")
 @export var pieceName : StringName = "Piece";
-@export_multiline var partDescription := "No description given.";
+@export_multiline var pieceDescription := "No Description Found.";
 @export var weightBase := 1.0;
 
 @export var scrapCostBase : int;
@@ -133,15 +134,24 @@ func phys_process_collision(delta):
 		else:
 			hurtboxCollisionHolder.collision_layer = 8; #Hurtbox layer and hover layer.
 
-##This function assigns socket data and generates all hitboxes. Should only ever be run once at _ready.
+##Assign all sockets with this as their host piece.
+func autoassign_child_sockets_to_self():
+	for child in Utils.get_all_children_of_type(self, Socket, self):
+		child.hostPiece = self;
+
+##This function assigns socket data and generates all hitboxes. Should only ever be run once at [method _ready()].
 func gather_colliders_and_meshes():
 	autograb_sockets();
 	get_all_mesh_init_materials();
-	#Assign all sockets with this as their host piece.
-	for child in Utils.get_all_children_of_type(self, Socket, self):
-		child.hostPiece = self;
+	autoassign_child_sockets_to_self();
+	refresh_and_gather_collision_helpers();
+
+##This function regenerates all collision boxes. Should in theory only ever be run at [method _ready()], but the Piece Helper tool scene uses it also.
+func refresh_and_gather_collision_helpers():
+	#Clear out all copies.
+	reset_collision_helpers();
 	
-	#Clear all colliders from their respective areas.
+	#Clear all colliders from their respective areas, given that the resets didn't work.
 	for child in placementCollisionHolder.get_children():
 		child.queue_free();
 	for child in hurtboxCollisionHolder.get_children():
@@ -152,41 +162,48 @@ func gather_colliders_and_meshes():
 	var identifyingNum = 0;
 	for child in get_children():
 		if child is PieceCollisionBox:
-			child.originalHost = self;
-			child.originalOffset = child.global_position - global_position;
-			if child.identifier == null:
-				child.identifier = str(identifyingNum)
-				identifyingNum += 1;
-			if is_instance_valid(child.shape):
-				##if the PieceCollisionBox is of type PlACEMENT then it should spawn a shapecast proxy with an identical shape.
-				if child.isPlacementBox:
-					var shapeCastNew = ShapeCast3D.new()
-					placementCollisionHolder.add_child(shapeCastNew);
-					shapeCastNew.set_deferred("target_position", Vector3(0,0,0));
-					var globalPosNew = child.position;
-					shapeCastNew.set_deferred("position", globalPosNew);
-					shapeCastNew.set_deferred("scale", child.scale * 0.95);
-					shapeCastNew.set_deferred("rotation", child.rotation);
-					shapeCastNew.set("shape", child.shape);
-					#shapeCastNew.enabled = false;
-					shapeCastNew.enabled = true;
-					shapeCastNew.debug_shape_custom_color = Color("af7f006b");
-				##if the PieceCollisionBox is of type HITBOX or HURTBOX then it should copy itself into those.
-				if child.isHurtbox:
-					var dupe = child.duplicate();
-					dupe.disabled = false;
-					hurtboxCollisionHolder.add_child(dupe);
-					dupe.debug_color = Color("0099b36b");
-					#dupe.global_position = child.global_position;
-				if child.isHitbox:
-					var dupe = child.duplicate();
-					dupe.disabled = false;
-					hitboxCollisionHolder.add_child(dupe);
-					dupe.debug_color = Color("f6007f6b");
-					#dupe.global_position = child.global_position;
-			child.queue_free();
+			if child.isOriginal and not child.copied:
+				child.reset();
+				child.originalHost = self;
+				child.originalOffset = child.global_position - global_position;
+				if child.identifier == null:
+					child.identifier = str(identifyingNum)
+					identifyingNum += 1;
+				if is_instance_valid(child.shape):
+					##if the PieceCollisionBox is of type PlACEMENT then it should spawn a shapecast proxy with an identical shape.
+					if child.isPlacementBox:
+						var shapeCastNew = child.make_shapecast();
+						placementCollisionHolder.add_child(shapeCastNew);
+						shapeCastNew.set_deferred("target_position", Vector3(0,0,0));
+						var globalPosNew = child.position;
+						shapeCastNew.set_deferred("position", globalPosNew);
+						shapeCastNew.set_deferred("scale", child.scale * 0.95);
+						shapeCastNew.set_deferred("rotation", child.rotation);
+						shapeCastNew.set("shape", child.shape);
+						#shapeCastNew.enabled = false;
+						shapeCastNew.enabled = true;
+						shapeCastNew.debug_shape_custom_color = Color("af7f006b");
+					##if the PieceCollisionBox is of type HITBOX or HURTBOX then it should copy itself into those.
+					if child.isHurtbox:
+						var dupe = child.make_copy();
+						dupe.disabled = false;
+						hurtboxCollisionHolder.add_child(dupe);
+						dupe.debug_color = Color("0099b36b");
+						#dupe.global_position = child.global_position;
+					if child.isHitbox:
+						var dupe = child.make_copy();
+						dupe.disabled = false;
+						hitboxCollisionHolder.add_child(dupe);
+						dupe.debug_color = Color("f6007f6b");
+						#dupe.global_position = child.global_position;
 	#print(placementCollisionHolder)
 	pass;
+
+##Runs the Reset function on all collision helpers.
+func reset_collision_helpers():
+	for child in get_children():
+		if child is PieceCollisionBox and child.isOriginal:
+			child.reset();
 
 ##Should ping all of the placement hitboxes and return TRUE if it collides with a Piece, of FALSE if it doesn't.
 ##TODO: Fix this. placementCollisionHolder is being freed for some ungodly reason.

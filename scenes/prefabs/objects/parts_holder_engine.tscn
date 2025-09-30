@@ -1,0 +1,425 @@
+[gd_scene load_steps=7 format=4 uid="uid://de0rs2455fdg4"]
+
+[ext_resource type="Texture2D" uid="uid://nywg1mmjv2qm" path="res://graphics/images/HUD/engine/engineBack.png" id="1_2a1yk"]
+[ext_resource type="Script" uid="uid://b1r88r130d6k2" path="res://scripts/GUI/parts_holder_engine.gd" id="2_tsx4u"]
+[ext_resource type="TileSet" uid="uid://dicxuohkdpmlx" path="res://graphics/images/HUD/engine/engineTileMap.tres" id="3_1v65i"]
+[ext_resource type="Texture2D" uid="uid://da5mwa6pcphjl" path="res://graphics/images/HUD/engine/inv_selectedPlugIn.png" id="4_wytm7"]
+[ext_resource type="Script" uid="uid://bpnwpequ3dde0" path="res://scripts/GUI/part_holder_button.gd" id="5_v6y6v"]
+[ext_resource type="Texture2D" uid="uid://b3qophrjs0l6u" path="res://graphics/images/HUD/engine/engineDoor.png" id="6_tsx4u"]
+
+[node name="PartsHolder_Engine" type="TextureRect" node_paths=PackedStringArray("door", "bgTiles")]
+texture_filter = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -960.0
+offset_top = -1080.0
+offset_right = -672.0
+offset_bottom = -792.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("1_2a1yk")
+script = ExtResource("2_tsx4u")
+door = NodePath("DoorCropper/Door")
+bgTiles = NodePath("Background")
+metadata/_edit_group_ = true
+
+[node name="Background" type="TileMapLayer" parent="."]
+position = Vector2(24, 24)
+tile_map_data = PackedByteArray("AAAGAAAAAAABAAEAAAAFAAAAAAACAAEAAAAEAAAAAAABAAEAAAAHAAAAAAACAAEAAAAFAAEAAAACAAIAAAAEAAEAAAABAAIAAAAGAAEAAAABAAIAAAAHAAEAAAACAAIAAAAHAAIAAAACAAEAAAAGAAIAAAABAAEAAAAFAAIAAAACAAEAAAAHAAMAAAACAAIAAAAGAAMAAAABAAIAAAAFAAMAAAACAAIAAAAEAAMAAAABAAIAAAAEAAIAAAABAAEAAAADAAEAAAACAAIAAAADAAAAAAACAAEAAAAAAAIAAAABAAEAAAABAAIAAAACAAEAAAABAAMAAAACAAIAAAAAAAMAAAABAAIAAAAAAAEAAAABAAIAAAABAAEAAAACAAIAAAABAAQAAAACAAEAAAAAAAQAAAABAAEAAAACAAMAAAABAAIAAAACAAQAAAABAAEAAAACAAIAAAABAAEAAAACAAEAAAABAAIAAAAAAAUAAAABAAIAAAABAAUAAAACAAIAAAABAAYAAAACAAEAAAAAAAYAAAABAAEAAAABAAcAAAACAAIAAAAAAAcAAAABAAIAAAABAAgAAAACAAEAAAAAAAgAAAABAAEAAAABAAkAAAACAAIAAAAAAAkAAAABAAIAAAABAAoAAAABAAMAAAAAAAoAAAABAAMAAAACAAkAAAABAAIAAAACAAoAAAABAAMAAAACAAgAAAABAAEAAAADAAkAAAACAAIAAAADAAoAAAACAAMAAAADAAgAAAACAAEAAAAEAAkAAAABAAIAAAAEAAoAAAABAAMAAAAEAAgAAAABAAEAAAAFAAkAAAACAAIAAAAFAAoAAAACAAMAAAAFAAgAAAACAAEAAAAGAAkAAAABAAIAAAAGAAoAAAABAAMAAAAGAAgAAAABAAEAAAAHAAkAAAACAAIAAAAHAAoAAAABAAMAAAAHAAgAAAACAAEAAAAIAAkAAAABAAIAAAAIAAoAAAACAAMAAAAIAAgAAAABAAEAAAAJAAkAAAACAAIAAAAJAAoAAAACAAMAAAAJAAgAAAACAAEAAAAIAAcAAAABAAIAAAAJAAcAAAACAAIAAAAIAAYAAAABAAEAAAAJAAYAAAACAAEAAAAIAAUAAAABAAIAAAAJAAUAAAACAAIAAAAIAAQAAAABAAEAAAAJAAQAAAACAAEAAAAIAAMAAAABAAIAAAAJAAMAAAACAAIAAAAIAAIAAAABAAEAAAAJAAIAAAACAAEAAAAIAAEAAAABAAIAAAAJAAEAAAACAAIAAAAIAAAAAAABAAEAAAAJAAAAAAACAAEAAAACAAAAAAABAAEAAAABAAAAAAACAAEAAAAAAAAAAAABAAEAAAADAAIAAAACAAEAAAACAAUAAAABAAIAAAACAAYAAAABAAEAAAACAAcAAAABAAIAAAADAAcAAAACAAIAAAAEAAcAAAABAAIAAAAFAAcAAAACAAIAAAAGAAcAAAABAAIAAAAHAAcAAAACAAIAAAAHAAYAAAACAAEAAAAHAAUAAAACAAIAAAAHAAQAAAACAAEAAAADAAMAAAACAAIAAAADAAQAAAACAAEAAAADAAYAAAACAAEAAAAEAAYAAAABAAEAAAAFAAYAAAACAAEAAAAGAAYAAAABAAEAAAAEAAUAAAABAAIAAAAFAAUAAAACAAIAAAAGAAUAAAABAAIAAAAEAAQAAAABAAEAAAAFAAQAAAACAAEAAAAGAAQAAAABAAEAAAADAAUAAAACAAIAAAD//wIAAAAAAAIAAAD//wMAAAAAAAEAAAD//wQAAAAAAAIAAAD//wUAAAAAAAIAAAD//wYAAAAAAAEAAAD//wcAAAAAAAIAAAD//wgAAAAAAAIAAAD//wkAAAAAAAIAAAD//woAAAAAAAMAAAD//wEAAAAAAAIAAAD//wAAAAAAAAIAAAD/////AAAAAAAAAAAAAP//AAACAAAAAAABAP//AAABAAAAAAACAP//AAABAAAAAAADAP//AAACAAAAAAAEAP//AAACAAAAAAAFAP//AAACAAAAAAAGAP//AAACAAAAAAAHAP//AAACAAAAAAAIAP//AAABAAAAAAAJAP//AAABAAAAAAAKAP//AAADAAAAAAAKAAAAAAADAAIAAAAKAAEAAAADAAEAAAAKAAIAAAADAAIAAAAKAAMAAAADAAEAAAAKAAQAAAADAAIAAAAKAAUAAAADAAIAAAAKAAYAAAADAAEAAAAKAAcAAAADAAIAAAAKAAgAAAADAAIAAAAKAAkAAAADAAEAAAAKAAoAAAADAAMAAAA=")
+tile_set = ExtResource("3_1v65i")
+
+[node name="Edge" type="TileMapLayer" parent="."]
+position = Vector2(24, 24)
+tile_map_data = PackedByteArray("AAD/////AAAEAAAAAAD//wAAAAAEAAEAAAD//wEAAAAEAAEAAAD//wIAAAAEAAEAAAD//wMAAAAEAAEAAAD//wQAAAAEAAEAAAD//wUAAAAEAAEAAAD//wYAAAAEAAEAAAD//wcAAAAEAAEAAAD//wgAAAAEAAEAAAD//wkAAAAEAAEAAAD//woAAAAEAAMAAAAAAP//AAAFAAAAAAAAAAoAAAAGAAMAAAABAP//AAAFAAAAAAABAAoAAAAGAAMAAAACAP//AAAFAAAAAAACAAoAAAAGAAMAAAADAP//AAAFAAAAAAADAAoAAAAGAAMAAAAEAP//AAAFAAAAAAAEAAoAAAAGAAMAAAAFAP//AAAFAAAAAAAFAAoAAAAGAAMAAAAGAP//AAAFAAAAAAAGAAoAAAAGAAMAAAAHAP//AAAFAAAAAAAHAAoAAAAGAAMAAAAIAP//AAAFAAAAAAAIAAoAAAAGAAMAAAAJAP//AAAFAAAAAAAJAAoAAAAGAAMAAAAKAP//AAAHAAAAAAAKAAAAAAAHAAIAAAAKAAEAAAAHAAIAAAAKAAIAAAAHAAIAAAAKAAMAAAAHAAIAAAAKAAQAAAAHAAIAAAAKAAUAAAAHAAIAAAAKAAYAAAAHAAIAAAAKAAcAAAAHAAIAAAAKAAgAAAAHAAIAAAAKAAkAAAAHAAIAAAAKAAoAAAAHAAMAAAA=")
+tile_set = ExtResource("3_1v65i")
+
+[node name="PartHolderButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 72.0
+offset_bottom = 72.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+
+[node name="PartHolderButton2" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 24.0
+offset_right = 120.0
+offset_bottom = 72.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 1
+
+[node name="PartHolderButton3" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 24.0
+offset_right = 168.0
+offset_bottom = 72.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 2
+
+[node name="PartHolderButton4" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 24.0
+offset_right = 216.0
+offset_bottom = 72.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 3
+
+[node name="PartHolderButton5" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 24.0
+offset_right = 264.0
+offset_bottom = 72.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 4
+
+[node name="PartHolderButton6" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 72.0
+offset_right = 72.0
+offset_bottom = 120.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordY = 1
+
+[node name="PartHolderButton7" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 72.0
+offset_right = 120.0
+offset_bottom = 120.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 1
+coordY = 1
+
+[node name="PartHolderButton8" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 72.0
+offset_right = 168.0
+offset_bottom = 120.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 2
+coordY = 1
+
+[node name="PartHolderButton9" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 72.0
+offset_right = 216.0
+offset_bottom = 120.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 3
+coordY = 1
+
+[node name="PartHolderButton10" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 72.0
+offset_right = 264.0
+offset_bottom = 120.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 4
+coordY = 1
+
+[node name="PartHolderButton11" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 120.0
+offset_right = 72.0
+offset_bottom = 168.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordY = 2
+
+[node name="PartHolderButton12" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 120.0
+offset_right = 120.0
+offset_bottom = 168.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 1
+coordY = 2
+
+[node name="PartHolderButton13" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 120.0
+offset_right = 168.0
+offset_bottom = 168.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 2
+coordY = 2
+
+[node name="PartHolderButton14" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 120.0
+offset_right = 216.0
+offset_bottom = 168.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 3
+coordY = 2
+
+[node name="PartHolderButton15" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 120.0
+offset_right = 264.0
+offset_bottom = 168.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 4
+coordY = 2
+
+[node name="PartHolderButton16" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 168.0
+offset_right = 72.0
+offset_bottom = 216.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordY = 3
+
+[node name="PartHolderButton17" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 168.0
+offset_right = 120.0
+offset_bottom = 216.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 1
+coordY = 3
+
+[node name="PartHolderButton18" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 168.0
+offset_right = 168.0
+offset_bottom = 216.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 2
+coordY = 3
+
+[node name="PartHolderButton19" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 168.0
+offset_right = 216.0
+offset_bottom = 216.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 3
+coordY = 3
+
+[node name="PartHolderButton20" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 168.0
+offset_right = 264.0
+offset_bottom = 216.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 4
+coordY = 3
+
+[node name="PartHolderButton21" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 216.0
+offset_right = 72.0
+offset_bottom = 264.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordY = 4
+
+[node name="PartHolderButton22" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 216.0
+offset_right = 120.0
+offset_bottom = 264.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 1
+coordY = 4
+
+[node name="PartHolderButton23" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 216.0
+offset_right = 168.0
+offset_bottom = 264.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 2
+coordY = 4
+
+[node name="PartHolderButton24" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 216.0
+offset_right = 216.0
+offset_bottom = 264.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 3
+coordY = 4
+
+[node name="PartHolderButton25" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 216.0
+offset_right = 264.0
+offset_bottom = 264.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_wytm7")
+texture_pressed = ExtResource("4_wytm7")
+texture_hover = ExtResource("4_wytm7")
+script = ExtResource("5_v6y6v")
+coordX = 4
+coordY = 4
+
+[node name="DoorCropper" type="Control" parent="."]
+clip_contents = true
+anchors_preset = 0
+anchor_left = 0.0486111
+anchor_top = 0.0451389
+anchor_right = 0.951389
+anchor_bottom = 0.947917
+metadata/_edit_use_anchors_ = true
+
+[node name="Door" type="TextureRect" parent="DoorCropper"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.04615
+offset_bottom = -12.0
+texture = ExtResource("6_tsx4u")
+metadata/_edit_use_anchors_ = true
+
+[node name="PatternChange" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[connection signal="pressed" from="PartHolderButton" to="PartHolderButton" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton2" to="PartHolderButton2" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton3" to="PartHolderButton3" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton4" to="PartHolderButton4" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton5" to="PartHolderButton5" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton6" to="PartHolderButton6" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton7" to="PartHolderButton7" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton8" to="PartHolderButton8" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton9" to="PartHolderButton9" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton10" to="PartHolderButton10" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton11" to="PartHolderButton11" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton12" to="PartHolderButton12" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton13" to="PartHolderButton13" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton14" to="PartHolderButton14" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton15" to="PartHolderButton15" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton16" to="PartHolderButton16" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton17" to="PartHolderButton17" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton18" to="PartHolderButton18" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton19" to="PartHolderButton19" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton20" to="PartHolderButton20" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton21" to="PartHolderButton21" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton22" to="PartHolderButton22" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton23" to="PartHolderButton23" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton24" to="PartHolderButton24" method="_on_pressed"]
+[connection signal="pressed" from="PartHolderButton25" to="PartHolderButton25" method="_on_pressed"]
+[connection signal="timeout" from="PatternChange" to="." method="_on_pattern_change_timeout"]

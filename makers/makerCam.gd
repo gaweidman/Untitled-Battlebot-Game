@@ -30,6 +30,14 @@ var fishes : Dictionary = {
 
 @export var cyube : MeshInstance3D;
 
+var enabled = true;
+
+func enable():
+	enabled = true;
+
+func disable():
+	enabled = false;
+
 func _process(delta):
 	position = Vector3(0, 0, zoom);
 	h_offset = x;
@@ -48,6 +56,7 @@ func _process(delta):
 	var inputted = false;
 		## Q/E - Roll
 	#cyube.visible = (Input.is_action_pressed("CameraYawLeft") or Input.is_action_pressed("CameraYawRight") or Input.is_action_pressed("MoveDown") or Input.is_action_pressed("MoveUp") or Input.is_action_pressed("MoveRight") or Input.is_action_pressed("MoveLeft"));
+	if not enabled: return;
 
 	if Input.is_action_pressed("CameraTiltModeKey"):
 		## Q/E - Roll
