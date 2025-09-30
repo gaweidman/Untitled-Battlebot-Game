@@ -146,7 +146,7 @@ skeleton = NodePath("../../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
 
 [node name="Horn" type="MeshInstance3D" parent="."]
-transform = Transform3D(4.37114e-08, -1.55294e-22, -1, 1, -4.37114e-08, 4.37114e-08, -4.37114e-08, -1, -1.55294e-22, -0.0171475, 0.375, -0.0304285)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
 mesh = ExtResource("9_jxej0")
 
 [node name="PieceCollisionBox2" parent="." instance=ExtResource("6_jxej0")]
