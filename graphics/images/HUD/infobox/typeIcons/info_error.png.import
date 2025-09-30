@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://drjmrl4v24oq6"
-path="res://.godot/imported/info_melee.png-a79d605936b8b7a65cd91e7c548ad9a7.ctex"
+uid="uid://cjeg1gr2rtfl1"
+path="res://.godot/imported/info_error.png-e3af5d45d45baf43ff33593e7789b3d0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/infobox/info_melee.png"
-dest_files=["res://.godot/imported/info_melee.png-a79d605936b8b7a65cd91e7c548ad9a7.ctex"]
+source_file="res://graphics/images/HUD/infobox/typeIcons/info_error.png"
+dest_files=["res://.godot/imported/info_error.png-e3af5d45d45baf43ff33593e7789b3d0.ctex"]
 
 [params]
 

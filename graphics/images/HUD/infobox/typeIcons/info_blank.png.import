@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d1ven4l0pibe3"
-path="res://.godot/imported/info_ranged.png-53d2af4c79876a05b5ac699454b0a9e8.ctex"
+uid="uid://dqecmx8uqcpbw"
+path="res://.godot/imported/info_blank.png-17ed40e9c8d4a8e5527f2d1be1dab4b6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/infobox/info_ranged.png"
-dest_files=["res://.godot/imported/info_ranged.png-53d2af4c79876a05b5ac699454b0a9e8.ctex"]
+source_file="res://graphics/images/HUD/infobox/typeIcons/info_blank.png"
+dest_files=["res://.godot/imported/info_blank.png-17ed40e9c8d4a8e5527f2d1be1dab4b6.ctex"]
 
 [params]
 

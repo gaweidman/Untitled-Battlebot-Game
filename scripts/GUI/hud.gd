@@ -17,9 +17,10 @@ var currentSize : Vector2;
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if OS.is_debug_build():
-		
+		$MainMenu/Btn_Editor.show();
 		pass;
 	else:
+		$MainMenu/Btn_Editor.queue_free();
 		pass;
 	pass; # Replace with function body.
 

@@ -146,12 +146,13 @@ func get_hud():
 	var board = get_game_board();
 	
 	if board != null:
-		return board.get_node_or_null("HUDCanvas/HUD");
+		return board.get_node_or_null("HUDCanvas/HUD Viewport/SubViewport/HUD");
 
 func get_game_hud() -> GameHUD:
 	var hud = get_hud();
 	
 	if hud != null:
+		#print("aa")
 		return hud.get_node_or_null("GameHud");
 	return null;
 
@@ -237,6 +238,13 @@ var partAge := 0;
 func get_unique_part_age() -> int:
 	var ret = partAge;
 	partAge += 1;
+	return ret;
+
+var statID := 0;
+
+func get_unique_stat_id() -> int:
+	var ret = statID;
+	statID += 1;
 	return ret;
 
 ############ SETTINGS AND SAVE DATA

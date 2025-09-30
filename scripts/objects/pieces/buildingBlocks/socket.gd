@@ -6,7 +6,7 @@ class_name Socket
 @export var invisibleInGame := false;
 var occupant : Piece;
 @export var hostPiece : Piece;
-var hostRobot : Robot;
+@export var hostRobot : Robot;
 var preview : Piece;
 var previewPlaceable := false;
 @onready var selectorRay = $SelectorRay;
@@ -37,7 +37,12 @@ func add_occupant(newPiece : Piece):
 		$Selector.hide();
 
 func get_energy_transmitted():
-	return hostPiece.get_outgoing_energy();
+	if hostPiece != null:
+		return hostPiece.get_outgoing_energy();
+	else:
+		if hostRobot != null:
+			return hostRobot.get_available_energy();
+	return 0.0;
 
 var available := false;
 func is_available():

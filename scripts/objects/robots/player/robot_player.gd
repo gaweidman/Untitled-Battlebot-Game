@@ -27,7 +27,7 @@ func process_hud(delta):
 	forcedUpdateTimerHUD -= 1;
 	if forcedUpdateTimerHUD <= 0:
 		forcedUpdateTimerHUD = 5;
-		health_or_energy_changed.emit();
+		update_bars();
 	pass;
 
 ######################## INPUT MANAGEMENT

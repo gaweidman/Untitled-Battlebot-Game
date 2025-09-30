@@ -4,8 +4,8 @@ class_name EnemyProgressBar
 
 var updateTimer := 0.0;
 var progress := 0.0;
-var progressBarTargetX := 24;
-var length := size.x;
+var progressBarTargetX := 24.0;
+@onready var length := float(size.x);
 
 var buttonModeSwitchCounter = 0;
 var buttonMode:= true;
@@ -18,14 +18,16 @@ func _process(delta):
 	else:
 		updateTimer = 0.10
 		update();
-	$ProgressBar.position.x = move_toward($ProgressBar.position.x, progressBarTargetX, delta * 340)
+	$ProgressBar.position.x = move_toward($ProgressBar.position.x, progressBarTargetX, delta * 340);
 
 func update():
 	if GameState.get_in_state_of_play():
 		if not $ProgressBar.visible:
 			$ProgressBar.show()
 		progress = GameState.get_round_completion();
-		progressBarTargetX = (1 - progress) * -length
+		#print(length)
+		#print(progress)
+		progressBarTargetX = (1.0 - progress) * -length
 		var enemiesLeft = GameState.get_wave_enemies_left();
 		$ProgressBar/Lbl_EnemiesLeft.text = str(enemiesLeft);
 		

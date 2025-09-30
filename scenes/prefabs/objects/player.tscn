@@ -33,7 +33,7 @@
 [ext_resource type="Texture2D" uid="uid://c1wx7qpxonisn" path="res://graphics/images/HUD/activeTab/mouse2.png" id="17_58nj6"]
 [ext_resource type="Texture2D" uid="uid://b30wj1uakji4q" path="res://graphics/images/HUD/Energy_EmptyOverlay.png" id="18_tkm3v"]
 [ext_resource type="Script" uid="uid://cdymr1vwdiwxo" path="res://scripts/GUI/info_box.gd" id="20_7eoqv"]
-[ext_resource type="Texture2D" uid="uid://drjmrl4v24oq6" path="res://graphics/images/HUD/infobox/info_melee.png" id="21_jm810"]
+[ext_resource type="Texture2D" uid="uid://drjmrl4v24oq6" path="res://graphics/images/HUD/infobox/typeIcons/info_melee.png" id="21_jm810"]
 [ext_resource type="Script" uid="uid://bcatqblb5gdws" path="res://scripts/GUI/inventory_panel.gd" id="22_nha5v"]
 [ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="22_r3ynj"]
 [ext_resource type="Texture2D" uid="uid://cnfat2kqvmdcd" path="res://graphics/images/HUD/statIcons/damageIconStriped.png" id="23_jumtr"]

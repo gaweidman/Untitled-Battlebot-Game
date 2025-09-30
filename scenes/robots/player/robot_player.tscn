@@ -12,7 +12,11 @@ script = ExtResource("2_u7rvj")
 [node name="Body" parent="." index="0"]
 can_sleep = false
 
+[node name="Socket" parent="Body/Meshes" index="0" node_paths=PackedStringArray("hostRobot")]
+hostRobot = NodePath("../../..")
+
 [node name="PieceBodyCube" parent="Body/Meshes/Socket" index="4"]
+visible = true
 assignedToSocket = true
 
 [node name="Piece_Sawblade" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket" index="4" node_paths=PackedStringArray("hostPiece", "hostRobot", "hostSocket") instance=ExtResource("3_a63pw")]
@@ -21,17 +25,12 @@ hostRobot = NodePath("../../../../../../..")
 hostSocket = NodePath("..")
 assignedToSocket = true
 
-[node name="Blade2" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_Sawblade" index="7"]
-surface_material_override/0 = null
-
-[node name="Piece_Cannon" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_Sawblade/Socket" index="4" node_paths=PackedStringArray("hostPiece", "hostRobot", "hostSocket") instance=ExtResource("4_u7rvj")]
-hostPiece = NodePath("../..")
-hostRobot = NodePath("../../../../../../../../..")
+[node name="Body_Meshes_Socket_PieceBodyCube_FemaleSockets_Socket_Piece_Sawblade_Socket#Piece_Cannon" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_Sawblade/FemaleSockets/Socket" index="4" node_paths=PackedStringArray("hostPiece", "hostRobot", "hostSocket") instance=ExtResource("4_u7rvj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.124997, 0)
+hostPiece = NodePath("../../..")
+hostRobot = NodePath("../../../../../../../../../..")
 hostSocket = NodePath("..")
 assignedToSocket = true
-
-[node name="PieceCollisionBox" parent="Body/Meshes/Socket/PieceBodyCube" index="4"]
-debug_color = Color(0, 0.6, 0.701961, 0.419608)
 
 [editable path="Body/Meshes/Socket/PieceBodyCube"]
 [editable path="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_Sawblade"]

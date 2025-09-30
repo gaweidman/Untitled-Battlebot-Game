@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjeg1gr2rtfl1"
-path="res://.godot/imported/info_error.png-ea6bf157a4cbf737ab8cb5c18080269c.ctex"
+uid="uid://ckoh5ch3x5bdh"
+path="res://.godot/imported/info_passive.png-6ec4b5dc76daca28c4a7bd73a4b29759.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/infobox/info_error.png"
-dest_files=["res://.godot/imported/info_error.png-ea6bf157a4cbf737ab8cb5c18080269c.ctex"]
+source_file="res://graphics/images/HUD/infobox/typeIcons/info_passive.png"
+dest_files=["res://.godot/imported/info_passive.png-6ec4b5dc76daca28c4a7bd73a4b29759.ctex"]
 
 [params]
 

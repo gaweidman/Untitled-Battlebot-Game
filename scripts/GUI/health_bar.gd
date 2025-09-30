@@ -34,4 +34,4 @@ func _process(delta):
 
 func update_text(amt : float, max: float):
 	var stringHealth = "";
-	label.text = Utils.format_stat_num(amt) + "/" + Utils.format_stat_num(max);
+	label.text = TextFunc.format_stat_num(amt) + "/" + TextFunc.format_stat_num(max);

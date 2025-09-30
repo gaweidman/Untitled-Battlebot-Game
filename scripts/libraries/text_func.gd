@@ -38,3 +38,18 @@ static func set_text_color(node, color):
 					newCol = Color(color);
 				if node.get("theme_override_colors/font_color") != newCol:
 					node.set_deferred("theme_override_colors/font_color", newCol);
+
+## Returns a string to be used for stats.
+func format_stat_num(_inNum, decimals : int = 2) -> String:
+	var factor = 10^decimals;
+	var inNum = (floor(_inNum*factor))/factor
+	
+	var outString = ""
+	if inNum >= 10:
+		outString = str(inNum);
+	else:
+		outString = " " + str(inNum);
+	
+	if outString.length() < 5:
+		outString += "0";
+	return outString;

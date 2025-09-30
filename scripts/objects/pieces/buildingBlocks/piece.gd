@@ -435,6 +435,7 @@ func is_transmitting():
 func get_incoming_energy():
 	if get_host_socket() != null:
 		var powerTransmitted = get_host_socket().get_energy_transmitted();
+		#print_if_true(get_host_socket(), self is Piece_Sawblade)
 		if powerTransmitted <= 0.0: 
 			hasIncomingPower = false;
 		else: 
@@ -443,12 +444,14 @@ func get_incoming_energy():
 		return incomingPower;
 	else:
 		if is_instance_valid(hostRobot):
+			#print("No host socket, yes power: ", hostRobot.get_available_energy())
 			hasIncomingPower = true;
 			incomingPower = hostRobot.get_available_energy();
 			return incomingPower;
 	incomingPower = 0.0;
 	hasIncomingPower = false;
 	return incomingPower;
+	
 
 func get_current_energy_draw():
 	return energyDrawCurrent;
@@ -469,9 +472,16 @@ func can_use_active(actionSlot : int):
 
 ##Returns true if energyDrawPassive is 0, or if the power draw would not exceed incoming power.
 func can_use_passive():
-	if energyDrawPassive == 0:
+	if energyDrawPassive == 0.0:
 		return true;
-	return (energyDrawPassive != 0) and (( get_current_energy_draw() + get_passive_energy_cost() ) <= get_incoming_energy());
+	#print( energyDrawPassive, get_current_energy_draw(),  get_passive_energy_cost(), get_incoming_energy())
+	return (energyDrawPassive != 0.0) and (( get_current_energy_draw() + get_passive_energy_cost() ) <= get_incoming_energy());
+
+func use_passive():
+	if can_use_passive():
+		energyDrawCurrent += get_passive_energy_cost();
+		return true;
+	return false;
 
 var activeAbilities : Dictionary[int, AbilityManager] = {}
 
@@ -512,12 +522,9 @@ func use_active(actionSlot : int):
 		var activeAbility = get_active_ability(actionSlot);
 		var call = activeAbility.functionWhenUsed;
 		call.call();
-	pass
+		return true;
+	return false;
 
-func use_passive():
-	if can_use_passive():
-		energyDrawCurrent += get_passive_energy_cost();
-		pass
 
 
 ####################### INVENTORY STUFF

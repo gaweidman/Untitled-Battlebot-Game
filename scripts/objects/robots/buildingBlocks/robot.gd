@@ -59,10 +59,13 @@ func stat_registry():
 		statIconDamage, 
 		null, 
 		(
-			func(newValue): 
-				health_or_energy_changed.emit(); 
-				var newValFixed = clampf(newValue, 0.0, get_stat("HealthMax")); 
-				print(newValFixed); return newValFixed)
+		func(newValue): 
+			health_or_energy_changed.emit(); 
+			var newValFixed = clampf(newValue, 0.0, get_stat("HealthMax")); 
+			print("new health value", newValFixed); 
+			return newValFixed;
+			),
+		StatTracker.roundingModes.None
 		);
 	register_stat("EnergyMax", maxEnergy, statIconDamage);
 	register_stat("Energy", maxEnergy, statIconEnergy, null, (func(newValue): health_or_energy_changed.emit(); return clampf(newValue, 0.0, get_stat("EnergyMax"))));
@@ -109,6 +112,7 @@ func live():
 	body.show();
 	spawned = true;
 	alive = true;
+	set_stat("Health", get_max_health());
 
 func die():
 	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
