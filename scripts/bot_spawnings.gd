@@ -8,4 +8,3 @@ func stop_trailing():
 		$Rubble.emitting = true;
 		diedAlready = true;
 	super();
-	

@@ -61,7 +61,6 @@ albedo_texture = ExtResource("11_wnksc")
 size = Vector3(1.5, 1.5, 1.5)
 
 [node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
-visible = false
 script = ExtResource("1_gm1wa")
 force_visibility = true
 pieceName = &"BodyCube"
@@ -103,7 +102,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 hostPiece = NodePath("../..")
 
 [node name="Socket2" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.75, 0.75)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.25, 0.75)
 hostPiece = NodePath("../..")
 
 [node name="Socket3" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]

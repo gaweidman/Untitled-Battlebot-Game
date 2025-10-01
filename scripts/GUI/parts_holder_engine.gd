@@ -5,7 +5,7 @@ class_name PartsHolder_Engine
 signal buttonPressed(x:int,y:int);
 
 @export var door : TextureRect;
-var doorOpeningSpeed := 13.0
+var doorOpeningSpeed := 13.0 / 1.5
 
 enum doorStates {
 	OPEN,
@@ -34,7 +34,8 @@ func enter_state(newState : doorStates):
 	curState = newState;
 	match newState:
 		doorStates.OPEN:
-			door.position.y = -271;
+			door.position.x = 0.0;
+			door.position.y = -271.0;
 			disable(false);
 			pass;
 		doorStates.OPENING:
@@ -43,6 +44,7 @@ func enter_state(newState : doorStates):
 		doorStates.CLOSING:
 			pass;
 		doorStates.CLOSED:
+			door.position.x = 0.0;
 			door.position.y = 0.0;
 			SND.play_sound_nondirectional("Shop.Door.Thump", 0.85);
 			pass;
@@ -68,12 +70,14 @@ func _process(delta):
 			
 			disable(true);
 			door.position.y = lerp (door.position.y, -280.0, doorOpeningSpeed * delta);
+			door.position.x = randi_range(-1, 1);
 			if door.position.y < -272.0:
 				change_state(doorStates.OPEN);
 			pass;
 		doorStates.CLOSING:
 			disable(true);
 			door.position.y = lerp (door.position.y, 10.0, doorOpeningSpeed * delta);
+			door.position.x = randi_range(-1, 1);
 			if door.position.y > 0.0:
 				change_state(doorStates.CLOSED);
 			pass;
