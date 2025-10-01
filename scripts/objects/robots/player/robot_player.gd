@@ -6,6 +6,8 @@ var gameHUD : GameHUD;
 var barHP : healthBar;
 var barEnergy : healthBar;
 
+var engineViewer : PartsHolder_Engine;
+
 func _process(delta):
 	super(delta);
 	process_hud(delta);
@@ -19,6 +21,8 @@ func grab_references():
 			barHP = GameState.get_bar_hp();
 		if !is_instance_valid(barEnergy):
 			barEnergy = GameState.get_bar_energy();
+		if !is_instance_valid(engineViewer):
+			engineViewer = GameState.get_engine_viewer();
 
 
 var forcedUpdateTimerHUD := 0;
@@ -116,3 +120,14 @@ func _on_health_or_energy_changed():
 	super();
 	update_bars();
 	pass # Replace with function body.
+
+
+
+func select_piece(piece):
+	if super(piece) != null and is_instance_valid(engineViewer):
+		engineViewer.open_with_new_piece(piece);
+
+func deselect_all_pieces(ignoredPiece : Piece = null):
+	super(ignoredPiece);
+	if ignoredPiece == null or selectedPiece != ignoredPiece:
+		engineViewer.close_and_clear();

@@ -6,7 +6,7 @@
 [ext_resource type="Material" uid="uid://b5uawxeiq0ye3" path="res://graphics/materials/models/arena/arena_wall.tres" id="4_jhciq"]
 [ext_resource type="Script" uid="uid://dwjkokqe7vwbb" path="res://scripts/objects/death_plane.gd" id="4_uflb5"]
 [ext_resource type="ArrayMesh" uid="uid://b4ai185oa1w42" path="res://graphics/models/extracted/arena_wall.res" id="5_4jixe"]
-[ext_resource type="Script" uid="uid://dr0v7dohkt13a" path="res://scripts/objects/camera_3d.gd" id="5_l5xbb"]
+[ext_resource type="Script" uid="uid://blg2b81fynoh3" path="res://scripts/objects/camera_game.gd" id="7_4upc1"]
 [ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/prefabs/objects/damage_cube.tscn" id="8_hfgcm"]
 [ext_resource type="Script" uid="uid://ct0mq8smfqpjl" path="res://scripts/libraries/sound_manager.gd" id="9_hh74c"]
 [ext_resource type="Theme" uid="uid://bq0jig2pdkgtn" path="res://graphics/images/HUD/UI_theme.tres" id="9_mlcvp"]
@@ -641,7 +641,8 @@ render_target_update_mode = 4
 [node name="Camera3D" type="Camera3D" parent="HUDCanvas/CameraViewport/SubViewport/CameraPointer" node_paths=PackedStringArray("floor", "positionParent")]
 transform = Transform3D(-1, -7.57104e-08, 4.37114e-08, 0, 0.5, 0.866025, -8.74228e-08, 0.866025, -0.5, 0, 15.3591, -9.84694)
 fov = 90.0
-script = ExtResource("5_l5xbb")
+script = ExtResource("7_4upc1")
+VOffsetInBuild = 0.0
 floor = NodePath("../../../../../ArenaFloor/StaticBody3D")
 positionParent = NodePath("..")
 

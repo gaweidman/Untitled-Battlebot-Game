@@ -1,4 +1,4 @@
-[gd_resource type="VisualShader" load_steps=15 format=3 uid="uid://b4rq7x3s7e1gi"]
+[gd_resource type="VisualShader" load_steps=15 format=3 uid="uid://caniow1g5t0k3"]
 
 [ext_resource type="Texture2D" uid="uid://5dm8ookfcpe1" path="res://graphics/images/particle PNGs/rocks_texture.png" id="1_yhtjd"]
 [ext_resource type="Texture2D" uid="uid://cjemx5gc4kbeh" path="res://graphics/images/particle PNGs/FireNormalMaps.png" id="2_yhtjd"]

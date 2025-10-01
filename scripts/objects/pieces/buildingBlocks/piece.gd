@@ -568,9 +568,14 @@ func use_active(actionSlot : int):
 	Vector2i(2,4) : null,
 	Vector2i(3,4) : null,
 	Vector2i(4,4) : null,
-	
-	##Shop stalls
-	"StallA" : null,
-	"StallB" : null,
-	"StallC" : null,
 }
+
+func get_all_parts() -> Array[Part]:
+	var gatheredParts : Array[Part] = [];
+	for slot in engineSlots.keys():
+		var slotContents = engineSlots[slot];
+		if slotContents != null:
+			if slotContents is Part:
+				if slotContents.get_engine() == self:
+					Utils.append_unique(gatheredParts, slotContents);
+	return gatheredParts;

@@ -6,6 +6,9 @@ var checkTimer := 1.0;
 var nodeToFollow : Node3D;
 var posOffset : Vector3;
 @export var forceFireOnce := false;
+var dying = false;
+var queueFreeTimer := 2.0;
+
 
 func _ready():
 	emit();
@@ -28,6 +31,12 @@ func _process(delta):
 	else:
 		check_emitting();
 		checkTimer = 1.0;
+	
+	
+	if dying:
+		queueFreeTimer -= delta;
+		if queueFreeTimer < 0:
+			queue_free();
 
 func check_emitting():
 	for child in get_children():
@@ -35,4 +44,7 @@ func check_emitting():
 			if child.emitting:
 				return;
 	
-	queue_free();
+	start_free();
+
+func start_free():
+	dying = true;

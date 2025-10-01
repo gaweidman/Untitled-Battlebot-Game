@@ -8,6 +8,7 @@ const PFX_LIST = {
 	"BulletTracer": preload("res://scenes/prefabs/particle-fx/BulletTracer.tscn"),
 	"BulletTracer_small": preload("res://scenes/prefabs/particle-fx/BulletTracer.tscn"),
 	"BigBoom": preload("res://scenes/prefabs/particle-fx/big_boom.tscn"),
+	"SpawnerFX": preload("res://scenes/prefabs/particle-fx/bot_spawnings.tscn"),
 }
 
 func _ready():

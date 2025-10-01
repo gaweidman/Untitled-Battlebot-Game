@@ -409,6 +409,13 @@ func get_all_pieces() -> Array[Piece]:
 			piecesGathered.append(child);
 	return piecesGathered;
 
+##Returns a freshly gathered array of all pieces attached to this Robot and whih have it set as their host.
+func get_all_parts() -> Array[Part]:
+	var piecesGathered : Array[Part] = [];
+	for piece in get_all_pieces():
+		Utils.append_array_unique(piecesGathered, piece.get_all_parts());
+	return piecesGathered;
+
 ##Returns an array of all PieceCollisionBox nodes that are direct children of the body.
 func get_all_gathered_hurtboxes():
 	return Utils.get_all_children_of_type(body, PieceCollisionBox, body);
@@ -462,16 +469,38 @@ func assign_ability_to_next_active_slot(abilityManager : AbilityManager):
 	if slot == null: return;
 	assign_ability_to_slot(slot, abilityManager);
 
-func deselect_all_pieces(ignoredPiece : Piece):
+
+var selectedPiece : Piece;
+var selectedPart : Part;
+
+func deselect_all_pieces(ignoredPiece : Piece = null):
 	for piece in get_all_pieces():
-		if piece != ignoredPiece:
+		if ignoredPiece == null or piece != ignoredPiece:
 			piece.deselect();
+	if ignoredPiece == null or selectedPiece != ignoredPiece:
+		selectedPiece = null;
 	pass;
+
 
 func select_piece(piece : Piece):
 	if is_instance_valid(piece):
 		deselect_all_pieces(piece);
 		piece.select(true);
+		selectedPiece = piece;
+		return piece;
+	return null;
+
+func deselect_all_parts(ignoredPart : Part = null):
+	for part in get_all_parts():
+		if ignoredPart == null or part != ignoredPart:
+			part.select(false);
+	if ignoredPart == null or selectedPart != ignoredPart:
+		selectedPart = null;
 
 func select_part(part : Part):
-	part.select(true);
+	if is_instance_valid(part):
+		deselect_all_parts(part)
+		part.select(true);
+		selectedPart = part;
+		return part;
+	return null;

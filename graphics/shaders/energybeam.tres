@@ -1,4 +1,4 @@
-[gd_resource type="VisualShader" load_steps=5 format=3 uid="uid://ebaqxnl6fg1b"]
+[gd_resource type="VisualShader" load_steps=5 format=3 uid="uid://twh0p4hu8cvc"]
 
 [ext_resource type="Texture2D" uid="uid://brb0kp1udy7m7" path="res://graphics/images/particle PNGs/NormalMap_EnergyBeam.png" id="1_m65dj"]
 

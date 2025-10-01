@@ -2,6 +2,8 @@ extends ParticleEffect
 
 class_name PFXBulletTracer
 
+@export var tracers : Array[GPUParticles3D];
+
 func _process(delta):
 	super(delta);
 	if is_instance_valid(nodeToFollow):
@@ -13,4 +15,5 @@ func _process(delta):
 		stop_trailing();
 
 func stop_trailing():
-	$BulletTracerParticles.emitting = false;
+	for tracer in tracers:
+		tracer.emitting = false;

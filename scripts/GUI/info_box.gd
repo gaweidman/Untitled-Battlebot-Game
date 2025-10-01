@@ -8,14 +8,14 @@ var partRef : Part;
 signal sellPart(part:Part);
 
 
-var icon_blank := preload("res://graphics/images/HUD/infobox/info_blank.png");
-var icon_utility := preload("res://graphics/images/HUD/infobox/info_utility.png");
-var icon_melee := preload("res://graphics/images/HUD/infobox/info_melee.png");
-var icon_ranged := preload("res://graphics/images/HUD/infobox/info_ranged.png");
-var icon_passive := preload("res://graphics/images/HUD/infobox/info_passive.png");
-var icon_scrap := preload("res://graphics/images/HUD/infobox/info_scrap.png");
-var icon_warning := preload("res://graphics/images/HUD/infobox/info_warning.png");
-var icon_error := preload("res://graphics/images/HUD/infobox/info_error.png");
+var icon_blank := preload("res://graphics/images/HUD/infobox/typeIcons/info_blank.png");
+var icon_utility := preload("res://graphics/images/HUD/infobox/typeIcons/info_utility.png");
+var icon_melee := preload("res://graphics/images/HUD/infobox/typeIcons/info_melee.png");
+var icon_ranged := preload("res://graphics/images/HUD/infobox/typeIcons/info_ranged.png");
+var icon_passive := preload("res://graphics/images/HUD/infobox/typeIcons/info_passive.png");
+var icon_scrap := preload("res://graphics/images/HUD/infobox/typeIcons/info_scrap.png");
+var icon_warning := preload("res://graphics/images/HUD/infobox/typeIcons/info_warning.png");
+var icon_error := preload("res://graphics/images/HUD/infobox/typeIcons/info_error.png");
 
 func _ready():
 	clear_info();

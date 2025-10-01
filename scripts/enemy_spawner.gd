@@ -20,6 +20,7 @@ func assign_enemy_type_from_resource(inPath : Resource):
 	enemyTypeToSpawn = inPath;
 
 func start_spawn(pos := Vector3(0,0,0), time: float = 1):
+	ParticleFX.play("SpawnerFX", GameState.get_game_board(), self.global_position, 1.0, self);
 	#Start the timer.
 	timerLength = time;
 	global_position = pos;
@@ -33,7 +34,8 @@ func start_spawn(pos := Vector3(0,0,0), time: float = 1):
 
 ##Enemy spawns whent he timer runs out.
 func _physics_process(delta):
-	timerLength -= delta;
+	if not GameState.is_paused():
+		timerLength -= delta;
 	if timerLength <= 0:
 		spawn_enemy();
 

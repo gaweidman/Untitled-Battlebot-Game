@@ -1,4 +1,4 @@
-extends Camera3D
+extends Camera
 
 class_name MakerCamera
 
@@ -10,23 +10,6 @@ var roll := 0.0;
 
 var x := 0.0;
 var y := 0.0;
-
-
-
-var fish
-
-var fish2 = 2
-
-var fish3 := 2
-
-var fish4 : int
-
-var fish5 : int
-
-var fishes : Dictionary = {
-	"sasdsadassd" : "value",
-	fish3 : fish2,
-}
 
 @export var cyube : MeshInstance3D;
 

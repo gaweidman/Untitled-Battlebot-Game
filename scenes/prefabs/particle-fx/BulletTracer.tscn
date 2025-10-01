@@ -41,8 +41,9 @@ alpha_curve = SubResource("CurveTexture_60i48")
 
 [sub_resource type="QuadMesh" id="QuadMesh_xxnja"]
 
-[node name="BulletTracer" type="Node3D"]
+[node name="BulletTracer" type="Node3D" node_paths=PackedStringArray("tracers")]
 script = ExtResource("1_vj8st")
+tracers = [NodePath("BulletTracerParticles")]
 
 [node name="BulletTracerParticles" type="GPUParticles3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)

@@ -211,7 +211,6 @@ func enter_state(newState:gameState):
 		
 		MUSIC.change_state(MusicHandler.musState.SHOP);
 		
-		##TODO: REIMPLEMENT DEATH TIMER
 		GameState.start_death_timer(120.0,true)
 		round = 0;
 		roundEnemiesInit = 1;
@@ -261,10 +260,10 @@ func process_state(delta : float, state : gameState):
 		if GameState.get_setting("killAllKey") and Input.is_action_just_pressed("DBG_KillAll"):
 			destroy_all_enemies()
 		
-		waveTimer -= delta;
-		#print (check_round_completion())
-		#print(roundEnemies, check_alive_enemies(), roundEnemiesInit)
-		#print(max(0, min(3+round,10,roundEnemies)))
+		if not GameState.is_paused():
+			waveTimer -= delta;
+			spawnTimer -= delta;
+		
 		if roundEnemies > 0:
 			if waveTimer <= 0:
 				waveTimer = 10;
@@ -277,7 +276,6 @@ func process_state(delta : float, state : gameState):
 				spawn_wave(amtToSpawn)
 				MUSIC.change_state(MusicHandler.musState.BATTLING);
 		
-		spawnTimer -= delta;
 		if spawnTimer <= 0:
 			spawn_enemy_from_wave();
 			

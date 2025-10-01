@@ -1,8 +1,8 @@
-[gd_scene load_steps=24 format=3 uid="uid://om8iyd2ym7vp"]
+[gd_scene load_steps=24 format=3 uid="uid://cc66b6jfgufek"]
 
 [ext_resource type="Script" uid="uid://lmofd5yxqeuy" path="res://scripts/bot_spawnings.gd" id="1_hpcb0"]
-[ext_resource type="Shader" uid="uid://b4rq7x3s7e1gi" path="res://rubble.tres" id="1_kv702"]
-[ext_resource type="Shader" uid="uid://ebaqxnl6fg1b" path="res://graphics/shaders/energybeam.tres" id="2_0rnhr"]
+[ext_resource type="Shader" uid="uid://caniow1g5t0k3" path="res://rubble.tres" id="1_kv702"]
+[ext_resource type="Shader" uid="uid://twh0p4hu8cvc" path="res://graphics/shaders/energybeam.tres" id="2_0rnhr"]
 [ext_resource type="Texture2D" uid="uid://cjemx5gc4kbeh" path="res://graphics/images/particle PNGs/FireNormalMaps.png" id="2_4es52"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0rnhr"]
@@ -124,14 +124,17 @@ custom_aabb = AABB(0, 1.465, 0, 0, 0, 0)
 radius = 0.25
 curve = SubResource("Curve_4es52")
 
-[node name="BotSpawnings" type="Node3D"]
+[node name="BotSpawnings" type="Node3D" node_paths=PackedStringArray("tracers")]
 script = ExtResource("1_hpcb0")
+tracers = [NodePath("EnergyBeam")]
 
 [node name="Rubble" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.50897, 0)
 material_override = SubResource("StandardMaterial3D_0rnhr")
 material_overlay = SubResource("ShaderMaterial_4es52")
+emitting = false
 amount = 4
+one_shot = true
 process_material = SubResource("ParticleProcessMaterial_hpcb0")
 draw_pass_1 = SubResource("SphereMesh_kv702")
 

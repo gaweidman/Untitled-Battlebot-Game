@@ -170,6 +170,14 @@ func get_bar_energy() -> healthBar:
 		return ghud.get_node_or_null("RightSide/EnergyBar");
 	return null;
 
+func get_engine_viewer() -> PartsHolder_Engine:
+	var ghud = get_game_hud();
+	
+	if ghud != null:
+		return ghud.get_node_or_null("LeftSide/PartsHolder_Engine");
+	return null;
+
+
 func get_inventory() -> InventoryPlayer:
 	var ply = get_player();
 	
