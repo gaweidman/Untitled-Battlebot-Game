@@ -259,6 +259,8 @@ func generate_energy(amount, capAtMax := true):
 
 func get_global_body_position():
 	return body.global_position;
+func get_global_body_rotation():
+	return body.global_rotation;
 
 ##Should fire whenever a Piece connected to this robot gets hit by something.
 func on_hitbox_collision(body : PhysicsBody3D, pieceHit : Piece):
@@ -274,14 +276,21 @@ func reassign_body_collision():
 			child.queue_free();
 	
 	##Then, gather copies of every Hitbox collider from all pieces, and assign a copy of it to the Body.
+	var colliderIDsInUse = [];
 	for piece in get_all_pieces():
-		for hitbox in piece.get_all_hurtboxes():
-			var newHitbox = hitbox.duplicate();
-			#newHitbox.position = hitbox.position;
-			newHitbox.position = Vector3(0,0,0);
-			newHitbox.disabled = false;
-			hitbox.add_child(newHitbox);
-			newHitbox.reparent(body, true);
+		#piece.refresh_and_gather_collision_helpers();
+		for hurtbox in piece.get_all_hurtboxes():
+			print("Hurtbox Collider ID ", hurtbox.get_collider_id(), " ",hurtbox.name," ",hurtbox.originalHost)
+			if not ((hurtbox.copiedByBody) or (hurtbox.get_collider_id() in colliderIDsInUse)):
+				colliderIDsInUse.append(hurtbox.colliderID);
+				var newHurtbox = hurtbox.make_copy();
+				newHurtbox.debug_color = Color("af7fff6b");
+				newHurtbox.position = Vector3(0,0,0);
+				newHurtbox.disabled = false;
+				body.add_child(newHurtbox, true);
+				newHurtbox.owner = body;
+				hurtbox.copiedByBody = true;
+				newHurtbox.copiedByBody = true;
 
 ##TODO: Reimplement movement.
 #@export var topSpeed : 
@@ -298,9 +307,10 @@ var lastInputtedMV = Vector2.ZERO;
 ##Physics process step to adjust collision box positions according to the parts they're attached to.
 func phys_process_collision(delta):
 	for box in get_all_gathered_hurtboxes():
-		var boxOrigin = box.originalHost;
-		box.position = boxOrigin.global_position - get_global_body_position() + box.originalOffset;
-		box.global_rotation = boxOrigin.global_rotation;
+		var boxOrigin = box.originalBox;
+		if is_instance_valid(boxOrigin):
+			box.position = boxOrigin.global_position - get_global_body_position() + box.originalOffset;
+			box.rotation = boxOrigin.global_rotation - get_global_body_rotation() + box.originalRotation;
 
 ##Physics process step for motion.
 # custom physics handling for player movement. regular movement feels flat and boring.
@@ -418,7 +428,11 @@ func get_all_parts() -> Array[Part]:
 
 ##Returns an array of all PieceCollisionBox nodes that are direct children of the body.
 func get_all_gathered_hurtboxes():
-	return Utils.get_all_children_of_type(body, PieceCollisionBox, body);
+	var boxes = []
+	for child in body.get_children():
+		if child is PieceCollisionBox:
+			boxes.append(child)
+	return boxes;
 
 ##Adds an AbilityManager to the given slot index in active_pieces.
 func assign_ability_to_slot(slotNum : int, abilityManager : AbilityManager):

@@ -22,11 +22,13 @@ output_dict = {
 """
 # Returns raycast result after it hits an object in the world.
 # @return Dictionary or null
-func _do_raycast_on_mouse_position(collision_mask: int = 0b00000000_00000000_00000000_00000001, override_position:=Vector2(0.0,0.0)):
+func _do_raycast_on_mouse_position(collision_mask: int = 0b00000000_00000000_00000000_00000001, override_position:=Vector2(0.0,0.0), override_camera:Camera3D=null):
 	# Raycast related code
 	var space_state = get_world_3d().get_direct_space_state()
 	if is_instance_valid(space_state):
-		var cam = get_viewport().get_camera_3d(); 
+		var cam = override_camera; 
+		if cam == null: cam = get_viewport().get_camera_3d();
+		#print(cam)
 		if !is_instance_valid(cam) : return null;
 		var mousepos : Vector2;
 		if override_position != Vector2(0,0):
@@ -53,8 +55,8 @@ func _do_raycast_on_mouse_position(collision_mask: int = 0b00000000_00000000_000
 
 # Gets ray-cast hit position from camera to world.
 # @return Vector3 or null
-func get_mouse_world_position(collision_mask: int = 0b00000000_00000000_00000000_00000001, override_position:=Vector2(0.0,0.0)):
-	var raycast_result = _do_raycast_on_mouse_position(collision_mask, override_position)
+func get_mouse_world_position(collision_mask: int = 0b00000000_00000000_00000000_00000001, override_position:=Vector2(0.0,0.0), override_camera:Camera3D=null):
+	var raycast_result = _do_raycast_on_mouse_position(collision_mask, override_position, override_camera)
 	if raycast_result:
 		return raycast_result.position
 	return null
@@ -62,8 +64,8 @@ func get_mouse_world_position(collision_mask: int = 0b00000000_00000000_00000000
 
 # Gets ray-cast hit object from camera to world.
 # @return Object or null
-func get_raycast_hit_object(collision_mask: int = 0b00000000_00000000_00000000_00000001, override_position:=Vector2(0.0,0.0)):
-	var raycast_result = _do_raycast_on_mouse_position(collision_mask, override_position)
+func get_raycast_hit_object(collision_mask: int = 0b00000000_00000000_00000000_00000001, override_position:=Vector2(0.0,0.0), override_camera:Camera3D=null):
+	var raycast_result = _do_raycast_on_mouse_position(collision_mask, override_position, override_camera)
 	if raycast_result:
 		return raycast_result.collider
 	return null

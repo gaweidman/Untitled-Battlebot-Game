@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_fvnuu"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="8_x8ege"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="10_ese3e"]
+[ext_resource type="ArrayMesh" uid="uid://wyfj0ov8uyuf" path="res://graphics/models/obj/botparts/BotBody.obj" id="10_h4kss"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="11_wnksc"]
 
 [sub_resource type="Resource" id="Resource_xxf1u"]
@@ -57,9 +58,6 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("11_wnksc")
 
-[sub_resource type="BoxMesh" id="BoxMesh_e2238"]
-size = Vector3(1.5, 1.5, 1.5)
-
 [node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_gm1wa")
 force_visibility = true
@@ -102,7 +100,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 hostPiece = NodePath("../..")
 
 [node name="Socket2" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.25, 0.75)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.375, 0.75)
 hostPiece = NodePath("../..")
 
 [node name="Socket3" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
@@ -182,8 +180,8 @@ skeleton = NodePath("../../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
-mesh = SubResource("BoxMesh_e2238")
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+mesh = ExtResource("10_h4kss")
 skeleton = NodePath("../../PieceCollisionBox")
 
 [connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]

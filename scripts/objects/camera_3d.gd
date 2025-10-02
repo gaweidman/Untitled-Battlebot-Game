@@ -10,7 +10,7 @@ var pieceHovering : Piece;
 func click_on_piece():
 	var collisionMask = 8;
 	
-	var raycastHit = RaycastSystem.get_raycast_hit_object(collisionMask);
+	var raycastHit = RaycastSystem.get_raycast_hit_object(collisionMask, Vector2(0,0), self);
 	#print(raycastHit)
 	if is_instance_valid(raycastHit): 
 		#print(raycastHit)
@@ -20,7 +20,7 @@ func click_on_piece():
 func hover_socket():
 	var collisionMask = 32 + 128;
 	
-	var raycastHit = RaycastSystem.get_raycast_hit_object(collisionMask);
+	var raycastHit = RaycastSystem.get_raycast_hit_object(collisionMask, Vector2(0,0), self);
 	#print(raycastHit)
 	if is_instance_valid(raycastHit): 
 		print(raycastHit, pieceHovering)

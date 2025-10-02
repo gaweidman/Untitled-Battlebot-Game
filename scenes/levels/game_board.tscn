@@ -170,7 +170,7 @@ material_override = ExtResource("2_4jixe")
 mesh = ExtResource("3_e8tnf")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="ArenaFloor" groups=["Concrete", "Driveable", "World", "WorldFloor"]]
-collision_layer = 259
+collision_layer = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaFloor/StaticBody3D" groups=["Concrete", "World", "WorldFloor"]]
 shape = SubResource("ConcavePolygonShape3D_er3fg")

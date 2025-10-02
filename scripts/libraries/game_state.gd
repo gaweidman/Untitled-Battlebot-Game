@@ -220,12 +220,16 @@ func get_death_time() -> float:
 func get_camera() -> Camera:
 	var brd = get_game_board();
 	
-	return brd.get_main_camera();
+	if brd != null:
+		return brd.get_main_camera();
+	return null;
 
 func cam_unproject_position(world_point:Vector3) -> Vector2:
 	var cam = get_camera();
 	
-	return cam.unproject_position(world_point);
+	if cam != null:
+		return cam.unproject_position(world_point);
+	return Vector2(0.0,0.0);
 
 func get_music() -> MusicHandler:
 	var board = get_game_board();
@@ -253,6 +257,13 @@ var statID := 0;
 func get_unique_stat_id() -> int:
 	var ret = statID;
 	statID += 1;
+	return ret;
+
+var colliderID := 0;
+
+func get_unique_collider_id() -> int:
+	var ret = colliderID;
+	colliderID += 1;
 	return ret;
 
 ############ SETTINGS AND SAVE DATA

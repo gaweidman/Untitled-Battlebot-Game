@@ -1,44 +1,13 @@
-[gd_scene load_steps=21 format=3 uid="uid://dkdyfjmpb54su"]
+[gd_scene load_steps=14 format=3 uid="uid://dkdyfjmpb54su"]
 
-[ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_byqnp"]
-[ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_5hk1p"]
+[ext_resource type="Script" uid="uid://bxkvldgxyfk6p" path="res://scripts/objects/pieces/piece_swivel.gd" id="1_3tbmm"]
 [ext_resource type="ArrayMesh" uid="uid://cfvtjsean8sey" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="2_f1afw"]
-[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_686vw"]
 [ext_resource type="ArrayMesh" uid="uid://dddqhdde83f7e" path="res://graphics/models/obj/botparts/SwivelTop.obj" id="3_yjtb5"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="4_1a8uf"]
-[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_1jsoy"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_qbujc"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="6_p5af1"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="8_0x5a8"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="9_bk6my"]
-
-[sub_resource type="Resource" id="Resource_xxf1u"]
-script = ExtResource("2_5hk1p")
-statName = "ScrapCost"
-statIcon = ExtResource("3_686vw")
-baseStat = 0.0
-roundingMode = 6
-
-[sub_resource type="Resource" id="Resource_x7xa2"]
-script = ExtResource("2_5hk1p")
-statName = "ScrapSellModifier"
-statIcon = ExtResource("3_686vw")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_8crb0"]
-script = ExtResource("2_5hk1p")
-statName = "ScrapSalvageModifier"
-statIcon = ExtResource("3_686vw")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_8wfwi"]
-script = ExtResource("2_5hk1p")
-statName = "Weight"
-statIcon = ExtResource("4_1jsoy")
-baseStat = 1.0
-roundingMode = 0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_l000f"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -59,25 +28,14 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("9_bk6my")
 
-[node name="Piece" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Swivel" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
-script = ExtResource("1_byqnp")
-force_visibility = true
+script = ExtResource("1_3tbmm")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 meshesHolder = NodePath("Meshes")
 femaleSocketHolder = NodePath("FemaleSockets")
-engineSlots = {
-Vector2i(1, 1): null,
-Vector2i(1, 3): null,
-Vector2i(2, 1): null,
-Vector2i(2, 2): null,
-Vector2i(2, 3): null,
-Vector2i(3, 1): null,
-Vector2i(3, 3): null
-}
-statCollection = Array[ExtResource("2_5hk1p")]([SubResource("Resource_xxf1u"), SubResource("Resource_x7xa2"), SubResource("Resource_8crb0"), SubResource("Resource_8wfwi")])
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"

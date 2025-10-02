@@ -162,10 +162,11 @@ func refresh_and_gather_collision_helpers():
 	var identifyingNum = 0;
 	for child in get_children():
 		if child is PieceCollisionBox:
+			child.originalHost = self;
 			if child.isOriginal and not child.copied:
 				child.reset();
-				child.originalHost = self;
 				child.originalOffset = child.global_position - global_position;
+				child.originalRotation = child.global_rotation - global_rotation;
 				if child.identifier == null:
 					child.identifier = str(identifyingNum)
 					identifyingNum += 1;
@@ -189,6 +190,7 @@ func refresh_and_gather_collision_helpers():
 						dupe.disabled = false;
 						hurtboxCollisionHolder.add_child(dupe);
 						dupe.debug_color = Color("0099b36b");
+						print("COllider ID when copying from ", name, " ", dupe.colliderID)
 						#dupe.global_position = child.global_position;
 					if child.isHitbox:
 						var dupe = child.make_copy();
@@ -243,7 +245,7 @@ func on_hurtbox_collision(body : CollisionObject3D):
 func get_all_hurtboxes():
 	return hurtboxCollisionHolder.get_children();
 
-func _on_hitbox_shapes_body_entered(body):
+func _on_hitbox_shapes_body_entered(body):	
 	if body != self:
 		on_hurtbox_collision(body);
 	pass # Replace with function body.
