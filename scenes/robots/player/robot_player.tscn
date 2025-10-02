@@ -39,6 +39,9 @@ hostRobot = NodePath("../../../../../../../../../../../../..")
 hostSocket = NodePath("..")
 assignedToSocket = true
 
+[node name="Blade2" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_SwivelPointer/SwivelTop/Socket/Piece_Sawblade" index="7"]
+mesh = null
+
 [editable path="Body/Meshes/Socket/PieceBodyCube"]
 [editable path="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_SwivelPointer"]
 [editable path="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_SwivelPointer/SwivelTop/Socket/Piece_Sawblade"]

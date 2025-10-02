@@ -208,38 +208,3 @@ func get_camera_offset():
 
 func get_v_offset_vector():
 	return Vector3(vOffset, 0.0, 0.0).rotated(Vector3(0,1,0), currentRotationY);
-
-
-
-
-
-func get_rotation_to_fake_aiming(firingOrigin:=Vector3(0.0,0.0,0.0)):
-	var collisionMask = 256;
-	
-	#print(collisionMask);
-	var raycastPos = RaycastSystem.get_mouse_world_position(collisionMask, Vector2(0.0,0.0), self);
-	if raycastPos: 
-		#print(raycastPos);
-		#print("ray hit something")
-		##Get the offset.
-		var Yoffset = raycastPos.y - firingOrigin.y;
-		var raycastPosYAdjusted = Vector3(raycastPos.x, raycastPos.y + Yoffset, raycastPos.z)
-		##Unproject the raycast position.
-		var unproject = unproject_position(raycastPosYAdjusted);
-		#print(get_viewport().get_mouse_position())
-		#print(unproject)
-		##Get the offset.
-		var raycastPos2 = RaycastSystem.get_mouse_world_position(collisionMask, unproject, self);
-		if raycastPos2:
-			#print("ray hit floor")
-			var firingOriginV2 = Vector2(firingOrigin.x, firingOrigin.z);
-			var raycastPos2V2 = Vector2(raycastPos2.x, raycastPos2.z);
-			#var rot = firingOriginV2.direction_to(raycastPos2V2);
-			var offset = raycastPos2V2 - firingOriginV2;
-			#var lookAt = Vector3(rot.x, 0, rot.y);
-			var rot := firingOriginV2.angle_to_point(raycastPos2V2);
-			print(rot)
-			print(currentRotationY)
-			return rot;
-	#print("ray hit nothing.")
-	return 0.0;

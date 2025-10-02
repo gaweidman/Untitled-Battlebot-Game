@@ -6,6 +6,12 @@ class_name Piece_SwivelPointer
 
 var cam : GameCamera;
 var pointerLocation := Vector3.ZERO;
+var targetRotation := 0.0;
+@export var rotationSpeed := 1.0;
+
+func stat_registry():
+	super();
+	register_stat("RotationSpeed", rotationSpeed, statIconCooldown);
 
 func can_use_passive():
 	return true;
@@ -20,16 +26,24 @@ var tempFrameCounter = 0;
 func phys_process_collision(delta):
 	if !is_instance_valid(cam):
 		cam = GameState.get_camera();
-	if tempFrameCounter < 0:
-		tempFrameCounter = 10;
-		pointerLocation = Vector3()
+	
+	if can_use_passive():
+		swivelNode.rotation.y = lerp_angle(swivelNode.rotation.y, targetRotation, delta * 30.0 * get_stat("RotationSpeed"))
+	
 	super(delta);
 
 func use_passive():
-	if is_instance_valid(cam) and is_instance_valid(cam):
-		if super():
-			var rot = cam.get_rotation_to_fake_aiming(get_host_robot().get_global_body_position());
-			#print(rot)
-			if rot != null:
-				swivelNode.rotation.y = rot - get_host_robot().get_global_body_rotation().y;
-	return false;
+	var prevRotation = targetRotation;
+	if host_is_player():
+		if is_instance_valid(cam):
+			if super():
+				var rot = cam.get_rotation_to_fake_aiming(get_host_robot().get_global_body_position());
+				#print(rot)
+				if rot != null:
+					targetRotation = rot - get_host_robot().get_global_body_rotation().y;
+				else:
+					targetRotation = prevRotation;
+		return false;
+	else:
+		##TODO: Pointer Swivel: figure out non-player aiming methods for Robots, then plug that in here somehow. 
+		return false;

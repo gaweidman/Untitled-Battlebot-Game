@@ -1,6 +1,6 @@
 [gd_resource type="StandardMaterial3D" load_steps=7 format=3 uid="uid://b334vl7qgbx5n"]
 
-[ext_resource type="Shader" path="res://graphics/shaders/piece_cannot_be_placed.gdshader" id="2_2uos7"]
+[ext_resource type="Shader" uid="uid://16jrda8wnpdx" path="res://graphics/shaders/piece_cannot_be_placed.gdshader" id="2_2uos7"]
 [ext_resource type="Texture2D" uid="uid://brb0kp1udy7m7" path="res://graphics/images/particle PNGs/NormalMap_EnergyBeam.png" id="3_e36qd"]
 
 [sub_resource type="Gradient" id="Gradient_girts"]

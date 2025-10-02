@@ -35,3 +35,34 @@ func hover_socket():
 		if is_instance_valid(socketHovering):
 			socketHovering.hover(false);
 			socketHovering = null;
+
+
+func get_rotation_to_fake_aiming(firingOrigin:=Vector3(0.0,0.0,0.0), return_0_if_invalid := false):
+	var collisionMask = 256;
+	
+	#print(collisionMask);
+	var raycastPos = RaycastSystem.get_mouse_world_position(collisionMask);
+	if raycastPos: 
+		#print(raycastPos);
+		#print("ray hit something")
+		##Get the offset.
+		var Yoffset = raycastPos.y - firingOrigin.y;
+		var raycastPosYAdjusted = Vector3(raycastPos.x, raycastPos.y + Yoffset, raycastPos.z)
+		##Unproject the raycast position.
+		var unproject = unproject_position(raycastPosYAdjusted);
+		#print(get_viewport().get_mouse_position())
+		#print(unproject)
+		##Get the offset.
+		var raycastPos2 = RaycastSystem.get_mouse_world_position(collisionMask, unproject);
+		if raycastPos2:
+			#print("ray hit floor")
+			var firingOriginV2 = Vector2(firingOrigin.x, firingOrigin.z);
+			var raycastPos2V2 = Vector2(raycastPos2.x, raycastPos2.z);
+			#var rot = firingOriginV2.direction_to(raycastPos2V2);
+			var offset = raycastPos2V2 - firingOriginV2;
+			#var lookAt = Vector3(rot.x, 0, rot.y);
+			var rot := firingOriginV2.angle_to_point(raycastPos2V2);
+			return -rot + deg_to_rad(90.0);
+	#print("ray hit nothing.")
+	if return_0_if_invalid: return 0.0;
+	return null;

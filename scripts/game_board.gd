@@ -137,9 +137,9 @@ var camera_tilt_states = [
 	GameBoard.gameState.SHOP,
 	GameBoard.gameState.BUILD_MODE,
 ]
-@export var camera : Camera;
+@export var gameCamera : GameCamera;
 func get_main_camera():
-	return camera;
+	return gameCamera;
 
 func change_state(newState : gameState):
 	var changeToDefer = func change(newState):

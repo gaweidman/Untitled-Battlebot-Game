@@ -1,6 +1,6 @@
 [gd_resource type="StandardMaterial3D" load_steps=8 format=3 uid="uid://wr68mvk1dyo7"]
 
-[ext_resource type="Shader" path="res://graphics/shaders/piece_cannot_be_placed.gdshader" id="1_41ikb"]
+[ext_resource type="Shader" uid="uid://16jrda8wnpdx" path="res://graphics/shaders/piece_cannot_be_placed.gdshader" id="1_41ikb"]
 [ext_resource type="Texture2D" uid="uid://da20ptia6oypv" path="res://graphics/images/placeable_normal.png" id="2_r7g40"]
 
 [sub_resource type="Gradient" id="Gradient_r7g40"]

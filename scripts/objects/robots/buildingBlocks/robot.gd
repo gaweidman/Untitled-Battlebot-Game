@@ -309,8 +309,10 @@ func phys_process_collision(delta):
 	for box in get_all_gathered_hurtboxes():
 		var boxOrigin = box.originalBox;
 		if is_instance_valid(boxOrigin):
-			box.position = boxOrigin.global_position - get_global_body_position() + box.originalOffset;
+			box.global_position = boxOrigin.global_position;
 			box.rotation = boxOrigin.global_rotation - get_global_body_rotation() + box.originalRotation;
+		else:
+			box.queue_free();
 
 ##Physics process step for motion.
 # custom physics handling for player movement. regular movement feels flat and boring.

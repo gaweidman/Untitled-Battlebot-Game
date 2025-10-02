@@ -358,6 +358,9 @@ func get_host_robot() -> Robot:
 	else:
 		return hostRobot;
 
+func host_is_player() -> bool:
+	return has_robot_host() and hostRobot is Robot_Player;
+
 func has_socket_host():
 	return is_instance_valid(get_host_socket());
 func is_assigned_to_socket():
