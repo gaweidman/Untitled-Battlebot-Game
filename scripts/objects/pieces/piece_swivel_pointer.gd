@@ -1,17 +1,9 @@
-extends Piece
+extends Piece_Swivel
 
 class_name Piece_SwivelPointer
 
-@export var swivelNode : Node3D;
-
 var cam : GameCamera;
 var pointerLocation := Vector3.ZERO;
-var targetRotation := 0.0;
-@export var rotationSpeed := 1.0;
-
-func stat_registry():
-	super();
-	register_stat("RotationSpeed", rotationSpeed, statIconCooldown);
 
 func can_use_passive():
 	return true;
@@ -22,15 +14,10 @@ func can_use_passive():
 			return true;
 	return false;
 
-var tempFrameCounter = 0;
 func phys_process_collision(delta):
+	super(delta);
 	if !is_instance_valid(cam):
 		cam = GameState.get_camera();
-	
-	if can_use_passive():
-		swivelNode.rotation.y = lerp_angle(swivelNode.rotation.y, targetRotation, delta * 30.0 * get_stat("RotationSpeed"))
-	
-	super(delta);
 
 func use_passive():
 	var prevRotation = targetRotation;

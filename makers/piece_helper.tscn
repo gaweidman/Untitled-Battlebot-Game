@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://bhhd443ej7smu"]
+[gd_scene load_steps=11 format=3 uid="uid://bhhd443ej7smu"]
 
 [ext_resource type="Script" uid="uid://4xlbt5q5d03h" path="res://makers/piece_deets_helper.gd" id="1_kgy3g"]
 [ext_resource type="Texture2D" uid="uid://b27r3rshm0ite" path="res://graphics/images/HUD/textBoxBG_partPassive.png" id="2_26mwm"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="3_b8eto"]
 [ext_resource type="PackedScene" uid="uid://de0rs2455fdg4" path="res://scenes/prefabs/objects/parts_holder_engine.tscn" id="3_nijwa"]
+[ext_resource type="Script" uid="uid://ceadpmi0boxfx" path="res://scripts/objects/camera_follower.gd" id="6_bl5bc"]
 [ext_resource type="Script" uid="uid://t4858sodg0x3" path="res://makers/makerCam.gd" id="7_00eor"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_b8eto"]
@@ -24,7 +25,7 @@ sky = SubResource("Sky_6fdki")
 tonemap_mode = 2
 glow_enabled = true
 
-[node name="PieceHelper" type="Control" node_paths=PackedStringArray("A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "C5", "D1", "D2", "D3", "D4", "D5", "E1", "E2", "E3", "E4", "E5", "engine", "pieceHolder")]
+[node name="PieceHelper" type="Control" node_paths=PackedStringArray("engine", "A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "C5", "D1", "D2", "D3", "D4", "D5", "E1", "E2", "E3", "E4", "E5", "pieceHolder", "lbl_filepathName", "txt_pieceName", "txt_pieceDescription", "tree", "camHolder", "makerCamera", "followerCamera", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,6 +33,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_kgy3g")
+engine = NodePath("PartsHolder_Engine")
 A1 = NodePath("EngineBlockCustomizer/A1")
 A2 = NodePath("EngineBlockCustomizer/A2")
 A3 = NodePath("EngineBlockCustomizer/A3")
@@ -57,8 +59,21 @@ E2 = NodePath("EngineBlockCustomizer/E2")
 E3 = NodePath("EngineBlockCustomizer/E3")
 E4 = NodePath("EngineBlockCustomizer/E4")
 E5 = NodePath("EngineBlockCustomizer/E5")
-engine = NodePath("PartsHolder_Engine")
 pieceHolder = NodePath("Socket")
+lbl_filepathName = NodePath("FilepathName")
+txt_pieceName = NodePath("PieceData/PieceName")
+txt_pieceDescription = NodePath("PieceData/PieceDescription")
+tree = NodePath("Tree")
+camHolder = NodePath("camHolder")
+makerCamera = NodePath("camHolder/MakerCam")
+followerCamera = NodePath("FollowerCamera")
+save_txt_newPath = NodePath("ConfirmSavePopup/NewPath")
+save_txt_oldPath = NodePath("ConfirmSavePopup/OldPath")
+save_lbl_success = NodePath("ConfirmSavePopup/Success")
+newPathPrefix = NodePath("ConfirmSavePopup/newPathPrefix")
+ConfirmSavePopup = NodePath("ConfirmSavePopup")
+btn_cancelSave = NodePath("ConfirmSavePopup/CancelSave")
+btn_saveAs = NodePath("ConfirmSavePopup/SaveChangesAs")
 
 [node name="Engine Block Coordinates" type="Label" parent="."]
 layout_mode = 0
@@ -367,11 +382,11 @@ text = "Clear Piece Preview"
 
 [node name="camHolder" type="Node3D" parent="."]
 
-[node name="Camera3D" type="Camera3D" parent="camHolder" node_paths=PackedStringArray("cyube")]
+[node name="MakerCam" type="Camera3D" parent="camHolder" node_paths=PackedStringArray("cyube")]
 script = ExtResource("7_00eor")
 cyube = NodePath("MeshInstance3D")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="camHolder/Camera3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="camHolder/MakerCam"]
 transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, -0.117, -0.194)
 visible = false
 sorting_offset = 20.0
@@ -464,7 +479,7 @@ patch_margin_top = 12
 patch_margin_right = 12
 patch_margin_bottom = 12
 
-[node name="Label" type="Label" parent="ConfirmSavePopup"]
+[node name="_Save this piece?_" type="Label" parent="ConfirmSavePopup"]
 layout_mode = 0
 offset_left = -61.0
 offset_top = 10.0
@@ -475,7 +490,7 @@ text = "Save this Piece?
 Old path:"
 horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="ConfirmSavePopup"]
+[node name="_New path_" type="Label" parent="ConfirmSavePopup"]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 122.0
@@ -484,7 +499,7 @@ offset_bottom = 171.0
 text = "New path:"
 horizontal_alignment = 1
 
-[node name="tscn" type="Label" parent="ConfirmSavePopup"]
+[node name="_tscn_" type="Label" parent="ConfirmSavePopup"]
 layout_mode = 0
 offset_left = 233.0
 offset_top = 158.0
@@ -557,6 +572,11 @@ tooltip_text = "Creates a new entirely empty Piece.
 Any changes you want to make to hitboxes or meches must be done in the editor."
 text = "New Piece"
 
+[node name="FollowerCamera" type="Camera3D" parent="." node_paths=PackedStringArray("camToFollow")]
+script = ExtResource("6_bl5bc")
+camToFollow = NodePath("../camHolder/MakerCam")
+metadata/_custom_type_script = "uid://ceadpmi0boxfx"
+
 [connection signal="button_clicked" from="Tree" to="." method="_on_tree_button_clicked"]
 [connection signal="item_activated" from="Tree" to="." method="_on_tree_item_activated"]
 [connection signal="mouse_entered" from="PieceData" to="." method="_on_piece_name_mouse_entered"]
@@ -569,7 +589,7 @@ text = "New Piece"
 [connection signal="text_changed" from="PieceData/PieceDescription" to="." method="_on_piece_name_text_changed"]
 [connection signal="pressed" from="Reset Tree" to="." method="_on_reset_tree_pressed"]
 [connection signal="pressed" from="Clear Preview" to="." method="_on_clear_preview_pressed"]
-[connection signal="pressed" from="Clear Preview" to="camHolder/Camera3D" method="_on_clear_preview_pressed"]
+[connection signal="pressed" from="Clear Preview" to="camHolder/MakerCam" method="_on_clear_preview_pressed"]
 [connection signal="pressed" from="SaveChanges" to="." method="_on_save_changes_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="Select_Unselect All" to="." method="_on_select_unselect_all_pressed"]

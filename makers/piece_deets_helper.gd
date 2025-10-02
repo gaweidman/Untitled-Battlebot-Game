@@ -4,7 +4,14 @@ extends Control
 	#
 ## A billion export variables.
 
-@export_category("Engine customizers")
+
+@export_category("Node refs")
+
+
+@export_subgroup("Engine customizers")
+
+@export var engine : PartsHolder_Engine;
+
 @export var A1 : CheckBox;
 @export var A2 : CheckBox;
 @export var A3 : CheckBox;
@@ -35,13 +42,19 @@ extends Control
 @export var E4 : CheckBox;
 @export var E5 : CheckBox;
 
-@export_category("Node refs")
-@export var engine : PartsHolder_Engine;
+@export_subgroup("Socket")
 @export var pieceHolder : Socket;
 
 var pieceSceneFilePath : String;
 var pieceSceneBeingInspected : PackedScene;
 var pieceBeingInspected : Piece;
+
+@export var lbl_filepathName : Label;
+@export_subgroup("Piece data")
+@export var txt_pieceName : TextEdit;
+@export var txt_pieceDescription : TextEdit;
+@export_subgroup("Tree")
+@export var tree : Tree;
 
 ## Given a [Dictionary]. Format is { "node" : [PackedScene], "filepath" : original filepath }
 func set_inspected_piece(data):
@@ -66,11 +79,11 @@ func set_inspected_piece(data):
 		pieceBeingInspected.show();
 		
 		##Change the filepath text.
-		$FilepathName.text = pieceFilePath;
+		lbl_filepathName.text = pieceFilePath;
 		
 		##Change the piece name text.
-		$PieceData/PieceName.text = newPiece.pieceName;
-		$PieceData/PieceDescription.text = newPiece.pieceDescription;
+		txt_pieceName.text = newPiece.pieceName;
+		txt_pieceDescription.text = newPiece.pieceDescription;
 		
 		pieceHolder.add_child(pieceBeingInspected);
 		pieceHolder.add_occupant(pieceBeingInspected);
@@ -88,23 +101,27 @@ func clear_inspected_piece():
 	if is_instance_valid(pieceBeingInspected):
 		pieceBeingInspected.queue_free();
 	pieceSceneBeingInspected = null;
-	$FilepathName.text = "[No Piece selected]";
+	lbl_filepathName.text = "[No Piece selected]";
 
 var filepathPrefix = "res://scenes/prefabs/objects/pieces/"
 
 
 func _on_piece_name_text_changed():
 	if is_instance_valid(pieceBeingInspected):
-		var text = $PieceData/PieceName.text;
+		var text = txt_pieceName.text;
 		pieceBeingInspected.name = "Piece_" + text;
 		pieceBeingInspected.pieceName = text;
 		
-		var desc = $PieceData/PieceDescription.text;
+		var desc = txt_pieceDescription.text;
 		if desc == "":
 			desc = "No Description Found.";
 		pieceBeingInspected.pieceDescription = desc;
 	pass # Replace with function body.
 
+@export_subgroup("Camera")
+@export var camHolder : Node3D;
+@export var makerCamera : MakerCamera;
+@export var followerCamera : FollowerCamera;
 var cameraControlIsOn = true;
 func is_camera_control_on():
 	return $camHolder/Camera3D.enabled;
@@ -118,24 +135,24 @@ func disable_camera():
 func _on_piece_name_mouse_entered():
 	disable_camera();
 	
-	$PieceData/PieceName.editable = true;
-	$PieceData/PieceDescription.editable = true;
+	txt_pieceName.editable = true;
+	txt_pieceDescription.editable = true;
 	pass # Replace with function body.
 func _on_piece_name_mouse_exited():
 	enable_camera();
 	
-	$PieceData/PieceName.editable = false;
+	txt_pieceName.editable = false;
 	
-	$PieceData/PieceDescription.editable = false;
-	var desc = $PieceData/PieceDescription.text;
+	txt_pieceDescription.editable = false;
+	var desc = txt_pieceDescription.text;
 	if desc == "":
-		$PieceData/PieceDescription.text = "No Description Found.";
+		txt_pieceDescription.text = "No Description Found.";
 	pass # Replace with function body.
 
 ##Resets the list of viewed Pieces.
 func get_pieces():
-	$Tree.clear();
-	var child = $Tree.create_item();
+	tree.clear();
+	var child = tree.create_item();
 	child.set_text(0, "Pieces");
 	child.set_metadata(0, generate_new_piece());
 	
@@ -167,7 +184,7 @@ func _ready():
 	open_save_popup(false);
 	get_pieces();
 	##var tree = Tree.new()
-	#var tree = $Tree
+	#var tree = tree
 	#var root = tree.create_item()
 	#tree.hide_root = true
 	#var child1 = tree.create_item(root)
@@ -178,7 +195,7 @@ func _ready():
 
 ##Adds a Piece node to the tree. Needs the text, the node's PackedScene, and the original filepath.
 func add_to_tree(text, node, filepath):
-	var child = $Tree.create_item()
+	var child = tree.create_item()
 	child.set_metadata(0, {"node" : node, "filepath" : filepath});
 	child.set_text(0, str(text));
 
@@ -189,8 +206,8 @@ func _on_tree_button_clicked(item, column, id, mouse_button_index):
 
 
 func _on_tree_item_activated():
-	var mousePos = get_viewport().get_mouse_position() - $Tree.position
-	var itemAtPos : TreeItem = $Tree.get_item_at_position(mousePos);
+	var mousePos = get_viewport().get_mouse_position() - tree.position
+	var itemAtPos : TreeItem = tree.get_item_at_position(mousePos);
 	print(itemAtPos.get_text(0))
 	print(itemAtPos.get_metadata(0))
 	var data = itemAtPos.get_metadata(0)
@@ -291,15 +308,24 @@ func _on_save_changes_pressed():
 	pass # Replace with function body.
 
 
+@export_subgroup("Confirm Save Popup")
+@export var save_txt_newPath : TextEdit;
+@export var save_txt_oldPath : TextEdit;
+@export var save_lbl_success : Label;
+@export var newPathPrefix : Label;
+@export var ConfirmSavePopup : Control;
+@export var btn_cancelSave : Button;
+@export var btn_saveAs : Button;
+
 ##Actually saves the stuff. Saves the scene as a Piece; deletes all Collision copies, hides it, saves it, then regenerates collision and shows it again.
 func _on_save_changes_as_pressed():
-	var savedPath = filepathPrefix + $ConfirmSavePopup/NewPath.text + ".tscn"
+	var savedPath = filepathPrefix + save_txt_newPath.text + ".tscn"
 	if pieceBeingInspected != null && pieceSceneFilePath != null:
 		var saveNode = PackedScene.new()
 		
 		pieceBeingInspected.reset_collision_helpers();
 		pieceBeingInspected.hide();
-		pieceBeingInspected.name = "Piece_" + $PieceData/PieceName.text;
+		pieceBeingInspected.name = "Piece_" + txt_pieceName.text;
 		
 		
 		saveNode.pack(pieceBeingInspected);
@@ -312,13 +338,13 @@ func _on_save_changes_as_pressed():
 		pieceBeingInspected.refresh_and_gather_collision_helpers();
 		
 		get_pieces();
-		TextFunc.set_text_color($ConfirmSavePopup/Success, "utility");
-		$ConfirmSavePopup/Success.text = "Saved Successfully to " + savedPath
-		$ConfirmSavePopup/Success.show();
+		TextFunc.set_text_color(save_lbl_success, "utility");
+		save_lbl_success.text = "Saved Successfully to " + savedPath
+		save_lbl_success.show();
 	else:
-		TextFunc.set_text_color($ConfirmSavePopup/Success, "melee");
-		$ConfirmSavePopup/Success.text = "Saved Unsuccessfully to " + savedPath
-		$ConfirmSavePopup/Success.show();
+		TextFunc.set_text_color(save_lbl_success, "melee");
+		save_lbl_success.text = "Saved Unsuccessfully to " + savedPath
+		save_lbl_success.show();
 	pass # Replace with function body.
 
 
@@ -332,19 +358,19 @@ func open_save_popup(open : bool):
 	savePopupIsOpen = open;
 	if open:
 		##Old path text
-		$ConfirmSavePopup/OldPath.text = pieceSceneFilePath;
+		save_txt_oldPath.text = pieceSceneFilePath;
 		##New path text
-		$ConfirmSavePopup/newPathPrefix.text = filepathPrefix;
-		$ConfirmSavePopup/NewPath.text = "piece_test";
-		$ConfirmSavePopup/CancelSave.disabled = false;
-		$ConfirmSavePopup/SaveChangesAs.disabled = false;
-		$ConfirmSavePopup.show();
-		$ConfirmSavePopup/Success.hide();
+		newPathPrefix.text = filepathPrefix;
+		save_txt_newPath.text = "piece_test";
+		btn_cancelSave.disabled = false;
+		btn_saveAs.disabled = false;
+		ConfirmSavePopup.show();
+		save_lbl_success.hide();
 	else:
-		$ConfirmSavePopup.hide();
-		$ConfirmSavePopup/Success.hide();
-		$ConfirmSavePopup/CancelSave.disabled = true;
-		$ConfirmSavePopup/SaveChangesAs.disabled = true;
+		ConfirmSavePopup.hide();
+		save_lbl_success.hide();
+		btn_cancelSave.disabled = true;
+		btn_saveAs.disabled = true;
 
 func _on_cancel_save_pressed():
 	open_save_popup(false);

@@ -1,13 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cfsflls4t0wq6"]
+[gd_scene load_steps=3 format=3 uid="uid://cfsflls4t0wq6"]
 
 [ext_resource type="PackedScene" uid="uid://c2nsjhwipqr1m" path="res://scenes/robots/buildingBlocks/robot_base.tscn" id="1_f5qxl"]
 [ext_resource type="Script" uid="uid://dx1w5ja65qha1" path="res://scripts/objects/robots/player/robot_player.gd" id="2_u7rvj"]
-[ext_resource type="PackedScene" uid="uid://djgwiuexucnqm" path="res://scenes/prefabs/objects/pieces/piece_swivel_pointer.tscn" id="3_0grdw"]
-[ext_resource type="PackedScene" uid="uid://dl1v6eiy0gi1q" path="res://scenes/prefabs/objects/pieces/piece_sawblade.tscn" id="3_a63pw"]
-[ext_resource type="PackedScene" uid="uid://cj7wtreacnxtm" path="res://scenes/prefabs/objects/pieces/piece_cannon.tscn" id="4_u7rvj"]
 
 [node name="Robot_Player" instance=ExtResource("1_f5qxl")]
-visible = true
 script = ExtResource("2_u7rvj")
 
 [node name="Body" parent="." index="0"]
@@ -19,30 +15,7 @@ hostRobot = NodePath("../../..")
 [node name="PieceBodyCube" parent="Body/Meshes/Socket" index="4"]
 assignedToSocket = true
 
-[node name="Piece_SwivelPointer" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket" index="4" node_paths=PackedStringArray("hostPiece", "hostRobot", "hostSocket") instance=ExtResource("3_0grdw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.500001, 0)
-hostPiece = NodePath("../../..")
-hostRobot = NodePath("../../../../../../..")
-hostSocket = NodePath("../../../..")
-
-[node name="Piece_Sawblade" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_SwivelPointer/SwivelTop/Socket" index="4" node_paths=PackedStringArray("hostPiece", "hostRobot", "hostSocket") instance=ExtResource("3_a63pw")]
-transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 5.96046e-07, 0)
-hostPiece = NodePath("../../..")
-hostRobot = NodePath("../../../../../../../../../..")
-hostSocket = NodePath("..")
-assignedToSocket = true
-
-[node name="Body_Meshes_Socket_PieceBodyCube_FemaleSockets_Socket_Piece_Sawblade_Socket#Piece_Cannon" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_SwivelPointer/SwivelTop/Socket/Piece_Sawblade/FemaleSockets/Socket" index="4" node_paths=PackedStringArray("hostPiece", "hostRobot", "hostSocket") instance=ExtResource("4_u7rvj")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.124997, 0)
-hostPiece = NodePath("../../..")
-hostRobot = NodePath("../../../../../../../../../../../../..")
-hostSocket = NodePath("..")
-assignedToSocket = true
-
-[node name="Blade2" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_SwivelPointer/SwivelTop/Socket/Piece_Sawblade" index="7"]
-mesh = null
+[node name="Socket3" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets" index="1"]
+transform = Transform3D(-1, 2.98023e-08, 1.77636e-15, 0, -4.37114e-08, -1, -2.98023e-08, -1, 4.37114e-08, 0, 0.374999, -0.75)
 
 [editable path="Body/Meshes/Socket/PieceBodyCube"]
-[editable path="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_SwivelPointer"]
-[editable path="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_SwivelPointer/SwivelTop/Socket/Piece_Sawblade"]
-[editable path="Body/Meshes/Socket/PieceBodyCube/FemaleSockets/Socket/Piece_SwivelPointer/SwivelTop/Socket/Piece_Sawblade/FemaleSockets/Socket/Body_Meshes_Socket_PieceBodyCube_FemaleSockets_Socket_Piece_Sawblade_Socket#Piece_Cannon"]
