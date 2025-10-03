@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_fvnuu"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="8_x8ege"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="10_ese3e"]
-[ext_resource type="ArrayMesh" uid="uid://wyfj0ov8uyuf" path="res://graphics/models/obj/botparts/BotBody.obj" id="10_h4kss"]
+[ext_resource type="ArrayMesh" uid="uid://bnajrltu8pmd4" path="res://graphics/models/obj/botparts/BotBody.obj" id="10_h4kss"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="11_wnksc"]
 [ext_resource type="ArrayMesh" uid="uid://dddqhdde83f7e" path="res://graphics/models/obj/botparts/SwivelTop.obj" id="11_xcdtu"]
 
