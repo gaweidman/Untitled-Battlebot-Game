@@ -415,4 +415,7 @@ func is_paused():
 
 
 func editor_mode_start():
-	get_tree().change_scene_to_file("res://makers/piece_helper.tscn");
+	get_tree().change_scene_to_file("res://makers/maker_mode.tscn");
+
+func reset_to_main_menu():
+	get_tree().change_scene_to_file("res://scenes/levels/game_board.tscn");

@@ -98,11 +98,11 @@ statCollection = Array[ExtResource("2_xcdtu")]([SubResource("Resource_xxf1u"), S
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"
 
 [node name="Socket2" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.375, 0.75)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.25, 0.75)
 hostPiece = NodePath("../..")
 
 [node name="Socket3" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
-transform = Transform3D(-1, 2.98023e-08, 1.77636e-15, 0, -4.37114e-08, -1, -2.98023e-08, -1, 4.37114e-08, 0, 0.375, -0.75)
+transform = Transform3D(-1, 2.98023e-08, 1.77636e-15, 0, -4.37114e-08, -1, -2.98023e-08, -1, 4.37114e-08, 0, 0.25, -0.75)
 hostPiece = NodePath("../..")
 
 [node name="Socket4" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
@@ -118,8 +118,8 @@ editor_description = "Leave this node empty. "
 collision_layer = 16
 collision_mask = 8
 
-[node name="HurtboxShapes [Leave empty]" type="Area3D" parent="."]
-editor_description = "Leave this node empty. "
+[node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
+editor_description = "Holds all generated boxes meant for detecting incoming damage and bonks. Leave this node empty. "
 collision_layer = 8
 script = ExtResource("7_fvnuu")
 

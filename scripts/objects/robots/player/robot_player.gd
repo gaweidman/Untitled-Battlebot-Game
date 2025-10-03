@@ -100,9 +100,9 @@ func die():
 	ParticleFX.play("NutsBolts", GameState.get_game_board(), get_global_body_position());
 	ParticleFX.play("BigBoom", GameState.get_game_board(), get_global_body_position());
 	
-	print("Searching for Sockets ", Utils.get_all_children(self).size())
-	print("Searching for Sockets, checking ownership ", Utils.get_all_children(self, self).size())
-	print(Utils.get_all_children(self, self))
+	#print("Searching for Sockets ", Utils.get_all_children(self).size())
+	#print("Searching for Sockets, checking ownership ", Utils.get_all_children(self, self).size())
+	#print(Utils.get_all_children(self, self))
 
 #################### COMBAT HANDLING
 

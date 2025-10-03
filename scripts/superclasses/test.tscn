@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://c5kqts8vi5amx"]
 
-[ext_resource type="PackedScene" uid="uid://c2nsjhwipqr1m" path="res://scenes/robots/buildingBlocks/robot_base.tscn" id="1_g8gfh"]
-[ext_resource type="PackedScene" uid="uid://cfsflls4t0wq6" path="res://scenes/robots/player/robot_player.tscn" id="3_6ggyy"]
+[ext_resource type="PackedScene" uid="uid://c2nsjhwipqr1m" path="res://scenes/prefabs/objects/robots/buildingBlocks/robot_base.tscn" id="1_g8gfh"]
+[ext_resource type="PackedScene" uid="uid://cfsflls4t0wq6" path="res://scenes/prefabs/objects/robots/robot_player.tscn" id="3_6ggyy"]
 
 [sub_resource type="GDScript" id="GDScript_6ggyy"]
 script/source = "extends Node3D

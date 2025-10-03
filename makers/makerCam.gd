@@ -12,14 +12,28 @@ var x := 0.0;
 var y := 0.0;
 
 @export var cyube : MeshInstance3D;
+@export var lbl_cameraKeys : Label;
+@export var cameraControlIcon : TextureRect;
+
+@onready var camIcon_enabled = preload("res://graphics/images/HUD/camera_control_enabled.png");
+@onready var camIcon_disabled = preload("res://graphics/images/HUD/camera_control_disabled.png");
+
+
 
 var enabled = true;
 
+func _ready():
+	enable();
+
 func enable():
 	enabled = true;
+	cameraControlIcon.texture = camIcon_enabled;
+	TextFunc.set_text_color(lbl_cameraKeys, "white");
 
 func disable():
 	enabled = false;
+	cameraControlIcon.texture = camIcon_disabled;
+	TextFunc.set_text_color(lbl_cameraKeys, "grey");
 
 func _process(delta):
 	position = Vector3(0, 0, zoom);
@@ -90,6 +104,11 @@ func _process(delta):
 			yaw += delta * 4;
 		if Input.is_action_pressed("MoveLeft"):
 			yaw -= delta * 4;
+
+func _physics_process(delta):
+	hover_socket();
+	if Input.is_action_just_pressed("Select"):
+		click_on_piece();
 
 func reset_transforms(rot := true, pos := true):
 	if rot:

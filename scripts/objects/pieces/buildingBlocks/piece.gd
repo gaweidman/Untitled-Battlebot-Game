@@ -8,7 +8,6 @@ func _ready():
 	hide();
 	ability_registry();
 	super(); #Stat registry.
-	autograb_sockets();
 	gather_colliders_and_meshes();
 
 func _physics_process(delta):
@@ -35,6 +34,44 @@ func stat_registry():
 	register_stat("ScrapSellModifier", scrapSellModifierBase, statIconMagazine);
 	register_stat("ScrapSalvageModifier", scrapSellModifierBase, statIconMagazine);
 	register_stat("Weight", weightBase, statIconCooldown);
+
+##This is here for when things get out of whack and some of the export variables disconnect themselves for no good reason.
+func assign_references():
+	var allOK = true;
+	if !is_instance_valid(placementCollisionHolder):
+		if is_instance_valid($"PlacementShapes [Leave empty]"):
+			placementCollisionHolder = $"PlacementShapes [Leave empty]";
+			pass;
+	else:
+		allOK = false;
+	if !is_instance_valid(hurtboxCollisionHolder):
+		if is_instance_valid($"HurtboxShapes [Leave empty]"):
+			hurtboxCollisionHolder = $"HurtboxShapes [Leave empty]";
+			pass;
+	else:
+		allOK = false;
+	if !is_instance_valid(hitboxCollisionHolder):
+		if is_instance_valid($"HitboxShapes [Leave empty]"):
+			hitboxCollisionHolder = $"HitboxShapes [Leave empty]";
+			pass;
+	else:
+		allOK = false;
+	if !is_instance_valid(meshesHolder):
+		if is_instance_valid($"Meshes"):
+			meshesHolder = $"Meshes";
+			pass;
+	else:
+		allOK = false;
+	if !is_instance_valid(femaleSocketHolder):
+		if is_instance_valid($"FemaleSockets"):
+			femaleSocketHolder = $"FemaleSockets";
+			pass;
+	else:
+		allOK = false;
+	
+	if not allOK:
+		print("References for piece ", name, " were invalid. ")
+		queue_free();
 
 #################### VISUALS AND TRANSFORM
 
@@ -182,8 +219,11 @@ func refresh_and_gather_collision_helpers():
 						shapeCastNew.set_deferred("rotation", child.rotation);
 						shapeCastNew.set("shape", child.shape);
 						#shapeCastNew.enabled = false;
+						shapeCastNew.collide_with_areas = true;
 						shapeCastNew.enabled = true;
 						shapeCastNew.debug_shape_custom_color = Color("af7f006b");
+						shapeCastNew.set_collision_mask_value(4, true);
+						#shapeCastNew.set_collision_mask_value(5, true);
 					##if the PieceCollisionBox is of type HITBOX or HURTBOX then it should copy itself into those.
 					if child.isHurtbox:
 						var dupe = child.make_copy();
@@ -216,15 +256,20 @@ func ping_placement_validation():
 		#print("Hi 1")
 		#print(placementCollisionHolder.get_children())
 		if not collided:
-			#print("Hi 2")
+			print("Hi 2")
 			if child is ShapeCast3D:
 				#print("Hi 3")
 				child.force_shapecast_update();
 				if child.is_colliding(): 
 					#print("Yello?")
 					var collider = child.get_collider(0);
-					if collider.is_in_group("Piece") or collider.is_in_group("Combatant"):
-						collided = true;
+					if collider is HurtboxHolder:
+						print(self, collider.get_piece())
+						if self != collider.get_piece():
+							collided = true;
+					else:
+						print("what")
+						print(collider)
 	#print(collided)
 	if collided: set_selection_mode(selectionModes.NOT_PLACEABLE);
 	else: set_selection_mode(selectionModes.PLACEABLE);
@@ -315,11 +360,12 @@ func register_socket(socket : Socket):
 
 ##Assigns this Piece to a given Socket.
 func assign_socket(socket:Socket):
+	print("Children", get_children())
 	socket.add_occupant(self);
 	hostRobot.reassign_body_collision();
 	assignedToSocket = true;
 	hurtboxCollisionHolder.set_collision_mask_value(8, false);
-	#set_selection_mode(selectionModes.NOT_SELECTED);
+	set_selection_mode(selectionModes.NOT_SELECTED);
 	pass;
 
 func is_assigned() -> bool:

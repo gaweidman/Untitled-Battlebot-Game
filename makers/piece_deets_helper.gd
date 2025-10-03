@@ -1,12 +1,16 @@
-extends Control
+extends MakerMode
 
-#func remake_directory():
-	#
+class_name MakerMode_Pieces
+
+func exit():
+	clear_inspected_piece();
+
 ## A billion export variables.
 
 
 @export_category("Node refs")
 
+@export var manager : MakerModeManager;
 
 @export_subgroup("Engine customizers")
 
@@ -122,24 +126,16 @@ func _on_piece_name_text_changed():
 @export var camHolder : Node3D;
 @export var makerCamera : MakerCamera;
 @export var followerCamera : FollowerCamera;
-var cameraControlIsOn = true;
-func is_camera_control_on():
-	return $camHolder/Camera3D.enabled;
-func enable_camera():
-	cameraControlIsOn  = true;
-	$camHolder/Camera3D.enable()
-func disable_camera():
-	cameraControlIsOn = false;
-	$camHolder/Camera3D.disable()
 
 func _on_piece_name_mouse_entered():
-	disable_camera();
+	manager.disable_camera();
 	
 	txt_pieceName.editable = true;
 	txt_pieceDescription.editable = true;
 	pass # Replace with function body.
+
 func _on_piece_name_mouse_exited():
-	enable_camera();
+	manager.enable_camera();
 	
 	txt_pieceName.editable = false;
 	
@@ -198,12 +194,6 @@ func add_to_tree(text, node, filepath):
 	var child = tree.create_item()
 	child.set_metadata(0, {"node" : node, "filepath" : filepath});
 	child.set_text(0, str(text));
-
-
-func _on_tree_button_clicked(item, column, id, mouse_button_index):
-	print(item, column, id, mouse_button_index)
-	pass # Replace with function body.
-
 
 func _on_tree_item_activated():
 	var mousePos = get_viewport().get_mouse_position() - tree.position
@@ -347,11 +337,6 @@ func _on_save_changes_as_pressed():
 		save_lbl_success.show();
 	pass # Replace with function body.
 
-
-func _on_exit_pressed():
-	get_tree().quit();
-	pass # Replace with function body.
-
 var savePopupIsOpen
 
 func open_save_popup(open : bool):
@@ -383,8 +368,6 @@ func set_engine_pattern(tilesArray : Array[Vector2i]):
 		for tile in tilesArray:
 			pieceBeingInspected.engineSlots[tile] = null;
 
-@onready var newPieceRef = preload("res://scenes/prefabs/objects/pieces/buildingBlocks/piece.tscn")
-
 ##Creates a new piece from the void.
 func _on_new_piece_pressed():
 	set_inspected_piece(generate_new_piece());
@@ -392,7 +375,7 @@ func _on_new_piece_pressed():
 
 func generate_new_piece():
 	var newData = {
-		"node" : newPieceRef,
+		"node" : manager.newPieceRef,
 		"filepath" : "res://scenes/prefabs/objects/pieces/piece_test.tscn",
 	}
 	return newData;

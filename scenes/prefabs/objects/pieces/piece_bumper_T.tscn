@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://bretkiyuy4fah"]
+[gd_scene load_steps=26 format=3 uid="uid://bretkiyuy4fah"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_lmodm"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_8x5gi"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="3_vga6k"]
 [ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_05rox"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="8_lmodm"]
+[ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="8_u5m20"]
 
 [sub_resource type="Resource" id="Resource_xxf1u"]
 script = ExtResource("2_u5m20")
@@ -163,9 +164,10 @@ hostPiece = NodePath("../..")
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
 
-[node name="HurtboxShapes [Leave empty]" type="Area3D" parent="."]
+[node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
 collision_layer = 8
+script = ExtResource("8_u5m20")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "

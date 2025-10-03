@@ -1,0 +1,727 @@
+[gd_scene load_steps=15 format=3 uid="uid://bhhd443ej7smu"]
+
+[ext_resource type="Script" uid="uid://bvhx6f0lb1vk2" path="res://makers/maker_mode_manager.gd" id="1_vhu6f"]
+[ext_resource type="Theme" uid="uid://bq0jig2pdkgtn" path="res://graphics/images/HUD/UI_theme.tres" id="2_8384o"]
+[ext_resource type="Script" uid="uid://bgwgllmh3y6c1" path="res://makers/robot_maker.gd" id="3_1k5u0"]
+[ext_resource type="Script" uid="uid://4xlbt5q5d03h" path="res://makers/piece_deets_helper.gd" id="4_ti6iq"]
+[ext_resource type="Texture2D" uid="uid://b27r3rshm0ite" path="res://graphics/images/HUD/textBoxBG_partPassive.png" id="5_8f46y"]
+[ext_resource type="PackedScene" uid="uid://de0rs2455fdg4" path="res://scenes/prefabs/objects/parts_holder_engine.tscn" id="6_s3ktb"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="7_ccj5e"]
+[ext_resource type="Script" uid="uid://ceadpmi0boxfx" path="res://scripts/objects/camera_follower.gd" id="8_yvtic"]
+[ext_resource type="Script" uid="uid://t4858sodg0x3" path="res://makers/makerCam.gd" id="9_uy74y"]
+[ext_resource type="Texture2D" uid="uid://dmmyrbfw14p04" path="res://graphics/images/HUD/camera_control_enabled.png" id="10_pwi61"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_00eor"]
+sky_top_color = Color(0.0910561, 0.0229013, 0, 1)
+sky_horizon_color = Color(0.244366, 0.229288, 0.222582, 1)
+ground_bottom_color = Color(0.172549, 0.180392, 0.176471, 1)
+ground_horizon_color = Color(0.244366, 0.229288, 0.222582, 1)
+energy_multiplier = 0.5
+
+[sub_resource type="Sky" id="Sky_6fdki"]
+sky_material = SubResource("ProceduralSkyMaterial_00eor")
+
+[sub_resource type="Environment" id="Environment_b8eto"]
+background_mode = 2
+sky = SubResource("Sky_6fdki")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_b8eto"]
+
+[node name="Maker Modes" type="Control" node_paths=PackedStringArray("SelectionButtons", "PieceHelper", "RobotHelper", "lbl_modeName", "makerCamera")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vhu6f")
+SelectionButtons = NodePath("ModeSelectionButtons")
+PieceHelper = NodePath("PieceHelper")
+RobotHelper = NodePath("RobotMaker")
+lbl_modeName = NodePath("ModeName")
+makerCamera = NodePath("camHolder/MakerCam")
+
+[node name="ModeSelectionButtons" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PieceHelper" type="Button" parent="ModeSelectionButtons"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 9.1
+anchor_top = 5.25
+anchor_right = 13.675
+anchor_bottom = 6.625
+theme = ExtResource("2_8384o")
+text = "Piece helper"
+metadata/_edit_use_anchors_ = true
+
+[node name="RobotHelper" type="Button" parent="ModeSelectionButtons"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 14.1
+anchor_top = 5.225
+anchor_right = 18.675
+anchor_bottom = 6.6
+theme = ExtResource("2_8384o")
+text = "Robot helper"
+metadata/_edit_use_anchors_ = true
+
+[node name="RobotMaker" type="Control" parent="." node_paths=PackedStringArray("manager", "tree_robot", "tree_pieces", "engine", "botSpawnPoint")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_1k5u0")
+manager = NodePath("..")
+tree_robot = NodePath("RobotTree")
+tree_pieces = NodePath("PiecesTree")
+engine = NodePath("PartsHolder_Engine")
+botSpawnPoint = NodePath("RobotSpawnPoint")
+metadata/_custom_type_script = "uid://cseoyso26tb6f"
+metadata/_edit_use_anchors_ = true
+
+[node name="RobotTree" type="Tree" parent="RobotMaker"]
+layout_mode = 0
+offset_top = 304.0
+offset_right = 471.0
+offset_bottom = 549.0
+allow_reselect = true
+
+[node name="PiecesTree" type="Tree" parent="RobotMaker"]
+layout_mode = 0
+offset_top = 48.0
+offset_right = 471.0
+offset_bottom = 293.0
+allow_reselect = true
+
+[node name="RobotSpawnPoint" type="Node3D" parent="RobotMaker"]
+
+[node name="PartsHolder_Engine" parent="RobotMaker" instance=ExtResource("6_s3ktb")]
+layout_mode = 1
+offset_left = -780.0
+offset_top = -519.0
+offset_right = -492.0
+offset_bottom = -231.0
+
+[node name="PieceHelper" type="Control" parent="." node_paths=PackedStringArray("manager", "engine", "A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "C5", "D1", "D2", "D3", "D4", "D5", "E1", "E2", "E3", "E4", "E5", "pieceHolder", "lbl_filepathName", "txt_pieceName", "txt_pieceDescription", "tree", "camHolder", "makerCamera", "followerCamera", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_ti6iq")
+manager = NodePath("..")
+engine = NodePath("PartsHolder_Engine")
+A1 = NodePath("EngineBlockCustomizer/A1")
+A2 = NodePath("EngineBlockCustomizer/A2")
+A3 = NodePath("EngineBlockCustomizer/A3")
+A4 = NodePath("EngineBlockCustomizer/A4")
+A5 = NodePath("EngineBlockCustomizer/A5")
+B1 = NodePath("EngineBlockCustomizer/B1")
+B2 = NodePath("EngineBlockCustomizer/B2")
+B3 = NodePath("EngineBlockCustomizer/B3")
+B4 = NodePath("EngineBlockCustomizer/B4")
+B5 = NodePath("EngineBlockCustomizer/B5")
+C1 = NodePath("EngineBlockCustomizer/C1")
+C2 = NodePath("EngineBlockCustomizer/C2")
+C3 = NodePath("EngineBlockCustomizer/C3")
+C4 = NodePath("EngineBlockCustomizer/C4")
+C5 = NodePath("EngineBlockCustomizer/C5")
+D1 = NodePath("EngineBlockCustomizer/D1")
+D2 = NodePath("EngineBlockCustomizer/D2")
+D3 = NodePath("EngineBlockCustomizer/D3")
+D4 = NodePath("EngineBlockCustomizer/D4")
+D5 = NodePath("EngineBlockCustomizer/D5")
+E1 = NodePath("EngineBlockCustomizer/E1")
+E2 = NodePath("EngineBlockCustomizer/E2")
+E3 = NodePath("EngineBlockCustomizer/E3")
+E4 = NodePath("EngineBlockCustomizer/E4")
+E5 = NodePath("EngineBlockCustomizer/E5")
+pieceHolder = NodePath("Socket")
+lbl_filepathName = NodePath("FilepathName")
+txt_pieceName = NodePath("PieceData/PieceName")
+txt_pieceDescription = NodePath("PieceData/PieceDescription")
+tree = NodePath("Tree")
+camHolder = NodePath("../camHolder")
+makerCamera = NodePath("../camHolder/MakerCam")
+followerCamera = NodePath("FollowerCamera")
+save_txt_newPath = NodePath("ConfirmSavePopup/NewPath")
+save_txt_oldPath = NodePath("ConfirmSavePopup/OldPath")
+save_lbl_success = NodePath("ConfirmSavePopup/Success")
+newPathPrefix = NodePath("ConfirmSavePopup/newPathPrefix")
+ConfirmSavePopup = NodePath("ConfirmSavePopup")
+btn_cancelSave = NodePath("ConfirmSavePopup/CancelSave")
+btn_saveAs = NodePath("ConfirmSavePopup/SaveChangesAs")
+
+[node name="Engine Block Coordinates" type="Label" parent="PieceHelper"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 354.0
+offset_right = 203.0
+offset_bottom = 377.0
+text = "Engine Block Coordinates"
+
+[node name="Engine Block Preview" type="Label" parent="PieceHelper"]
+layout_mode = 0
+offset_left = 226.0
+offset_top = 354.0
+offset_right = 422.0
+offset_bottom = 377.0
+text = "Engine Block Preview"
+
+[node name="EngineBlockCustomizer" type="NinePatchRect" parent="PieceHelper"]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 374.0
+offset_right = 163.0
+offset_bottom = 506.0
+
+[node name="PanelBG" type="NinePatchRect" parent="PieceHelper/EngineBlockCustomizer"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_8f46y")
+region_rect = Rect2(1, 1, 46, 47)
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12
+
+[node name="A1" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 6.0
+offset_right = 29.0
+offset_bottom = 30.0
+
+[node name="A2" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 6.0
+offset_right = 53.0
+offset_bottom = 30.0
+
+[node name="A3" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 6.0
+offset_right = 77.0
+offset_bottom = 30.0
+
+[node name="A4" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 6.0
+offset_right = 101.0
+offset_bottom = 30.0
+
+[node name="A5" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 6.0
+offset_right = 125.0
+offset_bottom = 30.0
+
+[node name="B1" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 30.0
+offset_right = 29.0
+offset_bottom = 54.0
+
+[node name="B2" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 30.0
+offset_right = 53.0
+offset_bottom = 54.0
+
+[node name="B3" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 30.0
+offset_right = 77.0
+offset_bottom = 54.0
+
+[node name="B4" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 30.0
+offset_right = 101.0
+offset_bottom = 54.0
+
+[node name="B5" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 30.0
+offset_right = 125.0
+offset_bottom = 54.0
+
+[node name="C1" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 54.0
+offset_right = 29.0
+offset_bottom = 78.0
+
+[node name="C2" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 54.0
+offset_right = 53.0
+offset_bottom = 78.0
+
+[node name="C3" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 54.0
+offset_right = 77.0
+offset_bottom = 78.0
+
+[node name="C4" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 54.0
+offset_right = 101.0
+offset_bottom = 78.0
+
+[node name="C5" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 54.0
+offset_right = 125.0
+offset_bottom = 78.0
+
+[node name="D1" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 78.0
+offset_right = 29.0
+offset_bottom = 102.0
+
+[node name="D2" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 78.0
+offset_right = 53.0
+offset_bottom = 102.0
+
+[node name="D3" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 78.0
+offset_right = 77.0
+offset_bottom = 102.0
+
+[node name="D4" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 78.0
+offset_right = 101.0
+offset_bottom = 102.0
+
+[node name="D5" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 78.0
+offset_right = 125.0
+offset_bottom = 102.0
+
+[node name="E1" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 102.0
+offset_right = 29.0
+offset_bottom = 126.0
+
+[node name="E2" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 102.0
+offset_right = 53.0
+offset_bottom = 126.0
+
+[node name="E3" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 102.0
+offset_right = 77.0
+offset_bottom = 126.0
+
+[node name="E4" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 77.0
+offset_top = 102.0
+offset_right = 101.0
+offset_bottom = 126.0
+
+[node name="E5" type="CheckBox" parent="PieceHelper/EngineBlockCustomizer"]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 102.0
+offset_right = 125.0
+offset_bottom = 126.0
+
+[node name="Tree" type="Tree" parent="PieceHelper"]
+layout_mode = 0
+offset_top = 48.0
+offset_right = 471.0
+offset_bottom = 293.0
+allow_reselect = true
+
+[node name="PartsHolder_Engine" parent="PieceHelper" instance=ExtResource("6_s3ktb")]
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 210.0
+offset_top = 380.0
+offset_right = 498.0
+offset_bottom = 668.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="PieceData" type="Control" parent="PieceHelper"]
+layout_mode = 1
+anchor_left = 0.848438
+anchor_top = 0.0898148
+anchor_right = 0.984375
+anchor_bottom = 0.350925
+metadata/_edit_use_anchors_ = true
+
+[node name="_Piece Data_" type="Label" parent="PieceHelper/PieceData"]
+layout_mode = 0
+offset_left = 82.0
+offset_top = -3.0
+offset_right = 320.0
+offset_bottom = 20.0
+text = "Piece Data"
+vertical_alignment = 2
+
+[node name="PieceName" type="TextEdit" parent="PieceHelper/PieceData"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 25.0
+offset_right = 253.0
+offset_bottom = 63.0
+placeholder_text = "Piece Name"
+
+[node name="PieceDescription" type="TextEdit" parent="PieceHelper/PieceData"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 73.0
+offset_right = 253.0
+offset_bottom = 274.0
+placeholder_text = "Piece Description"
+
+[node name="PanelBG" type="NinePatchRect" parent="PieceHelper/PieceData"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_8f46y")
+region_rect = Rect2(1, 1, 46, 47)
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12
+
+[node name="FilepathName" type="Label" parent="PieceHelper"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 324.0
+offset_right = 499.0
+offset_bottom = 357.0
+
+[node name="Reset Tree" type="Button" parent="PieceHelper"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 295.0
+offset_right = 111.0
+offset_bottom = 326.0
+text = "Refresh Tree"
+
+[node name="Clear Preview" type="Button" parent="PieceHelper"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 547.0
+offset_right = 165.0
+offset_bottom = 578.0
+text = "Clear Piece Preview"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="PieceHelper"]
+environment = SubResource("Environment_b8eto")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="PieceHelper"]
+transform = Transform3D(0.97435, -0.181686, 0.132784, -1.0149e-08, 0.590056, 0.807362, -0.225036, -0.786654, 0.574921, -2.58875, 47.1188, -0.186724)
+shadow_enabled = true
+shadow_opacity = 0.62
+
+[node name="Socket" parent="PieceHelper" instance=ExtResource("7_ccj5e")]
+invisibleInGame = true
+
+[node name="SaveChanges" type="Button" parent="PieceHelper"]
+layout_mode = 0
+offset_left = 1690.0
+offset_top = 52.0
+offset_right = 1920.0
+offset_bottom = 83.0
+text = "SAVE CHANGES (OVERWRITE)"
+alignment = 2
+
+[node name="Select_Unselect All" type="Button" parent="PieceHelper"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 510.0
+offset_right = 165.0
+offset_bottom = 541.0
+text = "Select/Unselect All"
+
+[node name="ConfirmSavePopup" type="Control" parent="PieceHelper"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 730.0
+offset_top = 31.0
+offset_right = -768.0
+offset_bottom = -717.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelBG" type="NinePatchRect" parent="PieceHelper/ConfirmSavePopup"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.071
+anchor_right = 1.083
+anchor_bottom = 1.0
+offset_left = -0.0379982
+offset_right = -0.0260315
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_8f46y")
+region_rect = Rect2(1, 1, 46, 47)
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12
+
+[node name="_Save this piece?_" type="Label" parent="PieceHelper/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = -61.0
+offset_top = 10.0
+offset_right = 505.0
+offset_bottom = 59.0
+text = "Save this Piece? 
+(Changes may not be viewable until you reset the editor.)
+Old path:"
+horizontal_alignment = 1
+
+[node name="_New path_" type="Label" parent="PieceHelper/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 122.0
+offset_right = 405.0
+offset_bottom = 171.0
+text = "New path:"
+horizontal_alignment = 1
+
+[node name="_tscn_" type="Label" parent="PieceHelper/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 233.0
+offset_top = 158.0
+offset_right = 614.0
+offset_bottom = 207.0
+text = ".tscn
+"
+horizontal_alignment = 1
+
+[node name="newPathPrefix" type="Label" parent="PieceHelper/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = -65.0
+offset_top = 157.0
+offset_right = 316.0
+offset_bottom = 206.0
+text = "res://scenes/prefabs/objects/pieces/"
+horizontal_alignment = 1
+
+[node name="NewPath" type="TextEdit" parent="PieceHelper/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 150.0
+offset_right = 404.0
+offset_bottom = 188.0
+text = "piece_test"
+
+[node name="OldPath" type="TextEdit" parent="PieceHelper/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = -24.0
+offset_top = 86.0
+offset_right = 447.0
+offset_bottom = 124.0
+editable = false
+
+[node name="SaveChangesAs" type="Button" parent="PieceHelper/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 91.0
+offset_top = 245.0
+offset_right = 321.0
+offset_bottom = 276.0
+text = "CONFIRM SAVE"
+
+[node name="CancelSave" type="Button" parent="PieceHelper/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 289.0
+offset_right = 322.0
+offset_bottom = 321.0
+text = "CANCEL SAVE"
+
+[node name="Success" type="Label" parent="PieceHelper/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = -27.0
+offset_top = 187.0
+offset_right = 451.0
+offset_bottom = 236.0
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+text = "Save Successful
+"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="NewPiece" type="Button" parent="PieceHelper"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 295.0
+offset_right = 208.0
+offset_bottom = 326.0
+tooltip_text = "Creates a new entirely empty Piece.
+Any changes you want to make to hitboxes or meches must be done in the editor."
+text = "Create New Piece"
+
+[node name="FollowerCamera" type="Camera3D" parent="PieceHelper" node_paths=PackedStringArray("camToFollow")]
+script = ExtResource("8_yvtic")
+camToFollow = NodePath("../../camHolder/MakerCam")
+metadata/_custom_type_script = "uid://ceadpmi0boxfx"
+
+[node name="camHolder" type="Node3D" parent="."]
+
+[node name="MakerCam" type="Camera3D" parent="camHolder" node_paths=PackedStringArray("cyube", "lbl_cameraKeys", "cameraControlIcon")]
+script = ExtResource("9_uy74y")
+cyube = NodePath("MeshInstance3D")
+lbl_cameraKeys = NodePath("CameraKeys")
+cameraControlIcon = NodePath("CameraControlIcon")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="camHolder/MakerCam"]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, -0.117, -0.194)
+visible = false
+sorting_offset = 20.0
+mesh = SubResource("BoxMesh_b8eto")
+
+[node name="CameraKeys" type="Label" parent="camHolder/MakerCam"]
+offset_left = 7.0
+offset_top = 704.0
+offset_right = 245.0
+offset_bottom = 1013.0
+text = "A/D - Yaw (Y rotation)
+W/S - Pitch (X rotation)
+Q/E - Zoom in/out
+
+Shift + A/D - X Offset
+Shift + W/S - Y Offset
+Shift + Q/E - Roll (Z rotation)
+
+Ctrl + A/D - Save/Load Rotation
+Ctrl + W/S - Save/Load Position
+Ctrl + Q - Reset Position
+Ctrl + E - Reset Rotation"
+vertical_alignment = 2
+
+[node name="CameraControlIcon" type="TextureRect" parent="camHolder/MakerCam"]
+offset_left = 3.0
+offset_top = 655.0
+offset_right = 51.0
+offset_bottom = 703.0
+texture = ExtResource("10_pwi61")
+
+[node name="ModeName" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.123958
+anchor_top = 0.00740741
+anchor_right = 0.204167
+anchor_bottom = 0.0287037
+text = "Now Making: Pieces"
+metadata/_edit_use_anchors_ = true
+
+[node name="Exit" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1843.0
+offset_top = 1.0
+offset_right = 1919.0
+offset_bottom = 32.0
+text = "EXIT APP"
+
+[node name="BackToGame" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1719.0
+offset_right = 1837.0
+offset_bottom = 31.0
+text = "Back To Game"
+
+[node name="BackToModeSelection" type="Button" parent="."]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 9.0
+offset_right = 220.0
+offset_bottom = 40.0
+text = "BACK TO MODE SELECTION"
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ModeSelectionButtons/PieceHelper" to="." method="change_mode" binds= [1]]
+[connection signal="pressed" from="ModeSelectionButtons/RobotHelper" to="." method="change_mode" binds= [2]]
+[connection signal="item_activated" from="RobotMaker/RobotTree" to="RobotMaker" method="_on_robot_tree_item_activated"]
+[connection signal="item_activated" from="RobotMaker/PiecesTree" to="RobotMaker" method="_on_pieces_tree_item_activated"]
+[connection signal="mouse_entered" from="PieceHelper" to="PieceHelper" method="_on_piece_name_mouse_exited"]
+[connection signal="mouse_exited" from="PieceHelper" to="PieceHelper" method="_on_piece_name_mouse_entered"]
+[connection signal="button_clicked" from="PieceHelper/Tree" to="PieceHelper" method="_on_tree_button_clicked"]
+[connection signal="item_activated" from="PieceHelper/Tree" to="PieceHelper" method="_on_tree_item_activated"]
+[connection signal="mouse_entered" from="PieceHelper/PieceData" to="PieceHelper" method="_on_piece_name_mouse_entered"]
+[connection signal="mouse_exited" from="PieceHelper/PieceData" to="PieceHelper" method="_on_piece_name_mouse_exited"]
+[connection signal="mouse_entered" from="PieceHelper/PieceData/PieceName" to="PieceHelper" method="_on_piece_name_mouse_entered"]
+[connection signal="mouse_exited" from="PieceHelper/PieceData/PieceName" to="PieceHelper" method="_on_piece_name_mouse_exited"]
+[connection signal="text_changed" from="PieceHelper/PieceData/PieceName" to="PieceHelper" method="_on_piece_name_text_changed"]
+[connection signal="mouse_entered" from="PieceHelper/PieceData/PieceDescription" to="PieceHelper" method="_on_piece_name_mouse_entered"]
+[connection signal="mouse_exited" from="PieceHelper/PieceData/PieceDescription" to="PieceHelper" method="_on_piece_name_mouse_exited"]
+[connection signal="text_changed" from="PieceHelper/PieceData/PieceDescription" to="PieceHelper" method="_on_piece_name_text_changed"]
+[connection signal="pressed" from="PieceHelper/Reset Tree" to="PieceHelper" method="_on_reset_tree_pressed"]
+[connection signal="pressed" from="PieceHelper/Clear Preview" to="PieceHelper" method="_on_clear_preview_pressed"]
+[connection signal="pressed" from="PieceHelper/Clear Preview" to="camHolder/MakerCam" method="_on_clear_preview_pressed"]
+[connection signal="pressed" from="PieceHelper/SaveChanges" to="PieceHelper" method="_on_save_changes_pressed"]
+[connection signal="pressed" from="PieceHelper/Select_Unselect All" to="PieceHelper" method="_on_select_unselect_all_pressed"]
+[connection signal="pressed" from="PieceHelper/ConfirmSavePopup/SaveChangesAs" to="PieceHelper" method="_on_save_changes_as_pressed"]
+[connection signal="pressed" from="PieceHelper/ConfirmSavePopup/CancelSave" to="PieceHelper" method="_on_cancel_save_pressed"]
+[connection signal="pressed" from="PieceHelper/NewPiece" to="PieceHelper" method="_on_new_piece_pressed"]
+[connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="BackToGame" to="." method="_on_back_to_game_pressed"]
+[connection signal="pressed" from="BackToModeSelection" to="." method="change_mode" binds= [0]]

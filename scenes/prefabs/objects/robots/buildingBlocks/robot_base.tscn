@@ -1,0 +1,48 @@
+[gd_scene load_steps=9 format=3 uid="uid://c2nsjhwipqr1m"]
+
+[ext_resource type="Script" uid="uid://cjbf8lwy20s0y" path="res://scripts/objects/robots/buildingBlocks/robot.gd" id="1_u0mtq"]
+[ext_resource type="Script" uid="uid://cd3dvyejdjvlg" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="2_703oh"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="3_5nrmj"]
+[ext_resource type="PackedScene" uid="uid://88se3nfd8vrt" path="res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn" id="4_wrtu7"]
+[ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="5_4m0od"]
+[ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="6_pgkbn"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
+friction = 200.0
+bounce = 0.3
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0k1s"]
+radius = 0.75
+
+[node name="Robot" type="Node3D" node_paths=PackedStringArray("meshes", "body")]
+script = ExtResource("1_u0mtq")
+meshes = NodePath("Body/Meshes")
+body = NodePath("Body")
+
+[node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Driveable", "Metal"]]
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 100.0
+physics_material_override = SubResource("PhysicsMaterial_f0k1s")
+script = ExtResource("2_703oh")
+
+[node name="Meshes" type="Node3D" parent="Body"]
+transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
+
+[node name="Socket" parent="Body/Meshes" instance=ExtResource("3_5nrmj")]
+transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
+
+[node name="PieceBodyCube" parent="Body/Meshes/Socket" node_paths=PackedStringArray("placementCollisionHolder", "hostPiece", "hostRobot", "hostSocket") instance=ExtResource("4_wrtu7")]
+placementCollisionHolder = NodePath("PieceCollisionBox")
+hostPiece = NodePath(".")
+hostRobot = NodePath("../../../..")
+hostSocket = NodePath("..")
+statCollection = Array[ExtResource("5_4m0od")]([])
+
+[node name="PieceCollisionBox" parent="Body" instance=ExtResource("6_pgkbn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CapsuleShape3D_f0k1s")
+disabled = false
+
+[connection signal="health_or_energy_changed" from="." to="." method="_on_health_or_energy_changed"]

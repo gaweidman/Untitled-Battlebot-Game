@@ -28,9 +28,10 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("9_bk6my")
 
-[node name="Piece_Swivel" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
 script = ExtResource("1_3tbmm")
+swivelNode = NodePath("SwivelTop")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
@@ -45,7 +46,7 @@ editor_description = "Leave this node empty. "
 collision_layer = 16
 collision_mask = 8
 
-[node name="HurtboxShapes [Leave empty]" type="Area3D" parent="."]
+[node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
 collision_layer = 8
 script = ExtResource("5_qbujc")

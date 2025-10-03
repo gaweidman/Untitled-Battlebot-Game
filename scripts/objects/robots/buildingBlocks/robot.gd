@@ -492,7 +492,8 @@ var selectedPart : Part;
 func deselect_all_pieces(ignoredPiece : Piece = null):
 	for piece in get_all_pieces():
 		if ignoredPiece == null or piece != ignoredPiece:
-			piece.deselect();
+			if piece.selected:
+				piece.deselect();
 	if ignoredPiece == null or selectedPiece != ignoredPiece:
 		selectedPiece = null;
 	pass;

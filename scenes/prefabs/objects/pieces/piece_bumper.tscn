@@ -72,7 +72,6 @@ size = Vector3(1.75, 0.625, 1.25)
 size = Vector3(0.5, 0.75, 0.5)
 
 [node name="Piece_Bumper" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
-visible = false
 script = ExtResource("1_qe5pu")
 force_visibility = true
 pieceName = &"Bumper"
@@ -98,7 +97,7 @@ editor_description = "Leave this node empty. "
 collision_layer = 16
 collision_mask = 8
 
-[node name="HurtboxShapes [Leave empty]" type="Area3D" parent="."]
+[node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
 collision_layer = 8
 script = ExtResource("5_2hj47")

@@ -6,7 +6,7 @@ class_name GameBoard;
 @export var enemySpawnPositions : Node3D;
 @export var enemySpawnList := {};
 #@onready var playerScene = preload("res://scenes/prefabs/objects/player.tscn");
-@onready var playerScene = preload("res://scenes/robots/player/robot_player.tscn");
+@onready var playerScene = preload("res://scenes/prefabs/objects/robots/robot_player.tscn");
 @export var spawnChecker : ShapeCast3D;
 var spawnTimer := 0.0;
 var spawnPool := [];

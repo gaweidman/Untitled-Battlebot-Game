@@ -13,8 +13,9 @@ func click_on_piece():
 	var raycastHit = RaycastSystem.get_raycast_hit_object(collisionMask, Vector2(0,0), self);
 	#print(raycastHit)
 	if is_instance_valid(raycastHit): 
-		#print(raycastHit)
+		print("RAY HITQ", raycastHit)
 		if raycastHit is HurtboxHolder:
+			print("RAY HITQ2", raycastHit)
 			raycastHit.select_piece();
 
 func hover_socket():
@@ -23,7 +24,7 @@ func hover_socket():
 	var raycastHit = RaycastSystem.get_raycast_hit_object(collisionMask, Vector2(0,0), self);
 	#print(raycastHit)
 	if is_instance_valid(raycastHit): 
-		print(raycastHit, pieceHovering)
+		#print(raycastHit, pieceHovering)
 		if raycastHit is Socket and raycastHit.is_valid():
 			pieceHovering = raycastHit.hover_from_camera(self);
 			if pieceHovering != null:
