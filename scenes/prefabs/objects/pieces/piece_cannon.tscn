@@ -163,6 +163,8 @@ identifier = &"Cannon"
 [node name="Cannon" parent="." instance=ExtResource("10_f406y")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0.25, 0)
 
+[node name="ShapeCast3D" type="ShapeCast3D" parent="Cannon"]
+
 [connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
 [connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]
 [connection signal="area_entered" from="HurtboxShapes [Leave empty]" to="." method="_on_hurtbox_shapes_area_entered"]

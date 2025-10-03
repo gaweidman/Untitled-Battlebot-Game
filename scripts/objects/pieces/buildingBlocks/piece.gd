@@ -128,6 +128,8 @@ func get_all_meshes() -> Array:
 @export var scrapSellModifierBase := (2.0/3.0);
 @export var scrapSalvageModifierBase := (1.0/6.0);
 
+@export var removable := true;
+
 ##TODO: Scrap sell/buy/salvage functions for when this has Parts inside of it.
 ##Gets the Scrap amount for when you sell this Piece. Does not take into account the price of any Parts inside its Engine.
 ##discountMultiplier is multiplied by the price.
@@ -223,14 +225,14 @@ func refresh_and_gather_collision_helpers():
 						shapeCastNew.enabled = true;
 						shapeCastNew.debug_shape_custom_color = Color("af7f006b");
 						shapeCastNew.set_collision_mask_value(4, true);
-						#shapeCastNew.set_collision_mask_value(5, true);
+						shapeCastNew.set_collision_mask_value(5, true);
 					##if the PieceCollisionBox is of type HITBOX or HURTBOX then it should copy itself into those.
 					if child.isHurtbox:
 						var dupe = child.make_copy();
 						dupe.disabled = false;
 						hurtboxCollisionHolder.add_child(dupe);
 						dupe.debug_color = Color("0099b36b");
-						print("COllider ID when copying from ", name, " ", dupe.colliderID)
+						#print("COllider ID when copying from ", name, " ", dupe.colliderID)
 						#dupe.global_position = child.global_position;
 					if child.isHitbox:
 						var dupe = child.make_copy();
@@ -248,28 +250,39 @@ func reset_collision_helpers():
 			child.reset();
 
 ##Should ping all of the placement hitboxes and return TRUE if it collides with a Piece, of FALSE if it doesn't.
-##TODO: Fix this. placementCollisionHolder is being freed for some ungodly reason.
 func ping_placement_validation():
 	var collided := false;
 	#print(get_children())
+	var shapecasts = []
 	for child in placementCollisionHolder.get_children():
 		#print("Hi 1")
 		#print(placementCollisionHolder.get_children())
 		if not collided:
-			print("Hi 2")
+			#print("Hi 2")
 			if child is ShapeCast3D:
 				#print("Hi 3")
+				#child.reparent(self, true);
+				shapecasts.append(child);
+				child.add_exception(hitboxCollisionHolder);
+				child.add_exception(hurtboxCollisionHolder);
 				child.force_shapecast_update();
 				if child.is_colliding(): 
-					#print("Yello?")
 					var collider = child.get_collider(0);
 					if collider is HurtboxHolder:
-						print(self, collider.get_piece())
+						#print(self, collider.get_piece())
 						if self != collider.get_piece():
 							collided = true;
+					if collider is RobotBody:
+						collided = true;
 					else:
-						print("what")
-						print(collider)
+						#print("what")
+						#print(collider)
+						pass;
+	
+	##Put all the shapecasts back.
+	for cast in shapecasts:
+		cast.reparent(placementCollisionHolder, true);
+	
 	#print(collided)
 	if collided: set_selection_mode(selectionModes.NOT_PLACEABLE);
 	else: set_selection_mode(selectionModes.PLACEABLE);
@@ -312,7 +325,9 @@ func select(foo := not selected):
 	deselect_other_pieces(self);
 	if foo == selected: return;
 	selected = foo;
-	if selected: set_selection_mode(selectionModes.SELECTED);
+	if selected: 
+		if selectionMode == selectionModes.NOT_SELECTED:
+			set_selection_mode(selectionModes.SELECTED);
 	else: set_selection_mode(selectionModes.NOT_SELECTED);
 	print(pieceName)
 	pass;

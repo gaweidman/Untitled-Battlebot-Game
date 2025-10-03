@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://88se3nfd8vrt"]
+[gd_scene load_steps=22 format=3 uid="uid://88se3nfd8vrt"]
 
 [ext_resource type="Script" uid="uid://lqnydwh6c74e" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="1_gm1wa"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_kcjt4"]
@@ -59,11 +59,15 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("11_wnksc")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_gm1wa"]
+size = Vector3(0.5, 0.5, 0.5)
+
 [node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("swivelNode", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_gm1wa")
 swivelNode = NodePath("Meshes/SwivelTop")
 force_visibility = true
 pieceName = &"BodyCube"
+removable = false
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
@@ -190,6 +194,10 @@ skeleton = NodePath("../..")
 [node name="Socket" parent="Meshes/SwivelTop" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 hostPiece = NodePath("../../..")
+
+[node name="PieceCollisionBox2" parent="." instance=ExtResource("8_x8ege")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+shape = SubResource("BoxShape3D_gm1wa")
 
 [connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
 [connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]
