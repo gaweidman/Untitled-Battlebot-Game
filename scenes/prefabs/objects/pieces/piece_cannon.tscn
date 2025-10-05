@@ -8,8 +8,8 @@
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_rjpgo"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="8_o54vu"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="9_2dtav"]
+[ext_resource type="ArrayMesh" uid="uid://bxol2x25bhxpg" path="res://graphics/models/obj/botparts/cannon.res" id="9_861xr"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="10_861xr"]
-[ext_resource type="PackedScene" uid="uid://d4h6s4tvk4y7j" path="res://graphics/models/obj/botparts/Cannon.obj" id="10_f406y"]
 
 [sub_resource type="Resource" id="Resource_xxf1u"]
 script = ExtResource("2_f406y")
@@ -62,7 +62,6 @@ size = Vector3(1, 0.5, 1)
 size = Vector3(0.5, 0.5, 1.5)
 
 [node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
-visible = false
 script = ExtResource("1_861xr")
 force_visibility = true
 pieceName = &"Cannon"
@@ -148,6 +147,10 @@ mesh = SubResource("PlaneMesh_k8cvo")
 skeleton = NodePath("../../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_ts5ym")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes"]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0.25, 0)
+mesh = ExtResource("9_861xr")
+
 [node name="PieceCollisionBox" parent="." instance=ExtResource("10_861xr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("BoxShape3D_f406y")
@@ -159,11 +162,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.5)
 shape = SubResource("BoxShape3D_shgbd")
 debug_color = Color(0, 0.6, 0.701961, 0.419608)
 identifier = &"Cannon"
-
-[node name="Cannon" parent="." instance=ExtResource("10_f406y")]
-transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0.25, 0)
-
-[node name="ShapeCast3D" type="ShapeCast3D" parent="Cannon"]
 
 [connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
 [connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]

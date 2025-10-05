@@ -12,8 +12,12 @@ class_name MakerMode_Robots
 
 @export_subgroup("Engine")
 @export var engine : PartsHolder_Engine;
+@export var stash : PieceStash;
 
 func _ready():
+	initialize();
+
+func initialize():
 	get_pieces();
 	get_robots();
 
@@ -39,6 +43,13 @@ func _on_pieces_tree_item_activated():
 	if data is Dictionary:
 		print(data)
 		#set_inspected_piece(data);
+		
+		if is_instance_valid(botBeingInspected):
+			if data.has("node"):
+				botBeingInspected.add_something_to_stash(data.node)
+				regenerate_stash(PieceStash.modes.PIECES);
+				print(botBeingInspected.stashParts)
+		
 	pass # Replace with function body.
 
 ##Adds a Piece node to the tree. Needs the text, the node's PackedScene, and the original filepath.
@@ -160,8 +171,16 @@ func spawn_inpspected_robot(data):
 		if newBot is Robot_Player:
 			newBot.engineViewer = engine;
 		
+		newBot.stashHUD = stash;
+		
 		botSpawnPoint.add_child(botBeingInspected);
 	return botBeingInspected;
+
+func regenerate_stash(mode : PieceStash.modes):
+	if is_instance_valid(botBeingInspected):
+		stash.regenerate_list(botBeingInspected, mode);
+	else:
+		stash.regenerate_list(botBeingInspected, PieceStash.modes.NONE);
 
 
 ### Given a [Dictionary]. Format is { "node" : [PackedScene], "filepath" : original filepath }
@@ -216,3 +235,9 @@ func clear_inspected_robot():
 		#pieceBeingInspected.queue_free();
 	#pieceSceneBeingInspected = null;
 	#lbl_filepathName.text = "[No Piece selected]";
+
+
+func _on_piece_stash_piece_button_clicked(tiedPiece):
+	if is_instance_valid(botBeingInspected):
+		botBeingInspected.prepare_pipette(tiedPiece);
+	pass # Replace with function body.

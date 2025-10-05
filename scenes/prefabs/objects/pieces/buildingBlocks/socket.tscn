@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://dosh155duu70e"]
 
-[ext_resource type="Script" uid="uid://bm0wods68kto4" path="res://scripts/objects/pieces/buildingBlocks/socket.gd" id="1_qwsax"]
+[ext_resource type="Script" uid="uid://bm0wods68kto4" path="res://scripts/GUI/socket.gd" id="1_qwsax"]
 [ext_resource type="Texture2D" uid="uid://sklc2odtf0wv" path="res://graphics/images/models/sockets/socketF.png" id="2_b25pf"]
 [ext_resource type="Texture2D" uid="uid://oxhe4uwmstjd" path="res://graphics/images/HUD/enemyPing.png" id="3_58w0t"]
 

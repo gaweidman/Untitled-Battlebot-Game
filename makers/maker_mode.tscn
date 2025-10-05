@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://bhhd443ej7smu"]
+[gd_scene load_steps=16 format=3 uid="uid://bhhd443ej7smu"]
 
 [ext_resource type="Script" uid="uid://bvhx6f0lb1vk2" path="res://makers/maker_mode_manager.gd" id="1_vhu6f"]
 [ext_resource type="Theme" uid="uid://bq0jig2pdkgtn" path="res://graphics/images/HUD/UI_theme.tres" id="2_8384o"]
 [ext_resource type="Script" uid="uid://bgwgllmh3y6c1" path="res://makers/robot_maker.gd" id="3_1k5u0"]
 [ext_resource type="Script" uid="uid://4xlbt5q5d03h" path="res://makers/piece_deets_helper.gd" id="4_ti6iq"]
 [ext_resource type="Texture2D" uid="uid://b27r3rshm0ite" path="res://graphics/images/HUD/textBoxBG_partPassive.png" id="5_8f46y"]
+[ext_resource type="PackedScene" uid="uid://cwe7m6fguo8yh" path="res://scenes/prefabs/objects/piece_stash.tscn" id="5_8384o"]
 [ext_resource type="PackedScene" uid="uid://de0rs2455fdg4" path="res://scenes/prefabs/objects/parts_holder_engine.tscn" id="6_s3ktb"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="7_ccj5e"]
 [ext_resource type="Script" uid="uid://ceadpmi0boxfx" path="res://scripts/objects/camera_follower.gd" id="8_yvtic"]
@@ -53,7 +54,7 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 9.1
 anchor_top = 5.25
-anchor_right = 13.675
+anchor_right = 13.925
 anchor_bottom = 6.625
 theme = ExtResource("2_8384o")
 text = "Piece helper"
@@ -62,15 +63,26 @@ metadata/_edit_use_anchors_ = true
 [node name="RobotHelper" type="Button" parent="ModeSelectionButtons"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 14.1
-anchor_top = 5.225
-anchor_right = 18.675
-anchor_bottom = 6.6
+anchor_left = 9.1
+anchor_top = 6.7
+anchor_right = 13.925
+anchor_bottom = 8.075
 theme = ExtResource("2_8384o")
 text = "Robot helper"
 metadata/_edit_use_anchors_ = true
 
-[node name="RobotMaker" type="Control" parent="." node_paths=PackedStringArray("manager", "tree_robot", "tree_pieces", "engine", "botSpawnPoint")]
+[node name="BackToGame" type="Button" parent="ModeSelectionButtons"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 9.1
+anchor_top = 3.8
+anchor_right = 13.925
+anchor_bottom = 5.175
+theme = ExtResource("2_8384o")
+text = "Back To Game"
+metadata/_edit_use_anchors_ = true
+
+[node name="RobotMaker" type="Control" parent="." node_paths=PackedStringArray("manager", "tree_robot", "tree_pieces", "engine", "stash", "botSpawnPoint")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -83,6 +95,7 @@ manager = NodePath("..")
 tree_robot = NodePath("RobotTree")
 tree_pieces = NodePath("PiecesTree")
 engine = NodePath("PartsHolder_Engine")
+stash = NodePath("PieceStash")
 botSpawnPoint = NodePath("RobotSpawnPoint")
 metadata/_custom_type_script = "uid://cseoyso26tb6f"
 metadata/_edit_use_anchors_ = true
@@ -109,6 +122,13 @@ offset_left = -780.0
 offset_top = -519.0
 offset_right = -492.0
 offset_bottom = -231.0
+
+[node name="PieceStash" parent="RobotMaker" instance=ExtResource("5_8384o")]
+layout_mode = 0
+offset_left = 1428.0
+offset_top = 19.0
+offset_right = 1821.0
+offset_bottom = 375.0
 
 [node name="PieceHelper" type="Control" parent="." node_paths=PackedStringArray("manager", "engine", "A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "C5", "D1", "D2", "D3", "D4", "D5", "E1", "E2", "E3", "E4", "E5", "pieceHolder", "lbl_filepathName", "txt_pieceName", "txt_pieceDescription", "tree", "camHolder", "makerCamera", "followerCamera", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs")]
 visible = false
@@ -667,41 +687,36 @@ texture = ExtResource("10_pwi61")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.123958
-anchor_top = 0.00740741
+anchor_top = 0.0222222
 anchor_right = 0.204167
-anchor_bottom = 0.0287037
+anchor_bottom = 0.0435185
 text = "Now Making: Pieces"
 metadata/_edit_use_anchors_ = true
 
 [node name="Exit" type="Button" parent="."]
 layout_mode = 0
 offset_left = 1843.0
-offset_top = 1.0
+offset_top = 17.0
 offset_right = 1919.0
-offset_bottom = 32.0
+offset_bottom = 48.0
 text = "EXIT APP"
-
-[node name="BackToGame" type="Button" parent="."]
-layout_mode = 0
-offset_left = 1719.0
-offset_right = 1837.0
-offset_bottom = 31.0
-text = "Back To Game"
 
 [node name="BackToModeSelection" type="Button" parent="."]
 layout_mode = 0
 offset_left = 3.0
-offset_top = 9.0
+offset_top = 17.0
 offset_right = 220.0
-offset_bottom = 40.0
+offset_bottom = 48.0
 text = "BACK TO MODE SELECTION"
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="ModeSelectionButtons/PieceHelper" to="." method="change_mode" binds= [1]]
 [connection signal="pressed" from="ModeSelectionButtons/RobotHelper" to="." method="change_mode" binds= [2]]
+[connection signal="pressed" from="ModeSelectionButtons/BackToGame" to="." method="_on_back_to_game_pressed"]
 [connection signal="item_activated" from="RobotMaker/RobotTree" to="RobotMaker" method="_on_robot_tree_item_activated"]
 [connection signal="item_activated" from="RobotMaker/PiecesTree" to="RobotMaker" method="_on_pieces_tree_item_activated"]
+[connection signal="pieceButtonClicked" from="RobotMaker/PieceStash" to="RobotMaker" method="_on_piece_stash_piece_button_clicked"]
 [connection signal="mouse_entered" from="PieceHelper" to="PieceHelper" method="_on_piece_name_mouse_exited"]
 [connection signal="mouse_exited" from="PieceHelper" to="PieceHelper" method="_on_piece_name_mouse_entered"]
 [connection signal="button_clicked" from="PieceHelper/Tree" to="PieceHelper" method="_on_tree_button_clicked"]
@@ -723,5 +738,4 @@ text = "BACK TO MODE SELECTION"
 [connection signal="pressed" from="PieceHelper/ConfirmSavePopup/CancelSave" to="PieceHelper" method="_on_cancel_save_pressed"]
 [connection signal="pressed" from="PieceHelper/NewPiece" to="PieceHelper" method="_on_new_piece_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
-[connection signal="pressed" from="BackToGame" to="." method="_on_back_to_game_pressed"]
 [connection signal="pressed" from="BackToModeSelection" to="." method="change_mode" binds= [0]]

@@ -18,9 +18,11 @@ func _ready():
 	grab_references();
 	reassign_body_collision();
 	freeze(true, true);
+	detach_pipette();
 
 func _process(delta):
 	process_pre(delta);
+	process_hud(delta);
 	pass
 
 func _physics_process(delta):
@@ -75,6 +77,16 @@ func stat_registry():
 	register_stat("MovementSpeedMax", maxSpeed, statIconCooldown);
 	pass;
 
+########## HUD
+
+func process_hud(delta):
+	if Input.is_action_just_pressed("StashSelected"):
+		print("Stash button pressed")
+		stash_selected_piece();
+	if Input.is_action_just_pressed("Unselect"):
+		print("Unselect button pressed")
+		deselect_everything();
+
 ######################### STATE CONTROL
 
 var spawned := false;
@@ -127,23 +139,118 @@ func die():
 
 
 ################################# EDITOR MODE
+
+var stashHUD : PieceStash;
+##The effective "inventory" of this robot. Inaccessible outside of Maker Mode for [@Robot]s that are not a [@Robot_Player].
+var stashPieces : Array[Piece] = []
+var stashParts : Array[Part] = []
+
+func remove_something_from_stash(inThing):
+	if inThing is Piece:
+		var count = 0;
+		for item in stashPieces:
+			if item == inThing:
+				stashPieces.remove_at(count);
+			count += 1;
+	if inThing is Part:
+		var count = 0;
+		for item in stashParts:
+			if item == inThing:
+				stashParts.remove_at(count);
+			count += 1;
+	
+	update_stash_hud();
+
+func add_something_to_stash(inThing):
+	if inThing is Piece:
+		add_instantiated_piece_to_stash(inThing);
+		update_stash_hud();
+		return true;
+	if inThing is Part:
+		add_instantiated_part_to_stash(inThing);
+		update_stash_hud();
+		return true;
+	if inThing is PackedScene:
+		add_packed_piece_or_part_to_stash(inThing);
+		update_stash_hud();
+		return true;
+	print(inThing, " failed to add to stash.")
+	update_stash_hud();
+	return false;
+
+func add_packed_piece_or_part_to_stash(inPieceScene : PackedScene):
+	var newPiece = inPieceScene.instantiate();
+	if newPiece is Piece:
+		add_instantiated_piece_to_stash(newPiece);
+		return true;
+	if newPiece is Part:
+		add_instantiated_part_to_stash(newPiece);
+		return true;
+	print(inPieceScene, " failed to add to stash at packedScene step.")
+	return false;
+
+func add_instantiated_piece_to_stash(inPiece : Piece):
+	stashPieces = Utils.append_unique(stashPieces, inPiece);
+	update_stash_hud();
+
+func add_instantiated_part_to_stash(inPiece : Part):
+	Utils.append_unique(stashParts, inPiece);
+	update_stash_hud();
+
+func update_stash_hud():
+	if is_instance_valid(stashHUD):
+		stashHUD.regenerate_list(self);
+
 ##The path to the scene the Piece placement pipette is using.
-var pipettePiecePath := "res://scenes/prefabs/objects/pieces/piece_bumper_T.tscn";
+var pipettePiecePath = "res://scenes/prefabs/objects/pieces/piece_bumper_T.tscn";
 var pipettePieceScene := preload("res://scenes/prefabs/objects/pieces/piece_bumper_T.tscn");
 var pipettePieceInstance : Piece = pipettePieceScene.instantiate();
+var pipettePartInstance : Part;
 
-func prepare_pipette(scenePath := pipettePiecePath):
+func get_current_pipette():
+	if is_instance_valid(pipettePartInstance):
+		return pipettePartInstance;
+	if is_instance_valid(pipettePieceInstance):
+		return pipettePieceInstance;
+	if is_instance_valid(pipettePieceScene):
+		return pipettePieceScene;
+	if is_instance_valid(pipettePiecePath):
+		return pipettePiecePath;
+
+func prepare_pipette_from_path(scenePath : String = pipettePiecePath):
 	#print("Preparing pipette")
 	pipettePiecePath = scenePath;
 	pipettePieceScene = load(scenePath);
-	if is_instance_valid(pipettePieceInstance):
-		pipettePieceInstance.queue_free();
-	pipettePieceInstance = pipettePieceScene.instantiate();
+	prepare_pipette_from_scene(pipettePieceScene);
+
+func prepare_pipette_from_scene(scene := pipettePieceScene):
+	var newPiece = scene.instantiate();
+	if newPiece is Piece:
+		prepare_pipette_from_piece(newPiece);
+
+func prepare_pipette_from_piece(newPiece : Piece):
+	pipettePieceInstance = newPiece;
 	pipettePieceInstance.hostRobot = self;
 
+func prepare_pipette_from_part(newPart : Part):
+	pipettePartInstance = newPart;
+	pipettePartInstance.hostRobot = self;
+
+func prepare_pipette(override : Variant = get_current_pipette()):
+	if override is String: 
+		prepare_pipette_from_path(override);
+	if override is PackedScene: 
+		prepare_pipette_from_scene(override);
+	if override is Piece: 
+		prepare_pipette_from_piece(override);
+	if override is Part: 
+		prepare_pipette_from_part(override);
+
 func detach_pipette():
+	pipettePiecePath = null;
 	pipettePieceScene = null;
 	pipettePieceInstance = null;
+	pipettePartInstance = null;
 
 ################################## HEALTH AND LIVING
 
@@ -309,8 +416,11 @@ func phys_process_collision(delta):
 	for box in get_all_gathered_hurtboxes():
 		var boxOrigin = box.originalBox;
 		if is_instance_valid(boxOrigin):
-			box.global_position = boxOrigin.global_position;
-			box.rotation = boxOrigin.global_rotation - get_global_body_rotation() + box.originalRotation;
+			if boxOrigin.is_inside_tree():
+				box.global_position = boxOrigin.global_position;
+				box.rotation = boxOrigin.global_rotation - get_global_body_rotation() + box.originalRotation;
+			else:
+				box.disabled = true;
 		else:
 			box.queue_free();
 
@@ -489,22 +599,30 @@ func assign_ability_to_next_active_slot(abilityManager : AbilityManager):
 var selectedPiece : Piece;
 var selectedPart : Part;
 
+func deselect_everything():
+	deselect_all_parts();
+	deselect_all_pieces();
+
 func deselect_all_pieces(ignoredPiece : Piece = null):
 	for piece in get_all_pieces():
 		if ignoredPiece == null or piece != ignoredPiece:
-			if piece.selected:
+			if piece.get_selected():
 				piece.deselect();
 	if ignoredPiece == null or selectedPiece != ignoredPiece:
 		selectedPiece = null;
 	pass;
 
-
 func select_piece(piece : Piece):
 	if is_instance_valid(piece):
-		deselect_all_pieces(piece);
-		piece.select(true);
-		selectedPiece = piece;
-		return piece;
+		var result = piece.select();
+		if result:
+			selectedPiece = piece;
+			print("Selected Piece: ", selectedPiece)
+			deselect_all_pieces(piece);
+			return piece;
+		else:
+			deselect_all_pieces();
+			selectedPiece = null;
 	return null;
 
 func deselect_all_parts(ignoredPart : Part = null):
@@ -521,3 +639,16 @@ func select_part(part : Part):
 		selectedPart = part;
 		return part;
 	return null;
+
+func stash_selected_piece():
+	if is_instance_valid(selectedPiece):
+		print("Attempting to stash ", selectedPiece)
+		if selectedPiece.removable:
+			selectedPiece.remove_and_add_to_robot_stash(self);
+
+##TODO: Parts and Engine bs.
+func stash_selected_part():
+	if is_instance_valid(selectedPart):
+		print("Attempting to stash ", selectedPart)
+		#if selectedPiece.removable:
+			#selectedPiece.remove_and_add_to_robot_stash(self);

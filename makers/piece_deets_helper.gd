@@ -331,10 +331,14 @@ func _on_save_changes_as_pressed():
 		TextFunc.set_text_color(save_lbl_success, "utility");
 		save_lbl_success.text = "Saved Successfully to " + savedPath
 		save_lbl_success.show();
+		
+		
 	else:
 		TextFunc.set_text_color(save_lbl_success, "melee");
 		save_lbl_success.text = "Saved Unsuccessfully to " + savedPath
 		save_lbl_success.show();
+	
+	get_pieces();
 	pass # Replace with function body.
 
 var savePopupIsOpen

@@ -12,4 +12,4 @@ func get_piece():
 func select_piece():
 	var piece = get_piece();
 	if piece != null:
-		piece.select();
+		piece.select_via_robot();

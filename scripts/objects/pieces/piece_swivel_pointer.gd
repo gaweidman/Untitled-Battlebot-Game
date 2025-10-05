@@ -6,7 +6,6 @@ var cam : GameCamera;
 var pointerLocation := Vector3.ZERO;
 
 func can_use_passive():
-	return true;
 	if super():
 		var rot = global_rotation_degrees;
 		##Can only use the passive if it's not rotated.

@@ -8,6 +8,7 @@ var originalBox : PieceCollisionBox = self;
 var originalOffset : Vector3;
 var originalRotation : Vector3;
 var copied : = false;
+var copiedShapecast : = false;
 var copiedByBody : = false; ##Set by the Robot when it's copied for the body.
 @export var identifier : StringName;
 @export var isPlacementBox := true; ##This collider is for placement validation.
@@ -22,6 +23,7 @@ func _ready():
 	get_collider_id();
 
 func make_copy() -> PieceCollisionBox:
+	if (not isOriginal) and (is_instance_valid(originalBox)): return originalBox.make_copy();
 	var newBox : PieceCollisionBox = duplicate();
 	print(originalHost)
 	newBox.isOriginal = false;
@@ -34,9 +36,29 @@ func make_copy() -> PieceCollisionBox:
 	return newBox;
 
 func make_shapecast():
-	var shapecast = ShapeCast3D.new();
-	shapecasts.append(shapecast);
-	return shapecast;
+	if copiedShapecast == true: return shapecasts[0]
+	var shapeCastNew = ShapeCast3D.new();
+	shapecasts.append(shapeCastNew);
+	copied = true;
+	
+	add_child(shapeCastNew)
+	
+	var posNew = position;
+	posNew = Vector3(0,0,0);
+	shapeCastNew.set("position", posNew);
+	shapeCastNew.set("scale", scale * 0.95);
+	shapeCastNew.set("rotation", rotation);
+	shapeCastNew.set("shape", shape);
+	shapeCastNew.set("target_position", Vector3(0,0,0));	
+	shapeCastNew.collide_with_areas = true;
+	shapeCastNew.enabled = true;
+	shapeCastNew.debug_shape_custom_color = Color("af7f006b");
+	shapeCastNew.set_collision_mask_value(4, true);
+	shapeCastNew.set_collision_mask_value(5, true);
+	
+	copiedShapecast = true;
+	
+	return shapeCastNew;
 
 func erase_all_copies():
 	for copy in copies:
@@ -55,6 +77,7 @@ func reset():
 	erase_all_copies();
 	copied = false;
 	copiedByBody = false;
+	copiedShapecast = false;
 
 func fix_positions_of_copies():
 	for copy in copies:

@@ -213,19 +213,9 @@ func refresh_and_gather_collision_helpers():
 					##if the PieceCollisionBox is of type PlACEMENT then it should spawn a shapecast proxy with an identical shape.
 					if child.isPlacementBox:
 						var shapeCastNew = child.make_shapecast();
-						placementCollisionHolder.add_child(shapeCastNew);
-						shapeCastNew.set_deferred("target_position", Vector3(0,0,0));
-						var globalPosNew = child.position;
-						shapeCastNew.set_deferred("position", globalPosNew);
-						shapeCastNew.set_deferred("scale", child.scale * 0.95);
-						shapeCastNew.set_deferred("rotation", child.rotation);
-						shapeCastNew.set("shape", child.shape);
-						#shapeCastNew.enabled = false;
-						shapeCastNew.collide_with_areas = true;
-						shapeCastNew.enabled = true;
-						shapeCastNew.debug_shape_custom_color = Color("af7f006b");
-						shapeCastNew.set_collision_mask_value(4, true);
-						shapeCastNew.set_collision_mask_value(5, true);
+						shapeCastNew.reparent(placementCollisionHolder, true);
+						shapeCastNew.add_exception(hitboxCollisionHolder);
+						shapeCastNew.add_exception(hurtboxCollisionHolder);
 					##if the PieceCollisionBox is of type HITBOX or HURTBOX then it should copy itself into those.
 					if child.isHurtbox:
 						var dupe = child.make_copy();
@@ -251,42 +241,42 @@ func reset_collision_helpers():
 
 ##Should ping all of the placement hitboxes and return TRUE if it collides with a Piece, of FALSE if it doesn't.
 func ping_placement_validation():
-	var collided := false;
-	#print(get_children())
-	var shapecasts = []
-	for child in placementCollisionHolder.get_children():
-		#print("Hi 1")
-		#print(placementCollisionHolder.get_children())
-		if not collided:
-			#print("Hi 2")
-			if child is ShapeCast3D:
-				#print("Hi 3")
-				#child.reparent(self, true);
-				shapecasts.append(child);
-				child.add_exception(hitboxCollisionHolder);
-				child.add_exception(hurtboxCollisionHolder);
-				child.force_shapecast_update();
-				if child.is_colliding(): 
-					var collider = child.get_collider(0);
-					if collider is HurtboxHolder:
-						#print(self, collider.get_piece())
-						if self != collider.get_piece():
+	if is_node_ready():
+		var collided := false;
+		#print(get_children())
+		var shapecasts = []
+		for child in placementCollisionHolder.get_children():
+			#print("Hi 1")
+			#print(placementCollisionHolder.get_children())
+			if not collided:
+				#print("Hi 2")
+				if child is ShapeCast3D:
+					#print("Hi 3")
+					#child.reparent(self, true);
+					#shapecasts.append(child);
+					child.force_shapecast_update();
+					if child.is_colliding(): 
+						var collider = child.get_collider(0);
+						if collider is HurtboxHolder:
+							#print(self, collider.get_piece())
+							if self != collider.get_piece():
+								collided = true;
+						if collider is RobotBody:
 							collided = true;
-					if collider is RobotBody:
-						collided = true;
-					else:
-						#print("what")
-						#print(collider)
-						pass;
+						else:
+							#print("what")
+							#print(collider)
+							pass;
 	
 	##Put all the shapecasts back.
-	for cast in shapecasts:
-		cast.reparent(placementCollisionHolder, true);
+	#for cast in shapecasts:
+		#cast.reparent(placementCollisionHolder, true);
 	
-	#print(collided)
-	if collided: set_selection_mode(selectionModes.NOT_PLACEABLE);
-	else: set_selection_mode(selectionModes.PLACEABLE);
-	return collided;
+		#print(collided)
+		if collided: set_selection_mode(selectionModes.NOT_PLACEABLE);
+		else: set_selection_mode(selectionModes.PLACEABLE);
+		return collided;
+	return true;
 
 func get_all_hitboxes():
 	return hitboxCollisionHolder.get_children();
@@ -321,16 +311,26 @@ func disable_hurtbox(foo:bool):
 ##Fired whent he camera finds this piece.
 ##TODO: Fancy stuff. 
 var selected := false;
-func select(foo := not selected):
-	deselect_other_pieces(self);
-	if foo == selected: return;
+
+func get_selected() -> bool:
+	return selected;
+
+func select(foo : bool = not get_selected()):
+	if foo == selected: return foo;
+	if foo: deselect_other_pieces(self);
+	else: deselect_other_pieces();
 	selected = foo;
 	if selected: 
 		if selectionMode == selectionModes.NOT_SELECTED:
 			set_selection_mode(selectionModes.SELECTED);
 	else: set_selection_mode(selectionModes.NOT_SELECTED);
 	print(pieceName)
+	return selected;
 	pass;
+
+func select_via_robot():
+	if is_instance_valid(get_host_robot()):
+		get_host_robot().select_piece(self);
 
 func deselect():
 	deselect_all_sockets();
@@ -360,13 +360,14 @@ func deselect_other_pieces(filterPiece := self):
 var allSockets : Array[Socket] = []
 
 func autograb_sockets():
-	Utils.append_array_unique(allSockets, Utils.get_all_children_of_type(self, Socket, self));
-	for socket in allSockets:
+	var sockets = Utils.get_all_children_of_type(self, Socket, self);
+	for socket in sockets:
+		Utils.append_unique(allSockets, socket);
 		socket.set_host_piece(self);
 	pass;
 
 ##Returns a list of all sockets on this part.
-func get_all_female_sockets():
+func get_all_female_sockets() -> Array[Socket]:
 	autograb_sockets();
 	return allSockets;
 
@@ -374,9 +375,11 @@ func register_socket(socket : Socket):
 	Utils.append_unique(allSockets, socket);
 
 ##Assigns this Piece to a given Socket.
+##This essentially places the thing.
 func assign_socket(socket:Socket):
 	print("Children", get_children())
 	socket.add_occupant(self);
+	hostRobot.remove_something_from_stash(self);
 	hostRobot.reassign_body_collision();
 	assignedToSocket = true;
 	hurtboxCollisionHolder.set_collision_mask_value(8, false);
@@ -388,10 +391,12 @@ func is_assigned() -> bool:
 
 ##Removes this piece from its assigned Socket.
 func remove_from_socket():
-	hostSocket.remove_occupant();
+	disconnect_from_host_socket();
 	hostSocket = null;
 	hostRobot = null;
 	assignedToSocket = false;
+	if is_instance_valid(get_parent()):
+		get_parent().remove_child(self);
 	#ping the
 	pass;
 
@@ -399,9 +404,12 @@ func get_specific_female_socket(index):
 	return femaleSocketHolder.get_child(index);
 
 func disconnect_from_host_socket():
-	hostSocket.remove_occupant();
+	if is_instance_valid(hostSocket):
+		hostSocket.remove_occupant();
+	else:
+		hostSocket = null;
 
-func get_host_socket() -> Socket:
+func get_host_socket() -> Socket: 
 	if is_instance_valid(hostSocket):
 		return hostSocket;
 	else:
@@ -413,7 +421,9 @@ func get_host_piece() -> Piece:
 	else:
 		return get_host_socket().get_host_piece();
 
-func get_host_robot() -> Robot:
+func get_host_robot(forceReturnRobot := false) -> Robot:
+	if forceReturnRobot: return hostRobot;
+	
 	if get_host_socket() == null:
 		return null;
 	else:
@@ -451,6 +461,22 @@ func assign_selected_socket(socket):
 func deselect_all_sockets():
 	for socket in get_all_female_sockets():
 		socket.select(false);
+
+var allPiecesLoops := 0;
+
+func get_all_pieces() -> Array[Piece]:
+	var ret : Array[Piece] = []
+	#print("ALL FEMALE SOCKETS: ", get_all_female_sockets())
+	for socket in get_all_female_sockets():
+		allPiecesLoops += 1;
+		#print("ALL PIECES LOOOPS: ", allPiecesLoops);
+		var occupant = socket.get_occupant();
+		if occupant != null:
+			#print("ALL PIECES OCCUPANT :", occupant, " SELF : ", self)
+			if occupant != self:
+				ret.append(occupant);
+	print("ALL PIECES : ", ret)
+	return ret;
 
 ################# MELEE 
 ##If the thing is meant to do something upon making contact with another Robot, put what happens in here.
@@ -594,6 +620,22 @@ func use_active(actionSlot : int):
 
 
 ####################### INVENTORY STUFF
+@export_category("Stash")
+
+## Removes this Piece and any Pieces below it, then adds them to the stash of the robot they're on, if there is one. Calls [method remove_from_socket], then [method Robot.add_something_to_stash], then [method Robot_Player.queue_close_engine].
+func remove_and_add_to_robot_stash(botOverride : Robot = get_host_robot(true)):
+	deselect();
+	##Stash everything below this.
+	for subPiece in get_all_pieces():
+		print("PIECE IN ALL PIECES: ", subPiece.pieceName)
+		subPiece.remove_and_add_to_robot_stash(botOverride);
+	
+	remove_from_socket();
+	var bot = botOverride;
+	if is_instance_valid(bot):
+		bot.add_something_to_stash(self);
+		if bot is Robot_Player:
+			bot.queue_close_engine();
 
 @export_category("Engine")
 #var pieceBonusOut : Array[PartModifier] = [] ##TODO: MAKE A PIECE BONUS THING
@@ -636,6 +678,7 @@ func use_active(actionSlot : int):
 	Vector2i(4,4) : null,
 }
 
+## Returns a list of all the [Part] inside the [member engineSlots]. Utilizes [method Utils.append_unique] so each [Part] is only added once to the resulting [Array].
 func get_all_parts() -> Array[Part]:
 	var gatheredParts : Array[Part] = [];
 	for slot in engineSlots.keys():
@@ -645,3 +688,9 @@ func get_all_parts() -> Array[Part]:
 				if slotContents.get_engine() == self:
 					Utils.append_unique(gatheredParts, slotContents);
 	return gatheredParts;
+
+func get_stash_button_name() -> String:
+	var ret = pieceName;
+	for piece in get_all_pieces():
+		ret += "\n   " + piece.pieceName;
+	return ret;

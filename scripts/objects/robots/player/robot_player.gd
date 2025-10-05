@@ -8,10 +8,6 @@ var barEnergy : healthBar;
 
 var engineViewer : PartsHolder_Engine;
 
-func _process(delta):
-	super(delta);
-	process_hud(delta);
-
 func grab_references():
 	super();
 	if !is_instance_valid(gameHUD):
@@ -24,15 +20,6 @@ func grab_references():
 		if !is_instance_valid(engineViewer):
 			engineViewer = GameState.get_engine_viewer();
 
-
-var forcedUpdateTimerHUD := 0;
-## Updates the HUD for player stuff.
-func process_hud(delta):
-	forcedUpdateTimerHUD -= 1;
-	if forcedUpdateTimerHUD <= 0:
-		forcedUpdateTimerHUD = 5;
-		update_bars();
-	pass;
 
 ######################## INPUT MANAGEMENT
 
@@ -131,3 +118,28 @@ func deselect_all_pieces(ignoredPiece : Piece = null):
 	super(ignoredPiece);
 	if ignoredPiece == null or selectedPiece != ignoredPiece:
 		engineViewer.close_and_clear();
+
+
+
+############# HUD
+
+var forcedUpdateTimerHUD := 0;
+var queueCloseEngine := false;
+## Updates the HUD for player stuff.
+func process_hud(delta):
+	super(delta);
+	forcedUpdateTimerHUD -= 1;
+	if forcedUpdateTimerHUD <= 0:
+		forcedUpdateTimerHUD = 5;
+		update_bars();
+	if queueCloseEngine:
+		engineViewer.close_and_clear();
+		queueCloseEngine = false;
+	pass;
+
+func queue_close_engine():
+	queueCloseEngine = true;
+
+func deselect_everything():
+	super();
+	queue_close_engine();

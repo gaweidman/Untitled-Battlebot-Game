@@ -130,10 +130,11 @@ script = ExtResource("7_fvnuu")
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
 
-[node name="PieceCollisionBox" parent="." instance=ExtResource("8_x8ege")]
+[node name="PieceCollisionBox_Body" parent="." instance=ExtResource("8_x8ege")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.625, 0)
 shape = SubResource("BoxShape3D_n78fx")
 debug_color = Color(0, 0.6, 0.701961, 0.419608)
+identifier = &"Body"
 
 [node name="Meshes" type="Node3D" parent="."]
 editor_description = "Put any and all mesh instances in here."
@@ -184,7 +185,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
 mesh = ExtResource("10_h4kss")
-skeleton = NodePath("../../PieceCollisionBox")
+skeleton = NodePath("../../PieceCollisionBox_Body")
 
 [node name="SwivelTop" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
@@ -195,9 +196,10 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 hostPiece = NodePath("../../..")
 
-[node name="PieceCollisionBox2" parent="." instance=ExtResource("8_x8ege")]
+[node name="PieceCollisionBox_Swivel" parent="." instance=ExtResource("8_x8ege")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 shape = SubResource("BoxShape3D_gm1wa")
+identifier = &"Swivel"
 
 [connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
 [connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]

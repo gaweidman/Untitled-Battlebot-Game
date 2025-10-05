@@ -1,12 +1,20 @@
 extends Node
 
+var nodesChecked = []
+var loopCounter := 0;
 ##Returns an array of every single child and grandchild of a Node.
-func get_all_children(node, ownerToCheck : Node = null) -> Array:
+func get_all_children(node, ownerToCheck : Node = null, init := true) -> Array:
+	if init: 
+		nodesChecked = []; 
+		loopCounter = 0;
+	#print("ALL CHILDREN LOOPS: ", loopCounter)
+	loopCounter += 1;
 	var nodes : Array = [];
 	#print(node.owner)
 	if node is not Node: return [];
 	
 	for N in node.get_children():
+		if N in nodesChecked: return nodes;
 		##In theory this bit here will allow to check only nodes from the thing's original scene...
 		if ownerToCheck != null:
 			#print("Checking if " , ownerToCheck ," is owner of ", N)
@@ -16,10 +24,10 @@ func get_all_children(node, ownerToCheck : Node = null) -> Array:
 			#print("Is owner, continuing")
 		
 		if N.get_child_count() > 0:
-			nodes.append(N);
-			nodes.append_array(get_all_children(N, ownerToCheck));
+			append_unique(nodes, N);
+			append_array_unique(nodes, get_all_children(N, ownerToCheck, false));
 		else:
-			nodes.append(N);
+			append_unique(nodes, N);
 	return nodes;
 
 ##Returns an array of every single child of a certain type.
@@ -36,7 +44,7 @@ func get_all_children_of_type(node, type : Object = Node, ownerToCheck : Node = 
 ##Appends an item to a given @Array only if the array does not already contain that item.
 ##Returns the array as well, if you need it.
 func append_unique(hostArray : Array, input : Variant):
-	if hostArray.has(input):
+	if !hostArray.has(input):
 		hostArray.append(input);
 	return hostArray;
 
