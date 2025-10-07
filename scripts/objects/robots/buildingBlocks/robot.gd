@@ -145,6 +145,16 @@ var stashHUD : PieceStash;
 var stashPieces : Array[Piece] = []
 var stashParts : Array[Part] = []
 
+func get_stash_pieces():
+	return stashPieces;
+func get_stash_parts():
+	return stashParts;
+func get_stash_all():
+	var ret = [];
+	ret.append_array(stashPieces);
+	ret.append_array(stashParts);
+	return ret;
+
 func remove_something_from_stash(inThing):
 	if inThing is Piece:
 		var count = 0;

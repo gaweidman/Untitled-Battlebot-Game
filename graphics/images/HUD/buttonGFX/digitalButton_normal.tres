@@ -1,0 +1,19 @@
+[gd_resource type="StyleBoxTexture" load_steps=3 format=3 uid="uid://lq3g667watr3"]
+
+[ext_resource type="Texture2D" uid="uid://ca0d47sm2muv7" path="res://graphics/images/HUD/buttonGFX/digitalButton_normal.png" id="1_uxils"]
+
+[sub_resource type="GDScript" id="GDScript_8rc5o"]
+
+[resource]
+content_margin_left = 5.0
+content_margin_top = 3.0
+content_margin_right = 5.0
+content_margin_bottom = 3.0
+texture = ExtResource("1_uxils")
+texture_margin_left = 3.0
+texture_margin_top = 5.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+script = SubResource("GDScript_8rc5o")

@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://bbtx1gkk751ox" path="res://scenes/prefabs/objects/stash_button.tscn" id="2_pkixk"]
 
 [node name="PieceStash" type="TextureRect" node_paths=PackedStringArray("buttonsHolder")]
+offset_right = 17.0
+offset_bottom = 12.0
 texture = ExtResource("1_twkm8")
 stretch_mode = 1
 script = ExtResource("1_186n4")
@@ -16,6 +18,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = -3.0
 grow_horizontal = 2
 grow_vertical = 2
 

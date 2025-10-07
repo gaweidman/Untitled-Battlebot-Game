@@ -47,7 +47,7 @@ func _on_pieces_tree_item_activated():
 		if is_instance_valid(botBeingInspected):
 			if data.has("node"):
 				botBeingInspected.add_something_to_stash(data.node)
-				regenerate_stash(PieceStash.modes.PIECES);
+				regenerate_stash(PieceStash.modes.ALL);
 				print(botBeingInspected.stashParts)
 		
 	pass # Replace with function body.
