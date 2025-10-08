@@ -1,0 +1,12 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://dk8xoef3dtmtp"]
+
+[ext_resource type="Texture2D" uid="uid://dh38ujh4rcbhu" path="res://graphics/images/HUD/scrollBar.png" id="1_3qtc6"]
+
+[resource]
+texture = ExtResource("1_3qtc6")
+texture_margin_left = 1.0
+texture_margin_top = 1.0
+texture_margin_right = 1.0
+texture_margin_bottom = 1.0
+axis_stretch_vertical = 1
+region_rect = Rect2(0, 0, 4, 4)

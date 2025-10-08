@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://bgwgllmh3y6c1" path="res://makers/robot_maker.gd" id="3_1k5u0"]
 [ext_resource type="Script" uid="uid://4xlbt5q5d03h" path="res://makers/piece_deets_helper.gd" id="4_ti6iq"]
 [ext_resource type="Texture2D" uid="uid://b27r3rshm0ite" path="res://graphics/images/HUD/textBoxBG_partPassive.png" id="5_8f46y"]
-[ext_resource type="PackedScene" uid="uid://cwe7m6fguo8yh" path="res://scenes/prefabs/objects/piece_stash.tscn" id="5_8384o"]
+[ext_resource type="PackedScene" uid="uid://dpal3hy2d8lig" path="res://scenes/prefabs/objects/piece_inspector.tscn" id="6_8384o"]
 [ext_resource type="PackedScene" uid="uid://de0rs2455fdg4" path="res://scenes/prefabs/objects/parts_holder_engine.tscn" id="6_s3ktb"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="7_ccj5e"]
 [ext_resource type="Script" uid="uid://ceadpmi0boxfx" path="res://scripts/objects/camera_follower.gd" id="8_yvtic"]
@@ -82,7 +82,7 @@ theme = ExtResource("2_8384o")
 text = "Back To Game"
 metadata/_edit_use_anchors_ = true
 
-[node name="RobotMaker" type="Control" parent="." node_paths=PackedStringArray("manager", "tree_robot", "tree_pieces", "engine", "stash", "botSpawnPoint")]
+[node name="RobotMaker" type="Control" parent="." node_paths=PackedStringArray("manager", "lbl_filepathName", "tree_robot", "tree_pieces", "tree_parts", "engine", "stash", "botSpawnPoint", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -92,43 +92,190 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("3_1k5u0")
 manager = NodePath("..")
+lbl_filepathName = NodePath("_FilepathName_")
 tree_robot = NodePath("RobotTree")
 tree_pieces = NodePath("PiecesTree")
+tree_parts = NodePath("PartsTree")
 engine = NodePath("PartsHolder_Engine")
-stash = NodePath("PieceStash")
+stash = NodePath("PieceInspector/StashViewer/PieceStash")
 botSpawnPoint = NodePath("RobotSpawnPoint")
+save_txt_newPath = NodePath("ConfirmSavePopup/NewPath")
+save_txt_oldPath = NodePath("ConfirmSavePopup/OldPath")
+save_lbl_success = NodePath("ConfirmSavePopup/Success")
+newPathPrefix = NodePath("ConfirmSavePopup/newPathPrefix")
+ConfirmSavePopup = NodePath("ConfirmSavePopup")
+btn_cancelSave = NodePath("ConfirmSavePopup/CancelSave")
+btn_saveAs = NodePath("ConfirmSavePopup/SaveChangesAs")
 metadata/_custom_type_script = "uid://cseoyso26tb6f"
 metadata/_edit_use_anchors_ = true
 
-[node name="RobotTree" type="Tree" parent="RobotMaker"]
+[node name="PiecesTree" type="Tree" parent="RobotMaker"]
 layout_mode = 0
-offset_top = 304.0
+offset_top = 224.0
 offset_right = 471.0
-offset_bottom = 549.0
+offset_bottom = 395.0
 allow_reselect = true
 
-[node name="PiecesTree" type="Tree" parent="RobotMaker"]
+[node name="RobotTree" type="Tree" parent="RobotMaker"]
 layout_mode = 0
 offset_top = 48.0
 offset_right = 471.0
-offset_bottom = 293.0
+offset_bottom = 219.0
+allow_reselect = true
+
+[node name="PartsTree" type="Tree" parent="RobotMaker"]
+layout_mode = 0
+offset_top = 400.0
+offset_right = 471.0
+offset_bottom = 571.0
 allow_reselect = true
 
 [node name="RobotSpawnPoint" type="Node3D" parent="RobotMaker"]
 
 [node name="PartsHolder_Engine" parent="RobotMaker" instance=ExtResource("6_s3ktb")]
 layout_mode = 1
-offset_left = -780.0
-offset_top = -519.0
-offset_right = -492.0
-offset_bottom = -231.0
+offset_left = 667.0
+offset_top = -458.0
+offset_right = 955.0
+offset_bottom = -170.0
 
-[node name="PieceStash" parent="RobotMaker" instance=ExtResource("5_8384o")]
+[node name="ConfirmSavePopup" type="Control" parent="RobotMaker"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 730.0
+offset_top = 31.0
+offset_right = -768.0
+offset_bottom = -717.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelBG" type="NinePatchRect" parent="RobotMaker/ConfirmSavePopup"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.071
+anchor_right = 1.083
+anchor_bottom = 1.0
+offset_left = -0.0379982
+offset_right = -0.0260315
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_8f46y")
+region_rect = Rect2(1, 1, 46, 47)
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12
+
+[node name="_Save this piece?_" type="Label" parent="RobotMaker/ConfirmSavePopup"]
 layout_mode = 0
-offset_left = 1428.0
-offset_top = 19.0
-offset_right = 1821.0
-offset_bottom = 375.0
+offset_left = -61.0
+offset_top = 10.0
+offset_right = 505.0
+offset_bottom = 59.0
+text = "Save this Robot? 
+(Changes may not be viewable until you reset the editor.)
+Old path:"
+horizontal_alignment = 1
+
+[node name="_New path_" type="Label" parent="RobotMaker/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 122.0
+offset_right = 405.0
+offset_bottom = 171.0
+text = "New path:"
+horizontal_alignment = 1
+
+[node name="_tscn_" type="Label" parent="RobotMaker/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 233.0
+offset_top = 158.0
+offset_right = 614.0
+offset_bottom = 207.0
+text = ".tscn
+"
+horizontal_alignment = 1
+
+[node name="newPathPrefix" type="Label" parent="RobotMaker/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = -65.0
+offset_top = 157.0
+offset_right = 316.0
+offset_bottom = 206.0
+text = "res://scenes/prefabs/objects/pieces/"
+horizontal_alignment = 1
+
+[node name="NewPath" type="TextEdit" parent="RobotMaker/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 150.0
+offset_right = 404.0
+offset_bottom = 188.0
+text = "piece_test"
+
+[node name="OldPath" type="TextEdit" parent="RobotMaker/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = -24.0
+offset_top = 86.0
+offset_right = 447.0
+offset_bottom = 124.0
+editable = false
+
+[node name="SaveChangesAs" type="Button" parent="RobotMaker/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 91.0
+offset_top = 245.0
+offset_right = 321.0
+offset_bottom = 276.0
+text = "CONFIRM SAVE"
+
+[node name="CancelSave" type="Button" parent="RobotMaker/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 289.0
+offset_right = 322.0
+offset_bottom = 321.0
+text = "CANCEL SAVE"
+
+[node name="Success" type="Label" parent="RobotMaker/ConfirmSavePopup"]
+layout_mode = 0
+offset_left = -27.0
+offset_top = 187.0
+offset_right = 451.0
+offset_bottom = 236.0
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+text = "Save Successful
+"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="_FilepathName_" type="Label" parent="RobotMaker"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 569.0
+offset_right = 475.0
+offset_bottom = 602.0
+text = "filepath label "
+
+[node name="SaveChanges" type="Button" parent="RobotMaker"]
+layout_mode = 0
+offset_left = 1690.0
+offset_top = 52.0
+offset_right = 1920.0
+offset_bottom = 83.0
+text = "SAVE CHANGES (OVERWRITE)"
+alignment = 2
+
+[node name="PieceInspector" parent="RobotMaker" instance=ExtResource("6_8384o")]
+layout_mode = 0
+offset_left = 1627.0
+offset_top = 94.0
+offset_right = 1915.0
+offset_bottom = 622.0
 
 [node name="PieceHelper" type="Control" parent="." node_paths=PackedStringArray("manager", "engine", "A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "C5", "D1", "D2", "D3", "D4", "D5", "E1", "E2", "E3", "E4", "E5", "pieceHolder", "lbl_filepathName", "txt_pieceName", "txt_pieceDescription", "tree", "camHolder", "makerCamera", "followerCamera", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs")]
 visible = false
@@ -167,7 +314,7 @@ E3 = NodePath("EngineBlockCustomizer/E3")
 E4 = NodePath("EngineBlockCustomizer/E4")
 E5 = NodePath("EngineBlockCustomizer/E5")
 pieceHolder = NodePath("Socket")
-lbl_filepathName = NodePath("FilepathName")
+lbl_filepathName = NodePath("_FilepathName_")
 txt_pieceName = NodePath("PieceData/PieceName")
 txt_pieceDescription = NodePath("PieceData/PieceDescription")
 tree = NodePath("Tree")
@@ -464,12 +611,13 @@ patch_margin_top = 12
 patch_margin_right = 12
 patch_margin_bottom = 12
 
-[node name="FilepathName" type="Label" parent="PieceHelper"]
+[node name="_FilepathName_" type="Label" parent="PieceHelper"]
 layout_mode = 0
 offset_left = 29.0
 offset_top = 324.0
 offset_right = 499.0
 offset_bottom = 357.0
+text = "filepath label"
 
 [node name="Reset Tree" type="Button" parent="PieceHelper"]
 layout_mode = 0
@@ -714,9 +862,12 @@ text = "BACK TO MODE SELECTION"
 [connection signal="pressed" from="ModeSelectionButtons/PieceHelper" to="." method="change_mode" binds= [1]]
 [connection signal="pressed" from="ModeSelectionButtons/RobotHelper" to="." method="change_mode" binds= [2]]
 [connection signal="pressed" from="ModeSelectionButtons/BackToGame" to="." method="_on_back_to_game_pressed"]
-[connection signal="item_activated" from="RobotMaker/RobotTree" to="RobotMaker" method="_on_robot_tree_item_activated"]
 [connection signal="item_activated" from="RobotMaker/PiecesTree" to="RobotMaker" method="_on_pieces_tree_item_activated"]
-[connection signal="pieceButtonClicked" from="RobotMaker/PieceStash" to="RobotMaker" method="_on_piece_stash_piece_button_clicked"]
+[connection signal="item_activated" from="RobotMaker/RobotTree" to="RobotMaker" method="_on_robot_tree_item_activated"]
+[connection signal="item_activated" from="RobotMaker/PartsTree" to="RobotMaker" method="_on_parts_tree_item_activated"]
+[connection signal="pressed" from="RobotMaker/ConfirmSavePopup/SaveChangesAs" to="RobotMaker" method="_on_save_changes_as_pressed"]
+[connection signal="pressed" from="RobotMaker/ConfirmSavePopup/CancelSave" to="RobotMaker" method="_on_cancel_save_pressed"]
+[connection signal="pressed" from="RobotMaker/SaveChanges" to="RobotMaker" method="_on_save_changes_pressed"]
 [connection signal="mouse_entered" from="PieceHelper" to="PieceHelper" method="_on_piece_name_mouse_exited"]
 [connection signal="mouse_exited" from="PieceHelper" to="PieceHelper" method="_on_piece_name_mouse_entered"]
 [connection signal="button_clicked" from="PieceHelper/Tree" to="PieceHelper" method="_on_tree_button_clicked"]
@@ -739,3 +890,5 @@ text = "BACK TO MODE SELECTION"
 [connection signal="pressed" from="PieceHelper/NewPiece" to="PieceHelper" method="_on_new_piece_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="BackToModeSelection" to="." method="change_mode" binds= [0]]
+
+[editable path="RobotMaker/PieceInspector"]

@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3xdylsv62lyp"]
+
+[ext_resource type="Texture2D" uid="uid://dpqcoxkidln0c" path="res://graphics/images/HUD/screenGFX/screenBG_grey.png" id="1_lyi3b"]
+[ext_resource type="Texture2D" uid="uid://cg1dktakxc4aj" path="res://graphics/images/HUD/screenGFX/screenBG_white.png" id="2_rj8qn"]
+
+[node name="separator" type="TextureRect"]
+texture_filter = 1
+anchors_preset = -1
+anchor_right = 0.0015625
+anchor_bottom = 0.0037037
+texture = ExtResource("1_lyi3b")
+stretch_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="bright" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = -1.0
+texture = ExtResource("2_rj8qn")
+stretch_mode = 1
+metadata/_edit_use_anchors_ = true

@@ -145,11 +145,29 @@ var stashHUD : PieceStash;
 var stashPieces : Array[Piece] = []
 var stashParts : Array[Part] = []
 
-func get_stash_pieces():
-	return stashPieces;
-func get_stash_parts():
-	return stashParts;
-func get_stash_all():
+func get_stash_pieces(equippedStatus : PieceStash.equippedStatus):
+	var ret = [];
+	match equippedStatus:
+		PieceStash.equippedStatus.ALL:
+			ret.append_array(stashPieces);
+			ret.append_array(get_all_pieces());
+		PieceStash.equippedStatus.EQUIPPED:
+			ret.append_array(get_all_pieces());
+		PieceStash.equippedStatus.NOT_EQUIPPED:
+			ret.append_array(stashPieces);
+	return ret;
+func get_stash_parts(equippedStatus : PieceStash.equippedStatus):
+	var ret = [];
+	match equippedStatus:
+		PieceStash.equippedStatus.ALL:
+			ret.append_array(stashParts);
+			ret.append_array(get_all_parts());
+		PieceStash.equippedStatus.EQUIPPED:
+			ret.append_array(get_all_parts());
+		PieceStash.equippedStatus.NOT_EQUIPPED:
+			ret.append_array(stashParts);
+	return ret;
+func get_stash_all(equippedStatus : PieceStash.equippedStatus):
 	var ret = [];
 	ret.append_array(stashPieces);
 	ret.append_array(stashParts);
@@ -533,6 +551,24 @@ var active_pieces : Dictionary[int, AbilityManager] = {
 
 ##TODO: There needs to be UI for all pieces you have active, as well as pieces generally in your tree.
 
+func on_add_piece(piece:Piece):
+	for abilityKey in piece.activeAbilities.keys():
+		var ability = piece.activeAbilities[abilityKey];
+		if ability is AbilityManager:
+			assign_ability_to_next_active_slot(ability);
+	pass;
+
+func on_remove_piece(piece:Piece):
+	remove_abilities_of_piece(piece);
+	pass;
+
+func remove_abilities_of_piece(piece:Piece):
+	for abilityKey in active_pieces:
+		var ability = active_pieces[abilityKey];
+		if ability is AbilityManager:
+			if ability.get_assigned_piece_or_part() == piece:
+				unassign_ability_slot(abilityKey);
+
 ##Returns a freshly gathered array of all pieces attached to this Robot and whih have it set as their host.
 func get_all_pieces() -> Array[Piece]:
 	var piecesGathered : Array[Piece] = [];
@@ -606,8 +642,15 @@ func assign_ability_to_next_active_slot(abilityManager : AbilityManager):
 	assign_ability_to_slot(slot, abilityManager);
 
 
+########################## SELECTION
+
 var selectedPiece : Piece;
 var selectedPart : Part;
+
+func is_piece_selected() -> bool:
+	return is_instance_valid(selectedPiece);
+func is_pipette_loaded() -> bool:
+	return is_instance_valid(pipettePieceInstance) or is_instance_valid(pipettePartInstance);
 
 func deselect_everything():
 	deselect_all_parts();
@@ -620,6 +663,7 @@ func deselect_all_pieces(ignoredPiece : Piece = null):
 				piece.deselect();
 	if ignoredPiece == null or selectedPiece != ignoredPiece:
 		selectedPiece = null;
+	update_stash_hud();
 	pass;
 
 func select_piece(piece : Piece):
@@ -649,6 +693,8 @@ func select_part(part : Part):
 		selectedPart = part;
 		return part;
 	return null;
+
+######################## STASH
 
 func stash_selected_piece():
 	if is_instance_valid(selectedPiece):

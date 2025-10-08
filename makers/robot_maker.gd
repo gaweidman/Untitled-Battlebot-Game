@@ -6,9 +6,13 @@ class_name MakerMode_Robots
 @export var manager : MakerModeManager;
 @export_subgroup("Camera")
 
-@export_subgroup("Tree")
+@export_subgroup("Labels")
+@export var lbl_filepathName : Label;
+
+@export_subgroup("Trees")
 @export var tree_robot : Tree;
 @export var tree_pieces : Tree;
+@export var tree_parts : Tree;
 
 @export_subgroup("Engine")
 @export var engine : PartsHolder_Engine;
@@ -18,8 +22,19 @@ func _ready():
 	initialize();
 
 func initialize():
-	get_pieces();
 	get_robots();
+	get_pieces();
+	get_parts();
+
+func exit():
+	super();
+	open_save_popup(false);
+	clear_inspected_robot();
+	pass;
+
+func enter():
+	super();
+	initialize();
 
 func _on_robot_tree_item_activated():
 	var mousePos = get_viewport().get_mouse_position() - tree_robot.position
@@ -52,6 +67,9 @@ func _on_pieces_tree_item_activated():
 		
 	pass # Replace with function body.
 
+func _on_parts_tree_item_activated():
+	pass # Replace with function body.
+
 ##Adds a Piece node to the tree. Needs the text, the node's PackedScene, and the original filepath.
 func add_to_tree(tree : Tree, text, node, filepath):
 	var child = tree.create_item()
@@ -60,6 +78,7 @@ func add_to_tree(tree : Tree, text, node, filepath):
 
 ##Resets the list of viewed Pieces.
 func get_pieces():
+	
 	tree_pieces.clear();
 	var child = tree_pieces.create_item();
 	child.set_text(0, "Pieces");
@@ -95,6 +114,9 @@ func generate_new_piece():
 	}
 	return newData;
 
+func get_parts():
+	##TODO: Parts rework
+	pass;
 
 ##Resets the list of viewed Robots.
 func get_robots():
@@ -129,7 +151,7 @@ func get_robots():
 func generate_new_robot():
 	var newData = {
 		"node" : manager.newRobotRef,
-		"filepath" : "res://scenes/prefabs/objects/robots/robot_test.tscn",
+		"filepath" : "res://scenes/prefabs/objects/robots/buildingBlocks/robot_base.tscn",
 	}
 	return newData;
 
@@ -157,12 +179,13 @@ func spawn_inpspected_robot(data):
 		botSceneBeingInspected = botRef;
 		botBeingInspected = newBot;
 		botSceneFilePath = botFilePath;
+		print("SCENE POATH ", botSceneFilePath)
 		
 		##Show the thing.
 		botBeingInspected.show();
 		
 		###Change the filepath text.
-		#lbl_filepathName.text = pieceFilePath;
+		lbl_filepathName.text = botFilePath;
 		#
 		###Change the piece name text.
 		#txt_pieceName.text = newPiece.pieceName;
@@ -172,6 +195,7 @@ func spawn_inpspected_robot(data):
 			newBot.engineViewer = engine;
 		
 		newBot.stashHUD = stash;
+		stash.currentRobot = newBot;
 		
 		botSpawnPoint.add_child(botBeingInspected);
 	return botBeingInspected;
@@ -182,62 +206,108 @@ func regenerate_stash(mode : PieceStash.modes):
 	else:
 		stash.regenerate_list(botBeingInspected, PieceStash.modes.NONE);
 
-
-### Given a [Dictionary]. Format is { "node" : [PackedScene], "filepath" : original filepath }
-#func set_inspected_piece(data):
-	#
-	#open_save_popup(false);
-	#
-	#var pieceRef = data.node;
-	#var pieceFilePath = data.filepath;
-	#if ! pieceRef is PackedScene: return;
-	#
-	#var newPiece = pieceRef.instantiate();
-	#if newPiece is Piece:
-		###Clear out the old.
-		#clear_inspected_piece();
-		#
-		###Set the new scene and piece.
-		#pieceSceneBeingInspected = pieceRef;
-		#pieceBeingInspected = newPiece;
-		#pieceSceneFilePath = pieceFilePath;
-		#
-		###Show the thing.
-		#pieceBeingInspected.show();
-		#
-		###Change the filepath text.
-		#lbl_filepathName.text = pieceFilePath;
-		#
-		###Change the piece name text.
-		#txt_pieceName.text = newPiece.pieceName;
-		#txt_pieceDescription.text = newPiece.pieceDescription;
-		#
-		#pieceHolder.add_child(pieceBeingInspected);
-		#pieceHolder.add_occupant(pieceBeingInspected);
-		#pieceBeingInspected.force_visibility = true;
-		#generate_coordinates_from_piece(pieceBeingInspected);
-	#return pieceBeingInspected;
-
-
 func clear_inspected_robot():
+	botSceneFilePath = "";
+	botSceneBeingInspected = null;
 	if is_instance_valid(botBeingInspected):
 		botBeingInspected.queue_free();
-	botSceneBeingInspected = null;
-	#lbl_filepathName.text = "[No Piece selected]";
+	botBeingInspected = null;
+	lbl_filepathName.text = "[No Piece selected]";
 	pass;
-
-
-#func clear_inspected_piece():
-	###Clear everything out.
-	#pieceHolder.remove_occupant(true);
-	#clear_coordinates();
-	#if is_instance_valid(pieceBeingInspected):
-		#pieceBeingInspected.queue_free();
-	#pieceSceneBeingInspected = null;
-	#lbl_filepathName.text = "[No Piece selected]";
 
 
 func _on_piece_stash_piece_button_clicked(tiedPiece):
 	if is_instance_valid(botBeingInspected):
 		botBeingInspected.prepare_pipette(tiedPiece);
+	pass # Replace with function body.
+
+func _on_piece_stash_part_button_clicked(tiedPart):
+	pass # Replace with function body.
+
+
+@export_subgroup("Confirm Save Popup")
+@export var save_txt_newPath : TextEdit;
+@export var save_txt_oldPath : TextEdit;
+@export var save_lbl_success : Label;
+@export var newPathPrefix : Label;
+@export var ConfirmSavePopup : Control;
+@export var btn_cancelSave : Button;
+@export var btn_saveAs : Button;
+
+var filepathPrefix = "res://scenes/prefabs/objects/robots/";
+
+
+##Actually saves the stuff. Saves the scene as a Piece; deletes all Collision copies, hides it, saves it, then regenerates collision and shows it again.
+func _on_save_changes_as_pressed():
+	var savedPath = filepathPrefix + save_txt_newPath.text + ".tscn"
+	
+	if is_valid_to_save():
+		#var saveNode = PackedScene.new()
+		#
+		#pieceBeingInspected.reset_collision_helpers();
+		#pieceBeingInspected.hide();
+		#pieceBeingInspected.name = "Piece_" + txt_pieceName.text;
+		#
+		#
+		#saveNode.pack(pieceBeingInspected);
+		#
+		#
+		#ResourceSaver.save(saveNode, savedPath);
+		#
+		#
+		#pieceBeingInspected.show();
+		#pieceBeingInspected.refresh_and_gather_collision_helpers();
+		#
+		#get_pieces();
+		#TextFunc.set_text_color(save_lbl_success, "utility");
+		#save_lbl_success.text = "Saved Successfully to " + savedPath
+		#save_lbl_success.show();
+		#
+		#
+		pass;
+	else:
+		#TextFunc.set_text_color(save_lbl_success, "melee");
+		#save_lbl_success.text = "Saved Unsuccessfully to " + savedPath
+		#save_lbl_success.show();
+		pass;
+	#
+	#get_pieces();
+	pass # Replace with function body.
+
+var savePopupIsOpen
+func is_valid_to_save():
+	return (save_txt_oldPath.text != "" && save_txt_oldPath.text != null) and (botBeingInspected != null && botSceneFilePath != null);
+
+func open_save_popup(open : bool):
+	savePopupIsOpen = open;
+	if open:
+		##Old path text
+		save_txt_oldPath.text = botSceneFilePath;
+		print("OLD FILEPATH: ", botSceneFilePath)
+		##New path text
+		newPathPrefix.text = filepathPrefix;
+		save_txt_newPath.text = "robot_test";
+		btn_cancelSave.disabled = false;
+		btn_saveAs.disabled = false;
+		ConfirmSavePopup.show();
+		save_lbl_success.hide();
+		if not is_valid_to_save():
+			TextFunc.set_text_color(save_lbl_success, "melee");
+			save_lbl_success.text = "Robot cannot be saved. Check that you have a chassis spawned in.";
+			save_lbl_success.show();
+			btn_saveAs.disabled = true;
+	else:
+		ConfirmSavePopup.hide();
+		save_lbl_success.hide();
+		btn_cancelSave.disabled = true;
+		btn_saveAs.disabled = true;
+
+func _on_cancel_save_pressed():
+	open_save_popup(false);
+	pass # Replace with function body.
+
+##"Save" button. Opens a confirmation popup.
+func _on_save_changes_pressed():
+	
+	open_save_popup(true);
 	pass # Replace with function body.

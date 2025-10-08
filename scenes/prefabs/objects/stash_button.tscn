@@ -1,14 +1,46 @@
-[gd_scene load_steps=3 format=3 uid="uid://bbtx1gkk751ox"]
+[gd_scene load_steps=5 format=3 uid="uid://bbtx1gkk751ox"]
 
 [ext_resource type="Theme" uid="uid://8f0fg65uxivb" path="res://graphics/images/HUD/digital_button.tres" id="1_5urb3"]
 [ext_resource type="Script" uid="uid://d3i56aw738ps2" path="res://scripts/GUI/piece_stash_button.gd" id="1_ppkec"]
+[ext_resource type="Texture2D" uid="uid://c7utaiwnu0a0d" path="res://graphics/images/HUD/screenGFX/screenBG_darkBlue.png" id="3_tqv4f"]
+[ext_resource type="Texture2D" uid="uid://b4664fnwc57k4" path="res://graphics/images/HUD/screenGFX/screenBG_lightBlue.png" id="4_4325b"]
 
-[node name="StashButton" type="Button"]
+[node name="StashButton" type="Button" node_paths=PackedStringArray("img_equippedBG", "img_selectedBG")]
+z_index = 2
 texture_filter = 1
 offset_right = 104.0
 offset_bottom = 34.0
 theme = ExtResource("1_5urb3")
 text = "Piece button"
+alignment = 0
 script = ExtResource("1_ppkec")
+img_equippedBG = NodePath("EquippedState")
+img_selectedBG = NodePath("SelectedState")
+
+[node name="EquippedState" type="TextureRect" parent="."]
+visible = false
+z_index = -2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_tqv4f")
+stretch_mode = 1
+flip_v = true
+
+[node name="SelectedState" type="TextureRect" parent="."]
+visible = false
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_4325b")
+stretch_mode = 1
+flip_v = true
 
 [connection signal="pressed" from="." to="." method="_on_pressed"]

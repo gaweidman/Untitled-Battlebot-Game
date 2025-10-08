@@ -1,11 +1,14 @@
-[gd_resource type="Theme" load_steps=7 format=3 uid="uid://8f0fg65uxivb"]
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://8f0fg65uxivb"]
 
 [ext_resource type="StyleBox" uid="uid://crpgbmifpd3vw" path="res://graphics/images/HUD/buttonGFX/digitalButton_disabled.tres" id="1_cnrgg"]
-[ext_resource type="Texture2D" uid="uid://bh1dsycw326xf" path="res://graphics/images/HUD/statIcons/pieceIconStriped.png" id="1_r6rp2"]
 [ext_resource type="FontFile" uid="uid://doo4kfsytv2c1" path="res://graphics/font/ScrapFives.ttf" id="1_xcf2r"]
 [ext_resource type="StyleBox" uid="uid://c15v120gq5yhm" path="res://graphics/images/HUD/buttonGFX/digitalButton_hover.tres" id="2_bm331"]
 [ext_resource type="StyleBox" uid="uid://c3s6gqoc4bbfh" path="res://graphics/images/HUD/buttonGFX/digitalButton_selected.tres" id="4_xcf2r"]
 [ext_resource type="StyleBox" uid="uid://lq3g667watr3" path="res://graphics/images/HUD/buttonGFX/digitalButton_normal.tres" id="5_pyv1n"]
+[ext_resource type="StyleBox" uid="uid://dk8xoef3dtmtp" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar.tres" id="7_e7eaa"]
+[ext_resource type="StyleBox" uid="uid://bqmpffdsekde" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar_hover.tres" id="8_wb3yn"]
+[ext_resource type="StyleBox" uid="uid://d2pfbht21vwtp" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar_pressed.tres" id="9_wb3yn"]
+[ext_resource type="StyleBox" uid="uid://cus1vmjxtuos0" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar_bg.tres" id="10_7gicb"]
 
 [resource]
 Button/colors/font_disabled_color = Color(0.47451, 0.47451, 0.47451, 1)
@@ -14,13 +17,21 @@ Button/colors/font_hover_pressed_color = Color(0.666667, 0.878431, 0.356863, 1)
 Button/colors/font_outline_color = Color(0.223529, 0.160784, 0.160784, 1)
 Button/colors/font_pressed_color = Color(0.396078, 0.670588, 0.207843, 1)
 Button/constants/h_separation = 4
-Button/constants/line_spacing = 0
+Button/constants/line_spacing = 2
 Button/constants/outline_size = 8
 Button/font_sizes/font_size = 10
 Button/fonts/font = ExtResource("1_xcf2r")
-Button/icons/icon = ExtResource("1_r6rp2")
 Button/styles/disabled = ExtResource("1_cnrgg")
 Button/styles/hover = ExtResource("2_bm331")
 Button/styles/hover_pressed = ExtResource("4_xcf2r")
 Button/styles/normal = ExtResource("5_pyv1n")
 Button/styles/pressed = ExtResource("4_xcf2r")
+Label/colors/font_color = Color(0.87451, 0.87451, 0.87451, 1)
+Label/colors/font_outline_color = Color(0.223529, 0.160784, 0.160784, 1)
+Label/constants/outline_size = 8
+Label/font_sizes/font_size = 10
+Label/fonts/font = ExtResource("1_xcf2r")
+VScrollBar/styles/grabber = ExtResource("7_e7eaa")
+VScrollBar/styles/grabber_highlight = ExtResource("8_wb3yn")
+VScrollBar/styles/grabber_pressed = ExtResource("9_wb3yn")
+VScrollBar/styles/scroll = ExtResource("10_7gicb")

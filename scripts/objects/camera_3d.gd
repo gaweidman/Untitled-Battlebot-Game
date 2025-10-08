@@ -19,6 +19,13 @@ func click_on_piece():
 			raycastHit.select_piece();
 
 func hover_socket():
+	##Remove "hovered socket" if nothing is selected or in the pipette.
+	var ply = GameState.get_player();
+	if is_instance_valid(ply):
+		if not (ply.is_piece_selected() or ply.is_pipette_loaded()):
+			socketHovering = null;
+			pieceHovering = null;
+	
 	var collisionMask = 32 + 128;
 	
 	var raycastHit = RaycastSystem.get_raycast_hit_object(collisionMask, Vector2(0,0), self);

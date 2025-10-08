@@ -8,14 +8,3 @@ script = ExtResource("2_gvkxh")
 
 [node name="Body" parent="." index="0"]
 can_sleep = false
-
-[node name="Socket" parent="Body/Meshes" index="0" node_paths=PackedStringArray("hostRobot")]
-hostRobot = NodePath("../../..")
-
-[node name="PieceBodyCube" parent="Body/Meshes/Socket" index="4"]
-assignedToSocket = true
-
-[node name="Socket3" parent="Body/Meshes/Socket/PieceBodyCube/FemaleSockets" index="1"]
-transform = Transform3D(-1, 2.98023e-08, 1.77636e-15, 0, -4.37114e-08, -1, -2.98023e-08, -1, 4.37114e-08, 0, 0.374999, -0.75)
-
-[editable path="Body/Meshes/Socket/PieceBodyCube"]

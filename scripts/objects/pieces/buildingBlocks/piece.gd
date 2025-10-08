@@ -313,6 +313,7 @@ func disable_hurtbox(foo:bool):
 var selected := false;
 
 func get_selected() -> bool:
+	if selected: set_selection_mode(selectionModes.SELECTED);
 	return selected;
 
 func select(foo : bool = not get_selected()):
@@ -429,8 +430,6 @@ func get_host_robot(forceReturnRobot := false) -> Robot:
 	else:
 		return hostRobot;
 
-func host_is_player() -> bool:
-	return has_robot_host() and hostRobot is Robot_Player;
 
 func has_socket_host():
 	return is_instance_valid(get_host_socket());
@@ -438,8 +437,12 @@ func is_assigned_to_socket():
 	return has_socket_host() and assignedToSocket;
 func has_robot_host():
 	return is_instance_valid(get_host_robot());
-func equipped_by_player():
+func host_is_player() -> bool:
 	return has_robot_host() and (get_host_robot() is Robot_Player);
+func is_equipped():
+	return is_assigned_to_socket() and has_robot_host();
+func is_equipped_by_player():
+	return is_assigned_to_socket() and host_is_player();
 
 ##Returns true if the part has both a host socket and a host robot.
 func has_host(getSocket := true, getRobot := true, getSocketAssigned := true):
@@ -575,7 +578,7 @@ func use_passive():
 		return true;
 	return false;
 
-var activeAbilities : Dictionary[int, AbilityManager] = {}
+var activeAbilities : Dictionary[int, AbilityManager] = {};
 
 ## Where any and all register_active_ability() or related calls should go. Runs at _ready().
 func ability_registry():
@@ -689,8 +692,9 @@ func get_all_parts() -> Array[Part]:
 					Utils.append_unique(gatheredParts, slotContents);
 	return gatheredParts;
 
-func get_stash_button_name() -> String:
-	var ret = pieceName;
-	for piece in get_all_pieces():
-		ret += "\n   " + piece.pieceName;
+func get_stash_button_name(showTree := false, prelude := "") -> String:
+	var ret = prelude + pieceName;
+	if showTree:
+		for piece in get_all_pieces():
+			ret += "\n" + prelude + "-" + piece.get_stash_button_name(true, prelude + "-");
 	return ret;

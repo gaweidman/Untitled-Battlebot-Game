@@ -1,0 +1,113 @@
+[gd_scene load_steps=7 format=4 uid="uid://dpal3hy2d8lig"]
+
+[ext_resource type="Texture2D" uid="uid://dggphix4dl3qu" path="res://graphics/images/HUD/screenGFX/screenBG.png" id="1_kj7fi"]
+[ext_resource type="PackedScene" uid="uid://cwe7m6fguo8yh" path="res://scenes/prefabs/objects/piece_stash.tscn" id="2_5kns5"]
+[ext_resource type="TileSet" uid="uid://dicxuohkdpmlx" path="res://graphics/images/HUD/engine/engineTileMap.tres" id="3_5nxix"]
+[ext_resource type="PackedScene" uid="uid://c3xdylsv62lyp" path="res://scenes/prefabs/objects/gui/separator.tscn" id="3_gqx4l"]
+[ext_resource type="Theme" uid="uid://8f0fg65uxivb" path="res://graphics/images/HUD/digital_button.tres" id="5_rirx1"]
+[ext_resource type="Texture2D" uid="uid://b80sl2txym55l" path="res://graphics/images/HUD/statIcons/piecePartIconStriped.png" id="6_gqx4l"]
+
+[node name="PieceInspector" type="TextureRect"]
+texture_filter = 1
+offset_left = 11.0001
+offset_top = 32.0
+offset_right = 299.0
+offset_bottom = 560.0
+texture = ExtResource("1_kj7fi")
+stretch_mode = 1
+
+[node name="Edge" type="TileMapLayer" parent="."]
+z_index = 2
+position = Vector2(24, 24)
+tile_map_data = PackedByteArray("AAD/////AAAEAAIAAAD//wAAAAAEAAEAAAD//wEAAAAEAAEAAAD//wIAAAAEAAEAAAD//wMAAAAEAAEAAAD//wQAAAAEAAEAAAD//wUAAAAEAAEAAAD//wYAAAAEAAEAAAD//wcAAAAEAAEAAAD//wgAAAAEAAEAAAD//wkAAAAEAAEAAAD//woAAAAEAAEAAAAAAP//AAAGAAAAAAABAP//AAAGAAAAAAACAP//AAAGAAAAAAADAP//AAAGAAAAAAAEAP//AAAGAAAAAAAFAP//AAAGAAAAAAAGAP//AAAGAAAAAAAHAP//AAAGAAAAAAAIAP//AAAGAAAAAAAJAP//AAAGAAAAAAAKAP//AAAHAAEAAAAKAAAAAAAHAAIAAAAKAAEAAAAHAAIAAAAKAAIAAAAHAAIAAAAKAAMAAAAHAAIAAAAKAAQAAAAHAAIAAAAKAAUAAAAHAAIAAAAKAAYAAAAHAAIAAAAKAAcAAAAHAAIAAAAKAAgAAAAHAAIAAAAKAAkAAAAHAAIAAAAKAAoAAAAHAAIAAAAAABQAAAAGAAMAAAABABQAAAAGAAMAAAACABQAAAAGAAMAAAADABQAAAAGAAMAAAAEABQAAAAGAAMAAAAFABQAAAAGAAMAAAAGABQAAAAGAAMAAAAHABQAAAAGAAMAAAAIABQAAAAGAAMAAAAJABQAAAAGAAMAAAAKABQAAAAHAAMAAAD//xQAAAAEAAMAAAD//wsAAAAEAAEAAAD//wwAAAAEAAEAAAD//w0AAAAEAAEAAAD//w4AAAAEAAEAAAD//w8AAAAEAAEAAAD//xAAAAAEAAEAAAD//xEAAAAEAAEAAAD//xIAAAAEAAEAAAD//xMAAAAEAAEAAAAKABMAAAAHAAIAAAAKABIAAAAHAAIAAAAKABEAAAAHAAIAAAAKABAAAAAHAAIAAAAKAA8AAAAHAAIAAAAKAA4AAAAHAAIAAAAKAAwAAAAHAAIAAAAKAA0AAAAHAAIAAAAKAAsAAAAHAAIAAAA=")
+tile_set = ExtResource("3_5nxix")
+metadata/_edit_group_ = true
+
+[node name="StashViewer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="PieceStash" parent="StashViewer" node_paths=PackedStringArray("btn_sortPieces", "btn_Equipped") instance=ExtResource("2_5kns5")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0555556
+anchor_top = 0.431818
+anchor_right = 0.944444
+anchor_bottom = 0.863636
+offset_right = 0.0
+offset_bottom = 0.0
+btn_sortPieces = NodePath("../SortByParts")
+btn_Equipped = NodePath("../SortByEquipped")
+metadata/_edit_use_anchors_ = true
+
+[node name="separator2" parent="StashViewer" instance=ExtResource("3_gqx4l")]
+layout_mode = 1
+anchor_left = -53.6667
+anchor_top = 0.316288
+anchor_right = 33.8993
+anchor_bottom = 0.324633
+offset_left = 15470.0
+offset_top = 54.0
+offset_right = -9488.99
+offset_bottom = 52.5935
+
+[node name="separator" parent="StashViewer" instance=ExtResource("3_gqx4l")]
+layout_mode = 1
+anchor_left = 0.0486111
+anchor_top = 0.867424
+anchor_right = 0.951389
+anchor_bottom = 0.873106
+
+[node name="SortByParts" type="Button" parent="StashViewer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 4.4
+anchor_right = 0.978948
+anchor_bottom = 4.71429
+offset_left = 179.0
+offset_top = -1846.2
+offset_right = -9.93701
+offset_bottom = -1978.14
+theme = ExtResource("5_rirx1")
+text = "All"
+icon = ExtResource("6_gqx4l")
+
+[node name="SortByEquipped" type="Button" parent="StashViewer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -1.71579
+anchor_top = 4.4
+anchor_right = -0.031579
+anchor_bottom = 4.71429
+offset_left = 510.147
+offset_top = -1846.2
+offset_right = 186.095
+offset_bottom = -1978.14
+theme = ExtResource("5_rirx1")
+text = "EQUIPPED
+"
+
+[node name="_SORT BY_" type="Label" parent="StashViewer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -1.71579
+anchor_top = 4.27619
+anchor_right = 0.978948
+anchor_bottom = 4.37143
+offset_left = 510.147
+offset_top = -1793.83
+offset_right = -9.93698
+offset_bottom = -1833.11
+theme = ExtResource("5_rirx1")
+text = "SORT BY"
+horizontal_alignment = 1
+
+[connection signal="partButtonClicked" from="StashViewer/PieceStash" to="StashViewer/PieceStash" method="_on_part_button_clicked"]
+[connection signal="pieceButtonClicked" from="StashViewer/PieceStash" to="StashViewer/PieceStash" method="_on_piece_button_clicked"]
+[connection signal="pressed" from="StashViewer/SortByParts" to="StashViewer/PieceStash" method="_on_sort_by_parts_pressed"]
+[connection signal="pressed" from="StashViewer/SortByEquipped" to="StashViewer/PieceStash" method="_on_sort_by_equipped_pressed"]

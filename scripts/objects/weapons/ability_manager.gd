@@ -17,6 +17,12 @@ func assign_robot(robot : Robot):
 func unassign_robot():
 	assignedRobot = null;
 
+func get_assigned_piece_or_part():
+	return assignedPieceOrPart;
+
+func get_assigned_action_slot():
+	return assignedActionSlot;
+
 func register(partOrPiece : Node, actionSlot : int, _abilityName : String = "Active Ability", _abilityDescription : String = "No Description Found.", _functionWhenUsed : Callable = func(): pass, _statsUsed : Array[String] = []):
 	if partOrPiece is PartActive or partOrPiece is Piece:
 		assignedPieceOrPart = partOrPiece;

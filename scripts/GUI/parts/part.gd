@@ -8,6 +8,7 @@ var inPlayerInventory := false;
 var ownedByPlayer := false;
 var invHolderNode : Control;
 var thisBot : Combatant;
+
 @export_group("References")
 @export var textureBase : Control;
 @export var textureIcon : TextureRect;
