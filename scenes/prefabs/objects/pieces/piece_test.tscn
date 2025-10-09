@@ -61,16 +61,17 @@ size = Vector3(1, 0.5, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_shgbd"]
 size = Vector3(0.5, 0.5, 1.5)
 
-[node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("meshesHolder", "maleSocketMesh", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
 script = ExtResource("1_jca88")
 force_visibility = true
 pieceName = &"Cannon"
 pieceDescription = "Shooty blam blam."
+meshesHolder = NodePath("Meshes")
+maleSocketMesh = NodePath("Meshes/MaleSocket")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
-meshesHolder = NodePath("Meshes")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
 Vector2i(1, 2): null,

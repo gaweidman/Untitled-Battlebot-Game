@@ -134,6 +134,15 @@ func process_draw(delta):
 		if visible: hide()
 	else:
 		if not visible: show()
+		
+		##Hide/show the male socket based on plugged-in status.
+		if is_instance_valid(maleSocketMesh):
+			if has_host(true, false, false):
+				if maleSocketMesh.visible:
+					maleSocketMesh.hide();
+			else:
+				if !maleSocketMesh.visible:
+					maleSocketMesh.show();
 
 enum selectionModes {
 	NOT_SELECTED,
@@ -199,12 +208,14 @@ func get_buy_price_piece_only(discountMultiplier := 1.0, fixedMarkup := 0):
 	return currentPrice + fixedMarkup;
 
 ################### COLLISION
-
-@export_category("Collision")
+@export_category("Node refs")
+@export_subgroup("Meshes")
+@export var meshesHolder : Node3D;
+@export var maleSocketMesh : Node3D;
+@export_subgroup("Collision")
 @export var placementCollisionHolder : Node3D;
 @export var hurtboxCollisionHolder : Area3D;
 @export var hitboxCollisionHolder : Area3D;
-@export var meshesHolder : Node3D;
 #var bodyMeshes : Dictionary[StringName, MeshInstance3D] = {};
 
 ##Frame timer that updates scale of hitboxes every 3 frames.

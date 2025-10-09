@@ -1,23 +1,21 @@
-[gd_scene load_steps=8 format=3 uid="uid://c2nsjhwipqr1m"]
+[gd_scene load_steps=7 format=3 uid="uid://c2nsjhwipqr1m"]
 
 [ext_resource type="Script" uid="uid://cjbf8lwy20s0y" path="res://scripts/objects/robots/buildingBlocks/robot.gd" id="1_u0mtq"]
 [ext_resource type="Script" uid="uid://cd3dvyejdjvlg" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="2_703oh"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="3_5nrmj"]
 [ext_resource type="PackedScene" uid="uid://88se3nfd8vrt" path="res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn" id="4_wrtu7"]
-[ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="6_pgkbn"]
+[ext_resource type="PackedScene" uid="uid://b4adm8wxo7ym0" path="res://scenes/prefabs/objects/robots/buildingBlocks/treads.tscn" id="5_kynhc"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
 friction = 200.0
 bounce = 0.3
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0k1s"]
-radius = 0.75
-
-[node name="Robot" type="Node3D" node_paths=PackedStringArray("meshes", "bodyPiece", "bodySocket", "body")]
+[node name="Robot" type="Node3D" node_paths=PackedStringArray("meshes", "bodyPiece", "bodySocket", "treads", "body")]
 script = ExtResource("1_u0mtq")
 meshes = NodePath("Body/Meshes")
 bodyPiece = NodePath("Body/Meshes/Socket/Piece_BodyCube")
 bodySocket = NodePath("Body/Meshes/Socket")
+treads = NodePath("")
 body = NodePath("Body")
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Driveable", "Metal"]]
@@ -42,9 +40,7 @@ hostRobot = NodePath("../../../..")
 hostSocket = NodePath("..")
 assignedToSocket = true
 
-[node name="PieceCollisionBox" parent="Body" instance=ExtResource("6_pgkbn")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("CapsuleShape3D_f0k1s")
-disabled = false
+[node name="Treads" parent="Body" instance=ExtResource("5_kynhc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [connection signal="health_or_energy_changed" from="." to="." method="_on_health_or_energy_changed"]

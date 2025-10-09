@@ -53,13 +53,13 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("5_s5jac")
 
-[node name="Piece" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece" type="Node3D" node_paths=PackedStringArray("meshesHolder", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
 script = ExtResource("1_rh04g")
+meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
-meshesHolder = NodePath("Meshes")
 femaleSocketHolder = NodePath("FemaleSockets")
 statCollection = Array[ExtResource("2_3xiip")]([SubResource("Resource_xxf1u"), SubResource("Resource_x7xa2"), SubResource("Resource_8crb0"), SubResource("Resource_8wfwi")])
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://dywcwe3tbfkn6"]
+[gd_scene load_steps=25 format=3 uid="uid://dywcwe3tbfkn6"]
 
 [ext_resource type="Script" uid="uid://dx1w5ja65qha1" path="res://scripts/objects/robots/player/robot_player.gd" id="2_gvkxh"]
 [ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_y1urp"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://cd3dvyejdjvlg" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="6_py1sw"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="7_fj0lc"]
 [ext_resource type="PackedScene" uid="uid://88se3nfd8vrt" path="res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn" id="9_t4t88"]
+[ext_resource type="PackedScene" uid="uid://b4adm8wxo7ym0" path="res://scenes/prefabs/objects/robots/buildingBlocks/treads.tscn" id="10_x05dx"]
 [ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="11_p207n"]
 
 [sub_resource type="Resource" id="Resource_l2ggl"]
@@ -114,13 +115,14 @@ statIcon = ExtResource("5_p207n")
 baseStat = 1.0
 roundingMode = 0
 
-[node name="Robot_Player" type="Node3D" node_paths=PackedStringArray("meshes", "bodyPiece", "bodySocket", "body")]
+[node name="Robot_Player" type="Node3D" node_paths=PackedStringArray("meshes", "bodyPiece", "bodySocket", "treads", "body")]
 script = ExtResource("2_gvkxh")
 meshes = NodePath("Body/Meshes")
 bodyPiece = NodePath("Body/Meshes/Socket/Piece_BodyCube")
 bodySocket = NodePath("Body/Meshes/Socket")
 robotNameInternal = "Player"
 robotName = "Untitled Scrapbot #15"
+treads = NodePath("Body/Treads")
 startupGenerator = {
 &"occupant": {
 "res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn": {
@@ -205,5 +207,7 @@ hostRobot = NodePath("../../../..")
 hostSocket = NodePath("..")
 assignedToSocket = true
 statCollection = Array[ExtResource("2_y1urp")]([SubResource("Resource_xxf1u"), SubResource("Resource_x7xa2"), SubResource("Resource_8crb0"), SubResource("Resource_8wfwi"), SubResource("Resource_kacip")])
+
+[node name="Treads" parent="Body" instance=ExtResource("10_x05dx")]
 
 [connection signal="health_or_energy_changed" from="." to="." method="_on_health_or_energy_changed"]

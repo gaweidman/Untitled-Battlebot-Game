@@ -1,0 +1,68 @@
+[gd_scene load_steps=6 format=3 uid="uid://b4adm8wxo7ym0"]
+
+[ext_resource type="Script" uid="uid://bqpwfw5xvfp2g" path="res://scripts/objects/player/underbellyColliders.gd" id="1_l2tp1"]
+[ext_resource type="ArrayMesh" uid="uid://cea36t65x5vhu" path="res://graphics/models/obj/botparts/Treads_CentralAxle.obj" id="2_b5goa"]
+[ext_resource type="Script" uid="uid://dslbjn7emuthd" path="res://scripts/objects/player/contact_point.gd" id="3_csg4c"]
+[ext_resource type="ArrayMesh" uid="uid://bjqbi0vfs40ot" path="res://graphics/models/obj/botparts/Treads_TreadSeperate.obj" id="4_t5pkk"]
+[ext_resource type="Script" uid="uid://caotgm5hf1ikf" path="res://scripts/objects/player/tread.gd" id="5_7l80t"]
+
+[node name="Treads" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("1_l2tp1")
+
+[node name="Axle" type="MeshInstance3D" parent="."]
+transform = Transform3D(-5.76205e-08, 0, 1, 0, 1, 0, -1, 0, -5.76205e-08, 0, 0, 0)
+mesh = ExtResource("2_b5goa")
+
+[node name="FloorCheck" type="RayCast3D" parent="Axle"]
+transform = Transform3D(1.93785, 0, -2.69537e-08, 0, 1.93785, 0, 2.69537e-08, 0, 1.93785, 0, -0.016953, 0)
+target_position = Vector3(0, -0.35, 0)
+script = ExtResource("3_csg4c")
+
+[node name="TreadLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(-2.98023e-08, 0, -1, 0, 1, 0, 1, 0, -2.98023e-08, 0.875, -0.125, -0.375)
+mesh = ExtResource("4_t5pkk")
+
+[node name="TreadL" type="Node3D" parent="TreadLeft" node_paths=PackedStringArray("contactPointFront", "contactPointBack")]
+transform = Transform3D(-5.77523e-08, 0, 1.93785, 0, 1.93785, 0, -1.93785, 0, -5.77523e-08, 0.375, 0.125, 0)
+script = ExtResource("5_7l80t")
+contactPointFront = NodePath("RaycastL1")
+contactPointBack = NodePath("RaycastL2")
+
+[node name="RaycastL2" type="RayCast3D" parent="TreadLeft/TreadL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00999999, -0.270991)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("3_csg4c")
+
+[node name="RaycastL1" type="RayCast3D" parent="TreadLeft/TreadL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00999999, 0.270991)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("3_csg4c")
+
+[node name="TreadRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.00100625, 0.00206727, -0.999997, 0.0117488, 0.999929, 0.00207896, 0.999931, -0.0117509, 0.000981884, -0.875, -0.125, -0.375)
+mesh = ExtResource("4_t5pkk")
+
+[node name="TreadR" type="Node3D" parent="TreadRight" node_paths=PackedStringArray("contactPointFront", "contactPointBack")]
+transform = Transform3D(0.00194996, 0.0227675, 1.93771, 0.00400607, 1.93771, -0.0227714, -1.93784, 0.0040287, 0.00190274, 0.376443, 0.120585, 0.000628173)
+script = ExtResource("5_7l80t")
+contactPointFront = NodePath("RaycastR1")
+contactPointBack = NodePath("RaycastR2")
+
+[node name="RaycastR2" type="RayCast3D" parent="TreadRight/TreadR"]
+transform = Transform3D(1, -1.35032e-16, 2.66454e-15, 6.68802e-17, 1, 1.11022e-16, 3.55271e-15, 8.88178e-16, 1, 0, 0.00999996, -0.270991)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("3_csg4c")
+
+[node name="RaycastR1" type="RayCast3D" parent="TreadRight/TreadR"]
+transform = Transform3D(1, -1.07277e-16, 1.77636e-15, 6.68802e-17, 1, 1.11022e-16, 2.66454e-15, 0, 1, 0, 0.00999996, 0.270991)
+target_position = Vector3(0, -0.35, 0)
+hit_from_inside = true
+collide_with_areas = true
+script = ExtResource("3_csg4c")

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cea36t65x5vhu"
+path="res://.godot/imported/Treads_CentralAxle.obj-e4dddf9b3d4ee406758631f18c9f066f.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Treads_CentralAxle.obj-e4dddf9b3d4ee406758631f18c9f066f.mesh"]
+
+source_file="res://graphics/models/obj/botparts/Treads_CentralAxle.obj"
+dest_files=["res://.godot/imported/Treads_CentralAxle.obj-e4dddf9b3d4ee406758631f18c9f066f.mesh", "res://.godot/imported/Treads_CentralAxle.obj-e4dddf9b3d4ee406758631f18c9f066f.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

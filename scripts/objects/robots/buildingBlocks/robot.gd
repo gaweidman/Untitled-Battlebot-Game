@@ -12,6 +12,7 @@ var gameBoard : GameBoard;
 var camera : Camera;
 @export var robotNameInternal : String = "Base";
 @export var robotName : String = "Basic";
+@export var treads : UnderbellyContactPoints;
 
 
 ################################## GODOT PROCESSING FUNCTIONS
@@ -60,6 +61,8 @@ func grab_references():
 		bodySocket = $Body/Meshes/Socket;
 	if not is_instance_valid(bodyPiece):
 		bodyPiece = $Body/Meshes/Socket/Piece_BodyCube;
+	if not is_instance_valid(treads):
+		bodyPiece = $Body/Treads;
 
 func stat_registry():
 	super();
