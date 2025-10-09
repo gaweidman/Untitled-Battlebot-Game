@@ -88,8 +88,6 @@ func look_at_safe(node : Node3D, target : Vector3):
 	if node.global_transform.origin.is_equal_approx(target): return;
 	node.look_at(target);
 
-
-
 ## Prints the input only when the boolean value is true.
 func print_if_true(printable, boolean : bool):
 	if boolean: print(printable);

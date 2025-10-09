@@ -21,8 +21,8 @@ func add_rotation(deg):
 	if deg >= 360:
 		deg -= 360;
 
-#func ability_registry():
-	#register_active_ability("Deflect", "Spin the sawblade with extreme speed, causing it to deflect projectiles and deal extra damage.", )
+func ability_registry():
+	register_active_ability("Deflect", "Spin the sawblade with extreme speed, causing it to deflect projectiles and deal extra damage.", func (): pass)
 
 func phys_process_abilities(delta):
 	super(delta);
@@ -43,4 +43,7 @@ func contact_damage(robot : Robot):
 	if can_use_passive():
 		robot.take_damage(get_damage());
 		robot.take_knockback(get_knockback(robot.position));
+	pass;
+
+func deflect():
 	pass;

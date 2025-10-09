@@ -58,6 +58,10 @@ func get_in_state_of_play() ->bool:
 	else:
 		return false;
 func get_in_state_of_building() ->bool:
+	var maker = get_node_or_null("/root/Maker Modes");
+	if maker != null:
+		return true;
+	
 	var board = get_game_board();
 	if is_instance_valid(board):
 		return board.in_state_of_building();

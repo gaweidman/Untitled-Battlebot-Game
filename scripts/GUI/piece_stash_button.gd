@@ -66,7 +66,6 @@ func update_bg():
 			img_equippedBG.show();
 		else:
 			img_equippedBG.hide();
-	
 
 func _process(delta):
 	update_bg();

@@ -1,14 +1,28 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://8f0fg65uxivb"]
+[gd_resource type="Theme" load_steps=12 format=3 uid="uid://8f0fg65uxivb"]
 
 [ext_resource type="StyleBox" uid="uid://crpgbmifpd3vw" path="res://graphics/images/HUD/buttonGFX/digitalButton_disabled.tres" id="1_cnrgg"]
 [ext_resource type="FontFile" uid="uid://doo4kfsytv2c1" path="res://graphics/font/ScrapFives.ttf" id="1_xcf2r"]
 [ext_resource type="StyleBox" uid="uid://c15v120gq5yhm" path="res://graphics/images/HUD/buttonGFX/digitalButton_hover.tres" id="2_bm331"]
+[ext_resource type="Texture2D" uid="uid://dac8flnws1ce" path="res://graphics/images/HUD/buttonGFX/digitalButton_focusOutline.png" id="3_7gicb"]
 [ext_resource type="StyleBox" uid="uid://c3s6gqoc4bbfh" path="res://graphics/images/HUD/buttonGFX/digitalButton_selected.tres" id="4_xcf2r"]
 [ext_resource type="StyleBox" uid="uid://lq3g667watr3" path="res://graphics/images/HUD/buttonGFX/digitalButton_normal.tres" id="5_pyv1n"]
 [ext_resource type="StyleBox" uid="uid://dk8xoef3dtmtp" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar.tres" id="7_e7eaa"]
 [ext_resource type="StyleBox" uid="uid://bqmpffdsekde" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar_hover.tres" id="8_wb3yn"]
 [ext_resource type="StyleBox" uid="uid://d2pfbht21vwtp" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar_pressed.tres" id="9_wb3yn"]
 [ext_resource type="StyleBox" uid="uid://cus1vmjxtuos0" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar_bg.tres" id="10_7gicb"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_evyqx"]
+texture = ExtResource("3_7gicb")
+texture_margin_left = 1.0
+texture_margin_top = 1.0
+texture_margin_right = 1.0
+texture_margin_bottom = 1.0
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
 
 [resource]
 Button/colors/font_disabled_color = Color(0.47451, 0.47451, 0.47451, 1)
@@ -22,6 +36,7 @@ Button/constants/outline_size = 8
 Button/font_sizes/font_size = 10
 Button/fonts/font = ExtResource("1_xcf2r")
 Button/styles/disabled = ExtResource("1_cnrgg")
+Button/styles/focus = SubResource("StyleBoxTexture_evyqx")
 Button/styles/hover = ExtResource("2_bm331")
 Button/styles/hover_pressed = ExtResource("4_xcf2r")
 Button/styles/normal = ExtResource("5_pyv1n")

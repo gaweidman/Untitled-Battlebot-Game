@@ -8,6 +8,12 @@ var barEnergy : healthBar;
 
 var engineViewer : PartsHolder_Engine;
 
+func _ready():
+	super();
+
+func stat_registry():
+	super();
+
 func grab_references():
 	super();
 	if !is_instance_valid(gameHUD):
@@ -109,15 +115,21 @@ func _on_health_or_energy_changed():
 	pass # Replace with function body.
 
 
-
+##Add in lo
 func select_piece(piece):
-	if super(piece) != null and is_instance_valid(engineViewer):
-		engineViewer.open_with_new_piece(piece);
+	var result = super(piece);
+	#if super(piece) != null and is_instance_valid(engineViewer):
+		#engineViewer.open_with_new_piece(piece);
+	if is_instance_valid(engineViewer):
+		queue_update_engine_with_selected_or_pipette();
+	return result;
 
 func deselect_all_pieces(ignoredPiece : Piece = null):
 	super(ignoredPiece);
-	if ignoredPiece == null or selectedPiece != ignoredPiece:
-		engineViewer.close_and_clear();
+	#if ignoredPiece == null or selectedPiece != ignoredPiece:
+		#engineViewer.close_and_clear();
+	if is_instance_valid(engineViewer):
+		queue_update_engine_with_selected_or_pipette();
 
 
 
@@ -132,14 +144,33 @@ func process_hud(delta):
 	if forcedUpdateTimerHUD <= 0:
 		forcedUpdateTimerHUD = 5;
 		update_bars();
-	if queueCloseEngine:
-		engineViewer.close_and_clear();
-		queueCloseEngine = false;
+	
+	
+	if is_instance_valid(engineViewer):
+		if queueUpdateEngineWithSelectedOrPipette:
+			var selectionResult = get_selected_or_pipette();
+			print("Selection result ", selectionResult)
+			if selectionResult != null:
+				if selectionResult is Piece:
+					engineViewer.open_with_new_piece(selectionResult);
+			else:
+				queue_close_engine();
+			queueUpdateEngineWithSelectedOrPipette = false;
+		
+		if queueCloseEngine:
+			engineViewer.close_and_clear();
+			queueCloseEngine = false;
 	pass;
+
 
 func queue_close_engine():
 	queueCloseEngine = true;
 
 func deselect_everything():
 	super();
-	queue_close_engine();
+	queue_update_engine_with_selected_or_pipette();
+
+
+var queueUpdateEngineWithSelectedOrPipette := false;
+func queue_update_engine_with_selected_or_pipette():
+	queueUpdateEngineWithSelectedOrPipette = true;

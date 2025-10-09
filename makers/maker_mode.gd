@@ -7,3 +7,9 @@ func exit():
 
 func enter():
 	pass;
+
+func enable_textEdits():
+	pass;
+
+func disable_textEdits():
+	pass;

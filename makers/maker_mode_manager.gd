@@ -58,13 +58,15 @@ func _on_exit_pressed():
 	get_tree().quit();
 	pass # Replace with function body.
 
-
+## Fired when the mouse enters the background.
 func _on_mouse_entered():
+	disable_textEdits();
 	enable_camera();
 	pass # Replace with function body.
 
-
+## Fired when the mouse exits the background.
 func _on_mouse_exited():
+	enable_textEdits();
 	disable_camera();
 	pass # Replace with function body.
 
@@ -84,7 +86,17 @@ func _on_back_to_game_pressed():
 	pass # Replace with function body.
 
 
+func enable_textEdits():
+	for modeNode in modeNodes.values():
+		if is_instance_valid(modeNode):
+			if modeNode is MakerMode:
+				modeNode.enable_textEdits();
 
+func disable_textEdits():
+	for modeNode in modeNodes.values():
+		if is_instance_valid(modeNode):
+			if modeNode is MakerMode:
+				modeNode.disable_textEdits();
 
 
 @onready var newPieceRef = preload("res://scenes/prefabs/objects/pieces/buildingBlocks/piece.tscn")

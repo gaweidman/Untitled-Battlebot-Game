@@ -11,8 +11,15 @@ var statIconMagazine = preload("res://graphics/images/HUD/statIcons/magazineIcon
 var statIconEnergy = preload("res://graphics/images/HUD/statIcons/energyIconStriped.png");
 var statIconDamage = preload("res://graphics/images/HUD/statIcons/damageIconStriped.png");
 
+@export var filepathForThisEntity : String;
+
 func _ready():
+	super();
+	clear_stats();
 	stat_registry();
+
+func clear_stats():
+	statCollection.clear();
 
 ##Gets a named stat from the stat collection. Optional rounding mode override.
 func get_stat(statName : StringName, roundModeOverride := StatTracker.roundingModes.NoOverride):
@@ -47,8 +54,10 @@ func stat_minus(statName : StringName, numToSubtract : float):
 
 ## Registers new stats. Only ever call this from stat_registry().[br]In the getFunction field, you can define a new function that is called and returned when get_stat() is called.[br]In the setFunction field, you can define a new function that is called when set_stat() is called.[br]Both getFunction and setFunction can be set to null to have them use the default get or set.
 func register_stat(statName : StringName, baseStat : float, statIcon : Texture2D = null, getFunction : Variant = null, setFunction : Variant = null, roundingMode : StatTracker.roundingModes = StatTracker.roundingModes.None):
+	print_rich("[color=blue]Creating stat "+statName+" with value "+str(baseStat)+"[/color]")
 	if get_stat_resource(statName) == null: #Check if the stat already exists before adding it again.
 		var statTracked = StatTracker.new();
+		
 		
 		statTracked.statName = statName;
 		statTracked.statIcon = statIcon;

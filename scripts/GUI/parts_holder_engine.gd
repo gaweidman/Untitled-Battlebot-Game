@@ -17,6 +17,7 @@ enum doorStates {
 var curState := doorStates.CLOSED;
 
 var referenceQueued : Piece;
+var referenceCurrent : Piece;
 var patternQueued : Array[Vector2i];
 var patternIsQueued := false;
 var currentPattern : Array[Vector2i];
@@ -91,7 +92,7 @@ func _process(delta):
 			#change_state(doorStates.OPENING);
 			if referenceQueued != null and is_instance_valid(referenceQueued):
 				set_pattern_from_piece(referenceQueued);
-				referenceQueued = null;
+				set_reference_from_queue();
 				open_slow();
 			pass;
 
@@ -166,8 +167,9 @@ func get_buttons() -> Array[PartHolderButton]:
 	return buttons;
 
 func open_with_new_piece(piece : Piece):
-	referenceQueued = piece;
-	close();
+	if referenceCurrent != piece:
+		referenceQueued = piece;
+		close();
 
 func queue_pattern(inPattern : Array[Vector2i]):
 	if inPattern != currentPattern:
@@ -184,10 +186,11 @@ func _on_pattern_change_timeout():
 func close_and_clear():
 	close();
 	queue_clear_pattern();
+	clear_current_reference();
 	pass;
 
-const emptyPattern : Array[Vector2i] = [];
 
+const emptyPattern : Array[Vector2i] = [];
 func queue_clear_pattern():
 	queue_pattern(emptyPattern);
 
@@ -195,3 +198,10 @@ func set_pattern_from_queue():
 	if patternIsQueued:
 		set_pattern(patternQueued);
 		patternIsQueued = false;
+
+func set_reference_from_queue():
+	referenceCurrent = referenceQueued;
+	referenceQueued = null;
+
+func clear_current_reference():
+	referenceCurrent = null;

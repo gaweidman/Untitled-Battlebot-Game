@@ -82,7 +82,7 @@ theme = ExtResource("2_8384o")
 text = "Back To Game"
 metadata/_edit_use_anchors_ = true
 
-[node name="RobotMaker" type="Control" parent="." node_paths=PackedStringArray("manager", "lbl_filepathName", "tree_robot", "tree_pieces", "tree_parts", "engine", "stash", "botSpawnPoint", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs")]
+[node name="RobotMaker" type="Control" parent="." node_paths=PackedStringArray("manager", "txt_botName", "txt_botNameInternal", "lbl_filepathName", "tree_robot", "tree_pieces", "tree_parts", "engine", "stash", "botSpawnPoint", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs", "tree_abilities")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -92,6 +92,8 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("3_1k5u0")
 manager = NodePath("..")
+txt_botName = NodePath("RobotData/RobotName")
+txt_botNameInternal = NodePath("RobotData/RobotNameInternal")
 lbl_filepathName = NodePath("_FilepathName_")
 tree_robot = NodePath("RobotTree")
 tree_pieces = NodePath("PiecesTree")
@@ -106,6 +108,7 @@ newPathPrefix = NodePath("ConfirmSavePopup/newPathPrefix")
 ConfirmSavePopup = NodePath("ConfirmSavePopup")
 btn_cancelSave = NodePath("ConfirmSavePopup/CancelSave")
 btn_saveAs = NodePath("ConfirmSavePopup/SaveChangesAs")
+tree_abilities = NodePath("AbilitiesTree")
 metadata/_custom_type_script = "uid://cseoyso26tb6f"
 metadata/_edit_use_anchors_ = true
 
@@ -276,6 +279,65 @@ offset_left = 1627.0
 offset_top = 94.0
 offset_right = 1915.0
 offset_bottom = 622.0
+
+[node name="AbilitiesTree" type="Tree" parent="RobotMaker"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.108333
+anchor_top = 0.55463
+anchor_right = 0.243229
+anchor_bottom = 0.735185
+metadata/_edit_use_anchors_ = true
+
+[node name="RobotData" type="Control" parent="RobotMaker"]
+layout_mode = 1
+anchor_left = 0.141146
+anchor_top = 0.737963
+anchor_right = 0.277083
+anchor_bottom = 0.999073
+metadata/_edit_use_anchors_ = true
+
+[node name="_Robot Data_" type="Label" parent="RobotMaker/RobotData"]
+layout_mode = 0
+offset_left = 82.0
+offset_top = -3.0
+offset_right = 320.0
+offset_bottom = 20.0
+text = "Robot Data"
+vertical_alignment = 2
+
+[node name="RobotName" type="TextEdit" parent="RobotMaker/RobotData"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 25.0
+offset_right = 253.0
+offset_bottom = 63.0
+placeholder_text = "Robot Name"
+metadata/_edit_use_anchors_ = true
+
+[node name="RobotNameInternal" type="TextEdit" parent="RobotMaker/RobotData"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 73.0
+offset_right = 253.0
+offset_bottom = 111.0
+placeholder_text = "Internal Robot Name"
+
+[node name="PanelBG" type="NinePatchRect" parent="RobotMaker/RobotData"]
+z_index = -1
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.858159
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_8f46y")
+region_rect = Rect2(1, 1, 46, 47)
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12
+metadata/_edit_use_anchors_ = true
 
 [node name="PieceHelper" type="Control" parent="." node_paths=PackedStringArray("manager", "engine", "A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "C5", "D1", "D2", "D3", "D4", "D5", "E1", "E2", "E3", "E4", "E5", "pieceHolder", "lbl_filepathName", "txt_pieceName", "txt_pieceDescription", "tree", "camHolder", "makerCamera", "followerCamera", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs")]
 visible = false
@@ -868,6 +930,8 @@ text = "BACK TO MODE SELECTION"
 [connection signal="pressed" from="RobotMaker/ConfirmSavePopup/SaveChangesAs" to="RobotMaker" method="_on_save_changes_as_pressed"]
 [connection signal="pressed" from="RobotMaker/ConfirmSavePopup/CancelSave" to="RobotMaker" method="_on_cancel_save_pressed"]
 [connection signal="pressed" from="RobotMaker/SaveChanges" to="RobotMaker" method="_on_save_changes_pressed"]
+[connection signal="text_changed" from="RobotMaker/RobotData/RobotName" to="RobotMaker" method="_on_robot_name_text_changed"]
+[connection signal="text_changed" from="RobotMaker/RobotData/RobotNameInternal" to="RobotMaker" method="_on_robot_name_text_changed"]
 [connection signal="mouse_entered" from="PieceHelper" to="PieceHelper" method="_on_piece_name_mouse_exited"]
 [connection signal="mouse_exited" from="PieceHelper" to="PieceHelper" method="_on_piece_name_mouse_entered"]
 [connection signal="button_clicked" from="PieceHelper/Tree" to="PieceHelper" method="_on_tree_button_clicked"]

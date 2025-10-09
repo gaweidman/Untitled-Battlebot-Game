@@ -13,9 +13,11 @@ bounce = 0.3
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0k1s"]
 radius = 0.75
 
-[node name="Robot" type="Node3D" node_paths=PackedStringArray("meshes", "body")]
+[node name="Robot" type="Node3D" node_paths=PackedStringArray("meshes", "bodyPiece", "bodySocket", "body")]
 script = ExtResource("1_u0mtq")
 meshes = NodePath("Body/Meshes")
+bodyPiece = NodePath("Body/Meshes/Socket/Piece_BodyCube")
+bodySocket = NodePath("Body/Meshes/Socket")
 body = NodePath("Body")
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Driveable", "Metal"]]
@@ -29,9 +31,10 @@ script = ExtResource("2_703oh")
 [node name="Meshes" type="Node3D" parent="Body"]
 transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
 
-[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("hostRobot") instance=ExtResource("3_5nrmj")]
+[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("occupant", "hostRobot") instance=ExtResource("3_5nrmj")]
 transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
 invisibleInGame = true
+occupant = NodePath("Piece_BodyCube")
 hostRobot = NodePath("../../..")
 
 [node name="Piece_BodyCube" parent="Body/Meshes/Socket" node_paths=PackedStringArray("hostRobot", "hostSocket") instance=ExtResource("4_wrtu7")]

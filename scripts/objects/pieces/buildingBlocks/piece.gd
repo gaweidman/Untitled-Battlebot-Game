@@ -73,6 +73,56 @@ func assign_references():
 		print("References for piece ", name, " were invalid. ")
 		queue_free();
 
+######### SAVING/LOADING
+
+##Creates a dictionary with data pertinent to generating a new piece.
+## TODO: This will NOT currently save the contents of each Piece's Engine.[br]
+##current format should be:
+##[codeblock]
+##{ 
+##   file_path[float] : { 
+##      "engine" : { TODO: Figure out engine data formatting },
+##      "sockets" : { 
+##         socket_index[int] : { 
+##         "rotation" : float, 
+##         "occupant" : null or Piece.create_startup_data() } 
+##      } 
+##   } 
+##} 
+##[/codeblock]
+func create_startup_data():
+	var engineDict = {};
+	var socketDict = {};
+	for socket:Socket in get_all_female_sockets():
+		var index = get_index_of_socket(socket);
+		var rotationVal = socket.rotation.y;
+		var occupantResult = socket.get_occupant();
+		var occupantVal;
+		if occupantResult != null:
+			occupantVal = occupantResult.create_startup_data();
+		else:
+			occupantVal = "null";
+		var socketData = { "rotation" : rotationVal, "occupant" : occupantVal};
+		socketDict[index] = socketData
+		
+	var dict = { filepathForThisEntity : {
+			#"engine" : engineDict,
+			"sockets" : socketDict,
+		}
+	}
+	#print("SAVE: Startup data dictionary: ", dict)
+	return dict;
+
+func load_startup_data(data):
+	print(data)
+	for socketIndex in data["sockets"].keys():
+		var socketData = data["sockets"][socketIndex];
+		autoassign_child_sockets_to_self();
+		var socket = get_socket_at_index(socketIndex);
+		if is_instance_valid(socket):
+			socket.load_startup_data(socketData);
+	pass;
+
 #################### VISUALS AND TRANSFORM
 
 @export var force_visibility := false; 
@@ -176,6 +226,7 @@ func phys_process_collision(delta):
 ##Assign all sockets with this as their host piece.
 func autoassign_child_sockets_to_self():
 	for child in Utils.get_all_children_of_type(self, Socket, self):
+		child.hostRobot = get_host_robot();
 		child.hostPiece = self;
 
 ##This function assigns socket data and generates all hitboxes. Should only ever be run once at [method _ready()].
@@ -360,11 +411,17 @@ func deselect_other_pieces(filterPiece := self):
 @export var assignedToSocket := false;
 var allSockets : Array[Socket] = []
 
+func get_index_of_socket(inSocket : Socket) -> int:
+	return get_all_female_sockets().find(inSocket);
+func get_socket_at_index(socketIndex : int) -> Socket:
+	return get_all_female_sockets()[socketIndex];
+
 func autograb_sockets():
 	var sockets = Utils.get_all_children_of_type(self, Socket, self);
-	for socket in sockets:
+	for socket : Socket in sockets:
 		Utils.append_unique(allSockets, socket);
 		socket.set_host_piece(self);
+		socket.set_host_robot(get_host_robot());
 	pass;
 
 ##Returns a list of all sockets on this part.
@@ -375,25 +432,29 @@ func get_all_female_sockets() -> Array[Socket]:
 func register_socket(socket : Socket):
 	Utils.append_unique(allSockets, socket);
 
-##Assigns this Piece to a given Socket.
-##This essentially places the thing.
+##Assigns this [Piece] to a given [Socket]. This essentially places the thing onto the [Robot] the [Socket] has as its host.
 func assign_socket(socket:Socket):
 	print("Children", get_children())
 	socket.add_occupant(self);
-	hostRobot.remove_something_from_stash(self);
-	hostRobot.reassign_body_collision();
+	assign_socket_post(socket);
+	pass;
+
+##Assigns this [Piece] to a given [Socket]. This portion is separated so it can have an entry point for manual assignment.
+func assign_socket_post(socket:Socket):
+	hostRobot.on_add_piece(self);
 	assignedToSocket = true;
 	hurtboxCollisionHolder.set_collision_mask_value(8, false);
 	set_selection_mode(selectionModes.NOT_SELECTED);
-	pass;
 
 func is_assigned() -> bool:
 	return assignedToSocket;
 
-##Removes this piece from its assigned Socket.
+##Removes this piece from its assigned Socket. Essentially removes it from the [Robot], too.
 func remove_from_socket():
 	disconnect_from_host_socket();
 	hostSocket = null;
+	if is_instance_valid(hostRobot):
+		hostRobot.on_remove_piece(self);
 	hostRobot = null;
 	assignedToSocket = false;
 	if is_instance_valid(get_parent()):
@@ -404,11 +465,11 @@ func remove_from_socket():
 func get_specific_female_socket(index):
 	return femaleSocketHolder.get_child(index);
 
+##Calls [method Socket.remove_occupant()] on this Piece's host [Socket], if it has one.
 func disconnect_from_host_socket():
 	if is_instance_valid(hostSocket):
 		hostSocket.remove_occupant();
-	else:
-		hostSocket = null;
+	hostSocket = null;
 
 func get_host_socket() -> Socket: 
 	if is_instance_valid(hostSocket):
@@ -519,6 +580,7 @@ func phys_process_abilities(delta):
 	use_passive();
 
 func get_outgoing_energy():
+	get_incoming_energy();
 	if not is_transmitting(): return 0.0;
 	return max(0.0, get_incoming_energy() - energyDrawCurrent);
 
@@ -529,6 +591,7 @@ func is_transmitting():
 ##If not, then it's probably a robot body or not plugged in, and returns 0.
 func get_incoming_energy():
 	if get_host_socket() != null:
+		#print(get_host_socket().get_energy_transmitted())
 		var powerTransmitted = get_host_socket().get_energy_transmitted();
 		#print_if_true(get_host_socket(), self is Piece_Sawblade)
 		if powerTransmitted <= 0.0: 
@@ -596,7 +659,7 @@ func get_next_available_ability_slot():
 ## functionWhenUsed = the function that gets called when this ability is called for.
 ## statsUsed = an Array of strings. This should hold any and all stats you want to have displayed on this ability's card.
 ## slotOverride is if you want to have this ability use a specific numbered slot.
-func register_active_ability(abilityName : String = "Active Ability", abilityDescription : String = "No Description Found.", functionWhenUsed : Callable = func(): pass, statsUsed : Array = [], slotOverride = null):
+func register_active_ability(abilityName : String = "Active Ability", abilityDescription : String = "No Description Found.", functionWhenUsed : Callable = func(): pass, statsUsed : Array[String] = [], slotOverride = null):
 	var newAbility = AbilityManager.new();
 	var slot = slotOverride;
 	if slot == null: slot = get_next_available_ability_slot();
@@ -638,7 +701,7 @@ func remove_and_add_to_robot_stash(botOverride : Robot = get_host_robot(true)):
 	if is_instance_valid(bot):
 		bot.add_something_to_stash(self);
 		if bot is Robot_Player:
-			bot.queue_close_engine();
+			bot.queue_update_engine_with_selected_or_pipette();
 
 @export_category("Engine")
 #var pieceBonusOut : Array[PartModifier] = [] ##TODO: MAKE A PIECE BONUS THING

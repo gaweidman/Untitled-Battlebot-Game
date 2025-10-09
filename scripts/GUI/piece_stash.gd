@@ -152,18 +152,21 @@ signal pieceButtonClicked(tiedPiece : Piece, button : StashButton);
 signal partButtonClicked(tiedPart : Part, button : StashButton);
 
 func _on_part_button_clicked(tiedPart:Part, button : StashButton):
+	deselect_all_buttons(button);
 	if is_instance_valid(currentRobot):
 		currentRobot.prepare_pipette(tiedPart);
 	pass # Replace with function body.
 
 func _on_piece_button_clicked(tiedPiece:Piece, button : StashButton):
+	deselect_all_buttons(button);
 	if is_instance_valid(currentRobot):
 		if ! tiedPiece.has_robot_host():
 			currentRobot.prepare_pipette(tiedPiece);
 		else:
-			tiedPiece.select();
+			currentRobot.select_piece(tiedPiece);
 	pass # Replace with function body.
 
-func deselect_all_buttons():
+func deselect_all_buttons(ignoredButton : StashButton):
 	for button in buttonsHolder.get_children():
-		button.select(false);
+		if is_instance_valid(ignoredButton) or button != ignoredButton:
+			button.select(false);

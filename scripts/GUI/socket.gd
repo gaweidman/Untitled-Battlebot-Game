@@ -4,12 +4,14 @@ extends Node3D
 class_name Socket
 
 @export var invisibleInGame := false;
-var occupant : Piece;
+@export var occupant : Piece;
 @export var hostPiece : Piece;
 @export var hostRobot : Robot;
 var preview : Piece;
 var previewPlaceable := false;
 @onready var selectorRay = $SelectorRay;
+
+@export var dontUsePieceForRobotHost := false;
 
 ##Needs functions to ping its host.
 ##If occupant is null, it is assumed to be empty and able to be plugged in.
@@ -23,18 +25,60 @@ func _ready():
 		#queue_free();
 		pass;
 
+####################### SETUP LOAD
+
+func load_startup_data(data):
+	remove_occupant(true);
+	var rot = data["rotation"];
+	set_socket_rotation(rad_to_deg(rot));
+	var occupantData = data["occupant"];
+	if occupantData != null and not occupantData is String:
+		print("OCCUPANT DATA: ", occupantData)
+		var occupantPath = occupantData.keys()[0]
+		print("OCCUPANT PATH: ", occupantPath)
+		var occupantDataForwarded = occupantData[occupantPath];
+		print("OCCUPANT DATA TO FORWARD: ", occupantDataForwarded)
+		var result = add_occupant_from_scene_path(occupantPath);
+		if result != null:
+			print(result);
+			result.load_startup_data(occupantDataForwarded);
+
+
+########################
+
+func add_occupant_from_scene_path(scenePath : String):
+	if FileAccess.file_exists(scenePath):
+		var newPieceScene = load(scenePath);
+		var newPiece = newPieceScene.instantiate();
+		if newPiece is Piece:
+			add_child(newPiece);
+			add_occupant(newPiece, true)
+			return newPiece;
+	return null;
+
 func remove_occupant(delete := false):
 	if delete and is_instance_valid(occupant): occupant.queue_free();
 	if is_instance_valid(occupant): remove_child(occupant);
 	occupant = null;
 	pass
 
-func add_occupant(newPiece : Piece):
+##Sets the given piece as a child of this [Socket], and sets its [member Robot.hostPiece] and [member Robot.hostRobot] as this [Socket]'s hosts.
+func add_occupant(newPiece : Piece, manual := false):
 	if is_instance_valid(newPiece):
 		occupant = newPiece;
-		occupant.reparent(self, false)
+		if is_instance_valid(occupant.get_parent()):
+			occupant.reparent(self, false);
+		else:
+			add_child(occupant);
+		
 		occupant.hostPiece = hostPiece;
-		occupant.hostRobot = get_robot();
+		occupant.hostSocket = self;
+		
+		if ! manual:
+			occupant.hostRobot = get_robot();
+		else:
+			occupant.hostRobot = get_host_robot_unsafe();
+			occupant.assign_socket_post(self);
 		$Selector.hide();
 
 func get_energy_transmitted():
@@ -63,18 +107,42 @@ func set_host_piece(piece : Piece):
 func get_host_piece() -> Piece:
 	return hostPiece;
 
-func get_robot() -> Robot:
+func set_host_robot(robot: Robot):
+	hostRobot = robot;
+
+func get_robot(forcePieceToGiveHostRobot := false) -> Robot:
 	if get_host_piece() == null: return null;
-	var bot = get_host_piece().get_host_robot()
+	#print("Has a piece...", get_host_piece().pieceName)
+	var bot = get_host_piece().get_host_robot(forcePieceToGiveHostRobot);
+	#print(bot)
 	if bot != null: hostRobot = bot;
 	return bot;
 
+## This ghets the host robot, but directly from the variable. Unsafe to use outside of scenarios where the host has been preset.
+func get_host_robot_unsafe() -> Robot:
+	#print("HOst robot b4 safe function: ", hostRobot)
+	get_robot(true);
+	#print("HOst robot: ", hostRobot)
+	if hostRobot == null:
+		if $"../../.." is Robot:
+			hostRobot = $"../../..";
+	return hostRobot;
+
+var currentRotationDeg := 0.0;
+
 func rotate_90(rotations:float=1):
 	#print("Attempting "+str(rotations)+ " rotation.")
+	currentRotationDeg += rotations * 90.0;
 	rotate_object_local(Vector3.UP, (rotations * deg_to_rad(90.0)))
 
+func set_socket_rotation(newRotDeg := currentRotationDeg):
+	reset_rotation();
+	currentRotationDeg = newRotDeg;
+	rotation.y = deg_to_rad(newRotDeg);
+
 func reset_rotation():
-	rotation.y = 0;
+	currentRotationDeg = 0.0;
+	rotation.y = 0.0;
 
 var hovering = false;
 var selected = false;
@@ -118,12 +186,6 @@ func _process(delta):
 		
 		if Input.is_action_just_pressed("Unselect"):
 			hostPiece.deselect_all_sockets();
-		
-		##Change size based on selected state.
-		$Selector.mesh.size = Vector2(0.75, 0.75);
-	else:
-		##Change size based on selected state.
-		$Selector.mesh.size = Vector2(0.5, 0.5);
 	
 	##Change collision based on validity.
 	$CollisionShape3D.disabled = not valid;
@@ -134,6 +196,7 @@ func _process(delta):
 			rotate_90(1)
 		if Input.is_action_just_pressed("RotatePiece_CCW"):
 			rotate_90(-1)
+	
 
 func _physics_process(delta):
 	calc_preview_placeable();
@@ -146,12 +209,10 @@ func hover(foo):
 	if foo:
 		if is_available():
 			hovering = true;
-			#$Selector.show();
 			hoverResetFrameCounter = 5;
 			return;
 	if not selected:
 		hovering = false;
-		#$Selector.hide();
 		return;
 
 func select(foo:=true):
@@ -173,7 +234,7 @@ func show_preview_of_pipette():
 		var pipetteInstance = bot.pipettePieceInstance;
 		if is_instance_valid(pipetteInstance):
 			selectorRay.add_exception(pipetteInstance.hitboxCollisionHolder);
-			if pipetteInstance.get_parent() == null:
+			if ! is_instance_valid(pipetteInstance.get_parent()):
 				add_child(pipetteInstance);
 			else:
 				pipetteInstance.reparent(self);
@@ -215,7 +276,7 @@ func clear_preview():
 func set_preview_as_occupant():
 	if is_available and is_instance_valid(preview) and get_preview_placeable():
 		var bot = get_robot();
-		bot.detach_pipette();
+		bot.unreference_pipette();
 		preview.assign_socket(self);
 		preview = null;
 		select(false);

@@ -4,6 +4,8 @@ class_name MakerMode_Robots
 
 @export_category("Node Refs")
 @export var manager : MakerModeManager;
+@export var txt_botName : TextEdit;
+@export var txt_botNameInternal : TextEdit;
 @export_subgroup("Camera")
 
 @export_subgroup("Labels")
@@ -36,16 +38,26 @@ func enter():
 	super();
 	initialize();
 
+func enable_textEdits():
+	txt_botName.editable = true;
+	txt_botNameInternal.editable = true;
+func disable_textEdits():
+	txt_botName.editable = false;
+	txt_botNameInternal.editable = false;
+
 func _on_robot_tree_item_activated():
 	var mousePos = get_viewport().get_mouse_position() - tree_robot.position
 	var itemAtPos : TreeItem = tree_robot.get_item_at_position(mousePos);
-	print(itemAtPos.get_text(0))
-	print(itemAtPos.get_metadata(0))
-	var data = itemAtPos.get_metadata(0)
-	if data is Dictionary:
-		print(data)
-		#set_inspected_piece(data);
-		spawn_inpspected_robot(data);
+	if is_instance_valid(itemAtPos):
+		print(itemAtPos.get_text(0))
+		print(itemAtPos.get_metadata(0))
+		var data = itemAtPos.get_metadata(0)
+		if data is Dictionary:
+			print(data)
+			##Clear out the old.
+			clear_inspected_robot();
+			#set_inspected_piece(data);
+			spawn_inpspected_robot(data);
 	pass # Replace with function body.
 
 
@@ -61,10 +73,15 @@ func _on_pieces_tree_item_activated():
 		
 		if is_instance_valid(botBeingInspected):
 			if data.has("node"):
-				botBeingInspected.add_something_to_stash(data.node)
-				regenerate_stash(PieceStash.modes.ALL);
-				print(botBeingInspected.stashParts)
-		
+				var node = data.node;
+				var path = data.filepath;
+				var instance = node.instantiate();
+				if instance is Piece:
+					instance.filepathForThisEntity = path;
+					botBeingInspected.add_something_to_stash(instance)
+					regenerate_stash(PieceStash.modes.ALL);
+					print(botBeingInspected.stashParts)
+	
 	pass # Replace with function body.
 
 func _on_parts_tree_item_activated():
@@ -170,10 +187,12 @@ func spawn_inpspected_robot(data):
 	var botFilePath = data.filepath;
 	if ! botRef is PackedScene: return;
 	
+	
+	##Clear out the old.
+	clear_inspected_robot();
+	
 	var newBot = botRef.instantiate();
 	if newBot is Robot:
-		##Clear out the old.
-		clear_inspected_robot();
 		
 		##Set the new scene and bot.
 		botSceneBeingInspected = botRef;
@@ -183,12 +202,17 @@ func spawn_inpspected_robot(data):
 		
 		##Show the thing.
 		botBeingInspected.show();
+		#print("SAVE: Loading Bot data: ", botBeingInspected.startupGenerator)
+		#print("SAVE: Loading Bot data: ", botBeingInspected.startupGenerator)
+		
+		botBeingInspected.filepathForThisEntity = botFilePath;
 		
 		###Change the filepath text.
 		lbl_filepathName.text = botFilePath;
 		#
 		###Change the piece name text.
-		#txt_pieceName.text = newPiece.pieceName;
+		txt_botName.text = botBeingInspected.robotName;
+		txt_botNameInternal.text = botBeingInspected.robotNameInternal;
 		#txt_pieceDescription.text = newPiece.pieceDescription;
 		
 		if newBot is Robot_Player:
@@ -198,13 +222,10 @@ func spawn_inpspected_robot(data):
 		stash.currentRobot = newBot;
 		
 		botSpawnPoint.add_child(botBeingInspected);
+		print("SAVE: Loading Bot data: ", botBeingInspected.startupGenerator)
+		botBeingInspected.load_from_startup_generator();
 	return botBeingInspected;
 
-func regenerate_stash(mode : PieceStash.modes):
-	if is_instance_valid(botBeingInspected):
-		stash.regenerate_list(botBeingInspected, mode);
-	else:
-		stash.regenerate_list(botBeingInspected, PieceStash.modes.NONE);
 
 func clear_inspected_robot():
 	botSceneFilePath = "";
@@ -215,6 +236,18 @@ func clear_inspected_robot():
 	lbl_filepathName.text = "[No Piece selected]";
 	pass;
 
+func get_inspected_robot() -> Robot:
+	if is_instance_valid(botBeingInspected):
+		return botBeingInspected;
+	return null;
+
+##Regenerates the stash viewer when called.
+##@deprecated: The stash is updated by the robot pretty regularly, I [i]think...[/i]
+func regenerate_stash(mode : PieceStash.modes):
+	if is_instance_valid(botBeingInspected):
+		stash.regenerate_list(botBeingInspected, mode);
+	else:
+		stash.regenerate_list(botBeingInspected, PieceStash.modes.NONE);
 
 func _on_piece_stash_piece_button_clicked(tiedPiece):
 	if is_instance_valid(botBeingInspected):
@@ -242,33 +275,43 @@ func _on_save_changes_as_pressed():
 	var savedPath = filepathPrefix + save_txt_newPath.text + ".tscn"
 	
 	if is_valid_to_save():
-		#var saveNode = PackedScene.new()
+		var saveNode = PackedScene.new()
+		var bot = get_inspected_robot();
+		
+		
+		bot.filepathForThisEntity = savedPath;
+		
+		bot.name = "Robot_" + txt_botNameInternal.text;
+		
+		bot.prepare_to_save();
+		
 		#
-		#pieceBeingInspected.reset_collision_helpers();
-		#pieceBeingInspected.hide();
-		#pieceBeingInspected.name = "Piece_" + txt_pieceName.text;
+		print("SAVE: Bot data: ", bot.startupGenerator)
+		
+		saveNode.pack(bot);
 		#
 		#
-		#saveNode.pack(pieceBeingInspected);
+		ResourceSaver.save(saveNode, savedPath);
 		#
 		#
-		#ResourceSaver.save(saveNode, savedPath);
-		#
-		#
+		#bot.show();
+		
+		bot.reassign_body_collision();
 		#pieceBeingInspected.show();
 		#pieceBeingInspected.refresh_and_gather_collision_helpers();
 		#
-		#get_pieces();
-		#TextFunc.set_text_color(save_lbl_success, "utility");
-		#save_lbl_success.text = "Saved Successfully to " + savedPath
-		#save_lbl_success.show();
+		get_robots();
+		get_pieces();
+		TextFunc.set_text_color(save_lbl_success, "utility");
+		save_lbl_success.text = "Saved Successfully to " + savedPath
+		save_lbl_success.show();
 		#
 		#
 		pass;
 	else:
-		#TextFunc.set_text_color(save_lbl_success, "melee");
-		#save_lbl_success.text = "Saved Unsuccessfully to " + savedPath
-		#save_lbl_success.show();
+		TextFunc.set_text_color(save_lbl_success, "melee");
+		save_lbl_success.text = "Saved Unsuccessfully to " + savedPath
+		save_lbl_success.show();
 		pass;
 	#
 	#get_pieces();
@@ -276,7 +319,7 @@ func _on_save_changes_as_pressed():
 
 var savePopupIsOpen
 func is_valid_to_save():
-	return (save_txt_oldPath.text != "" && save_txt_oldPath.text != null) and (botBeingInspected != null && botSceneFilePath != null);
+	return (save_txt_oldPath.text != "" && save_txt_oldPath.text != null) and (get_inspected_robot() != null && botSceneFilePath != null);
 
 func open_save_popup(open : bool):
 	savePopupIsOpen = open;
@@ -310,4 +353,41 @@ func _on_cancel_save_pressed():
 func _on_save_changes_pressed():
 	
 	open_save_popup(true);
+	pass # Replace with function body.
+
+@export_subgroup("Abilities")
+@export var tree_abilities : Tree;
+
+func update_abilities_tree():
+	tree_abilities.clear();
+	
+	var child = tree_abilities.create_item();
+	child.set_text(0, "Abilities");
+	
+	var bot = get_inspected_robot();
+	if bot != null:
+		#print("Updating ability viewer")
+		for abilityKey in bot.active_pieces.keys():
+			var ability = bot.active_pieces[abilityKey];
+			var child2 = tree_abilities.create_item(child)
+			var abilityText = "Slot " + str(abilityKey) + ": "
+			if is_instance_valid(ability):
+				abilityText += ability.abilityName;
+			else:
+				abilityText += "Empty";
+			child2.set_text(0, abilityText);
+
+var abilityViewerRefresh := 0;
+func _process(delta):
+	abilityViewerRefresh -= 1;
+	if abilityViewerRefresh < 0:
+		abilityViewerRefresh = 20;
+		update_abilities_tree();
+
+func _on_robot_name_text_changed():
+	var bot = get_inspected_robot();
+	if bot != null:
+		bot.robotName = txt_botName.text;
+		bot.robotNameInternal = txt_botNameInternal.text;
+		bot.name = "Robot_" + txt_botNameInternal.text;
 	pass # Replace with function body.

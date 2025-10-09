@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://88se3nfd8vrt"]
+[gd_scene load_steps=23 format=3 uid="uid://88se3nfd8vrt"]
 
 [ext_resource type="Script" uid="uid://lqnydwh6c74e" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="1_gm1wa"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_kcjt4"]
@@ -62,6 +62,9 @@ albedo_texture = ExtResource("11_wnksc")
 [sub_resource type="BoxShape3D" id="BoxShape3D_gm1wa"]
 size = Vector3(0.5, 0.5, 0.5)
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gm1wa"]
+radius = 0.75
+
 [node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("swivelNode", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_gm1wa")
 swivelNode = NodePath("Meshes/SwivelTop")
@@ -97,6 +100,7 @@ Vector2i(4, 2): null,
 Vector2i(4, 3): null
 }
 statCollection = Array[ExtResource("2_xcdtu")]([SubResource("Resource_xxf1u"), SubResource("Resource_x7xa2"), SubResource("Resource_8crb0"), SubResource("Resource_8wfwi")])
+filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn"
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"
@@ -200,6 +204,11 @@ hostPiece = NodePath("../../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 shape = SubResource("BoxShape3D_gm1wa")
 identifier = &"Swivel"
+
+[node name="PieceCollisionBox" parent="." instance=ExtResource("8_x8ege")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+shape = SubResource("CapsuleShape3D_gm1wa")
+isPlacementBox = false
 
 [connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
 [connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]

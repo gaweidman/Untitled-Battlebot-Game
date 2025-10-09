@@ -32,7 +32,7 @@ var scrapGained := 0;
 @export var LIGHT : DirectionalLight3D;
 
 func _ready():
-	spawnPlayer();
+	spawn_player();
 	get_tree().current_scene.ready.connect(_on_scenetree_ready);
 	#return_random_spawn_location()
 func _on_scenetree_ready():
@@ -218,7 +218,7 @@ func enter_state(newState:gameState):
 		scrapGained = 0;
 		enemiesKilled = 0;
 		
-		spawnPlayer(return_random_unoccupied_spawn_location());
+		spawn_player(return_random_unoccupied_spawn_location());
 		player.start_new_game();
 		#player.inventory.show();
 		change_state(gameState.INIT_ROUND);
@@ -311,7 +311,9 @@ func in_one_of_given_states(states:Array)->bool:
 
 #################### ENTITY SPAWNING 
 
-func spawnPlayer(_in_position := playerSpawnPosition) -> Node3D:
+@export var stashHUD : PieceStash;
+
+func spawn_player(_in_position := playerSpawnPosition) -> Node3D:
 	if player != null:
 		#player.body.position = _in_position;
 		player.body.set_deferred("position", _in_position)
@@ -322,6 +324,9 @@ func spawnPlayer(_in_position := playerSpawnPosition) -> Node3D:
 		player = newPlayer;
 	
 	player.live();
+	stashHUD.currentRobot = player;
+	player.stashHUD = stashHUD;
+	stashHUD.regenerate_list();
 	
 	return player;
 

@@ -6,14 +6,18 @@ class_name Robot
 
 @export_category("General")
 @export var meshes : Node3D;
-var bodyPiece : Piece; ##The Piece this Robot is using as the 3D representation of its body.
+@export var bodyPiece : Piece; ##The Piece this Robot is using as the 3D representation of its body.
+@export var bodySocket : Socket; ## The Socket the bodyPiece gets plugged into.
 var gameBoard : GameBoard;
 var camera : Camera;
+@export var robotNameInternal : String = "Base";
+@export var robotName : String = "Basic";
 
 
 ################################## GODOT PROCESSING FUNCTIONS
 
 func _ready():
+	load_from_startup_generator();
 	super();
 	grab_references();
 	reassign_body_collision();
@@ -52,8 +56,13 @@ func grab_references():
 		gameBoard = GameState.get_game_board();
 	if not is_instance_valid(camera):
 		camera = GameState.get_camera();
+	if not is_instance_valid(bodySocket):
+		bodySocket = $Body/Meshes/Socket;
+	if not is_instance_valid(bodyPiece):
+		bodyPiece = $Body/Meshes/Socket/Piece_BodyCube;
 
 func stat_registry():
+	super();
 	register_stat("HealthMax", maxHealth, statIconDamage);
 	register_stat(
 		"Health", 
@@ -77,12 +86,45 @@ func stat_registry():
 	register_stat("MovementSpeedMax", maxSpeed, statIconCooldown);
 	pass;
 
+################## SAVING/LOADING
+
+##Stores the data required to load this robot from an editor save. Stored as the data [method bodySocket] needs to initialize the chain reaction.
+@export var startupGenerator : Dictionary = { "rotation": 0.0, "occupant" : { "res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn": { "sockets": { 0: { "occupant": "null", "rotation": 0.0 }, 1: { "occupant": "null", "rotation": 3.14159 }, 2: { "occupant": "null", "rotation": -2.25163 }, 3: { "occupant": "null", "rotation": -2.25158 }, 4: { "occupant": "null", "rotation": 0.0 } } } }
+};
+
+func prepare_to_save():
+	print("SAVE: prep function")
+	reset_collision_helpers();
+	create_startup_generator();
+
+############################## SAVE/LOAD
+
+## Creates the data that builds this robot at _ready().
+func create_startup_generator():
+	#print("SAVE: generating")
+	startupGenerator = { "occupant" = bodyPiece.create_startup_data(), "rotation" = 0.0 };
+	#print("SAVE: end result: ", startupGenerator)
+	pass;
+
+## Creates this robot from data saved to it. If there is none, it doesn't run.
+func load_from_startup_generator():
+	print("SAVE: Checking validation of startupGenerator: ", is_instance_valid(startupGenerator), startupGenerator is Dictionary)
+	if startupGenerator is Dictionary and not startupGenerator.is_empty():
+		#bodySocket.remove_occupant(true);
+		print("SAVE: Loading startup generator: ", startupGenerator)
+		#print(startupGenerator);
+		bodySocket.hostRobot = self;
+		print("SOCKET HOST BEFORE ADDING STARTUP DATA:", bodySocket, bodySocket.hostRobot)
+		bodySocket.load_startup_data(startupGenerator)
+	pass;
+
 ########## HUD
 
 func process_hud(delta):
 	if Input.is_action_just_pressed("StashSelected"):
 		print("Stash button pressed")
 		stash_selected_piece();
+		update_stash_hud();
 	if Input.is_action_just_pressed("Unselect"):
 		print("Unselect button pressed")
 		deselect_everything();
@@ -125,6 +167,8 @@ func live():
 	spawned = true;
 	alive = true;
 	set_stat("Health", get_max_health());
+	
+	update_stash_hud();
 
 func die():
 	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
@@ -138,7 +182,7 @@ func die():
 	ParticleFX.play("BigBoom", GameState.get_game_board(), get_global_body_position());
 
 
-################################# EDITOR MODE
+################################# STASH
 
 var stashHUD : PieceStash;
 ##The effective "inventory" of this robot. Inaccessible outside of Maker Mode for [@Robot]s that are not a [@Robot_Player].
@@ -230,9 +274,9 @@ func update_stash_hud():
 		stashHUD.regenerate_list(self);
 
 ##The path to the scene the Piece placement pipette is using.
-var pipettePiecePath = "res://scenes/prefabs/objects/pieces/piece_bumper_T.tscn";
-var pipettePieceScene := preload("res://scenes/prefabs/objects/pieces/piece_bumper_T.tscn");
-var pipettePieceInstance : Piece = pipettePieceScene.instantiate();
+var pipettePiecePath := "";
+var pipettePieceScene : PackedScene;
+var pipettePieceInstance : Piece;
 var pipettePartInstance : Part;
 
 func get_current_pipette():
@@ -257,6 +301,7 @@ func prepare_pipette_from_scene(scene := pipettePieceScene):
 		prepare_pipette_from_piece(newPiece);
 
 func prepare_pipette_from_piece(newPiece : Piece):
+	deselect_all_pieces();
 	pipettePieceInstance = newPiece;
 	pipettePieceInstance.hostRobot = self;
 
@@ -274,11 +319,17 @@ func prepare_pipette(override : Variant = get_current_pipette()):
 	if override is Part: 
 		prepare_pipette_from_part(override);
 
-func detach_pipette():
-	pipettePiecePath = null;
+func unreference_pipette():
+	pipettePiecePath = "";
 	pipettePieceScene = null;
 	pipettePieceInstance = null;
 	pipettePartInstance = null;
+	update_stash_hud();
+
+func detach_pipette():
+	if is_instance_valid(pipettePieceInstance):
+		pipettePieceInstance.remove_from_socket();
+	unreference_pipette();
 
 ################################## HEALTH AND LIVING
 
@@ -357,6 +408,10 @@ func phys_process_combat(delta):
 
 ##Returns available power. Whenever something is used in a frame, it should detract from the energy variable.
 func get_available_energy() -> float:
+	#prints("Available energy:", maxEnergy, get_maximum_energy(), get_stat("Energy"))
+	#print(statCollection)
+	#for stat in statCollection:
+		#print(stat.statName, stat.get_stat())
 	return get_stat("Energy");
 
 func get_maximum_energy() -> float:
@@ -413,7 +468,7 @@ func reassign_body_collision():
 	##Then, gather copies of every Hitbox collider from all pieces, and assign a copy of it to the Body.
 	var colliderIDsInUse = [];
 	for piece in get_all_pieces():
-		#piece.refresh_and_gather_collision_helpers();
+		piece.refresh_and_gather_collision_helpers();
 		for hurtbox in piece.get_all_hurtboxes():
 			print("Hurtbox Collider ID ", hurtbox.get_collider_id(), " ",hurtbox.name," ",hurtbox.originalHost)
 			if not ((hurtbox.copiedByBody) or (hurtbox.get_collider_id() in colliderIDsInUse)):
@@ -435,6 +490,7 @@ var movementVector := Vector2.ZERO;
 var movementVectorRotation := 0.0;
 var bodyRotationAngle = Vector2.ZERO;
 @export var bodyRotationSpeedBase := 0.80;
+@export var bodyRotationSpeedMaxBase := 40.0;
 var bodyRotationSpeed := bodyRotationSpeedBase;
 @export var speedReductionWhileNoInput := 0.9; ##Slipperiness, basically.
 var lastInputtedMV = Vector2.ZERO;
@@ -527,16 +583,21 @@ func get_movement_speed_length():
 
 func get_rotation_speed():
 	var spd = get_movement_speed_length();
-	return bodyRotationSpeedBase * spd;
+	return min(bodyRotationSpeedBase * spd, bodyRotationSpeedMaxBase);
 
 func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = body):
 	SND.play_collision_sound(thisComponent, collider, Vector3.ZERO, 0.45)
 	Hooks.OnCollision(thisComponent, collider);
 
-# make sure the bot's speed doesn't go over its max speed
+## Makes sure the bot's speed doesn't go over its max speed.
 func clamp_speed():
 	body.clamp_speed()
 	return;
+
+## Runs the Reset function on all collision helpers on all Pieces.
+func reset_collision_helpers():
+	for piece in get_all_pieces():
+		piece.reset_collision_helpers();
 
 ##################################################### 3D INVENTORY STUFF
 
@@ -552,13 +613,18 @@ var active_pieces : Dictionary[int, AbilityManager] = {
 ##TODO: There needs to be UI for all pieces you have active, as well as pieces generally in your tree.
 
 func on_add_piece(piece:Piece):
+	remove_something_from_stash(piece);
+	reassign_body_collision();
+	piece.owner = self;
 	for abilityKey in piece.activeAbilities.keys():
 		var ability = piece.activeAbilities[abilityKey];
 		if ability is AbilityManager:
+			print("Adding ability ", ability.abilityName)
 			assign_ability_to_next_active_slot(ability);
 	pass;
 
 func on_remove_piece(piece:Piece):
+	piece.owner = null;
 	remove_abilities_of_piece(piece);
 	pass;
 
@@ -569,7 +635,7 @@ func remove_abilities_of_piece(piece:Piece):
 			if ability.get_assigned_piece_or_part() == piece:
 				unassign_ability_slot(abilityKey);
 
-##Returns a freshly gathered array of all pieces attached to this Robot and whih have it set as their host.
+##Returns a freshly gathered array of all pieces attached to this Robot and which have it set as their host.
 func get_all_pieces() -> Array[Piece]:
 	var piecesGathered : Array[Piece] = [];
 	for child in Utils.get_all_children_of_type(body, Piece):
@@ -651,8 +717,28 @@ func is_piece_selected() -> bool:
 	return is_instance_valid(selectedPiece);
 func is_pipette_loaded() -> bool:
 	return is_instance_valid(pipettePieceInstance) or is_instance_valid(pipettePartInstance);
+## Returns what's selected, or what's in the pipette. Returns [code]null[/code] elsewise.[br]Priority is [member pipettePartPath] > [member pipettePiecePath] > [member selectedPart] > [member selectedPiece] > [code]null[/code].
+func get_selected_or_pipette():
+	#if is_instance_valid(pipettePartPath): ##TODO: Part pipette logic.
+		#return pipettePartPath;
+	var pipette = get_current_pipette();
+	if is_instance_valid(pipette):
+		return pipette;
+	var selected = get_selected();
+	if is_instance_valid(selected):
+		return selected;
+	return null;
+
+## Returns what's selected. Returns [code]null[/code] if it's invalid.[br]Priority is [member selectedPart] > [member selectedPiece] > [code]null[/code].
+func get_selected():
+	if is_instance_valid(selectedPart):
+		return selectedPart;
+	if is_instance_valid(selectedPiece):
+		return selectedPiece;
+	return null;
 
 func deselect_everything():
+	detach_pipette();
 	deselect_all_parts();
 	deselect_all_pieces();
 
@@ -663,6 +749,7 @@ func deselect_all_pieces(ignoredPiece : Piece = null):
 				piece.deselect();
 	if ignoredPiece == null or selectedPiece != ignoredPiece:
 		selectedPiece = null;
+	#detach_pipette()
 	update_stash_hud();
 	pass;
 
