@@ -1,7 +1,6 @@
 [gd_scene load_steps=28 format=3 uid="uid://dl1v6eiy0gi1q"]
 
 [ext_resource type="Script" uid="uid://021qwhyd0air" path="res://scripts/objects/pieces/piece_sawblade.gd" id="1_5k0fg"]
-[ext_resource type="ArrayMesh" uid="uid://cfvtjsean8sey" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="2_584uk"]
 [ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_j66hk"]
 [ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="3_kb5ak"]
 [ext_resource type="ArrayMesh" uid="uid://q6bj0b082swx" path="res://graphics/models/obj/botparts/blade2.obj" id="3_omexb"]
@@ -13,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="6_r0nuw"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="7_3l8sh"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="12_k1jne"]
+[ext_resource type="ArrayMesh" uid="uid://bd8g8qktqly2e" path="res://graphics/models/obj/botparts/StaticSwivel.obj" id="13_erqxd"]
 
 [sub_resource type="Resource" id="Resource_4rrfy"]
 resource_name = "PassiveEnergyDraw"
@@ -97,15 +97,15 @@ radius = 1.125
 height = 0.335938
 radius = 1.625
 
-[node name="Piece_Sawblade" type="Node3D" node_paths=PackedStringArray("blade", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Sawblade" type="Node3D" node_paths=PackedStringArray("blade", "meshesHolder", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_5k0fg")
 blade = NodePath("Blade2")
 force_visibility = true
 pieceName = &"Sawblade"
+meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
-meshesHolder = NodePath("Meshes")
 femaleSocketHolder = NodePath("FemaleSockets")
 energyDrawPassive = 0.1
 activeCooldownTime = 2.0
@@ -187,14 +187,6 @@ mesh = SubResource("PlaneMesh_kphb4")
 skeleton = NodePath("../../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
 
-[node name="SwivelBottom" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0.125, 0)
-mesh = ExtResource("2_584uk")
-
-[node name="SwivelBottom2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.5, 8.74228e-08, 0, -4.37114e-08, -1, 0, 0.125, 0)
-mesh = ExtResource("2_584uk")
-
 [node name="Blade2" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.323604, 0, 0.635109, 0, 0.7128, 0, -0.635109, 0, 0.323604, 0, -0.0945297, 0)
 mesh = ExtResource("3_omexb")
@@ -218,6 +210,10 @@ debug_color = Color(0.964706, 0, 0.498039, 0.419608)
 isPlacementBox = false
 isHurtbox = false
 isHitbox = true
+
+[node name="SwivelBottom3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 0.125, 0)
+mesh = ExtResource("13_erqxd")
 
 [connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
 [connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]
