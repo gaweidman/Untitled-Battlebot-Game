@@ -7,11 +7,10 @@
 [ext_resource type="Script" uid="uid://caotgm5hf1ikf" path="res://scripts/objects/player/tread.gd" id="5_7l80t"]
 
 [node name="Treads" type="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("1_l2tp1")
 
 [node name="Axle" type="MeshInstance3D" parent="."]
-transform = Transform3D(-5.76205e-08, 0, 1, 0, 1, 0, -1, 0, -5.76205e-08, 0, 0, 0)
+transform = Transform3D(-5.76205e-08, 0, 1, 0, 1, 0, -1, 0, -5.76205e-08, 0, -0.0119711, 0)
 mesh = ExtResource("2_b5goa")
 
 [node name="FloorCheck" type="RayCast3D" parent="Axle"]
