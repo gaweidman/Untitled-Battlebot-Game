@@ -185,6 +185,7 @@ static var SOUNDS = {
 		preload("res://sounds/collision/Metal_Ting_01.wav"), 
 		preload("res://sounds/collision/Metal_Ting_02.wav")
 	],
+	
 	"Movement.Drone": [preload("res://sounds/Movement_Drone.ogg")],
 	"Movement.Dash": [preload("res://sounds/Toaster.wav")],
 	"Movement.Whoosh": [
@@ -199,6 +200,9 @@ static var SOUNDS = {
 	"Part.Select": [preload("res://sounds/PickupClick.wav")],
 	"Part.Place": [preload("res://sounds/Toaster.wav")],
 	
+	"Piece.Select": [preload("res://sounds/zaps/shortzap_3.ogg")],
+	"Piece.Place": [preload("res://sounds/zaps/shortzap_3.ogg")],
+	
 	"Metal.Ting": [
 		preload("res://sounds/collision/Metal_Ting_01.wav"), 
 		preload("res://sounds/collision/Metal_Ting_02.wav")
@@ -207,6 +211,12 @@ static var SOUNDS = {
 		preload("res://sounds/collision/Metal_Light_01.wav"),
 		preload("res://sounds/collision/Metal_Light_02.wav"),
 		preload("res://sounds/collision/Metal_Light_03.mp3")
+	],
+	"Zap.Short": [
+		preload("res://sounds/zaps/shortzap_1.ogg"),
+		preload("res://sounds/zaps/shortzap_2.ogg"),
+		preload("res://sounds/zaps/shortzap_3.ogg"),
+		preload("res://sounds/zaps/shortzap_4.ogg")
 	],
 	
 	"Shop.Door.Open": [

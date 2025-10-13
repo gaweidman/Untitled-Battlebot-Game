@@ -38,7 +38,6 @@ hostRobot = NodePath("../../../..")
 hostSocket = NodePath("..")
 assignedToSocket = true
 
-[node name="Treads" parent="Body" instance=ExtResource("5_kynhc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+[node name="Treads" parent="." instance=ExtResource("5_kynhc")]
 
 [connection signal="health_or_energy_changed" from="." to="." method="_on_health_or_energy_changed"]

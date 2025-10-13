@@ -127,10 +127,17 @@ func load_startup_data(data):
 
 @export var force_visibility := false; 
 
+var placingAnimationTimer = -1;
+
+func start_placing_animation():
+	placingAnimationTimer = 15;
+	pass;
+
 func process_draw(delta):
 	#return;
 	#print(hurtboxCollisionHolder.get_collision_layer())
 	if not has_host(true, false, false) and not force_visibility:
+		placingAnimationTimer = -1;
 		if visible: hide()
 	else:
 		if not visible: show()
@@ -143,6 +150,21 @@ func process_draw(delta):
 			else:
 				if !maleSocketMesh.visible:
 					maleSocketMesh.show();
+		
+		var socket = get_host_socket();
+		if socket != null:
+			if placingAnimationTimer >= 0:
+				placingAnimationTimer -= 1;
+				position.y = 0.015 * placingAnimationTimer;
+				pass;
+			if placingAnimationTimer == 0:
+				ParticleFX.play("Sparks", socket, socket.global_position);
+				var randomSpeed_1 = randf_range(0.85, 1.1);
+				SND.play_sound_at("Part.Place", socket.global_position, socket, 0.7, randomSpeed_1);
+				var randomSpeed_2 = randf_range(0.85, 1.1);
+				SND.play_sound_at("Zap.Short", socket.global_position, socket, 0.7, randomSpeed_2);
+				position.y = 0;
+				pass;
 
 enum selectionModes {
 	NOT_SELECTED,
@@ -251,6 +273,7 @@ func gather_colliders_and_meshes():
 func refresh_and_gather_collision_helpers():
 	#Clear out all copies.
 	reset_collision_helpers();
+	if ! is_inside_tree(): return;
 	
 	#Clear all colliders from their respective areas, given that the resets didn't work.
 	for child in placementCollisionHolder.get_children():
@@ -303,7 +326,7 @@ func reset_collision_helpers():
 
 ##Should ping all of the placement hitboxes and return TRUE if it collides with a Piece, of FALSE if it doesn't.
 func ping_placement_validation():
-	if is_node_ready():
+	if is_node_ready() and is_visible_in_tree() and is_instance_valid(get_parent()):
 		var collided := false;
 		#print(get_children())
 		var shapecasts = []
@@ -448,6 +471,7 @@ func assign_socket(socket:Socket):
 	print("Children", get_children())
 	socket.add_occupant(self);
 	assign_socket_post(socket);
+	start_placing_animation();
 	pass;
 
 ##Assigns this [Piece] to a given [Socket]. This portion is separated so it can have an entry point for manual assignment.
@@ -462,10 +486,10 @@ func is_assigned() -> bool:
 
 ##Removes this piece from its assigned Socket. Essentially removes it from the [Robot], too.
 func remove_from_socket():
+	if assignedToSocket and is_instance_valid(hostRobot):
+		hostRobot.on_remove_piece(self);
 	disconnect_from_host_socket();
 	hostSocket = null;
-	if is_instance_valid(hostRobot):
-		hostRobot.on_remove_piece(self);
 	hostRobot = null;
 	assignedToSocket = false;
 	if is_instance_valid(get_parent()):

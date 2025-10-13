@@ -38,3 +38,8 @@ func get_tread_normal() -> Vector3:
 
 func status_report():
 	return {"onFloor":is_on_floor(), "onDriveable":is_on_something_driveable(), "driveableAxis":get_driveable_contact_axis()};
+
+func dust_particle():
+	if randf() > 0.1:
+		if is_on_floor():
+			ParticleFX.play("SmokePuffSingleShort", self, global_position)

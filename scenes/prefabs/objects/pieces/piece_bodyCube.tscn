@@ -9,8 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="8_x8ege"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="10_ese3e"]
 [ext_resource type="ArrayMesh" uid="uid://bnajrltu8pmd4" path="res://graphics/models/obj/botparts/BotBody.obj" id="10_h4kss"]
+[ext_resource type="ArrayMesh" uid="uid://cgto2m6qw8n2d" path="res://graphics/models/obj/botparts/SwivelPointer.obj" id="11_gm1wa"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="11_wnksc"]
-[ext_resource type="ArrayMesh" uid="uid://dddqhdde83f7e" path="res://graphics/models/obj/botparts/SwivelTop.obj" id="11_xcdtu"]
 
 [sub_resource type="Resource" id="Resource_xxf1u"]
 script = ExtResource("2_xcdtu")
@@ -193,7 +193,7 @@ skeleton = NodePath("../../PieceCollisionBox_Body")
 
 [node name="SwivelTop" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
-mesh = ExtResource("11_xcdtu")
+mesh = ExtResource("11_gm1wa")
 skeleton = NodePath("../..")
 
 [node name="Socket" parent="Meshes/SwivelTop" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]

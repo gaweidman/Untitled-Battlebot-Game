@@ -5,6 +5,10 @@ class_name UnderbellyContactPoints
 @export var underbellyCollider : ContactPoint;
 @export var rightTread : TreadContactPoints;
 @export var leftTread : TreadContactPoints;
+@export var mesh_leftTread : MeshInstance3D;
+@export var mesh_rightTread : MeshInstance3D;
+@export var pivot_left : Node3D;
+@export var pivot_right : Node3D;
 
 func full_status_report():
 	var onFloor = is_on_floor();
@@ -56,3 +60,37 @@ func get_tread_normal() -> Vector3:
 		return (normF).normalized();
 	else:
 		return Vector3.ZERO;
+
+var targetPivotRotation := 0.0;
+var targetPivotDisplacement := 0.0;
+var bodSpeedLength := 0;
+func update_visuals_to_match_rotation(angleDifferenceThisFrame, _bodSpeedLength):
+	#if rad_to_deg(angleDifferenceThisFrame) 
+	#targetPivotDisplacement = (angleDifferenceThisFrame * 10);
+	targetPivotRotation = clamp((angleDifferenceThisFrame * 10) + deg_to_rad(90), deg_to_rad(90-50), deg_to_rad(90+50));
+	#print(bodSpeedLength)
+	#print(rad_to_deg(targetPivotRotation))
+	bodSpeedLength = _bodSpeedLength;
+	
+	pass;
+
+func _physics_process(delta):
+	if is_instance_valid(pivot_left) and is_instance_valid(pivot_right):
+		pivot_left.rotation.y = lerp_angle(pivot_left.rotation.y, targetPivotRotation, delta * (10.0 + (bodSpeedLength / 5)));
+		pivot_right.rotation.y = lerp_angle(pivot_right.rotation.y, targetPivotRotation, delta * (10.0 + (bodSpeedLength / 5)));
+	if is_instance_valid(leftTread) and is_instance_valid(rightTread):
+		call_for_dust(bodSpeedLength * delta);
+
+var dustTimerL := 0.0; 
+var dustTimerR := 0.0;
+var maxDustTimer := 2.;
+var minDustTimer := 1.;
+func call_for_dust(speed):
+	dustTimerL -= speed;
+	dustTimerR -= speed;
+	if dustTimerL <= 0.0:
+		dustTimerL += randf_range(maxDustTimer, minDustTimer);
+		leftTread.dust_particle();
+	if dustTimerR <= 0.0:
+		dustTimerR += randf_range(maxDustTimer, minDustTimer);
+		rightTread.dust_particle();

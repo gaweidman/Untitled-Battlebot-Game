@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://dywcwe3tbfkn6"]
+[gd_scene load_steps=25 format=3 uid="uid://cms4myt2c5jo1"]
 
 [ext_resource type="Script" uid="uid://dx1w5ja65qha1" path="res://scripts/objects/robots/player/robot_player.gd" id="2_gvkxh"]
 [ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_y1urp"]
@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://b4adm8wxo7ym0" path="res://scenes/prefabs/objects/robots/buildingBlocks/treads.tscn" id="10_x05dx"]
 [ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="11_p207n"]
 
-[sub_resource type="Resource" id="Resource_l2ggl"]
+[sub_resource type="Resource" id="Resource_fj0lc"]
 resource_name = "HealthMax"
 script = ExtResource("2_y1urp")
 statName = "HealthMax"
@@ -19,7 +19,7 @@ statIcon = ExtResource("3_t4t88")
 baseStat = 3.0
 roundingMode = 0
 
-[sub_resource type="Resource" id="Resource_ui24w"]
+[sub_resource type="Resource" id="Resource_fts0s"]
 resource_name = "Health"
 script = ExtResource("2_y1urp")
 statName = "Health"
@@ -27,7 +27,7 @@ statIcon = ExtResource("3_t4t88")
 baseStat = 3.0
 roundingMode = 0
 
-[sub_resource type="Resource" id="Resource_8qswc"]
+[sub_resource type="Resource" id="Resource_k43ie"]
 resource_name = "EnergyMax"
 script = ExtResource("2_y1urp")
 statName = "EnergyMax"
@@ -35,7 +35,7 @@ statIcon = ExtResource("3_t4t88")
 baseStat = 3.0
 roundingMode = 0
 
-[sub_resource type="Resource" id="Resource_aau5o"]
+[sub_resource type="Resource" id="Resource_8qbbb"]
 resource_name = "Energy"
 script = ExtResource("2_y1urp")
 statName = "Energy"
@@ -43,7 +43,7 @@ statIcon = ExtResource("4_kacip")
 baseStat = 3.0
 roundingMode = 0
 
-[sub_resource type="Resource" id="Resource_8c3dl"]
+[sub_resource type="Resource" id="Resource_gji2c"]
 resource_name = "EnergyRefreshRate"
 script = ExtResource("2_y1urp")
 statName = "EnergyRefreshRate"
@@ -51,7 +51,7 @@ statIcon = ExtResource("4_kacip")
 baseStat = 1.65
 roundingMode = 0
 
-[sub_resource type="Resource" id="Resource_keiyc"]
+[sub_resource type="Resource" id="Resource_l2ggl"]
 resource_name = "InvincibilityTime"
 script = ExtResource("2_y1urp")
 statName = "InvincibilityTime"
@@ -59,7 +59,7 @@ statIcon = ExtResource("5_p207n")
 baseStat = 0.25
 roundingMode = 0
 
-[sub_resource type="Resource" id="Resource_l5jgq"]
+[sub_resource type="Resource" id="Resource_ui24w"]
 resource_name = "MovementSpeedAcceleration"
 script = ExtResource("2_y1urp")
 statName = "MovementSpeedAcceleration"
@@ -67,7 +67,7 @@ statIcon = ExtResource("5_p207n")
 baseStat = 6000.0
 roundingMode = 0
 
-[sub_resource type="Resource" id="Resource_gym66"]
+[sub_resource type="Resource" id="Resource_8qswc"]
 resource_name = "MovementSpeedMax"
 script = ExtResource("2_y1urp")
 statName = "MovementSpeedMax"
@@ -79,35 +79,39 @@ roundingMode = 0
 friction = 200.0
 bounce = 0.3
 
-[sub_resource type="Resource" id="Resource_xxf1u"]
+[sub_resource type="Resource" id="Resource_aau5o"]
+resource_name = "ScrapCost"
 script = ExtResource("2_y1urp")
 statName = "ScrapCost"
 statIcon = ExtResource("11_p207n")
 baseStat = 0.0
 roundingMode = 6
 
-[sub_resource type="Resource" id="Resource_x7xa2"]
+[sub_resource type="Resource" id="Resource_8c3dl"]
+resource_name = "ScrapSellModifier"
 script = ExtResource("2_y1urp")
 statName = "ScrapSellModifier"
 statIcon = ExtResource("11_p207n")
 baseStat = 0.666667
 roundingMode = 0
 
-[sub_resource type="Resource" id="Resource_8crb0"]
+[sub_resource type="Resource" id="Resource_keiyc"]
+resource_name = "ScrapSalvageModifier"
 script = ExtResource("2_y1urp")
 statName = "ScrapSalvageModifier"
 statIcon = ExtResource("11_p207n")
 baseStat = 0.666667
 roundingMode = 0
 
-[sub_resource type="Resource" id="Resource_8wfwi"]
+[sub_resource type="Resource" id="Resource_l5jgq"]
+resource_name = "Weight"
 script = ExtResource("2_y1urp")
 statName = "Weight"
 statIcon = ExtResource("5_p207n")
 baseStat = 1.0
 roundingMode = 0
 
-[sub_resource type="Resource" id="Resource_kacip"]
+[sub_resource type="Resource" id="Resource_gym66"]
 resource_name = "RotationSpeed"
 script = ExtResource("2_y1urp")
 statName = "RotationSpeed"
@@ -122,14 +126,14 @@ bodyPiece = NodePath("Body/Meshes/Socket/Piece_BodyCube")
 bodySocket = NodePath("Body/Meshes/Socket")
 robotNameInternal = "Player"
 robotName = "Untitled Scrapbot #15"
-treads = NodePath("Body/Treads")
+treads = NodePath("Treads")
 startupGenerator = {
 &"occupant": {
 "res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn": {
 "sockets": {
 0: {
 "occupant": {
-"res://scenes/prefabs/objects/pieces/piece_bumper.tscn": {
+"": {
 "sockets": {}
 }
 },
@@ -137,7 +141,7 @@ startupGenerator = {
 },
 1: {
 "occupant": {
-"res://scenes/prefabs/objects/pieces/piece_bumper.tscn": {
+"": {
 "sockets": {}
 }
 },
@@ -153,11 +157,11 @@ startupGenerator = {
 },
 4: {
 "occupant": {
-"res://scenes/prefabs/objects/pieces/piece_sawblade.tscn": {
+"": {
 "sockets": {
 0: {
 "occupant": {
-"res://scenes/prefabs/objects/pieces/piece_cannon.tscn": {
+"": {
 "sockets": {
 0: {
 "occupant": "null",
@@ -178,7 +182,7 @@ startupGenerator = {
 },
 &"rotation": 0.0
 }
-statCollection = Array[ExtResource("2_y1urp")]([SubResource("Resource_l2ggl"), SubResource("Resource_ui24w"), SubResource("Resource_8qswc"), SubResource("Resource_aau5o"), SubResource("Resource_8c3dl"), SubResource("Resource_keiyc"), SubResource("Resource_l5jgq"), SubResource("Resource_gym66")])
+statCollection = Array[ExtResource("2_y1urp")]([SubResource("Resource_fj0lc"), SubResource("Resource_fts0s"), SubResource("Resource_k43ie"), SubResource("Resource_8qbbb"), SubResource("Resource_gji2c"), SubResource("Resource_l2ggl"), SubResource("Resource_ui24w"), SubResource("Resource_8qswc")])
 filepathForThisEntity = "res://scenes/prefabs/objects/robots/robot_player.tscn"
 body = NodePath("Body")
 
@@ -206,8 +210,8 @@ hostRobot = NodePath("../../..")
 hostRobot = NodePath("../../../..")
 hostSocket = NodePath("..")
 assignedToSocket = true
-statCollection = Array[ExtResource("2_y1urp")]([SubResource("Resource_xxf1u"), SubResource("Resource_x7xa2"), SubResource("Resource_8crb0"), SubResource("Resource_8wfwi"), SubResource("Resource_kacip")])
+statCollection = Array[ExtResource("2_y1urp")]([SubResource("Resource_aau5o"), SubResource("Resource_8c3dl"), SubResource("Resource_keiyc"), SubResource("Resource_l5jgq"), SubResource("Resource_gym66")])
 
-[node name="Treads" parent="Body" instance=ExtResource("10_x05dx")]
+[node name="Treads" parent="." instance=ExtResource("10_x05dx")]
 
 [connection signal="health_or_energy_changed" from="." to="." method="_on_health_or_energy_changed"]

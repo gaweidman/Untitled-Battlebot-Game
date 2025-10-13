@@ -149,12 +149,13 @@ func process_hud(delta):
 	if is_instance_valid(engineViewer):
 		if queueUpdateEngineWithSelectedOrPipette:
 			var selectionResult = get_selected_or_pipette();
-			print("Selection result ", selectionResult)
+			#print("Selection result ", selectionResult)
 			if selectionResult != null:
 				if selectionResult is Piece:
 					engineViewer.open_with_new_piece(selectionResult);
 			else:
 				queue_close_engine();
+			
 			queueUpdateEngineWithSelectedOrPipette = false;
 		
 		if queueCloseEngine:

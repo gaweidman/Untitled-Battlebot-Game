@@ -62,7 +62,7 @@ func grab_references():
 	if not is_instance_valid(bodyPiece):
 		bodyPiece = $Body/Meshes/Socket/Piece_BodyCube;
 	if not is_instance_valid(treads):
-		bodyPiece = $Body/Treads;
+		treads = $Body/Treads;
 
 func stat_registry():
 	super();
@@ -515,6 +515,10 @@ func phys_process_collision(delta):
 # custom physics handling for player movement. regular movement feels flat and boring.
 func phys_process_motion(delta):
 	if not is_frozen():
+		##Calc the last velocity. 
+		if !body.linear_velocity.is_equal_approx(Vector3.ZERO):
+			lastLinearVelocity = body.linear_velocity;
+		
 		##Reset movement vector for the frame.
 		movementVector = Vector2.ZERO;
 	
@@ -524,8 +528,9 @@ func phys_process_motion(delta):
 	
 		##Apply the current movement vector.
 		#print("MV",movementVector);
-		move_and_rotate_towards_movement_vector(delta)
-	
+		move_and_rotate_towards_movement_vector(delta);
+		update_treads_rotation(delta);
+	update_treads_position();
 	pass;
 
 func move_and_rotate_towards_movement_vector(delta : float):
@@ -536,6 +541,7 @@ func move_and_rotate_towards_movement_vector(delta : float):
 	#print("MV3",movementVector);
 
 	if is_inputting_movement():
+		lastInputtedMV = movementVector;
 		var movementVectorRotated = movementVector.rotated(deg_to_rad(90.0 + randf()))
 		var vectorToRotTo = Vector2(movementVectorRotated.x, -movementVectorRotated.y)
 		bodyRotationAngle = vectorToRotTo
@@ -565,11 +571,117 @@ func move_and_rotate_towards_movement_vector(delta : float):
 		#print(forceVector)
 		body.apply_central_force(forceVector);
 		#print(movementVector)
-		lastInputtedMV = Vector2(body.linear_velocity.x, body.linear_velocity.z)
 	else:
 		body.linear_velocity *= speedReductionWhileNoInput;
 	
 	clamp_speed();
+
+var lastLinearVelocity : Vector3 = Vector3.ZERO;
+@export var treadsRotationSpeed : float = 6.0;
+@export var treadsRotationSpeedClamp : float = 1.0;
+var reversing := false;
+func update_treads_rotation(delta : float):
+	## Rotate the treads to look towards the movement vector.
+	#var vel3 = body.linear_velocity
+	#if vel3.is_equal_approx(Vector3.ZERO):
+		#vel3 = lastLinearVelocity;
+		#return;
+	#else:
+		#lastLinearVelocity = vel3;
+	#var bod_vel2 = lastInputtedMV;
+	##print(bod_vel2);
+	#var bod_angle = bod_vel2.angle(); 
+	#
+	#var treads_angle = movementVectorRotation;
+	#
+	###Fix looping around the 180/-180 mark.
+	#if treads_angle < PI / -2:
+		#if bod_angle > 0:
+			#bod_angle += - PI;
+	#if treads_angle > PI / 2:
+		#if bod_angle < 0:
+			#bod_angle += PI;
+	#
+	#var angleDif = angle_difference(bod_angle, treads_angle);
+	#
+	###Adjust the body angle so it reads as being reversed when the target rotation would be more than 90 degrees.
+	###Effectively, this makes the treads go in reverse instead of forward, when the angle is too steep.
+	#var bod_angleAdjusted = bod_angle;
+	#var reversing = false;
+	#if abs(angleDif) > PI / 2:
+		###print("hi")
+		#reversing = true;
+		#if angleDif < 0:
+			#bod_angleAdjusted -= PI * 2;
+		#if angleDif > 0:
+			#bod_angleAdjusted += PI * 2;
+	##if reversing: treads_angle -= deg_to_;
+	##if reversing: treads_angle -= deg_to_rad(180);
+	#
+	#
+	##var actualAngleDif = rad_to_deg(angle_difference(treads_angle, bod_angle));
+	#var newAngle = lerp_angle(treads.rotation.y, bod_angleAdjusted, treadsRotationSpeed * delta);
+	#var angleDif2 = clamp(bod_angleAdjusted - newAngle, deg_to_rad(-treadsRotationSpeedClamp), deg_to_rad(treadsRotationSpeedClamp));
+	#
+	#if is_inputting_movement():
+		#print(angleDif2)
+		#print("degrees", rad_to_deg(angleDif2))
+	#
+	#treads.rotation.y = treads.rotation.y + angleDif2;
+	#
+	
+	var bodMV = body.linear_velocity.normalized();
+	if bodMV.is_equal_approx(Vector3.ZERO):
+		bodMV = lastLinearVelocity.normalized();
+	var bodMV2 = Vector2(bodMV.x, bodMV.z);
+	var bodMVA = bodMV2.angle();
+	
+	var prevMV = lastInputtedMV.normalized();
+	var prevMVA = prevMV.angle();
+	
+	var inputMV = movementVector;
+	if ! is_inputting_movement():
+		inputMV = prevMV;
+	inputMV.y *= -1;
+	var inputMVA = inputMV.angle() - PI/2;
+	
+	var treadsMVA = treads.rotation.y;
+	var treadsMV = Vector2.from_angle(treadsMVA);
+	
+	if treadsMVA < -PI / 2:
+		if inputMVA > 0:
+			inputMVA -= PI * 2;
+	if treadsMVA > PI / 2:
+		if inputMVA < 0:
+			inputMVA += PI * 2;
+	
+	var angleDif = angle_difference(treadsMVA, inputMVA);
+	
+	if angleDif > PI/2:
+		angleDif -= PI;
+	if angleDif < PI/-2:
+		angleDif += PI;
+	
+	var treadsMVAlerped = lerp_angle(treadsMVA, treadsMVA + angleDif, delta * (treadsRotationSpeed + (get_movement_speed_length() / 5)));
+	treadsMVAlerped = clamp(treadsMVAlerped, treadsMVA - treadsRotationSpeedClamp, treadsMVA + treadsRotationSpeedClamp)
+	
+	var angleDifFromLerp = treadsMVA - treadsMVAlerped;
+	
+	if !is_zero_approx(get_movement_speed_length()):
+		treads.rotation.y = treadsMVAlerped;
+	
+	var angleDif3 = 0;
+	
+	#if is_inputting_movement():
+		#prints(prevMV, inputMV, treadsMV, rad_to_deg(treadsMVA), rad_to_deg(inputMVA), rad_to_deg(angleDif))
+		#prints(rad_to_deg(inputMVA), rad_to_deg(angleDifFromLerp))
+	
+	
+	
+	treads.update_visuals_to_match_rotation( - angleDifFromLerp, get_movement_speed_length());
+
+func update_treads_position():
+	treads.global_position = get_global_body_position();
 
 ##This is empty here, but the Player and Enemy varieties of this should have things for gathering input / getting player location respectively.
 func get_movement_vector(rotatedByCamera : bool = false) -> Vector2:
@@ -624,11 +736,13 @@ func on_add_piece(piece:Piece):
 		if ability is AbilityManager:
 			print("Adding ability ", ability.abilityName)
 			assign_ability_to_next_active_slot(ability);
+	get_all_pieces_regenerate();
 	pass;
 
 func on_remove_piece(piece:Piece):
 	piece.owner = null;
 	remove_abilities_of_piece(piece);
+	get_all_pieces_regenerate();
 	pass;
 
 func remove_abilities_of_piece(piece:Piece):
@@ -638,12 +752,20 @@ func remove_abilities_of_piece(piece:Piece):
 			if ability.get_assigned_piece_or_part() == piece:
 				unassign_ability_slot(abilityKey);
 
+
+var allPieces : Array[Piece]= [];
+func get_all_pieces():
+	if allPieces.is_empty():
+		get_all_pieces_regenerate();
+	return allPieces;
+
 ##Returns a freshly gathered array of all pieces attached to this Robot and which have it set as their host.
-func get_all_pieces() -> Array[Piece]:
+func get_all_pieces_regenerate() -> Array[Piece]:
 	var piecesGathered : Array[Piece] = [];
 	for child in Utils.get_all_children_of_type(body, Piece):
 		if child.hostRobot == self:
 			piecesGathered.append(child);
+	allPieces = piecesGathered;
 	return piecesGathered;
 
 ##Returns a freshly gathered array of all pieces attached to this Robot and whih have it set as their host.
@@ -683,7 +805,7 @@ func check_abilities_are_valid():
 		var ability = active_pieces[slot];
 		if ability is AbilityManager:
 			if !is_instance_valid(ability.assignedPieceOrPart):
-				unassign_ability_slot(ability);
+				unassign_ability_slot(slot);
 
 ##Attempts to fire the active ability in the given slot, if that slot has one.
 func fire_active(slotNum):

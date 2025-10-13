@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="8_6fl3f"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="9_psn5c"]
 [ext_resource type="ArrayMesh" uid="uid://cfvtjsean8sey" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="10_h2y4f"]
-[ext_resource type="ArrayMesh" uid="uid://dddqhdde83f7e" path="res://graphics/models/obj/botparts/SwivelTop.obj" id="11_7o881"]
+[ext_resource type="ArrayMesh" uid="uid://cgto2m6qw8n2d" path="res://graphics/models/obj/botparts/SwivelPointer.obj" id="10_noc8o"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="12_cinit"]
 
 [sub_resource type="Resource" id="Resource_vph73"]
@@ -71,16 +71,16 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("9_psn5c")
 
-[node name="Piece_Pointer Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Pointer Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "meshesHolder", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
 script = ExtResource("1_bn4l8")
 swivelNode = NodePath("SwivelTop")
 force_visibility = true
 pieceName = &"Pointer Swivel"
+meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
-meshesHolder = NodePath("Meshes")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
 Vector2i(2, 1): null,
@@ -162,7 +162,7 @@ mesh = ExtResource("10_h2y4f")
 
 [node name="SwivelTop" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
-mesh = ExtResource("11_7o881")
+mesh = ExtResource("10_noc8o")
 
 [node name="Socket" parent="SwivelTop" node_paths=PackedStringArray("hostPiece") instance=ExtResource("12_cinit")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
