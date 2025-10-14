@@ -366,6 +366,9 @@ var immunities : Dictionary = {
 }
 
 ##TODO: This function regenerates the list of damage type immunities and resistances granted by bonuses.
+func generate_immunities():
+	return immunities;
+
 func get_immunities():
 	return immunities;
 
@@ -496,7 +499,7 @@ func reassign_body_collision():
 	
 	##Then, gather copies of every Hitbox collider from all pieces, and assign a copy of it to the Body.
 	var colliderIDsInUse = [];
-	for piece in get_all_pieces():
+	for piece in get_all_pieces_regenerate():
 		await piece.refresh_and_gather_collision_helpers();
 		for hurtbox in piece.get_all_hurtboxes():
 			if not ((hurtbox.copiedByBody) or (hurtbox.get_collider_id() in colliderIDsInUse) or !is_instance_valid(hurtbox.originalHost)):
@@ -705,6 +708,7 @@ var active_pieces : Dictionary[int, AbilityManager] = {
 
 ##TODO: There needs to be UI for all pieces you have active, as well as pieces generally in your tree.
 
+##Fired by a Piece when it is added to the Robot permanently.
 func on_add_piece(piece:Piece):
 	remove_something_from_stash(piece);
 	reassign_body_collision();
@@ -714,15 +718,16 @@ func on_add_piece(piece:Piece):
 		if ability is AbilityManager:
 			print("Adding ability ", ability.abilityName)
 			assign_ability_to_next_active_slot(ability);
-	get_all_pieces_regenerate();
 	pass;
 
+## Fired by a Piece when it is removed from the Robot.
 func on_remove_piece(piece:Piece):
 	piece.owner = null;
 	remove_abilities_of_piece(piece);
-	get_all_pieces_regenerate();
+	reassign_body_collision();
 	pass;
 
+## Removes all abilities that were supplied by the given Piece.
 func remove_abilities_of_piece(piece:Piece):
 	for abilityKey in active_pieces:
 		var ability = active_pieces[abilityKey];
@@ -730,14 +735,16 @@ func remove_abilities_of_piece(piece:Piece):
 			if ability.get_assigned_piece_or_part() == piece:
 				unassign_ability_slot(abilityKey);
 
-
-var allPieces : Array[Piece]= [];
+## A list of all Pieces attached to this Robot and which have it set as their host.
+var allPieces : Array[Piece]= []; 
+## Returns [member allPieces]. Calls [method get_all_pieces_regenerate()] before returning if [member allPieces] is empty.
 func get_all_pieces() -> Array[Piece]:
 	if allPieces.is_empty():
 		get_all_pieces_regenerate();
 	return allPieces;
 
-##Returns a freshly gathered array of all pieces attached to this Robot and which have it set as their host.
+##Returns a freshly gathered array of all Pieces attached to this Robot and which have it set as their host.[br]
+## Saves it to [member allPieces].
 func get_all_pieces_regenerate() -> Array[Piece]:
 	var piecesGathered : Array[Piece] = [];
 	for child in Utils.get_all_children_of_type(body, Piece):
@@ -746,8 +753,18 @@ func get_all_pieces_regenerate() -> Array[Piece]:
 	allPieces = piecesGathered;
 	return piecesGathered;
 
-##Returns a freshly gathered array of all pieces attached to this Robot and whih have it set as their host.
+## A list of all Parts attached to this Robot within the engines all of its Parts.
+var allParts : Array[Part]=[];
+
+##Returns a freshly gathered array of all Parts placed within the engines of every Piece attached to this Robot.[br]
+## Saves it to [member allParts].
 func get_all_parts() -> Array[Part]:
+	if allParts.is_empty():
+		get_all_parts_regenerate();
+	return allParts;
+
+##Returns a freshly gathered array of all Parts attached to this Robot and whih have it set as their host.
+func get_all_parts_regenerate() -> Array[Part]:
 	var piecesGathered : Array[Part] = [];
 	for piece in get_all_pieces():
 		Utils.append_array_unique(piecesGathered, piece.get_all_parts());
