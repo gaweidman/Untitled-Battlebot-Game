@@ -127,3 +127,7 @@ func set_attacker(atkr):
 	if attacker is Combatant:
 		raycast.clear_exceptions();
 		raycast.add_exception(get_attacker().body);
+	if attacker is Robot:
+		raycast.clear_exceptions();
+		raycast.add_exception(get_attacker().body);
+		raycast.add_exception(get_attacker().hurtboxCollisionHolder)
