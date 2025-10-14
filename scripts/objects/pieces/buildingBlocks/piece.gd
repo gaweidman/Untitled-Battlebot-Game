@@ -6,6 +6,7 @@ class_name Piece
 
 func _ready():
 	hide();
+	assign_references();
 	ability_registry();
 	super(); #Stat registry.
 	gather_colliders_and_meshes();
@@ -23,6 +24,7 @@ func stat_registry():
 		register_stat("PassiveEnergyDraw", energyDrawPassive, statIconEnergy);
 	if energyDrawPassive < 0:
 		register_stat("PassiveEnergyRegeneration", energyDrawPassive, statIconEnergy);
+	register_stat("PassiveCooldown", passiveCooldownTime, statIconCooldown);
 	
 	#Stats that only matter if the thing has abilities.
 	if activeAbilities.size() > 0:
@@ -33,7 +35,12 @@ func stat_registry():
 	register_stat("ScrapCost", scrapCostBase, statIconMagazine, null, null, StatTracker.roundingModes.Ceili);
 	register_stat("ScrapSellModifier", scrapSellModifierBase, statIconMagazine);
 	register_stat("ScrapSalvageModifier", scrapSellModifierBase, statIconMagazine);
-	register_stat("Weight", weightBase, statIconCooldown);
+	register_stat("Weight", weightBase, statIconWeight);
+	
+	#Stats regarding damage.
+	register_stat("Damage", damageBase, statIconDamage);
+	register_stat("Knockback", knockbackBase, statIconWeight);
+	register_stat("Kickback", kickbackBase, statIconWeight);
 
 ##This is here for when things get out of whack and some of the export variables disconnect themselves for no good reason.
 func assign_references():
@@ -42,32 +49,32 @@ func assign_references():
 		if is_instance_valid($"PlacementShapes [Leave empty]"):
 			placementCollisionHolder = $"PlacementShapes [Leave empty]";
 			pass;
-	else:
-		allOK = false;
+		else:
+			allOK = false;
 	if !is_instance_valid(hurtboxCollisionHolder):
 		if is_instance_valid($"HurtboxShapes [Leave empty]"):
 			hurtboxCollisionHolder = $"HurtboxShapes [Leave empty]";
 			pass;
-	else:
-		allOK = false;
+		else:
+			allOK = false;
 	if !is_instance_valid(hitboxCollisionHolder):
 		if is_instance_valid($"HitboxShapes [Leave empty]"):
 			hitboxCollisionHolder = $"HitboxShapes [Leave empty]";
 			pass;
-	else:
-		allOK = false;
+		else:
+			allOK = false;
 	if !is_instance_valid(meshesHolder):
 		if is_instance_valid($"Meshes"):
 			meshesHolder = $"Meshes";
 			pass;
-	else:
-		allOK = false;
+		else:
+			allOK = false;
 	if !is_instance_valid(femaleSocketHolder):
 		if is_instance_valid($"FemaleSockets"):
 			femaleSocketHolder = $"FemaleSockets";
 			pass;
-	else:
-		allOK = false;
+		else:
+			allOK = false;
 	
 	if not allOK:
 		print("References for piece ", name, " were invalid. ")
@@ -236,8 +243,8 @@ func get_buy_price_piece_only(discountMultiplier := 1.0, fixedMarkup := 0):
 @export var maleSocketMesh : Node3D;
 @export_subgroup("Collision")
 @export var placementCollisionHolder : Node3D;
-@export var hurtboxCollisionHolder : Area3D;
-@export var hitboxCollisionHolder : Area3D;
+@export var hurtboxCollisionHolder : HurtboxHolder;
+@export var hitboxCollisionHolder : HitboxHolder;
 #var bodyMeshes : Dictionary[StringName, MeshInstance3D] = {};
 
 ##Frame timer that updates scale of hitboxes every 3 frames.
@@ -283,6 +290,8 @@ func refresh_and_gather_collision_helpers():
 	for child in hitboxCollisionHolder.get_children():
 		child.queue_free();
 	
+	
+	
 	var identifyingNum = 0;
 	for child in get_children():
 		if child is PieceCollisionBox:
@@ -301,20 +310,30 @@ func refresh_and_gather_collision_helpers():
 						shapeCastNew.reparent(placementCollisionHolder, true);
 						shapeCastNew.add_exception(hitboxCollisionHolder);
 						shapeCastNew.add_exception(hurtboxCollisionHolder);
+						
 					##if the PieceCollisionBox is of type HITBOX or HURTBOX then it should copy itself into those.
 					if child.isHurtbox:
 						var dupe = child.make_copy();
 						dupe.disabled = false;
 						hurtboxCollisionHolder.add_child(dupe);
 						dupe.debug_color = Color("0099b36b");
-						#print("COllider ID when copying from ", name, " ", dupe.colliderID)
-						#dupe.global_position = child.global_position;
+						
+						##Disable the other types the copy box isn't.
+						dupe.isPlacementBox = false;
+						dupe.isHurtbox = true;
+						dupe.isHitbox = false;
+						
 					if child.isHitbox:
 						var dupe = child.make_copy();
 						dupe.disabled = false;
 						hitboxCollisionHolder.add_child(dupe);
 						dupe.debug_color = Color("f6007f6b");
-						#dupe.global_position = child.global_position;
+						
+						##Disable the other types the copy box isn't.
+						dupe.isPlacementBox = false;
+						dupe.isHurtbox = false;
+						dupe.isHitbox = true;
+						
 	#print(placementCollisionHolder)
 	pass;
 
@@ -364,28 +383,18 @@ func ping_placement_validation():
 	return true;
 
 func get_all_hitboxes():
-	return hitboxCollisionHolder.get_children();
-
-##TODO: Figure out what this is even useful for. Taking damage? 
-##Figure out how to know the body is a Robot.
-func on_hurtbox_collision(body : CollisionObject3D):
-	##TODO: Add a Hook here.
-	GameState
-	#if body :
-		#hostRobot.on_hitbox_collision(body, self);
-	pass
+	var ret = [];
+	for child in hitboxCollisionHolder.get_children():
+		child.originalHost = self;
+		ret.append(child);
+	return ret;
 
 func get_all_hurtboxes():
-	return hurtboxCollisionHolder.get_children();
-
-func _on_hitbox_shapes_body_entered(body):	
-	if body != self:
-		on_hurtbox_collision(body);
-	pass # Replace with function body.
-
-func _on_hitbox_shapes_area_entered(area):
-	on_hurtbox_collision(area);
-	pass # Replace with function body.
+	var ret = [];
+	for child in hurtboxCollisionHolder.get_children():
+		child.originalHost = self;
+		ret.append(child);
+	return ret;
 
 var hitboxEnabled = false;
 func disable_hurtbox(foo:bool):
@@ -577,11 +586,6 @@ func get_all_pieces() -> Array[Piece]:
 	print("ALL PIECES : ", ret)
 	return ret;
 
-################# MELEE 
-##If the thing is meant to do something upon making contact with another Robot, put what happens in here.
-##Empty at base, and isn't called.
-func contact_damage(robot: Robot) -> void:
-	pass;
 
 ####################### ABILITY AND ENERGY MANAGEMENT
 
@@ -597,19 +601,38 @@ var incomingPower := 0.0;
 var hasIncomingPower := true;
 var transmittingPower := true; ##While false, no power is transmitted from this piece.
 
+##The amount of time needed between uses of this Piece's Passive Ability, after it successfully fires.
+@export var passiveCooldownTime := 0.0;
 ##The amount of time needed between uses of this Piece's Active Abilities.
 @export var activeCooldownTime := 0.5;
 var activeCooldownTimer := 0.0;
-func set_cooldown():
+func set_cooldown_active():
 	set_deferred("activeCooldownTimer", get_stat("ActiveCooldown"));
+var passiveCooldownTimer := 0.0;
 
-func on_cooldown():
+##Never called in base, but to be used for stuff like Bumpers needing a cooldown before they can Bump again.
+func set_cooldown_passive():
+	set_deferred("passiveCooldownTimer", get_stat("PassiveCooldown"));
+
+func on_cooldown_active():
 	return activeCooldownTimer > 0;
+func on_cooldown_passive():
+	return passiveCooldownTimer > 0;
+func on_cooldown():
+	return on_cooldown_active() or on_cooldown_passive();
 
 ##Physics process step for abilities.
 func phys_process_abilities(delta):
+	##Tick down ability cooldowns.
+	if activeCooldownTimer > 0: activeCooldownTimer -= delta;
+	if passiveCooldownTimer > 0: passiveCooldownTimer -= delta;
+	##Un-disable hurtboxes.
 	if hurtboxAlwaysEnabled:
 		disable_hurtbox(false);
+	if on_cooldown() and disableHitboxesWhileOnCooldown:
+		hitboxCollisionHolder.scale = Vector3(0.00001,0.00001,0.00001);
+	else:
+		hitboxCollisionHolder.scale = Vector3.ONE;
 	energyDrawCurrent = 0.0;
 	##Use the passive ability of this guy.
 	use_passive();
@@ -651,24 +674,24 @@ func get_current_energy_draw():
 
 func get_active_energy_cost():
 	##TODO: Bonuses
-	return ( energyDrawActive );
+	return ( get_stat("ActiveEnergyDraw") );
 
 func get_passive_energy_cost():
 	##TODO: Bonuses
-	return ( energyDrawPassive * get_physics_process_delta_time() );
+	return ( get_stat("PassiveEnergyDraw") * get_physics_process_delta_time() );
 
 ##Returns true if the actionSlot has an ability assigned and energy draw post-use would not exceed the incoming energy pool.
 func can_use_active(actionSlot : int): 
 	if get_active_ability(actionSlot) == null:
 		return false;
-	return (not on_cooldown()) and (( get_current_energy_draw() + get_active_energy_cost() ) <= get_incoming_energy());
+	return (not on_cooldown_active()) and (( get_current_energy_draw() + get_active_energy_cost() ) <= get_incoming_energy());
 
 ##Returns true if energyDrawPassive is 0, or if the power draw would not exceed incoming power.
 func can_use_passive():
 	if energyDrawPassive == 0.0:
 		return true;
 	#print( energyDrawPassive, get_current_energy_draw(),  get_passive_energy_cost(), get_incoming_energy())
-	return (energyDrawPassive != 0.0) and (( get_current_energy_draw() + get_passive_energy_cost() ) <= get_incoming_energy());
+	return (not on_cooldown_passive()) and ((energyDrawPassive != 0.0) and (( get_current_energy_draw() + get_passive_energy_cost() ) <= get_incoming_energy()) or energyDrawPassive == 0.0);
 
 func use_passive():
 	if can_use_passive():
@@ -711,7 +734,7 @@ func get_active_ability(actionSlot : int) -> AbilityManager:
 func use_active(actionSlot : int):
 	if can_use_active(actionSlot):
 		energyDrawCurrent += get_active_energy_cost();
-		set_cooldown();
+		set_cooldown_active();
 		var activeAbility = get_active_ability(actionSlot);
 		var call = activeAbility.functionWhenUsed;
 		call.call();
@@ -796,3 +819,119 @@ func get_stash_button_name(showTree := false, prelude := "") -> String:
 		for piece in get_all_pieces():
 			ret += "\n" + prelude + "-" + piece.get_stash_button_name(true, prelude + "-");
 	return ret;
+
+
+
+##########################   DAMAGE STUFF
+
+@export_subgroup("Attack Stuff")
+@export var damageBase := 0.0;
+@export var knockbackBase := 0.0;
+@export var kickbackBase := 0.0;
+@export var damageTypes : Array[DamageData.damageTypes] = [];
+@export var disableHitboxesWhileOnCooldown := true;
+
+var damageModifier := 1.0; ##This variable can be used to modify damage on the fly without needing to go thru set/get stat.
+
+func get_damage() -> float:
+	return get_stat("Damage") * damageModifier;
+
+func get_knockback_force() -> float:
+	return get_stat("Knockback");
+
+func get_impact_direction(positionOfTarget : Vector3, factorBodyVelocity := true) -> Vector3:
+	var factor = (positionOfTarget - global_position).normalized();
+	if factorBodyVelocity:
+		var bodVel = get_host_robot().body.linear_velocity;
+		factor += bodVel;
+	return factor;
+
+## Returns a Vector3 taking into account this Piece's Knockback force stat, as well as this bot's velocity.
+func get_knockback(positionOfTarget : Vector3, factorBodyVelocity := true) -> Vector3:
+	var knockbackVal = get_knockback_force();
+	var knockbackFactor = get_impact_direction(positionOfTarget, factorBodyVelocity);
+	var knockbackVector = knockbackVal * knockbackFactor;
+	return knockbackVector;
+
+func get_kickback_force() -> float:
+	return get_stat("Kickback");
+func get_kickback_direction(positionOfTarget : Vector3, factorBodyVelocity := true) -> Vector3:
+	var factor = (positionOfTarget - global_position).normalized();
+	if factorBodyVelocity:
+		var bodVel = get_host_robot().body.linear_velocity;
+		factor += bodVel;
+	return factor.rotated(Vector3.UP, PI);
+
+func get_damage_types() -> Array[DamageData.damageTypes]:
+	##TODO: Part stuff that adds damage types.
+	return damageTypes;
+
+## Creates a brand new [@DamageData] based on your current stats.
+func get_damage_data(_damageAmount := get_damage(), _knockbackForce := get_knockback_force(), _direction := Vector3(0,0,0), _damageTypes := get_damage_types()):
+	var DD = DamageData.new();
+	return DD.create(_damageAmount, _knockbackForce, _direction, _damageTypes);
+
+## Creates a brand new [@DamageData] based on your current stats.
+func get_kickback_damage_data(_damageAmount := 0.0, _knockbackForce := get_kickback_force(), _direction := Vector3(0,0,0), _damageTypes :Array[DamageData.damageTypes]= []):
+	var DD = DamageData.new();
+	return DD.create(_damageAmount, _knockbackForce, _direction, _damageTypes);
+
+##Fired AFTER a hitbox hits an enemy's hurtbox, via [method _on_hitbox_shape_entered]. Calculates the damage and knockback.
+func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, thisPieceCollider : PieceCollisionBox):
+	if otherPiece != self:
+		##Handle damaging the opposition.
+		var DD = get_damage_data();
+		var KB = get_impact_direction(otherPiece.global_position, true);
+		DD.damageDirection = KB;
+		otherPiece.hurtbox_collision_from_piece(self, DD);
+		
+		##Handle kickback.
+		initiate_kickback(otherPiece.global_position);
+		return true;
+	return false;
+
+func initiate_kickback(awayPos : Vector3):
+	var kb = get_kickback_damage_data();
+	var kick = get_kickback_direction(awayPos, false);
+	kb.damageDirection = kick;
+	hurtbox_collision_from_piece(self, kb)
+
+## Fired when an enemy Piece hitbox hurts this.
+func hurtbox_collision_from_piece(otherPiece : Piece, damageData : DamageData):
+	take_damage_from_damageData(damageData);
+	pass;
+
+## Fired when an enemy Projectile hitbox hurts this.
+func hurtbox_collision_from_projectile(projectile : Bullet, damageData : DamageData):
+	take_damage_from_damageData(damageData);
+	pass;
+
+## Gives DamageData to the player to chew through. Runs [method modify_incoming_damage_data] before actually sending it through.
+func take_damage_from_damageData(damageData : DamageData):
+	if get_host_robot() != null and is_instance_valid(damageData):
+		var resultingDamage = modify_incoming_damage_data(damageData);
+		get_host_robot().take_damage_from_damageData(resultingDamage);
+
+## Extend this function with any modifications you want to do to the incoming DamageData when this Piece gets hit.[br]
+## This is potentially useful for things like a Shield, for example, which might nullify most of the damage from incoming Piercing-tagged attacks.
+func modify_incoming_damage_data(damageData : DamageData) -> DamageData:
+	return damageData;
+
+## Fires when a Hitbox hits another robot.
+func _on_hitbox_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
+	#print("please.")
+	if body is RobotBody and body.get_parent() != get_host_robot():
+		print("tis a robot. from ", pieceName)
+		var other_shape_owner = body.shape_find_owner(body_shape_index)
+		var other_shape_node = body.shape_owner_get_owner(other_shape_owner)
+		if other_shape_node is not PieceCollisionBox: return;
+		
+		var local_shape_owner = hitboxCollisionHolder.shape_find_owner(local_shape_index)
+		var local_shape_node =  hitboxCollisionHolder.shape_owner_get_owner(local_shape_owner)
+		if local_shape_node is not PieceCollisionBox: return;
+		
+		var otherPiece : Piece = other_shape_node.get_piece();
+		print("Other Piece in hitbox collision: ", otherPiece)
+		if ! is_instance_valid(otherPiece): return;
+		contact_damage(otherPiece, other_shape_node, local_shape_node)
+	pass # Replace with function body.

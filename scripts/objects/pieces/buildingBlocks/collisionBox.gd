@@ -24,13 +24,13 @@ func _ready():
 
 func make_copy() -> PieceCollisionBox:
 	if (not isOriginal) and (is_instance_valid(originalBox)): return originalBox.make_copy();
+	copied = true;
+	var newShape = shape.duplicate();
 	var newBox : PieceCollisionBox = duplicate();
-	print(originalHost)
+	newBox.shape = newShape;
+	newBox.originalHost = originalHost;
 	newBox.isOriginal = false;
 	newBox.colliderID = get_collider_id();
-	print(newBox.colliderID)
-	print(isHitbox, isHurtbox, isPlacementBox)
-	copied = true;
 	newBox.originalBox = self;
 	copies.append(newBox);
 	return newBox;
@@ -93,3 +93,6 @@ func get_collider_id():
 	if colliderID == null or colliderID == -1:
 		colliderID = GameState.get_unique_collider_id();
 	return colliderID;
+
+func get_piece() -> Piece:
+	return originalHost;

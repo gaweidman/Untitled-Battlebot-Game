@@ -1,0 +1,253 @@
+[gd_scene load_steps=28 format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/robots/buildingBlocks/robot.gd" id="1_gt8l0"]
+[ext_resource type="Script" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_wr1yw"]
+[ext_resource type="Texture2D" path="res://graphics/images/HUD/statIcons/damageIconStriped.png" id="3_78fxv"]
+[ext_resource type="Texture2D" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="4_u6dlq"]
+[ext_resource type="Texture2D" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="5_45w85"]
+[ext_resource type="Script" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="6_8s501"]
+[ext_resource type="PackedScene" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="7_l2o6j"]
+[ext_resource type="Script" path="res://scripts/GUI/socket.gd" id="8_1gxvl"]
+[ext_resource type="PackedScene" path="res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn" id="9_kpnu0"]
+[ext_resource type="Script" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="10_w8ieq"]
+[ext_resource type="Texture2D" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="11_s08yd"]
+[ext_resource type="PackedScene" path="res://scenes/prefabs/objects/robots/buildingBlocks/treads.tscn" id="12_t1jr4"]
+[ext_resource type="Script" path="res://scripts/objects/player/underbellyColliders.gd" id="13_mh5vv"]
+
+[sub_resource type="Resource" id="Resource_6trft"]
+resource_name = "HealthMax"
+script = ExtResource("2_wr1yw")
+statName = "HealthMax"
+statIcon = ExtResource("3_78fxv")
+baseStat = 3.0
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_8p3r0"]
+resource_name = "Health"
+script = ExtResource("2_wr1yw")
+statName = "Health"
+statIcon = ExtResource("3_78fxv")
+baseStat = 3.0
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_1otlk"]
+resource_name = "EnergyMax"
+script = ExtResource("2_wr1yw")
+statName = "EnergyMax"
+statIcon = ExtResource("3_78fxv")
+baseStat = 3.0
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_pm1hx"]
+resource_name = "Energy"
+script = ExtResource("2_wr1yw")
+statName = "Energy"
+statIcon = ExtResource("4_u6dlq")
+baseStat = 3.0
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_4nahd"]
+resource_name = "EnergyRefreshRate"
+script = ExtResource("2_wr1yw")
+statName = "EnergyRefreshRate"
+statIcon = ExtResource("4_u6dlq")
+baseStat = 1.65
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_6talv"]
+resource_name = "InvincibilityTime"
+script = ExtResource("2_wr1yw")
+statName = "InvincibilityTime"
+statIcon = ExtResource("5_45w85")
+baseStat = 0.25
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_3e5nf"]
+resource_name = "MovementSpeedAcceleration"
+script = ExtResource("2_wr1yw")
+statName = "MovementSpeedAcceleration"
+statIcon = ExtResource("5_45w85")
+baseStat = 6000.0
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_xqn2d"]
+resource_name = "MovementSpeedMax"
+script = ExtResource("2_wr1yw")
+statName = "MovementSpeedMax"
+statIcon = ExtResource("5_45w85")
+baseStat = 20.0
+roundingMode = 0
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
+friction = 200.0
+bounce = 0.3
+
+[sub_resource type="Resource" id="Resource_ylcud"]
+resource_name = "ScrapCost"
+script = ExtResource("2_wr1yw")
+statName = "ScrapCost"
+statIcon = ExtResource("11_s08yd")
+baseStat = 0.0
+roundingMode = 6
+
+[sub_resource type="Resource" id="Resource_jpn0q"]
+resource_name = "ScrapSellModifier"
+script = ExtResource("2_wr1yw")
+statName = "ScrapSellModifier"
+statIcon = ExtResource("11_s08yd")
+baseStat = 0.666667
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_e1hot"]
+resource_name = "ScrapSalvageModifier"
+script = ExtResource("2_wr1yw")
+statName = "ScrapSalvageModifier"
+statIcon = ExtResource("11_s08yd")
+baseStat = 0.666667
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_etipa"]
+resource_name = "Weight"
+script = ExtResource("2_wr1yw")
+statName = "Weight"
+statIcon = ExtResource("5_45w85")
+baseStat = 1.0
+roundingMode = 0
+
+[sub_resource type="Resource" id="Resource_x18ex"]
+resource_name = "RotationSpeed"
+script = ExtResource("2_wr1yw")
+statName = "RotationSpeed"
+statIcon = ExtResource("5_45w85")
+baseStat = 1.0
+roundingMode = 0
+
+[node name="Robot_Base" type="Node3D" node_paths=PackedStringArray("meshes", "bodyPiece", "bodySocket", "treads", "body")]
+visible = false
+script = ExtResource("1_gt8l0")
+meshes = NodePath("Body/Meshes")
+bodyPiece = NodePath("Body/Meshes/Socket/Piece_BodyCube")
+bodySocket = NodePath("Body/Meshes/Socket")
+treads = NodePath("Treads")
+startupGenerator = {
+&"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn": {
+"sockets": {
+0: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_bumper.tscn": {
+"sockets": {}
+}
+},
+"rotation": 0.0
+},
+1: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_bumper.tscn": {
+"sockets": {}
+}
+},
+"rotation": 3.14159
+},
+2: {
+"occupant": "null",
+"rotation": -2.25163
+},
+3: {
+"occupant": "null",
+"rotation": -2.25158
+},
+4: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_sawblade.tscn": {
+"sockets": {
+0: {
+"occupant": "null",
+"rotation": 0.0
+}
+}
+}
+},
+"rotation": 0.0
+}
+}
+}
+},
+&"rotation": 0.0
+}
+statCollection = Array[ExtResource("2_wr1yw")]([SubResource("Resource_6trft"), SubResource("Resource_8p3r0"), SubResource("Resource_1otlk"), SubResource("Resource_pm1hx"), SubResource("Resource_4nahd"), SubResource("Resource_6talv"), SubResource("Resource_3e5nf"), SubResource("Resource_xqn2d")])
+filepathForThisEntity = "res://scenes/prefabs/objects/robots/robot_test.tscn"
+body = NodePath("Body")
+
+[node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Driveable", "Metal"]]
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 100.0
+physics_material_override = SubResource("PhysicsMaterial_f0k1s")
+gravity_scale = 0.0
+freeze = true
+script = ExtResource("6_8s501")
+
+[node name="Meshes" type="Node3D" parent="Body"]
+transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
+
+[node name="Socket" type="Area3D" parent="Body/Meshes" node_paths=PackedStringArray("occupant", "hostRobot") instance=ExtResource("7_l2o6j")]
+transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("8_1gxvl")
+occupant = NodePath("Piece_BodyCube")
+hostRobot = NodePath("../../..")
+
+[node name="Piece_BodyCube" type="Node3D" parent="Body/Meshes/Socket" node_paths=PackedStringArray("swivelNode", "meshesHolder", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "hostRobot", "femaleSocketHolder", "hostSocket") groups=["Piece"] instance=ExtResource("9_kpnu0")]
+script = ExtResource("10_w8ieq")
+swivelNode = NodePath("Meshes/SwivelTop")
+force_visibility = true
+pieceName = &"BodyCube"
+removable = false
+meshesHolder = NodePath("Meshes")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
+hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
+hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+hostRobot = NodePath("../../../..")
+femaleSocketHolder = NodePath("FemaleSockets")
+hostSocket = NodePath("..")
+assignedToSocket = true
+engineSlots = {
+Vector2i(0, 1): null,
+Vector2i(0, 2): null,
+Vector2i(0, 3): null,
+Vector2i(1, 0): null,
+Vector2i(1, 1): null,
+Vector2i(1, 2): null,
+Vector2i(1, 3): null,
+Vector2i(1, 4): null,
+Vector2i(2, 0): null,
+Vector2i(2, 1): null,
+Vector2i(2, 2): null,
+Vector2i(2, 3): null,
+Vector2i(2, 4): null,
+Vector2i(3, 0): null,
+Vector2i(3, 1): null,
+Vector2i(3, 2): null,
+Vector2i(3, 3): null,
+Vector2i(3, 4): null,
+Vector2i(4, 1): null,
+Vector2i(4, 2): null,
+Vector2i(4, 3): null
+}
+statCollection = Array[ExtResource("2_wr1yw")]([SubResource("Resource_ylcud"), SubResource("Resource_jpn0q"), SubResource("Resource_e1hot"), SubResource("Resource_etipa"), SubResource("Resource_x18ex")])
+filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn"
+
+[node name="Treads" type="Node3D" parent="." node_paths=PackedStringArray("underbellyCollider", "rightTread", "leftTread", "mesh_leftTread", "mesh_rightTread", "pivot_left", "pivot_right") instance=ExtResource("12_t1jr4")]
+script = ExtResource("13_mh5vv")
+underbellyCollider = NodePath("Axle/FloorCheck")
+rightTread = NodePath("RightTreadPivot/TreadRight/TreadR")
+leftTread = NodePath("LeftTreadPivot/TreadLeft/TreadL")
+mesh_leftTread = NodePath("LeftTreadPivot/TreadLeft")
+mesh_rightTread = NodePath("RightTreadPivot/TreadRight")
+pivot_left = NodePath("LeftTreadPivot")
+pivot_right = NodePath("RightTreadPivot")
+
+[connection signal="health_or_energy_changed" from="." to="." method="_on_health_or_energy_changed"]

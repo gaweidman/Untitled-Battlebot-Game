@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cgavbpvet6s7r"]
+
+[ext_resource type="FontFile" uid="uid://dwqyohj6icqan" path="res://graphics/font/Oxanium/static/Oxanium-SemiBold.ttf" id="1_7o8qm"]
+[ext_resource type="Script" uid="uid://ch7f36wvxcysj" path="res://scripts/objects/flyaway.gd" id="1_tnycq"]
+
+[node name="Flyaway" type="Label3D"]
+billboard = 1
+fixed_size = true
+text = "Flyaway"
+font = ExtResource("1_7o8qm")
+font_size = 8
+outline_size = 2
+script = ExtResource("1_tnycq")

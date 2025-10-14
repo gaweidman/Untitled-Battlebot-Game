@@ -25,6 +25,7 @@ AI="*res://scripts/libraries/ai.gd"
 RaycastSystem="*res://scripts/libraries/raycast_system.gd"
 TextFunc="*res://scripts/libraries/text_func.gd"
 Utils="*res://scripts/libraries/utils.gd"
+SpawnerUtils="*res://scripts/libraries/spawner_utils.gd"
 
 [debug]
 

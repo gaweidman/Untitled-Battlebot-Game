@@ -10,7 +10,7 @@ var paused := true;
 
 func _process(delta):
 	
-	text = format_time(time);
+	text = TextFunc.format_time(time);
 	
 	if GameState.get_in_state_of_play():
 		if not visible:
@@ -58,6 +58,7 @@ func blink():
 		var particlePos := Vector3(randf_range(0.5,-0.5),randf_range(0.5,-0.5),randf_range(0.5,-0.5));
 		particlePos += player.body.global_position;
 		ParticleFX.play("SmokePuffSingleDark", GameState.get_game_board(), particlePos);
+		TextFunc.flyaway(text, particlePos, "inaffordable")
 
 func add_time(_time:float):
 	time += _time;
@@ -71,28 +72,6 @@ func start(_startTime := 120.0, _reset := false):
 		time = 0.0;
 	add_time(_startTime);
 	pause(false);
-
-func format_time(_time:float):
-	var minutes = 0;
-	var seconds = floori(_time)
-	while seconds > 60:
-		seconds -= 60;
-		minutes += 1;
-	minutes = min(99,minutes);
-	seconds = min(60,max(0,seconds));
-	var minuteString = "00"
-	if minutes < 10 && minutes > 0:
-		minuteString = "0" + str(minutes)
-	elif minutes >= 10:
-		minuteString = str(minutes)
-	
-	var secondString = "00"
-	if seconds < 10 && seconds > 0:
-		secondString = "0" + str(seconds)
-	elif seconds >= 10:
-		secondString = str(seconds)
-	
-	return minuteString + ":" + secondString;
 
 func get_time() -> float:
 	return time;

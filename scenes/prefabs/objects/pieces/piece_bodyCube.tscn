@@ -1,10 +1,11 @@
-[gd_scene load_steps=23 format=3 uid="uid://88se3nfd8vrt"]
+[gd_scene load_steps=24 format=3 uid="uid://88se3nfd8vrt"]
 
 [ext_resource type="Script" uid="uid://lqnydwh6c74e" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="1_gm1wa"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_kcjt4"]
 [ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_xcdtu"]
 [ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_dbydh"]
 [ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_1i375"]
+[ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="6_xcdtu"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_fvnuu"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="8_x8ege"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="10_ese3e"]
@@ -65,7 +66,7 @@ size = Vector3(0.5, 0.5, 0.5)
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gm1wa"]
 radius = 0.75
 
-[node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("swivelNode", "meshesHolder", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("swivelNode", "meshesHolder", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_gm1wa")
 swivelNode = NodePath("Meshes/SwivelTop")
 force_visibility = true
@@ -73,7 +74,6 @@ pieceName = &"BodyCube"
 removable = false
 meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
-hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
@@ -125,6 +125,7 @@ hostPiece = NodePath("../..")
 editor_description = "Leave this node empty. "
 collision_layer = 16
 collision_mask = 8
+script = ExtResource("6_xcdtu")
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Holds all generated boxes meant for detecting incoming damage and bonks. Leave this node empty. "
@@ -211,7 +212,4 @@ shape = SubResource("CapsuleShape3D_gm1wa")
 identifier = &"Capsule"
 isPlacementBox = false
 
-[connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
-[connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]
-[connection signal="area_entered" from="HurtboxShapes [Leave empty]" to="." method="_on_hurtbox_shapes_area_entered"]
-[connection signal="body_entered" from="HurtboxShapes [Leave empty]" to="." method="_on_hurtbox_shapes_body_entered"]
+[connection signal="body_shape_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_body_shape_entered"]

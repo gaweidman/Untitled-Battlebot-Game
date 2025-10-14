@@ -10,6 +10,7 @@ var statIconCooldown = preload("res://graphics/images/HUD/statIcons/cooldownIcon
 var statIconMagazine = preload("res://graphics/images/HUD/statIcons/magazineIconStriped.png");
 var statIconEnergy = preload("res://graphics/images/HUD/statIcons/energyIconStriped.png");
 var statIconDamage = preload("res://graphics/images/HUD/statIcons/damageIconStriped.png");
+var statIconWeight = preload("res://graphics/images/HUD/statIcons/weightIconStriped.png");
 
 @export var filepathForThisEntity : String;
 
@@ -29,7 +30,7 @@ func get_stat(statName : StringName, roundModeOverride := StatTracker.roundingMo
 			return stat.get_stat(roundModeOverride);
 		else:
 			return stat.get_stat();
-	return null;
+	return 0.0;
 	pass;
 
 func get_stat_resource(statName : StringName):

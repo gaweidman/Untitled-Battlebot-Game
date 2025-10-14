@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dpsg34ncf6c1y"]
+[gd_scene load_steps=22 format=3 uid="uid://dpsg34ncf6c1y"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_jca88"]
 [ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_8se50"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="5_0ojr0"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_uuld8"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="6_r26v0"]
+[ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="6_uuld8"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="7_3vnpp"]
 [ext_resource type="ArrayMesh" uid="uid://bxol2x25bhxpg" path="res://graphics/models/obj/botparts/cannon.res" id="10_fcxei"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="11_tsg7n"]
@@ -61,7 +62,7 @@ size = Vector3(1, 0.5, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_shgbd"]
 size = Vector3(0.5, 0.5, 1.5)
 
-[node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("meshesHolder", "maleSocketMesh", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("meshesHolder", "maleSocketMesh", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
 script = ExtResource("1_jca88")
 force_visibility = true
@@ -70,7 +71,6 @@ pieceDescription = "Shooty blam blam."
 meshesHolder = NodePath("Meshes")
 maleSocketMesh = NodePath("Meshes/MaleSocket")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
-hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
@@ -94,7 +94,7 @@ hostPiece = NodePath("../..")
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
 collision_layer = 16
-collision_mask = 8
+script = ExtResource("6_uuld8")
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
@@ -166,7 +166,4 @@ shape = SubResource("BoxShape3D_shgbd")
 debug_color = Color(0, 0.6, 0.701961, 0.419608)
 identifier = &"Cannon"
 
-[connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
-[connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]
-[connection signal="area_entered" from="HurtboxShapes [Leave empty]" to="." method="_on_hurtbox_shapes_area_entered"]
-[connection signal="body_entered" from="HurtboxShapes [Leave empty]" to="." method="_on_hurtbox_shapes_body_entered"]
+[connection signal="body_shape_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_body_shape_entered"]

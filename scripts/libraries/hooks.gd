@@ -97,11 +97,13 @@ func OnChangeGameState(oldState: GameBoard.gameState, newState: GameBoard.gameSt
 	for hookFunc in getValidHooks("OnChangeGameState"):
 		hookFunc.call(oldState, newState);
 
-## Use to add a hook.
-## To use, we go to any file and call
+## Use to add a hook.[br]
+## To use, we go to any file and call[br]
+##[codeblock]
 ## Hooks.add("OnActiveUse", "OurImplementation", func (part: ActivePart):
 ## 	 print("We used an active item!")
 ## )
+##[/codeblock]
 func add(nodeRef:Node, hookName: String, instanceName: String, hookFunc: Callable):
 	list[hookName][instanceName] = {"func":hookFunc, "source":nodeRef};
 	#list[hookName][instanceName] = null;

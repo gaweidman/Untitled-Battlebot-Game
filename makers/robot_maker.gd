@@ -270,7 +270,7 @@ func _on_piece_stash_part_button_clicked(tiedPart):
 var filepathPrefix = "res://scenes/prefabs/objects/robots/";
 
 
-##Actually saves the stuff. Saves the scene as a Piece; deletes all Collision copies, hides it, saves it, then regenerates collision and shows it again.
+##Actually saves the stuff. Saves the scene as a Robot; deletes all Collision copies, hides it, saves it, then regenerates collision and shows it again.
 func _on_save_changes_as_pressed():
 	var savedPath = filepathPrefix + save_txt_newPath.text + ".tscn"
 	
@@ -294,7 +294,7 @@ func _on_save_changes_as_pressed():
 		ResourceSaver.save(saveNode, savedPath);
 		#
 		#
-		#bot.show();
+		bot.show();
 		
 		bot.reassign_body_collision();
 		#pieceBeingInspected.show();

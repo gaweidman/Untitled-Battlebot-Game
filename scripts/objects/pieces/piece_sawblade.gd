@@ -1,4 +1,4 @@
-extends Piece_Weapon
+extends Piece
 
 class_name Piece_Sawblade
 
@@ -12,7 +12,6 @@ var snd : SND;
 
 @export var blade : MeshInstance3D;
 
-
 func stat_registry():
 	super();
 
@@ -22,7 +21,7 @@ func add_rotation(deg):
 		deg -= 360;
 
 func ability_registry():
-	register_active_ability("Deflect", "Spin the sawblade with extreme speed, causing it to deflect projectiles and deal extra damage.", func (): pass)
+	register_active_ability("Deflect", "Spin the sawblade with extreme speed, causing it to deflect projectiles and deal extra damage.", func (): deflect())
 
 func phys_process_abilities(delta):
 	super(delta);
@@ -39,11 +38,12 @@ func process_draw(delta):
 	super(delta);
 	blade.rotation.y = deg_to_rad(rotationDeg);
 
-func contact_damage(robot : Robot):
+func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, thisPieceCollider : PieceCollisionBox):
 	if can_use_passive():
-		robot.take_damage(get_damage());
-		robot.take_knockback(get_knockback(robot.position));
+		if super(otherPiece, otherPieceCollider, thisPieceCollider):
+			set_cooldown_passive();
 	pass;
 
 func deflect():
+	rotationSpeed += 100;
 	pass;

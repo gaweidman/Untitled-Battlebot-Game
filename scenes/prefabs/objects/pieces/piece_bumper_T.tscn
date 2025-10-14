@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bmmagsxjkf6hx"]
+[gd_scene load_steps=27 format=3 uid="uid://bmmagsxjkf6hx"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_lmodm"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_8x5gi"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="3_vga6k"]
 [ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_05rox"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="8_lmodm"]
+[ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="8_pmqmd"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="8_u5m20"]
 
 [sub_resource type="Resource" id="Resource_xxf1u"]
@@ -84,14 +85,13 @@ size = Vector3(1.5, 0.5, 0.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_pmqmd"]
 size = Vector3(1.75, 0.625, 1.25)
 
-[node name="Piece_T-Junction" type="Node3D" node_paths=PackedStringArray("placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_T-Junction" type="Node3D" node_paths=PackedStringArray("meshesHolder", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_lmodm")
 force_visibility = true
 pieceName = &"T-Junction"
-placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
-hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
-hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 meshesHolder = NodePath("Meshes")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
+hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 hurtboxAlwaysEnabled = true
 engineSlots = {
@@ -163,6 +163,7 @@ hostPiece = NodePath("../..")
 
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
+script = ExtResource("8_pmqmd")
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
@@ -241,7 +242,4 @@ isPlacementBox = false
 isHurtbox = false
 isHitbox = true
 
-[connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
-[connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]
-[connection signal="area_entered" from="HurtboxShapes [Leave empty]" to="." method="_on_hurtbox_shapes_area_entered"]
-[connection signal="body_entered" from="HurtboxShapes [Leave empty]" to="." method="_on_hurtbox_shapes_body_entered"]
+[connection signal="body_shape_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_body_shape_entered"]

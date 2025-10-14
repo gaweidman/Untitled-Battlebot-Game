@@ -62,7 +62,7 @@ func grab_references():
 	if not is_instance_valid(bodyPiece):
 		bodyPiece = $Body/Meshes/Socket/Piece_BodyCube;
 	if not is_instance_valid(treads):
-		treads = $Body/Treads;
+		treads = $Treads;
 
 func stat_registry():
 	super();
@@ -97,6 +97,7 @@ func stat_registry():
 
 func prepare_to_save():
 	print("SAVE: prep function")
+	hide();
 	reset_collision_helpers();
 	create_startup_generator();
 
@@ -360,16 +361,39 @@ func get_max_health():
 	##TODO: Add bonuses into this calc.
 	return get_stat("HealthMax");
 
+var immunities : Dictionary = {
+	"general" : 1.0
+}
+
+##TODO: This function regenerates the list of damage type immunities and resistances granted by bonuses.
+func get_immunities():
+	return immunities;
+
+##This function multiplies damage based on any damage type damage-taken modifiers.
+func modify_damage_based_on_immunities(damageData : DamageData):
+	var dmg = damageData.get_damage();
+	for type in damageData.tags:
+		if type in immunities:
+			dmg *= immunities[type];
+	dmg *= immunities["general"];
+	return dmg;
+
+func take_damage_from_damageData(damageData : DamageData):
+	take_damage(modify_damage_based_on_immunities(damageData));
+	take_knockback(damageData.get_knockback());
+	##TODO: Readd Hooks functionality.
+
 func take_damage(damage:float):
 	print("ASASASSA")
-	if is_playing():
+	if is_playing() && damage != 0.0:
 		print(damage," damage being taken.")
 		var health = get_health();
-		#if invincible && damage > 0:
-			#return;
-		#if !(GameState.get_setting("godMode") == true && self is Robot_Player):
-			#health -= damage;
-		health -= damage;
+		TextFunc.flyaway(damage, get_global_body_position() + Vector3(0,20,0), "unaffordable")
+		if invincible && damage > 0:
+			return;
+		if !(GameState.get_setting("godMode") == true && self is Robot_Player):
+			health -= damage;
+		#health -= damage;
 		set_invincibility();
 		if health <= 0.0:
 			health = 0.0;
@@ -394,6 +418,7 @@ func set_invincibility(amountOverride : float = maxInvincibleTimer):
 	invincibleTimer = max(invincibleTimer, amountOverride);
 
 func take_knockback(inDir:Vector3):
+	##TODO: Weight calculation.
 	body.call_deferred("apply_impulse", inDir);
 	pass
 
@@ -402,6 +427,9 @@ func phys_process_combat(delta):
 	if not is_frozen():
 		if invincibleTimer > 0:
 			invincibleTimer -= delta;
+			invincible = true;
+		else:
+			invincible = false;
 
 ################################## ENERGY
 
@@ -460,9 +488,7 @@ func on_hitbox_collision(body : PhysicsBody3D, pieceHit : Piece):
 	pass;
 
 ##Gives the Body new collision based on its Parts.
-##Currently commented out because of rotation shenanigans. Maybe take another look at this later.
 func reassign_body_collision():
-	#return;
 	##First, clear the Body of all collision shapes.
 	for child in body.get_children(false):
 		if child is PieceCollisionBox:
@@ -471,10 +497,9 @@ func reassign_body_collision():
 	##Then, gather copies of every Hitbox collider from all pieces, and assign a copy of it to the Body.
 	var colliderIDsInUse = [];
 	for piece in get_all_pieces():
-		piece.refresh_and_gather_collision_helpers();
+		await piece.refresh_and_gather_collision_helpers();
 		for hurtbox in piece.get_all_hurtboxes():
-			print("Hurtbox Collider ID ", hurtbox.get_collider_id(), " ",hurtbox.name," ",hurtbox.originalHost)
-			if not ((hurtbox.copiedByBody) or (hurtbox.get_collider_id() in colliderIDsInUse)):
+			if not ((hurtbox.copiedByBody) or (hurtbox.get_collider_id() in colliderIDsInUse) or !is_instance_valid(hurtbox.originalHost)):
 				colliderIDsInUse.append(hurtbox.colliderID);
 				var newHurtbox = hurtbox.make_copy();
 				newHurtbox.debug_color = Color("af7fff6b");
@@ -491,12 +516,15 @@ func reassign_body_collision():
 @export var maxSpeed: float = 20.0;
 var movementVector := Vector2.ZERO;
 var movementVectorRotation := 0.0;
+var lastInputtedMV = Vector2.ZERO;
 var bodyRotationAngle = Vector2.ZERO;
 @export var bodyRotationSpeedBase := 0.80;
 @export var bodyRotationSpeedMaxBase := 40.0;
 var bodyRotationSpeed := bodyRotationSpeedBase;
 @export var speedReductionWhileNoInput := 0.9; ##Slipperiness, basically.
-var lastInputtedMV = Vector2.ZERO;
+var lastLinearVelocity : Vector3 = Vector3(0,0,0);
+@export var treadsRotationSpeed : float = 6.0;
+@export var treadsRotationSpeedClamp : float = 1.0;
 
 ##Physics process step to adjust collision box positions according to the parts they're attached to.
 func phys_process_collision(delta):
@@ -530,7 +558,8 @@ func phys_process_motion(delta):
 		#print("MV",movementVector);
 		move_and_rotate_towards_movement_vector(delta);
 		update_treads_rotation(delta);
-	update_treads_position();
+	if is_instance_valid(treads):
+		update_treads_position();
 	pass;
 
 func move_and_rotate_towards_movement_vector(delta : float):
@@ -576,67 +605,22 @@ func move_and_rotate_towards_movement_vector(delta : float):
 	
 	clamp_speed();
 
-var lastLinearVelocity : Vector3 = Vector3.ZERO;
-@export var treadsRotationSpeed : float = 6.0;
-@export var treadsRotationSpeedClamp : float = 1.0;
-var reversing := false;
+
 func update_treads_rotation(delta : float):
 	## Rotate the treads to look towards the movement vector.
-	#var vel3 = body.linear_velocity
-	#if vel3.is_equal_approx(Vector3.ZERO):
-		#vel3 = lastLinearVelocity;
-		#return;
-	#else:
-		#lastLinearVelocity = vel3;
-	#var bod_vel2 = lastInputtedMV;
-	##print(bod_vel2);
-	#var bod_angle = bod_vel2.angle(); 
-	#
-	#var treads_angle = movementVectorRotation;
-	#
-	###Fix looping around the 180/-180 mark.
-	#if treads_angle < PI / -2:
-		#if bod_angle > 0:
-			#bod_angle += - PI;
-	#if treads_angle > PI / 2:
-		#if bod_angle < 0:
-			#bod_angle += PI;
-	#
-	#var angleDif = angle_difference(bod_angle, treads_angle);
-	#
-	###Adjust the body angle so it reads as being reversed when the target rotation would be more than 90 degrees.
-	###Effectively, this makes the treads go in reverse instead of forward, when the angle is too steep.
-	#var bod_angleAdjusted = bod_angle;
-	#var reversing = false;
-	#if abs(angleDif) > PI / 2:
-		###print("hi")
-		#reversing = true;
-		#if angleDif < 0:
-			#bod_angleAdjusted -= PI * 2;
-		#if angleDif > 0:
-			#bod_angleAdjusted += PI * 2;
-	##if reversing: treads_angle -= deg_to_;
-	##if reversing: treads_angle -= deg_to_rad(180);
-	#
-	#
-	##var actualAngleDif = rad_to_deg(angle_difference(treads_angle, bod_angle));
-	#var newAngle = lerp_angle(treads.rotation.y, bod_angleAdjusted, treadsRotationSpeed * delta);
-	#var angleDif2 = clamp(bod_angleAdjusted - newAngle, deg_to_rad(-treadsRotationSpeedClamp), deg_to_rad(treadsRotationSpeedClamp));
-	#
-	#if is_inputting_movement():
-		#print(angleDif2)
-		#print("degrees", rad_to_deg(angleDif2))
-	#
-	#treads.rotation.y = treads.rotation.y + angleDif2;
-	#
-	
 	var bodMV = body.linear_velocity.normalized();
 	if bodMV.is_equal_approx(Vector3.ZERO):
-		bodMV = lastLinearVelocity.normalized();
+		if lastLinearVelocity.is_equal_approx(Vector3.ZERO):
+			bodMV = Vector3(0,0,1).normalized();
+		else:
+			bodMV = lastLinearVelocity.normalized();
 	var bodMV2 = Vector2(bodMV.x, bodMV.z);
+	
 	var bodMVA = bodMV2.angle();
 	
 	var prevMV = lastInputtedMV.normalized();
+	if lastInputtedMV.is_equal_approx(Vector2.ZERO):
+		prevMV = Vector2(0,1);
 	var prevMVA = prevMV.angle();
 	
 	var inputMV = movementVector;
@@ -671,12 +655,6 @@ func update_treads_rotation(delta : float):
 		treads.rotation.y = treadsMVAlerped;
 	
 	var angleDif3 = 0;
-	
-	#if is_inputting_movement():
-		#prints(prevMV, inputMV, treadsMV, rad_to_deg(treadsMVA), rad_to_deg(inputMVA), rad_to_deg(angleDif))
-		#prints(rad_to_deg(inputMVA), rad_to_deg(angleDifFromLerp))
-	
-	
 	
 	treads.update_visuals_to_match_rotation( - angleDifFromLerp, get_movement_speed_length());
 
@@ -754,7 +732,7 @@ func remove_abilities_of_piece(piece:Piece):
 
 
 var allPieces : Array[Piece]= [];
-func get_all_pieces():
+func get_all_pieces() -> Array[Piece]:
 	if allPieces.is_empty():
 		get_all_pieces_regenerate();
 	return allPieces;

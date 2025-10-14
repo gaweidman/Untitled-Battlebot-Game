@@ -1,18 +1,17 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=23 format=3 uid="uid://bfklqklhxtb2w"]
 
-[ext_resource type="Script" path="res://scripts/objects/pieces/piece_swivel.gd" id="1_3tbmm"]
-[ext_resource type="Script" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_byqnp"]
-[ext_resource type="ArrayMesh" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="2_f1afw"]
-[ext_resource type="Texture2D" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_5hk1p"]
-[ext_resource type="ArrayMesh" path="res://graphics/models/obj/botparts/SwivelTop.obj" id="3_yjtb5"]
-[ext_resource type="PackedScene" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="4_1a8uf"]
-[ext_resource type="Texture2D" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_686vw"]
-[ext_resource type="Script" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_qbujc"]
-[ext_resource type="PackedScene" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="6_p5af1"]
-[ext_resource type="Script" path="res://scripts/objects/pieces/buildingBlocks/collisionBox.gd" id="7_1jsoy"]
-[ext_resource type="Texture2D" path="res://graphics/images/models/sockets/socketM.png" id="8_0x5a8"]
-[ext_resource type="Texture2D" path="res://graphics/images/models/sockets/prong.png" id="9_bk6my"]
-[ext_resource type="Script" path="res://scripts/GUI/socket.gd" id="13_qbujc"]
+[ext_resource type="Script" uid="uid://bxkvldgxyfk6p" path="res://scripts/objects/pieces/piece_swivel.gd" id="1_3tbmm"]
+[ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_byqnp"]
+[ext_resource type="ArrayMesh" uid="uid://cfvtjsean8sey" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="2_f1afw"]
+[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_5hk1p"]
+[ext_resource type="ArrayMesh" uid="uid://dddqhdde83f7e" path="res://graphics/models/obj/botparts/SwivelTop.obj" id="3_yjtb5"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="4_1a8uf"]
+[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_686vw"]
+[ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="5_bso77"]
+[ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_qbujc"]
+[ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="6_p5af1"]
+[ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="8_0x5a8"]
+[ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="9_bk6my"]
 
 [sub_resource type="Resource" id="Resource_p5af1"]
 resource_name = "ScrapCost"
@@ -73,16 +72,15 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("9_bk6my")
 
-[node name="Piece_Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "meshesHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "meshesHolder", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
 script = ExtResource("1_3tbmm")
 swivelNode = NodePath("SwivelTop")
 force_visibility = true
 pieceName = &"Swivel"
-placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
-hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
-hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 meshesHolder = NodePath("Meshes")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
+hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
 Vector2i(2, 1): null,
@@ -98,6 +96,7 @@ editor_description = "Put all female sockets in this box. Make sure they align w
 editor_description = "Leave this node empty. "
 collision_layer = 16
 collision_mask = 8
+script = ExtResource("5_bso77")
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
@@ -107,14 +106,10 @@ script = ExtResource("5_qbujc")
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
 
-[node name="PieceCollisionBox" type="CollisionShape3D" parent="." instance=ExtResource("6_p5af1")]
-editor_description = "A handy dandy box for all your collision needs.
-Edit 'thisColliderType' to have it be copied in as a Hitbox, Hurtbox, Placement check, or a mixture of them."
+[node name="PieceCollisionBox" parent="." instance=ExtResource("6_p5af1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("BoxShape3D_l000f")
-disabled = true
 debug_color = Color(0, 0.6, 0.701961, 0.419608)
-script = ExtResource("7_1jsoy")
 
 [node name="Meshes" type="Node3D" parent="."]
 editor_description = "Put any and all mesh instances in here."
@@ -170,14 +165,8 @@ mesh = ExtResource("2_f1afw")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 mesh = ExtResource("3_yjtb5")
 
-[node name="Socket" type="Area3D" parent="SwivelTop" node_paths=PackedStringArray("hostPiece") instance=ExtResource("4_1a8uf")]
+[node name="Socket" parent="SwivelTop" node_paths=PackedStringArray("hostPiece") instance=ExtResource("4_1a8uf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
-collision_layer = 32
-collision_mask = 0
-script = ExtResource("13_qbujc")
 hostPiece = NodePath("../..")
 
-[connection signal="area_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_area_entered"]
-[connection signal="body_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_shapes_body_entered"]
-[connection signal="area_entered" from="HurtboxShapes [Leave empty]" to="." method="_on_hurtbox_shapes_area_entered"]
-[connection signal="body_entered" from="HurtboxShapes [Leave empty]" to="." method="_on_hurtbox_shapes_body_entered"]
+[connection signal="body_shape_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_body_shape_entered"]

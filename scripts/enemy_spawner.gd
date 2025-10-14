@@ -2,7 +2,7 @@ extends Node3D
 
 class_name RobotSpawner
 
-var enemyTypeToSpawn := preload("res://scenes/prefabs/objects/robots/buildingBlocks/robot_base.tscn");
+var enemyTypeToSpawn := preload("res://scenes/prefabs/objects/robots/buildingBlocks/robot_test.tscn");
 var gameBoard : GameBoard;
 var newEnemy : Node3D;
 var timerLength := 1.0;
