@@ -30,7 +30,10 @@ func _ready():
 func load_startup_data(data):
 	remove_occupant(true);
 	var rot = data["rotation"];
-	set_socket_rotation(rad_to_deg(rot));
+	if rot is float:
+		set_socket_rotation(rad_to_deg(rot));
+	elif rot is Vector3:
+		rotation = rot;
 	var occupantData = data["occupant"];
 	if occupantData != null and not occupantData is String:
 		print("OCCUPANT DATA: ", occupantData)

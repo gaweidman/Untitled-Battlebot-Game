@@ -9,6 +9,7 @@ var damage := 1.0;
 var fired := false;
 var lifetime := 1.0;
 @export var lifeTimer : Timer;
+var lifeDeltaTimer := 1.0;
 @export var raycast : RayCast3D;
 @export var collision : CollisionShape3D;
 var initPosition = position;
@@ -19,6 +20,9 @@ var launcherPiece : Piece;
 var attacker : Node3D;
 @export var tracerFXString := "BulletTracer_small";
 var damageData : DamageData;
+@export var hitbox : Area3D;
+@export var gravity := -0.0987;
+var verticalVelocity := 0.0;
 
 var leaking := false;
 
@@ -27,23 +31,34 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
-	if fired && visible:
-		positionAppend += (dir * speed * delta);
-		var oldPos = global_position;
-		position = initPosition + positionAppend;
-		var newPos = global_position;
-		var positionDif = oldPos - newPos;
-		var difLen = positionDif.length();
-		raycast.position.z = difLen;
-		raycast.target_position.z = -difLen;
-		if raycast.is_colliding():
-			var col = raycast.get_collider();
-			print("Bullet Raycast hit something this time")
-			shot_something(col);
+	if not is_frozen():
+		if fired && visible:
+			positionAppend += (dir * speed * delta);
+			positionAppend += Vector3(0,1,0) * verticalVelocity;
+			verticalVelocity += gravity * delta;
+			#print(verticalVelocity)
+			var oldPos = global_position;
+			position = initPosition + positionAppend;
+			var newPos = global_position;
+			var positionDif = oldPos - newPos;
+			var difLen = positionDif.length();
+			raycast.position.z = difLen;
+			raycast.target_position.z = -difLen;
+			if raycast.is_colliding():
+				var col = raycast.get_collider();
+				#print("Bullet Raycast hit something this time")
+				shot_something(col);
 	if not visible:
 		if leaking:
 			die();
 	pass
+
+func phys_process_timers(delta):
+	super(delta);
+	if not is_frozen():
+		if lifeDeltaTimer < 0:
+			_on_life_timer_timeout();
+		lifeDeltaTimer -= delta;
 
 
 ## @deprecated : This is here for compatibility reasons until we can completely flush out all references to Combatants.
@@ -72,7 +87,7 @@ func fire(_attacker : Combatant, _launcher : Node ,_initPosition : Vector3, _dir
 	fired = true;
 	print("I have been fired at ", global_position, ", attacker is at ", attacker.global_position)
 
-func fire_from_robot(_attacker : Robot, _launcher : Piece ,_initPosition : Vector3, _direction := Vector3(1,0,0), _fireSpeed := 30.0, _lifetime := 1.0, _damage := 1.0):
+func fire_from_robot(_attacker : Robot, _launcher : Piece ,_initPosition : Vector3, _damageData : DamageData, _direction := Vector3(1,0,0), _fireSpeed := 30.0, _lifetime := 1.0, _gravity := -0.0987):
 	launcherPiece = _launcher;
 	set_attacker(_attacker);
 	if ! is_instance_valid(attacker): 
@@ -80,10 +95,13 @@ func fire_from_robot(_attacker : Robot, _launcher : Piece ,_initPosition : Vecto
 		return;
 	speed = _fireSpeed;
 	dir = _direction;
+	verticalVelocity = 0.0;
 	lifetime = _lifetime;
-	lifeTimer.wait_time = lifetime;
-	lifeTimer.start();
-	damage = _damage;
+	lifeDeltaTimer = lifetime;
+	#lifeTimer.wait_time = lifetime;
+	#lifeTimer.start();
+	gravity = _gravity;
+	damageData = _damageData;
 	positionAppend = Vector3.ZERO;
 	initPosition = _initPosition;
 	set_deferred("scale", sizeMult);
@@ -99,9 +117,14 @@ func fire_from_robot(_attacker : Robot, _launcher : Piece ,_initPosition : Vecto
 
 func rotateTowardVector3(dir : Vector3):
 	look_at(global_transform.origin + dir, Vector3.UP)
+	rotation.x = dir.y;
 
 func change_direction(newAngle : Vector3):
 	dir = newAngle;
+	rotateTowardVector3(dir);
+
+func flip_direction():
+	dir *= -1;
 	rotateTowardVector3(dir);
 
 func die():
@@ -109,7 +132,7 @@ func die():
 		ParticleFX.play("SmokePuffSingle", GameState.get_game_board(), position, 0.5);
 	position = Vector3.ZERO;
 	fired = false;
-	collision.set_deferred("disabled", true);
+	collision.set("disabled", true);
 	hide();
 	if leaking:
 		queue_free();
@@ -123,34 +146,58 @@ func _on_body_entered(body):
 	shot_something(body);
 	pass # Replace with function body.
 
-func shot_something(body):
+func _on_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
+	if body is RobotBody and body.get_parent() != get_attacker():
+		print("tis a robot. from ", name)
+		var other_shape_owner = body.shape_find_owner(body_shape_index)
+		var other_shape_node = body.shape_owner_get_owner(other_shape_owner)
+		if other_shape_node is not PieceCollisionBox: return;
+		
+		var local_shape_owner = hitbox.shape_find_owner(local_shape_index)
+		var local_shape_node = hitbox.shape_owner_get_owner(local_shape_owner)
+		#if local_shape_node is not PieceCollisionBox: return;
+		
+		var otherPiece : Piece = other_shape_node.get_piece();
+		print("Other Piece in hitbox collision: ", otherPiece)
+		if ! is_instance_valid(otherPiece): return;
+		print("Bullet damage commencing:")
+		shot_something(body);
+	pass # Replace with function body.
+
+func shot_something(inbody):
 	if leaking: return;
-	if ! is_instance_valid(body): return;
-	var parent = body.get_parent();
+	if ! is_instance_valid(inbody): return;
+	var validTarget = false;
+	var parent = inbody.get_parent();
 	if parent == attacker:
 		#print("                     entered my attacker")
 		return;
 	if parent is Combatant:
-		#print(body.get_parent())
+		#print(inbody.get_parent())
 		parent.take_damage(damage);
 		parent.call_deferred("take_knockback",(dir + Vector3(0,0.01,0)) * knockbackMult);
 		print("should be taking knockback....")
-	if parent is Robot:
+		validTarget = true;
+	if inbody is RobotBody:
+		parent = inbody.get_robot()
 		if !is_instance_valid(damageData):
+			print_rich("[color=purple]Bullet needs a new DamageData")
 			damageData = DamageData.new();
 			damageData.create(damage, knockbackMult, dir, [DamageData.damageTypes.PIERCING])
-		#print(body.get_parent())
+		#print(inbody.get_parent())
+		print_rich("[color=purple]Bullet hit robot. Yippie!")
 		parent.take_damage_from_damageData(damageData);
+		validTarget = true;
 		#parent.call_deferred("take_knockback",(dir + Vector3(0,0.01,0)) * knockbackMult);
 		#print("should be taking knockback....")
-	#print("Shot ded by ",body, " named: ", body.name)
+	#print("Shot ded by ",inbody, " named: ", inbody.name)
 	
-	#if not ( body.is_in_group("Player Part") ):
+	#if not ( inbody.is_in_group("Player Part") ):
 		#die()
 		#;
 		
-	#Hooks.OnCollision(self, body);
-	SND.play_collision_sound(self, body, initPosition + positionAppend, 0.85, 1.5);
+	#Hooks.OnCollision(self, inbody);
+	SND.play_collision_sound(self, inbody, initPosition + positionAppend, 0.85, 1.5);
 	ParticleFX.play("Sparks", GameState.get_game_board(), initPosition + positionAppend, 0.5);
 	
 	die();

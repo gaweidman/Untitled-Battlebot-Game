@@ -21,7 +21,7 @@ func phys_process_timers(delta):
 
 
 var frozen := false;
-var frozenBeforePaused := false;
+var frozenBeforePaused = false;
 var paused := false;
 func pause(foo: bool, force := false):
 	#print("Pause attempt for ",name,", foo:", str(foo));
@@ -29,11 +29,14 @@ func pause(foo: bool, force := false):
 	#print("Pause attempt for ",name," successful.")
 	if foo: ##If pausing:
 		## Mark down whether the bot was frozen before pausing.
-		frozenBeforePaused = frozen;
+		if frozenBeforePaused == null:
+			frozenBeforePaused = frozen;
 		freeze(true, true);
 	else: ##If unpausing:
 		## Return frozen status to what it was before.
-		freeze(frozenBeforePaused, true);
+		if frozenBeforePaused != null:
+			freeze(frozenBeforePaused, true);
+			frozenBeforePaused = null;
 	paused = foo;
 ##Checks for game state pause, attempts to re-pause or re-unpause, then returns the result.
 func is_paused():

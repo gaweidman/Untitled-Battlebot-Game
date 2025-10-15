@@ -5,13 +5,16 @@
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_8grda"]
 
-[node name="Bullet" type="Area3D" node_paths=PackedStringArray("lifeTimer", "raycast", "collision") groups=["Metal", "Projectile"]]
+[node name="Bullet" type="Node3D" node_paths=PackedStringArray("lifeTimer", "raycast", "collision", "hitbox") groups=["Metal", "Projectile"]]
 script = ExtResource("1_lph27")
 lifeTimer = NodePath("LifeTimer")
 raycast = NodePath("RayCast3D")
-collision = NodePath("CollisionShape3D")
+collision = NodePath("Hitbox/CollisionShape3D")
+hitbox = NodePath("Hitbox")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["Projectile"]]
+[node name="Hitbox" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox" groups=["Projectile"]]
 unique_name_in_owner = true
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 shape = SubResource("SphereShape3D_8grda")
@@ -27,6 +30,6 @@ target_position = Vector3(0, 0, 0)
 debug_shape_custom_color = Color(0, 0.745098, 0, 1)
 debug_shape_thickness = 5
 
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
-[connection signal="body_shape_entered" from="." to="." method="_on_body_shape_entered"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_body_entered"]
+[connection signal="body_shape_entered" from="Hitbox" to="." method="_on_body_shape_entered"]
 [connection signal="timeout" from="LifeTimer" to="." method="_on_life_timer_timeout"]

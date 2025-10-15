@@ -1,10 +1,7 @@
-[gd_scene load_steps=24 format=3 uid="uid://88se3nfd8vrt"]
+[gd_scene load_steps=17 format=3 uid="uid://88se3nfd8vrt"]
 
 [ext_resource type="Script" uid="uid://lqnydwh6c74e" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="1_gm1wa"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_kcjt4"]
-[ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_xcdtu"]
-[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_dbydh"]
-[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_1i375"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="6_xcdtu"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_fvnuu"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="8_x8ege"]
@@ -12,34 +9,6 @@
 [ext_resource type="ArrayMesh" uid="uid://bnajrltu8pmd4" path="res://graphics/models/obj/botparts/BotBody.obj" id="10_h4kss"]
 [ext_resource type="ArrayMesh" uid="uid://cgto2m6qw8n2d" path="res://graphics/models/obj/botparts/SwivelPointer.obj" id="11_gm1wa"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="11_wnksc"]
-
-[sub_resource type="Resource" id="Resource_xxf1u"]
-script = ExtResource("2_xcdtu")
-statName = "ScrapCost"
-statIcon = ExtResource("3_dbydh")
-baseStat = 0.0
-roundingMode = 6
-
-[sub_resource type="Resource" id="Resource_x7xa2"]
-script = ExtResource("2_xcdtu")
-statName = "ScrapSellModifier"
-statIcon = ExtResource("3_dbydh")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_8crb0"]
-script = ExtResource("2_xcdtu")
-statName = "ScrapSalvageModifier"
-statIcon = ExtResource("3_dbydh")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_8wfwi"]
-script = ExtResource("2_xcdtu")
-statName = "Weight"
-statIcon = ExtResource("4_1i375")
-baseStat = 1.0
-roundingMode = 0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_n78fx"]
 size = Vector3(1.5, 1.25, 1.5)
@@ -71,7 +40,6 @@ script = ExtResource("1_gm1wa")
 swivelNode = NodePath("Meshes/SwivelTop")
 force_visibility = true
 pieceName = &"BodyCube"
-removable = false
 meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
@@ -99,7 +67,6 @@ Vector2i(4, 1): null,
 Vector2i(4, 2): null,
 Vector2i(4, 3): null
 }
-statCollection = Array[ExtResource("2_xcdtu")]([SubResource("Resource_xxf1u"), SubResource("Resource_x7xa2"), SubResource("Resource_8crb0"), SubResource("Resource_8wfwi")])
 filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn"
 
 [node name="FemaleSockets" type="Node3D" parent="."]

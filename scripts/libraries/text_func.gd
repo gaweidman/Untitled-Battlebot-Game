@@ -17,7 +17,9 @@ const textColors = {
 	"grey" : Color("e0dede"),
 	"utility" : Color("aae05b"),
 	"ranged" : Color("789be9"),
+	"lightblue" : Color("789be9"),
 	"melee" : Color("ff6e49"),
+	"lightred" : Color("ff6e49"),
 	"scrap" : Color("f2ec6b"),
 	"red" : Color("cf2121"),
 	"unaffordable" : Color("ff0000"),
@@ -26,22 +28,24 @@ const textColors = {
 }
 
 ## Recolors a Label or RichTextLabel or TextEdit or anythign else of the sort with [method Label.theme_override_colors/font_color].
-static func set_text_color(node, color):
-	if is_instance_valid(node) and node.has_method("theme_override_colors/font_color"):
-		color = get_color(color);
+static func set_text_color(node, _color):
+	if is_instance_valid(node) and "theme_override_colors/font_color" in node:
+		#print("Thing in thing")
+		var color = get_color(_color);
 		if node.get("theme_override_colors/font_color") != color:
 			node.set_deferred("theme_override_colors/font_color", color);
+			print("color being set to ", color)
 
 ## Returns a predefined color from [member textColors] if given a String key, or returns a given Color input as-is. Returns Color.WHITE if the input is not a String or Color.
-static func get_color(color) -> Color:
-	if color is Color:
-		return color;
-	if color is String:
+static func get_color(_color) -> Color:
+	if _color is Color:
+		return _color;
+	if _color is String:
 		var newCol := Color(textColors["white"]);
-		if color in textColors:
-			newCol = Color(textColors[color]);
+		if _color in textColors:
+			newCol = Color(textColors[_color]);
 		else:
-			newCol = Color(color);
+			newCol = Color(_color);
 		return newCol;
 	return Color.WHITE;
 

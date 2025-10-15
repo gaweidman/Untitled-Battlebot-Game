@@ -198,10 +198,8 @@ func spawn_inpspected_robot(data):
 		botSceneBeingInspected = botRef;
 		botBeingInspected = newBot;
 		botSceneFilePath = botFilePath;
-		print("SCENE POATH ", botSceneFilePath)
+		print("SCENE POATH ", botSceneFilePath);
 		
-		##Show the thing.
-		botBeingInspected.show();
 		#print("SAVE: Loading Bot data: ", botBeingInspected.startupGenerator)
 		#print("SAVE: Loading Bot data: ", botBeingInspected.startupGenerator)
 		
@@ -222,6 +220,9 @@ func spawn_inpspected_robot(data):
 		stash.currentRobot = newBot;
 		
 		botSpawnPoint.add_child(botBeingInspected);
+		##Show the thing.
+		botBeingInspected.show();
+		
 		print("SAVE: Loading Bot data: ", botBeingInspected.startupGenerator)
 		botBeingInspected.load_from_startup_generator();
 	return botBeingInspected;

@@ -408,7 +408,7 @@ static func play_sound_nondirectional(inSound, inVolume := 1.0, inPitch := 1.0):
 		return;
 	
 	newSound.volume_db = linear_to_db(inVolume * get_volume_UI());
-	print_rich("[color=green][b]", get_volume_UI());
+	#print_rich("[color=green][b]", get_volume_UI());
 	newSound.pitch_scale = inPitch;
 	newSound.set_and_play_sound(snd);
 	return newSound;

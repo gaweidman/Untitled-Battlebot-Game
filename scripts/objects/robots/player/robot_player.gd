@@ -123,6 +123,8 @@ func update_bars():
 		var currentHealthMax = get_max_health();
 		#print(currentHealth);
 		barHP.set_health(currentHealth, currentHealthMax);
+		barHP.set_alt_color(invincible);
+		
 		var currentEnergy = get_available_energy();
 		var currentEnergyMax = get_maximum_energy();
 		barEnergy.set_health(currentEnergy, currentEnergyMax);
@@ -131,7 +133,6 @@ func _on_health_or_energy_changed():
 	super();
 	update_bars();
 	pass # Replace with function body.
-
 
 func select_piece(piece):
 	var result = super(piece);

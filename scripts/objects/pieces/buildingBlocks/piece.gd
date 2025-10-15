@@ -65,6 +65,13 @@ func assign_references():
 			pass;
 		else:
 			allOK = false;
+		
+	if is_instance_valid(hitboxCollisionHolder):
+		if not hitboxCollisionHolder.is_connected("body_shape_entered", _on_hitbox_body_shape_entered):
+			hitboxCollisionHolder.connect("body_shape_entered", _on_hitbox_body_shape_entered);
+		if not hitboxCollisionHolder.is_connected("area_shape_entered", _on_hitbox_shapes_area_entered):
+			hitboxCollisionHolder.connect("area_shape_entered", _on_hitbox_shapes_area_entered);
+			pass;
 	if !is_instance_valid(meshesHolder):
 		if is_instance_valid($"Meshes"):
 			meshesHolder = $"Meshes";
@@ -79,7 +86,7 @@ func assign_references():
 			allOK = false;
 	
 	if not allOK:
-		print("References for piece ", name, " were invalid. ")
+		#print("References for piece ", name, " were invalid. ")
 		queue_free();
 
 ######### SAVING/LOADING
@@ -104,7 +111,7 @@ func create_startup_data():
 	var socketDict = {};
 	for socket:Socket in get_all_female_sockets():
 		var index = get_index_of_socket(socket);
-		var rotationVal = socket.rotation.y;
+		var rotationVal = socket.rotation;
 		var occupantResult = socket.get_occupant();
 		var occupantVal;
 		if occupantResult != null:
@@ -123,7 +130,7 @@ func create_startup_data():
 	return dict;
 
 func load_startup_data(data):
-	print(data)
+	#print(data)
 	for socketIndex in data["sockets"].keys():
 		var socketData = data["sockets"][socketIndex];
 		autoassign_child_sockets_to_self();
@@ -215,8 +222,14 @@ func phys_process_timers(delta):
 	##tick down hitbox timer.
 	hitboxRescaleTimer -= 1;
 	##Tick down ability cooldowns.
-	if activeCooldownTimer > 0: activeCooldownTimer -= delta;
-	if passiveCooldownTimer > 0: passiveCooldownTimer -= delta;
+	if activeCooldownTimer > 0: 
+		activeCooldownTimer -= delta;
+	else:
+		activeCooldownTimer == 0.0;
+	if passiveCooldownTimer > 0: 
+		passiveCooldownTimer -= delta;
+	else:
+		passiveCooldownTimer == 0.0;
 	pass;
 
 func phys_process_pre(delta):
@@ -309,7 +322,6 @@ func refresh_and_gather_collision_helpers():
 		child.queue_free();
 	
 	
-	
 	var identifyingNum = 0;
 	for child in get_children():
 		if child is PieceCollisionBox:
@@ -360,6 +372,7 @@ func reset_collision_helpers():
 	for child in get_children():
 		if child is PieceCollisionBox and child.isOriginal:
 			child.reset();
+	allSockets.clear();
 
 ##Should ping all of the placement hitboxes and return TRUE if it collides with a Piece, of FALSE if it doesn't.
 func ping_placement_validation():
@@ -414,11 +427,13 @@ func get_all_hurtboxes():
 		ret.append(child);
 	return ret;
 
-var hitboxEnabled = false;
+var hitboxEnabled = null;
 func disable_hurtbox(foo:bool):
-	for child in hurtboxCollisionHolder.get_children():
-		if child is PieceCollisionBox:
-			child.disabled = foo;
+	if hitboxEnabled != foo:
+		hitboxEnabled = foo;
+		for child in hurtboxCollisionHolder.get_children():
+			if child is PieceCollisionBox:
+				child.disabled = foo;
 
 ##Fired whent he camera finds this piece.
 ##TODO: Fancy stuff. 
@@ -487,7 +502,8 @@ func autograb_sockets():
 
 ##Returns a list of all sockets on this part.
 func get_all_female_sockets() -> Array[Socket]:
-	autograb_sockets();
+	if allSockets.is_empty():
+		autograb_sockets();
 	return allSockets;
 
 func register_socket(socket : Socket):
@@ -638,10 +654,10 @@ func get_cooldown_active() -> float:
 func set_cooldown_passive():
 	set_deferred("passiveCooldownTimer", get_stat("PassiveCooldown"));
 func on_cooldown_passive() -> bool:
-	return get_cooldown_active() > 0;
+	return get_cooldown_passive() > 0;
 func get_cooldown_passive() -> float:
 	if passiveCooldownTimer < 0:
-		passiveCooldownTimer = 0;
+		passiveCooldownTimer = 0.0;
 	return passiveCooldownTimer;
 
 func on_cooldown():
@@ -654,7 +670,6 @@ func phys_process_abilities(delta):
 		disable_hurtbox(false);
 	##Run cooldown behaviors.
 	cooldown_behavior();
-	
 	##Use the passive ability of this guy.
 	use_passive();
 
@@ -678,6 +693,7 @@ func cooldown_behavior(cooldown : bool = on_cooldown()):
 	else:
 		if disableHitboxesWhileOnCooldown:
 			hitboxCollisionHolder.scale = Vector3.ONE;
+	pass;
 
 func get_outgoing_energy():
 	get_incoming_energy();
@@ -724,6 +740,9 @@ func get_passive_energy_cost():
 
 ##Returns true if the actionSlot has an ability assigned and energy draw post-use would not exceed the incoming energy pool.
 func can_use_active(actionSlot : int): 
+	if is_paused():
+		#print_rich("[color=yellow]Active call was interrupted because the game is paused.")
+		return false;
 	if get_active_ability(actionSlot) == null:
 		return false;
 	if get_host_robot() == null:
@@ -732,12 +751,24 @@ func can_use_active(actionSlot : int):
 
 ##Returns true if energyDrawPassive is 0, or if the power draw would not exceed incoming power.
 func can_use_passive():
-	if energyDrawPassive == 0.0:
-		return true;
-	if get_host_robot() == null:
+	if is_paused():
+		#print_rich("[color=yellow]Passive call was interrupted because the game is paused.")
 		return false;
-	#print( energyDrawPassive, get_current_energy_draw(),  get_passive_energy_cost(), get_incoming_energy())
-	return (not on_cooldown_passive()) and ((energyDrawPassive != 0.0) and (( get_current_energy_draw() + get_passive_energy_cost() ) <= get_incoming_energy()) or energyDrawPassive == 0.0);
+	if get_host_robot() == null:
+		#print_rich("[color=yellow]Passive call was interrupted by lack of a host robot.")
+		return false;
+	if on_cooldown_passive():
+		#print_rich("[color=yellow]Passive call was interrupted by being on cooldown.")
+		return false;
+	if (get_passive_energy_cost() != 0.0):
+		if (( get_current_energy_draw() + get_passive_energy_cost() ) <= get_incoming_energy()):
+			##There's enough energy.
+			return true;
+		else:
+			#print_rich("[color=yellow]Passive call for ",pieceName," was interrupted by not having enough energy. ", get_current_energy_draw() + get_passive_energy_cost(), " ", get_incoming_energy())
+			return false;
+	return true;
+	#return (not on_cooldown_passive()) and ((energyDrawPassive != 0.0) and (( get_current_energy_draw() + get_passive_energy_cost() ) <= get_incoming_energy()) or energyDrawPassive == 0.0);
 
 func use_passive():
 	if can_use_passive():
@@ -797,7 +828,7 @@ func remove_and_add_to_robot_stash(botOverride : Robot = get_host_robot(true)):
 	deselect();
 	##Stash everything below this.
 	for subPiece in get_all_pieces():
-		print("PIECE IN ALL PIECES: ", subPiece.pieceName)
+		#print("PIECE IN ALL PIECES: ", subPiece.pieceName)
 		subPiece.remove_and_add_to_robot_stash(botOverride);
 	
 	remove_from_socket();
@@ -906,7 +937,7 @@ func get_kickback_direction(positionOfTarget : Vector3, factorBodyVelocity := tr
 	if factorBodyVelocity:
 		var bodVel = get_host_robot().body.linear_velocity;
 		factor += bodVel;
-	return factor.rotated(Vector3.UP, PI);
+	return factor.rotated(Vector3(0,1,0), deg_to_rad(180));
 
 func get_damage_types() -> Array[DamageData.damageTypes]:
 	##TODO: Part stuff that adds damage types.
@@ -924,7 +955,10 @@ func get_kickback_damage_data(_damageAmount := 0.0, _knockbackForce := get_kickb
 
 ##Fired AFTER a hitbox hits an enemy's hurtbox, via [method _on_hitbox_shape_entered]. Calculates the damage and knockback.
 func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, thisPieceCollider : PieceCollisionBox):
+	#print (self, otherPiece)
+	#print("COntactdamage function.")
 	if otherPiece != self:
+		#print("Target was not self.")
 		##Handle damaging the opposition.
 		var DD = get_damage_data();
 		var KB = get_impact_direction(otherPiece.global_position, true);
@@ -934,6 +968,7 @@ func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, 
 		##Handle kickback.
 		initiate_kickback(otherPiece.global_position);
 		return true;
+	#print_rich("[color=orange]Target was self.")
 	return false;
 
 func initiate_kickback(awayPos : Vector3):
@@ -967,7 +1002,7 @@ func modify_incoming_damage_data(damageData : DamageData) -> DamageData:
 func _on_hitbox_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
 	#print("please.")
 	if body is RobotBody and body.get_parent() != get_host_robot():
-		print("tis a robot. from ", pieceName)
+		#print("tis a robot. from ", pieceName)
 		var other_shape_owner = body.shape_find_owner(body_shape_index)
 		var other_shape_node = body.shape_owner_get_owner(other_shape_owner)
 		if other_shape_node is not PieceCollisionBox: return;
@@ -977,7 +1012,20 @@ func _on_hitbox_body_shape_entered(body_rid, body, body_shape_index, local_shape
 		if local_shape_node is not PieceCollisionBox: return;
 		
 		var otherPiece : Piece = other_shape_node.get_piece();
-		print("Other Piece in hitbox collision: ", otherPiece)
+		#print("Other Piece in hitbox collision: ", otherPiece)
 		if ! is_instance_valid(otherPiece): return;
-		contact_damage(otherPiece, other_shape_node, local_shape_node)
+		if is_instance_valid(otherPiece) and is_instance_valid(other_shape_node) and is_instance_valid(local_shape_node):
+			#print("Contact damage commencing:")
+			contact_damage(otherPiece, other_shape_node, local_shape_node)
 	pass # Replace with function body.
+
+## Fires when an area hits this Piece's Hitboxes. Mostly used for reflecting Bullets.
+func _on_hitbox_shapes_area_entered(area_rid, area, area_shape_index, local_shape_index):
+	var parent = area.get_parent();
+	if parent is Bullet:
+		bullet_hit_hitbox(parent);
+	pass # Replace with function body.
+
+## Fires when a bulelt hits this robot's HITBOX.
+func bullet_hit_hitbox(bullet : Bullet):
+	pass;

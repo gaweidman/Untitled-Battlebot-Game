@@ -216,6 +216,7 @@ StashSelected={
 3d_physics/layer_7="Placed Piece Hurtboxes"
 3d_physics/layer_8="Preview Piece Hurtboxes"
 3d_physics/layer_9="Aiming Helper"
+3d_physics/layer_10="Bullet"
 
 [physics]
 

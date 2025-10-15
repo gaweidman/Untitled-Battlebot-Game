@@ -36,4 +36,5 @@ func _integrate_forces(state):
 	#print("Applying current rotation:",currentRotation)
 	basis = basis.orthonormalized();
 
-#func _physics_process(delta):
+func get_robot() -> Robot:
+	return get_parent();

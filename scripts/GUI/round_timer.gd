@@ -9,16 +9,16 @@ var time := 120.0;
 var paused := true;
 
 func _process(delta):
+	var isPaused = GameState.is_paused() or paused or !(GameState.get_game_board_state() == GameBoard.gameState.PLAY);
 	
 	text = TextFunc.format_time(time);
 	
 	if GameState.get_in_state_of_play():
 		if not visible:
 			show();
-		if not paused:
+		if not isPaused:
 			if time > 0:
-				if GameState.get_game_board_state() == GameBoard.gameState.PLAY: ##This time it's specific
-					time -= delta;
+				time -= delta;
 			else:
 				time = 0.0;
 			

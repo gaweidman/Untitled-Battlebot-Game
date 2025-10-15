@@ -41,5 +41,5 @@ func status_report():
 
 func dust_particle():
 	if randf() > 0.1:
-		if is_on_floor():
+		if is_on_floor() and not GameState.is_paused():
 			ParticleFX.play("SmokePuffSingleShort", self, global_position)

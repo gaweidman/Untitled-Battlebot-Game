@@ -847,6 +847,7 @@ fromRight = false
 emptyBar = NodePath("SubViewport/BarHolder/Empty")
 width = 164.0
 label = NodePath("SubViewport/BarHolder/Lbl_Energy")
+colorBase = "lightblue"
 
 [node name="SubViewport" type="SubViewport" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/EnergyBar"]
 transparent_bg = true

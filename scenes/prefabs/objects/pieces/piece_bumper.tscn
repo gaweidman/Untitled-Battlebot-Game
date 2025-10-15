@@ -1,43 +1,12 @@
-[gd_scene load_steps=24 format=3 uid="uid://bvbnk32yrg0yy"]
+[gd_scene load_steps=17 format=3 uid="uid://bvbnk32yrg0yy"]
 
 [ext_resource type="Script" uid="uid://c6qwiyf4mcvpt" path="res://scripts/objects/pieces/piece_bumper.gd" id="1_pky5t"]
-[ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_pky5t"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="2_rahga"]
-[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_g4t8k"]
-[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="4_kskf6"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_2hj47"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="5_pky5t"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="8_nxsqm"]
 [ext_resource type="ArrayMesh" uid="uid://b2ntamwafapvc" path="res://graphics/models/obj/botparts/Bumper.obj" id="9_qe5pu"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="9_qffi3"]
-
-[sub_resource type="Resource" id="Resource_xxf1u"]
-script = ExtResource("2_pky5t")
-statName = "ScrapCost"
-statIcon = ExtResource("3_g4t8k")
-baseStat = 0.0
-roundingMode = 6
-
-[sub_resource type="Resource" id="Resource_x7xa2"]
-script = ExtResource("2_pky5t")
-statName = "ScrapSellModifier"
-statIcon = ExtResource("3_g4t8k")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_8crb0"]
-script = ExtResource("2_pky5t")
-statName = "ScrapSalvageModifier"
-statIcon = ExtResource("3_g4t8k")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_8wfwi"]
-script = ExtResource("2_pky5t")
-statName = "Weight"
-statIcon = ExtResource("4_kskf6")
-baseStat = 1.0
-roundingMode = 0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_t0t4j"]
 size = Vector3(1.5, 0.5, 0.5)
@@ -87,7 +56,6 @@ Vector2i(3, 2): null
 }
 knockbackBase = 75.0
 kickbackBase = 60.0
-statCollection = Array[ExtResource("2_pky5t")]([SubResource("Resource_xxf1u"), SubResource("Resource_x7xa2"), SubResource("Resource_8crb0"), SubResource("Resource_8wfwi")])
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"

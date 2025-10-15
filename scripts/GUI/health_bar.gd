@@ -10,6 +10,9 @@ var lerpPosX := width;
 var currentAmt := 0.0;
 var currentMax := 0.0;
 @export var label : Label;
+@export var colorBase := "lightred"
+@export var colorAlt := "scrap"
+var altColorOn : bool = false;
 
 func set_health(amt: float, max: float):
 	var percentage := amt/max;
@@ -21,6 +24,9 @@ func set_health(amt: float, max: float):
 	currentAmt = amt;
 	currentMax = max;
 	update_text(currentAmt, currentMax);
+
+func set_alt_color(on := false):
+	altColorOn = on;
 
 var counter = 0;
 func _process(delta):
@@ -35,3 +41,7 @@ func _process(delta):
 func update_text(amt : float, max: float):
 	var stringHealth = "";
 	label.text = TextFunc.format_stat_num(amt) + "/" + TextFunc.format_stat_num(max);
+	if altColorOn:
+		TextFunc.set_text_color(label, colorAlt);
+	else:
+		TextFunc.set_text_color(label, colorBase);

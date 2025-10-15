@@ -270,6 +270,15 @@ func get_unique_collider_id() -> int:
 	colliderID += 1;
 	return ret;
 
+
+var statHolderID := 0;
+
+func get_unique_stat_holder_id() -> int:
+	var ret = statHolderID;
+	statHolderID += 1;
+	return ret;
+
+
 ############ SETTINGS AND SAVE DATA
 
 static var settings := {
@@ -388,12 +397,12 @@ func load_data():
 		for key in content.keys():
 			if key in saveData:
 				saveData[key] = content[key]
-				print("data key found: ", key, " ", content[key])
+				#print("data key found: ", key, " ", content[key])
 			pass
 	
 	file.close()
 	
-	prints("[b]Loading data: ", saveData)
+	#prints("[b]Loading data: ", saveData)
 	
 	return saveData
 
@@ -401,9 +410,9 @@ func load_data():
 var paused := false;
 
 func pause(foo : bool = not paused):
-	print("GameState.pause() attempt. New: ", str(foo), " Old: ", str(paused))
+	#print("GameState.pause() attempt. New: ", str(foo), " Old: ", str(paused))
 	if paused == foo: return;
-	print("GameState.pause() attempt was successful.")
+	#print("GameState.pause() attempt was successful.")
 	paused = foo;
 	var board = get_game_board();
 	print(board)
@@ -411,12 +420,6 @@ func pause(foo : bool = not paused):
 
 func is_paused():
 	return paused;
-
-
-
-
-
-
 
 func editor_mode_start():
 	get_tree().change_scene_to_file("res://makers/maker_mode.tscn");

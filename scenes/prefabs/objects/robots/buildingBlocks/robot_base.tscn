@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c2nsjhwipqr1m"]
+[gd_scene load_steps=8 format=3 uid="uid://c2nsjhwipqr1m"]
 
 [ext_resource type="Script" uid="uid://cjbf8lwy20s0y" path="res://scripts/objects/robots/buildingBlocks/robot.gd" id="1_u0mtq"]
 [ext_resource type="Script" uid="uid://cd3dvyejdjvlg" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="2_703oh"]
@@ -9,6 +9,8 @@
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
 friction = 200.0
 bounce = 0.3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_kynhc"]
 
 [node name="Robot" type="Node3D" node_paths=PackedStringArray("meshes", "bodyPiece", "bodySocket", "body")]
 script = ExtResource("1_u0mtq")
@@ -37,6 +39,9 @@ hostRobot = NodePath("../../..")
 hostRobot = NodePath("../../../..")
 hostSocket = NodePath("..")
 assignedToSocket = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
+shape = SubResource("SphereShape3D_kynhc")
 
 [node name="Treads" parent="." instance=ExtResource("5_kynhc")]
 

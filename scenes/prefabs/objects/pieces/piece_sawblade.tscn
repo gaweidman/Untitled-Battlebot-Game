@@ -1,75 +1,14 @@
-[gd_scene load_steps=29 format=3 uid="uid://dl1v6eiy0gi1q"]
+[gd_scene load_steps=17 format=3 uid="uid://dl1v6eiy0gi1q"]
 
 [ext_resource type="Script" uid="uid://021qwhyd0air" path="res://scripts/objects/pieces/piece_sawblade.gd" id="1_5k0fg"]
-[ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_j66hk"]
-[ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="3_kb5ak"]
 [ext_resource type="ArrayMesh" uid="uid://q6bj0b082swx" path="res://graphics/models/obj/botparts/blade2.obj" id="3_omexb"]
-[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="4_r0nuw"]
-[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="5_3l8sh"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="5_gfg0o"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_kb5ak"]
-[ext_resource type="Texture2D" uid="uid://cnfat2kqvmdcd" path="res://graphics/images/HUD/statIcons/damageIconStriped.png" id="6_77x47"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="6_r0nuw"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="7_3l8sh"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="8_8yny5"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="12_k1jne"]
 [ext_resource type="ArrayMesh" uid="uid://bd8g8qktqly2e" path="res://graphics/models/obj/botparts/StaticSwivel.obj" id="13_erqxd"]
-
-[sub_resource type="Resource" id="Resource_4rrfy"]
-resource_name = "PassiveEnergyDraw"
-script = ExtResource("2_j66hk")
-statName = "PassiveEnergyDraw"
-statIcon = ExtResource("3_kb5ak")
-baseStat = 0.1
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_6gd0t"]
-resource_name = "ScrapCost"
-script = ExtResource("2_j66hk")
-statName = "ScrapCost"
-statIcon = ExtResource("4_r0nuw")
-baseStat = 0.0
-roundingMode = 6
-
-[sub_resource type="Resource" id="Resource_t7yhs"]
-resource_name = "ScrapSellModifier"
-script = ExtResource("2_j66hk")
-statName = "ScrapSellModifier"
-statIcon = ExtResource("4_r0nuw")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_nhygx"]
-resource_name = "ScrapSalvageModifier"
-script = ExtResource("2_j66hk")
-statName = "ScrapSalvageModifier"
-statIcon = ExtResource("4_r0nuw")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_dds4i"]
-resource_name = "Weight"
-script = ExtResource("2_j66hk")
-statName = "Weight"
-statIcon = ExtResource("5_3l8sh")
-baseStat = 1.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_qx1s7"]
-resource_name = "Damage"
-script = ExtResource("2_j66hk")
-statName = "Damage"
-statIcon = ExtResource("6_77x47")
-baseStat = 1.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_qhvba"]
-resource_name = "Knockback"
-script = ExtResource("2_j66hk")
-statName = "Knockback"
-statIcon = ExtResource("6_77x47")
-baseStat = 0.0
-roundingMode = 0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_g4w8c"]
 size = Vector2(0.25, 0.25)
@@ -121,11 +60,10 @@ Vector2i(3, 2): null,
 Vector2i(3, 3): null
 }
 damageBase = 1.0
-knockbackBase = 40.0
-kickbackBase = 40.0
+knockbackBase = 80.0
+kickbackBase = 80.0
 damageTypes = Array[int]([1])
 disableHitboxesWhileOnCooldown = false
-statCollection = Array[ExtResource("2_j66hk")]([SubResource("Resource_4rrfy"), SubResource("Resource_6gd0t"), SubResource("Resource_t7yhs"), SubResource("Resource_nhygx"), SubResource("Resource_dds4i"), SubResource("Resource_qx1s7"), SubResource("Resource_qhvba")])
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"

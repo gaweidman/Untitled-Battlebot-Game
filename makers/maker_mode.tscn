@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bhhd443ej7smu"]
+[gd_scene load_steps=17 format=3 uid="uid://bhhd443ej7smu"]
 
 [ext_resource type="Script" uid="uid://bvhx6f0lb1vk2" path="res://makers/maker_mode_manager.gd" id="1_vhu6f"]
 [ext_resource type="Theme" uid="uid://bq0jig2pdkgtn" path="res://graphics/images/HUD/UI_theme.tres" id="2_8384o"]
@@ -11,6 +11,8 @@
 [ext_resource type="Script" uid="uid://ceadpmi0boxfx" path="res://scripts/objects/camera_follower.gd" id="8_yvtic"]
 [ext_resource type="Script" uid="uid://t4858sodg0x3" path="res://makers/makerCam.gd" id="9_uy74y"]
 [ext_resource type="Texture2D" uid="uid://dmmyrbfw14p04" path="res://graphics/images/HUD/camera_control_enabled.png" id="10_pwi61"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_8384o"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_00eor"]
 sky_top_color = Color(0.0910561, 0.0229013, 0, 1)
@@ -134,6 +136,13 @@ offset_bottom = 571.0
 allow_reselect = true
 
 [node name="RobotSpawnPoint" type="Node3D" parent="RobotMaker"]
+
+[node name="Floor" type="StaticBody3D" parent="RobotMaker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RobotMaker/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.25, 0)
+shape = SubResource("WorldBoundaryShape3D_8384o")
 
 [node name="PartsHolder_Engine" parent="RobotMaker" instance=ExtResource("6_s3ktb")]
 layout_mode = 1

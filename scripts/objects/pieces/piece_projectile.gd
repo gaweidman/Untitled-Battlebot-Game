@@ -22,6 +22,11 @@ var firingAngle := Vector3.BACK;
 @export var inaccuracy := 0.05;
 var fireRateTimer := 0.0;
 
+##How much acceleration on the Y axis projectiles shot by this recieve.
+@export var bulletGravity := -0.0987;
+func get_bullet_gravity():
+	return get_stat("ProjectileGravity");
+
 @export var firingOffsetNode : Node3D;
 var firingOffset : Vector3;
 
@@ -64,6 +69,7 @@ func stat_registry():
 	register_stat("ProjectileSpeed", fireSpeed, statIconCooldown);
 	register_stat("ProjectileLifetime", bulletLifetime, statIconCooldown);
 	register_stat("Inaccuracy", bulletLifetime, statIconWeight);
+	register_stat("ProjectileGravity", bulletGravity, statIconWeight);
 
 func get_magazine_max():
 	return get_stat("MagazineSize");
@@ -84,7 +90,9 @@ func can_use_active(slot):
 		return can_fire();
 
 
-
+func get_firing_offset():
+	var bot = get_host_robot();
+	return firingOffset + global_position;
 
 
 ################### FIRING
@@ -98,7 +106,9 @@ func fireBullet():
 	
 	if magazine.size() < magazineMax:
 		bullet = bulletRef.instantiate();
-		get_node("/root/GameBoard").add_child(bullet);
+		var wrld = get_node_or_null("/root/GameBoard")
+		if wrld == null: return;
+		wrld.add_child(bullet);
 		magazine.append(bullet);
 	
 	bullet = nextBullet();
@@ -113,7 +123,9 @@ func fireBullet():
 		firingAngle = firingAngle.normalized();
 		var bot = get_host_robot();
 		var pos = bot.get_global_body_position() + firingOffset;
-		bullet.fire_from_robot(bot, self, pos, firingAngle, fireSpeed, bulletLifetime, get_damage());
+		pos = get_firing_offset();
+		prints("Firing offset",get_firing_offset())
+		bullet.fire_from_robot(bot, self, pos, get_damage_data(), firingAngle, fireSpeed, bulletLifetime, get_bullet_gravity());
 		SND.play_sound_at(firingSoundString, pos, GameState.get_game_board(), firingSoundVolumeAdjust, randf_range(firingSoundPitchAdjust * 1.15, firingSoundPitchAdjust * 0.85))
 	leak_timer_start();
 	pass

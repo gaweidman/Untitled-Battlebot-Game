@@ -1,0 +1,95 @@
+[gd_scene load_steps=7 format=3 uid="uid://dmmr20oepj5va"]
+
+[ext_resource type="Script" uid="uid://cjbf8lwy20s0y" path="res://scripts/objects/robots/buildingBlocks/robot.gd" id="1_wxap3"]
+[ext_resource type="Script" uid="uid://cd3dvyejdjvlg" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="2_x8553"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="3_cppxk"]
+[ext_resource type="PackedScene" uid="uid://88se3nfd8vrt" path="res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn" id="4_s1aoy"]
+[ext_resource type="PackedScene" uid="uid://b4adm8wxo7ym0" path="res://scenes/prefabs/objects/robots/buildingBlocks/treads.tscn" id="5_6pmkl"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
+friction = 200.0
+bounce = 0.3
+
+[node name="Robot_Base" type="Node3D" node_paths=PackedStringArray("meshes", "bodyPiece", "bodySocket", "treads", "body")]
+visible = false
+script = ExtResource("1_wxap3")
+meshes = NodePath("Body/Meshes")
+bodyPiece = NodePath("Body/Meshes/Socket/Piece_BodyCube")
+bodySocket = NodePath("Body/Meshes/Socket")
+treads = NodePath("Treads")
+startupGenerator = {
+&"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn": {
+"sockets": {
+0: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_bumper.tscn": {
+"sockets": {}
+}
+},
+"rotation": 0.0
+},
+1: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_bumper.tscn": {
+"sockets": {}
+}
+},
+"rotation": 3.14159
+},
+2: {
+"occupant": "null",
+"rotation": -2.25163
+},
+3: {
+"occupant": "null",
+"rotation": -2.25158
+},
+4: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_sawblade.tscn": {
+"sockets": {
+0: {
+"occupant": "null",
+"rotation": 0.0
+}
+}
+}
+},
+"rotation": 0.0
+}
+}
+}
+},
+&"rotation": 0.0
+}
+filepathForThisEntity = "res://scenes/prefabs/objects/robots/robot_test.tscn"
+body = NodePath("Body")
+
+[node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Driveable", "Metal"]]
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 100.0
+physics_material_override = SubResource("PhysicsMaterial_f0k1s")
+gravity_scale = 0.0
+freeze = true
+script = ExtResource("2_x8553")
+
+[node name="Meshes" type="Node3D" parent="Body"]
+transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
+
+[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("occupant", "hostRobot") instance=ExtResource("3_cppxk")]
+transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
+occupant = NodePath("Piece_BodyCube")
+hostRobot = NodePath("../../..")
+
+[node name="Piece_BodyCube" parent="Body/Meshes/Socket" node_paths=PackedStringArray("hurtboxCollisionHolder", "hostRobot", "hostSocket") instance=ExtResource("4_s1aoy")]
+hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
+hostRobot = NodePath("../../../..")
+hostSocket = NodePath("..")
+assignedToSocket = true
+
+[node name="Treads" parent="." instance=ExtResource("5_6pmkl")]
+
+[connection signal="health_or_energy_changed" from="." to="." method="_on_health_or_energy_changed"]

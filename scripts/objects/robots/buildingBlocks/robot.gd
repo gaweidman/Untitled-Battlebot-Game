@@ -1,6 +1,6 @@
 extends StatHolder3D;
 
-##This entity can be frozen and paused, and can hold stats.
+##This entity can be frozen and paused, and can hold stats.[br]
 ##This entity is a Robot.
 class_name Robot
 
@@ -18,12 +18,13 @@ var camera : Camera;
 ################################## GODOT PROCESSING FUNCTIONS
 
 func _ready():
+	hide();
 	load_from_startup_generator();
-	super();
 	grab_references();
+	super();
 	reassign_body_collision();
-	freeze(true, true);
 	detach_pipette();
+	freeze(true, true);
 
 func _process(delta):
 	process_pre(delta);
@@ -57,12 +58,20 @@ func phys_process_timers(delta):
 		##Invincibility.
 		if invincibleTimer > 0:
 			invincibleTimer -= delta;
-			invincible = true;
+			if not invincible:
+				invincible = true;
+				health_or_energy_changed.emit();
 		else:
-			invincible = false;
+			invincibleTimer = 0.0;
+			if invincible:
+				invincible = false;
+				health_or_energy_changed.emit();
 
 ##Grab all variable references to nodes that can't be declared with exports.
 func grab_references():
+	if not is_instance_valid(body):
+		if is_instance_valid($Body):
+			body = $Body;
 	if not is_instance_valid(gameBoard):
 		gameBoard = GameState.get_game_board();
 	if not is_instance_valid(camera):
@@ -82,17 +91,17 @@ func stat_registry():
 		maxHealth, 
 		statIconDamage, 
 		null, 
-		(
 		func(newValue): 
 			health_or_energy_changed.emit(); 
-			var newValFixed = clampf(newValue, 0.0, get_stat("HealthMax")); 
+			var newValFixed = clampf(newValue, 0.0, self.get_stat("HealthMax")); 
+			if newValFixed <= 0.0 or is_equal_approx(newValFixed, 0.0): self.die();
 			print("new health value", newValFixed); 
 			return newValFixed;
-			),
+			,
 		StatTracker.roundingModes.None
 		);
 	register_stat("EnergyMax", maxEnergy, statIconDamage);
-	register_stat("Energy", maxEnergy, statIconEnergy, null, (func(newValue): health_or_energy_changed.emit(); return clampf(newValue, 0.0, get_stat("EnergyMax"))));
+	register_stat("Energy", maxEnergy, statIconEnergy, null, (func(newValue): self.health_or_energy_changed.emit(); return clampf(newValue, 0.0, self.get_stat("EnergyMax"))));
 	register_stat("EnergyRefreshRate", energyRefreshRate, statIconEnergy);
 	register_stat("InvincibilityTime", maxInvincibleTimer, statIconCooldown);
 	register_stat("MovementSpeedAcceleration", acceleration, statIconCooldown);
@@ -116,12 +125,13 @@ func prepare_to_save():
 ## Creates the data that builds this robot at _ready().
 func create_startup_generator():
 	#print("SAVE: generating")
-	startupGenerator = { "occupant" = bodyPiece.create_startup_data(), "rotation" = 0.0 };
+	startupGenerator = { "occupant" = bodyPiece.create_startup_data(), "rotation" = Vector3(0,0,0) };
 	#print("SAVE: end result: ", startupGenerator)
 	pass;
 
 ## Creates this robot from data saved to it. If there is none, it doesn't run.
 func load_from_startup_generator():
+	grab_references();
 	print("SAVE: Checking validation of startupGenerator: ", is_instance_valid(startupGenerator), startupGenerator is Dictionary)
 	if startupGenerator is Dictionary and not startupGenerator.is_empty():
 		#bodySocket.remove_occupant(true);
@@ -195,7 +205,6 @@ func die():
 	##Play the death particle effects.
 	ParticleFX.play("NutsBolts", GameState.get_game_board(), get_global_body_position());
 	ParticleFX.play("BigBoom", GameState.get_game_board(), get_global_body_position());
-
 
 ################################# STASH
 
@@ -351,7 +360,7 @@ func detach_pipette():
 
 @export_category("Combat Handling")
 
-## Emitted when Health or Energy are changed.
+## Emitted when Health or Energy are changed, or when the bot enters/exits invincibility.
 signal health_or_energy_changed();
 
 func _on_health_or_energy_changed():
@@ -393,6 +402,7 @@ func modify_damage_based_on_immunities(damageData : DamageData):
 		if type in immunities:
 			dmg *= immunities[type];
 	dmg *= immunities["general"];
+	if is_invincible(): return min(0.0, dmg)
 	return dmg;
 
 func take_damage_from_damageData(damageData : DamageData):
@@ -401,23 +411,21 @@ func take_damage_from_damageData(damageData : DamageData):
 	##TODO: Readd Hooks functionality.
 
 func take_damage(damage:float):
-	print("ASASASSA")
+	print("Damage being taken: ", damage)
 	if is_playing() && damage != 0.0:
 		print(damage," damage being taken.")
 		var health = get_health();
+		var isInvincible = is_invincible();
 		TextFunc.flyaway(damage, get_global_body_position() + Vector3(0,20,0), "unaffordable")
-		if invincible && damage > 0:
-			return;
-		if !(GameState.get_setting("godMode") == true && self is Robot_Player):
-			health -= damage;
-		#health -= damage;
+		if damage > 0:
+			if !isInvincible:
+				health -= damage;
+			else:
+				print("Health was not subtracted. Bot was invincible!")
+				return;
 		set_invincibility();
-		if health <= 0.0:
-			health = 0.0;
-			die();
-		if health > get_max_health():
-			health = get_max_health();
 		set_stat("Health", health);
+		print("Health was subtracted. Nothing prevented it.", get_health())
 
 func heal(health:float):
 	take_damage(-health);
@@ -432,7 +440,14 @@ var alive := false;
 
 ##Replaces the invincible timer with the value given (Or maxInvincibleTimer by default) if that value is greater than the current invincibility timer.
 func set_invincibility(amountOverride : float = maxInvincibleTimer):
+	print("old invincibility time: ",invincibleTimer)
 	invincibleTimer = max(invincibleTimer, amountOverride);
+	print("new invincibility time: ",invincibleTimer)
+	health_or_energy_changed.emit();
+
+func is_invincible() -> bool:
+	invincible = invincibleTimer > 0 or (GameState.get_setting("godMode") == true && self is Robot_Player)
+	return invincible or invincibleTimer > 0 or (GameState.get_setting("godMode") == true && self is Robot_Player);
 
 func take_knockback(inDir:Vector3):
 	##TODO: Weight calculation.
@@ -502,6 +517,7 @@ func on_hitbox_collision(body : PhysicsBody3D, pieceHit : Piece):
 
 ##Gives the Body new collision based on its Parts.
 func reassign_body_collision():
+	allHurtboxes = [];
 	##First, clear the Body of all collision shapes.
 	for child in body.get_children(false):
 		if child is PieceCollisionBox:
@@ -542,15 +558,19 @@ var lastLinearVelocity : Vector3 = Vector3(0,0,0);
 ##Physics process step to adjust collision box positions according to the parts they're attached to.
 func phys_process_collision(delta):
 	for box in get_all_gathered_hurtboxes():
-		var boxOrigin = box.originalBox;
-		if is_instance_valid(boxOrigin):
-			if boxOrigin.is_inside_tree():
-				box.global_position = boxOrigin.global_position;
-				box.rotation = boxOrigin.global_rotation - get_global_body_rotation() + box.originalRotation;
+		if is_instance_valid(box):
+			var boxOrigin = box.originalBox;
+			if is_instance_valid(boxOrigin):
+				if boxOrigin.is_inside_tree():
+					box.global_position = boxOrigin.global_position;
+					box.rotation = boxOrigin.global_rotation - get_global_body_rotation() + box.originalRotation;
+				else:
+					box.disabled = true;
 			else:
-				box.disabled = true;
+				box.queue_free();
 		else:
-			box.queue_free();
+			var boxID = allHurtboxes.find(box)
+			allHurtboxes.remove_at(boxID);
 
 ##Physics process step for motion.
 # custom physics handling for player movement. regular movement feels flat and boring.
@@ -781,13 +801,19 @@ func get_all_parts_regenerate() -> Array[Part]:
 		Utils.append_array_unique(piecesGathered, piece.get_all_parts());
 	return piecesGathered;
 
-##Returns an array of all PieceCollisionBox nodes that are direct children of the body.
-func get_all_gathered_hurtboxes():
+var allHurtboxes = []
+func get_all_gathered_hurtboxes_regenerate():
 	var boxes = []
 	for child in body.get_children():
 		if child is PieceCollisionBox:
 			boxes.append(child)
+	allHurtboxes = boxes;
 	return boxes;
+##Returns an array of all PieceCollisionBox nodes that are direct children of the body.
+func get_all_gathered_hurtboxes():
+	if allHurtboxes.is_empty():
+		get_all_gathered_hurtboxes_regenerate();
+	return allHurtboxes;
 
 ##Adds an AbilityManager to the given slot index in active_abilities.
 func assign_ability_to_slot(slotNum : int, abilityManager : AbilityManager):
