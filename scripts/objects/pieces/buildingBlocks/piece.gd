@@ -725,7 +725,7 @@ func get_incoming_energy():
 	incomingPower = 0.0;
 	hasIncomingPower = false;
 	return incomingPower;
-	
+
 
 func get_current_energy_draw():
 	return energyDrawCurrent;
