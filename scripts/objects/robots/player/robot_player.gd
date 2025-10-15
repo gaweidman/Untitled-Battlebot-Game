@@ -29,8 +29,26 @@ func grab_references():
 
 ######################## INPUT MANAGEMENT
 
+func phys_process_combat(delta):
+	super(delta);
+	if Input.is_action_just_pressed("Fire0"):
+		fire_active(0);
+		print("Ability? ",active_abilities[0].abilityName)
+	if Input.is_action_just_pressed("Fire1"):
+		fire_active(1);
+		
+		print("Ability? ",active_abilities[1].abilityName)
+	if Input.is_action_just_pressed("Fire2"):
+		fire_active(2);
+		#print("Ability? ",active_abilities[2].abilityName)
+	if Input.is_action_just_pressed("Fire3"):
+		fire_active(3);
+		#print("Ability? ",active_abilities[3].abilityName)
+	#if Input.is_action_just_pressed("Fire4"):
+		#fire_active(4);
+
 func get_movement_vector(rotatedByCamera : bool = true) -> Vector2:
-	var movementVector = Vector2.ZERO
+	movementVector = Vector2.ZERO
 		
 	if Input.is_action_pressed("MoveLeft"):
 		movementVector += Vector2.LEFT;
@@ -115,7 +133,6 @@ func _on_health_or_energy_changed():
 	pass # Replace with function body.
 
 
-##Add in lo
 func select_piece(piece):
 	var result = super(piece);
 	#if super(piece) != null and is_instance_valid(engineViewer):

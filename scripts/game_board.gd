@@ -413,7 +413,7 @@ func pause_all_robots_and_projectiles(foo : bool):
 	for robot in Utils.get_all_children_of_type(self, FreezableEntity):
 		print(robot)
 		if robot is FreezableEntity:
-			robot.pause(foo);
+			robot.pause(foo, true);
 
 ##Fired when the game is over.
 func game_over():

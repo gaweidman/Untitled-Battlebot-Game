@@ -46,10 +46,20 @@ func process_pre(delta):
 func phys_process_pre(delta):
 	super(delta);
 	grab_references();
+	pass;
+
+func phys_process_timers(delta):
+	super(delta);
 	##Freeze this bot before it can do physics stuff.
 	if not is_frozen():
+		##Sleep.
 		sleepTimer -= delta;
-	pass;
+		##Invincibility.
+		if invincibleTimer > 0:
+			invincibleTimer -= delta;
+			invincible = true;
+		else:
+			invincible = false;
 
 ##Grab all variable references to nodes that can't be declared with exports.
 func grab_references():
@@ -159,7 +169,7 @@ func start_new_game():
 func end_round():
 	pass;
 ##Fired by the gameboard when the shop gets opened.
-##In here and not in the player subset just in case.
+##In here and not in the player subset... just in case.
 func enter_shop():
 	pass;
 
@@ -170,6 +180,7 @@ func live():
 	body.show();
 	spawned = true;
 	alive = true;
+	start_all_cooldowns();
 	set_stat("Health", get_max_health());
 	
 	update_stash_hud();
@@ -348,7 +359,10 @@ func _on_health_or_energy_changed():
 
 @export var deathSound := "Combatant.Die";
 
-#TODO: Reimplement all stuff involving taking damage, knockback, and invincibility.
+func start_all_cooldowns():
+	for piece in get_all_pieces():
+		piece.set_cooldown_active();
+		piece.set_cooldown_passive();
 
 @export_category("Health Management")
 ##Game statistics.
@@ -428,11 +442,7 @@ func take_knockback(inDir:Vector3):
 ##Physics process for combat. 
 func phys_process_combat(delta):
 	if not is_frozen():
-		if invincibleTimer > 0:
-			invincibleTimer -= delta;
-			invincible = true;
-		else:
-			invincible = false;
+		pass;
 
 ################################## ENERGY
 
@@ -698,7 +708,7 @@ func reset_collision_helpers():
 ##################################################### 3D INVENTORY STUFF
 
 @export_category("Piece Management")
-var active_pieces : Dictionary[int, AbilityManager] = {
+var active_abilities : Dictionary[int, AbilityManager] = {
 	0 : null,
 	1 : null,
 	2 : null,
@@ -706,7 +716,8 @@ var active_pieces : Dictionary[int, AbilityManager] = {
 	4 : null,
 }
 
-##TODO: There needs to be UI for all pieces you have active, as well as pieces generally in your tree.
+##TODO: There needs to be UI for all pieces you have active.
+##TODO: DONE: - as well as pieces generally in your tree.
 
 ##Fired by a Piece when it is added to the Robot permanently.
 func on_add_piece(piece:Piece):
@@ -729,8 +740,8 @@ func on_remove_piece(piece:Piece):
 
 ## Removes all abilities that were supplied by the given Piece.
 func remove_abilities_of_piece(piece:Piece):
-	for abilityKey in active_pieces:
-		var ability = active_pieces[abilityKey];
+	for abilityKey in active_abilities:
+		var ability = active_abilities[abilityKey];
 		if ability is AbilityManager:
 			if ability.get_assigned_piece_or_part() == piece:
 				unassign_ability_slot(abilityKey);
@@ -778,26 +789,26 @@ func get_all_gathered_hurtboxes():
 			boxes.append(child)
 	return boxes;
 
-##Adds an AbilityManager to the given slot index in active_pieces.
+##Adds an AbilityManager to the given slot index in active_abilities.
 func assign_ability_to_slot(slotNum : int, abilityManager : AbilityManager):
-	if slotNum in active_pieces.keys():
+	if slotNum in active_abilities.keys():
 		if is_instance_valid(abilityManager):
 			abilityManager.assign_robot(self);
-			active_pieces[slotNum] = abilityManager;
+			active_abilities[slotNum] = abilityManager;
 
 ##Turns the given slot null and unassigns this robot from that ability on the resource.
 func unassign_ability_slot(slotNum : int):
-	if slotNum in active_pieces.keys():
-		if active_pieces[slotNum] is AbilityManager: 
-			var abilityManager = active_pieces[slotNum];
+	if slotNum in active_abilities.keys():
+		if active_abilities[slotNum] is AbilityManager: 
+			var abilityManager = active_abilities[slotNum];
 			if is_instance_valid(abilityManager):
 				abilityManager.unassign_robot();
-	active_pieces[slotNum] = null;
+	active_abilities[slotNum] = null;
 
-##Runs thru active_pieces and deletes AbilityManager resources that no longer have a valid Piece or Part reference.
+##Runs thru active_abilities and deletes AbilityManager resources that no longer have a valid Piece or Part reference.
 func check_abilities_are_valid():
-	for slot in active_pieces.keys():
-		var ability = active_pieces[slot];
+	for slot in active_abilities.keys():
+		var ability = active_abilities[slot];
 		if ability is AbilityManager:
 			if !is_instance_valid(ability.assignedPieceOrPart):
 				unassign_ability_slot(slot);
@@ -805,18 +816,18 @@ func check_abilities_are_valid():
 ##Attempts to fire the active ability in the given slot, if that slot has one.
 func fire_active(slotNum):
 	check_abilities_are_valid();
-	if slotNum in active_pieces.keys():
-		var ability = active_pieces[slotNum];
+	if slotNum in active_abilities.keys():
+		var ability = active_abilities[slotNum];
 		if ability is AbilityManager:
 			ability.call_ability();
 
 ##Grabs the next ability slot that is currently null.
 func get_next_available_active_slot():
 	check_abilities_are_valid();
-	var allKeys = active_pieces.keys().duplicate(true);
+	var allKeys = active_abilities.keys().duplicate(true);
 	while allKeys.size() > 0:
 		var slotNum = allKeys.pop_front();
-		var ability = active_pieces[slotNum];
+		var ability = active_abilities[slotNum];
 		if ability == null:
 			return slotNum;
 	return null;

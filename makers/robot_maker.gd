@@ -367,8 +367,8 @@ func update_abilities_tree():
 	var bot = get_inspected_robot();
 	if bot != null:
 		#print("Updating ability viewer")
-		for abilityKey in bot.active_pieces.keys():
-			var ability = bot.active_pieces[abilityKey];
+		for abilityKey in bot.active_abilities.keys():
+			var ability = bot.active_abilities[abilityKey];
 			var child2 = tree_abilities.create_item(child)
 			var abilityText = "Slot " + str(abilityKey) + ": "
 			if is_instance_valid(ability):

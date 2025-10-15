@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://im3ebt1adp1h"]
+
+[ext_resource type="PackedScene" uid="uid://bfklqklhxtb2w" path="res://scenes/prefabs/objects/pieces/piece_swivel.tscn" id="1_lwqng"]
+[ext_resource type="Script" uid="uid://cuqib5fp5hdjp" path="res://scripts/objects/pieces/piece_swivel_manual.gd" id="2_jbgvx"]
+
+[node name="Piece_Swivel" instance=ExtResource("1_lwqng")]
+script = ExtResource("2_jbgvx")
+energyDrawActive = 0.2
+activeCooldownTime = 0.0

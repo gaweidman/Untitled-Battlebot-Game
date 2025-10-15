@@ -8,10 +8,16 @@ class_name FreezableEntity
 
 func _physics_process(delta):
 	phys_process_pre(delta);
+	if not is_paused():
+		phys_process_timers(delta);
 
 ##Run before anything else.
 func phys_process_pre(delta):
 	if freezeQueued: freeze(true);
+
+##Any and all timers go here.
+func phys_process_timers(delta):
+	pass;
 
 
 var frozen := false;
@@ -72,7 +78,7 @@ func freeze(doFreeze := (not frozen), force := false):
 ## Convenience function to specifically unfreeze.
 func unfreeze(force := false):
 	freeze(false, force);
-## Returns true if the game is paused or if the bot is frozen.
+##Returns true if the game is paused or if the bot is frozen.
 func is_frozen(): return frozen or is_paused();
 var freezeQueued := false;
 ##This function sets a flag to freeze the robot during the next frame.

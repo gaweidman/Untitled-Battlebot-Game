@@ -12,7 +12,9 @@ func _ready():
 	gather_colliders_and_meshes();
 
 func _physics_process(delta):
+	super(delta);
 	if not is_paused():
+		phys_process_timers(delta);
 		phys_process_collision(delta);
 		phys_process_abilities(delta);
 
@@ -205,6 +207,23 @@ func get_all_meshes() -> Array:
 	var meshes = Utils.get_all_children_of_type(self, MeshInstance3D, self);
 	return meshes;
 
+######################## TIMERS
+
+##Any and all timers go here.
+func phys_process_timers(delta):
+	super(delta);
+	##tick down hitbox timer.
+	hitboxRescaleTimer -= 1;
+	##Tick down ability cooldowns.
+	if activeCooldownTimer > 0: activeCooldownTimer -= delta;
+	if passiveCooldownTimer > 0: passiveCooldownTimer -= delta;
+	pass;
+
+func phys_process_pre(delta):
+	super(delta);
+	##Reset current energy draw.
+	energyDrawCurrent = 0.0;
+
 ################ PIECE MANAGEMENT
 
 @export_category("Piece Data")
@@ -250,7 +269,6 @@ func get_buy_price_piece_only(discountMultiplier := 1.0, fixedMarkup := 0):
 ##Frame timer that updates scale of hitboxes every 3 frames.
 var hitboxRescaleTimer := 0;
 func phys_process_collision(delta):
-	hitboxRescaleTimer -= 1;
 	if hitboxRescaleTimer <= 0:
 		if has_host(true, true, true):
 			hitboxRescaleTimer = 3;
@@ -609,33 +627,57 @@ var activeCooldownTimer := 0.0;
 func set_cooldown_active():
 	set_deferred("activeCooldownTimer", get_stat("ActiveCooldown"));
 var passiveCooldownTimer := 0.0;
+func on_cooldown_active() -> bool:
+	return get_cooldown_active() > 0;
+func get_cooldown_active() -> float:
+	if activeCooldownTimer < 0:
+		activeCooldownTimer = 0;
+	return activeCooldownTimer;
 
 ##Never called in base, but to be used for stuff like Bumpers needing a cooldown before they can Bump again.
 func set_cooldown_passive():
 	set_deferred("passiveCooldownTimer", get_stat("PassiveCooldown"));
+func on_cooldown_passive() -> bool:
+	return get_cooldown_active() > 0;
+func get_cooldown_passive() -> float:
+	if passiveCooldownTimer < 0:
+		passiveCooldownTimer = 0;
+	return passiveCooldownTimer;
 
-func on_cooldown_active():
-	return activeCooldownTimer > 0;
-func on_cooldown_passive():
-	return passiveCooldownTimer > 0;
 func on_cooldown():
 	return on_cooldown_active() or on_cooldown_passive();
 
 ##Physics process step for abilities.
 func phys_process_abilities(delta):
-	##Tick down ability cooldowns.
-	if activeCooldownTimer > 0: activeCooldownTimer -= delta;
-	if passiveCooldownTimer > 0: passiveCooldownTimer -= delta;
 	##Un-disable hurtboxes.
 	if hurtboxAlwaysEnabled:
 		disable_hurtbox(false);
-	if on_cooldown() and disableHitboxesWhileOnCooldown:
-		hitboxCollisionHolder.scale = Vector3(0.00001,0.00001,0.00001);
-	else:
-		hitboxCollisionHolder.scale = Vector3.ONE;
-	energyDrawCurrent = 0.0;
+	##Run cooldown behaviors.
+	cooldown_behavior();
+	
 	##Use the passive ability of this guy.
 	use_passive();
+
+##Fires every physics frame when the Piece's active ability is on cooldown, via [method on_cooldown_active].
+func cooldown_behavior_active(cooldown : bool = on_cooldown_active()):
+	if cooldown:
+		pass;
+	else:
+		pass;
+##Fires every physics frame when the Piece's passive ability is on cooldown, via [method on_cooldown_passive].
+func cooldown_behavior_passive(cooldown : bool = on_cooldown_passive()):
+	if cooldown:
+		pass;
+	else:
+		pass;
+##Fires every physics frame when the Piece's passive or active abilities are on cooldown, via [method on_cooldown].
+func cooldown_behavior(cooldown : bool = on_cooldown()):
+	if cooldown:
+		if disableHitboxesWhileOnCooldown:
+			hitboxCollisionHolder.scale = Vector3(0.00001,0.00001,0.00001);
+	else:
+		if disableHitboxesWhileOnCooldown:
+			hitboxCollisionHolder.scale = Vector3.ONE;
 
 func get_outgoing_energy():
 	get_incoming_energy();
@@ -684,12 +726,16 @@ func get_passive_energy_cost():
 func can_use_active(actionSlot : int): 
 	if get_active_ability(actionSlot) == null:
 		return false;
+	if get_host_robot() == null:
+		return false;
 	return (not on_cooldown_active()) and (( get_current_energy_draw() + get_active_energy_cost() ) <= get_incoming_energy());
 
 ##Returns true if energyDrawPassive is 0, or if the power draw would not exceed incoming power.
 func can_use_passive():
 	if energyDrawPassive == 0.0:
 		return true;
+	if get_host_robot() == null:
+		return false;
 	#print( energyDrawPassive, get_current_energy_draw(),  get_passive_energy_cost(), get_incoming_energy())
 	return (not on_cooldown_passive()) and ((energyDrawPassive != 0.0) and (( get_current_energy_draw() + get_passive_energy_cost() ) <= get_incoming_energy()) or energyDrawPassive == 0.0);
 
@@ -822,7 +868,7 @@ func get_stash_button_name(showTree := false, prelude := "") -> String:
 
 
 
-##########################   DAMAGE STUFF
+########################## MELEE & DAMAGE
 
 @export_subgroup("Attack Stuff")
 @export var damageBase := 0.0;

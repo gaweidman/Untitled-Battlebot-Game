@@ -1,6 +1,6 @@
 [gd_scene load_steps=24 format=3 uid="uid://bvbnk32yrg0yy"]
 
-[ext_resource type="Script" uid="uid://c6qwiyf4mcvpt" path="res://scenes/prefabs/objects/pieces/piece_bumper.gd" id="1_pky5t"]
+[ext_resource type="Script" uid="uid://c6qwiyf4mcvpt" path="res://scripts/objects/pieces/piece_bumper.gd" id="1_pky5t"]
 [ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_pky5t"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="2_rahga"]
 [ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="3_g4t8k"]
@@ -67,7 +67,7 @@ cull_mode = 2
 albedo_texture = ExtResource("9_qffi3")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_er368"]
-size = Vector3(1.75, 0.625, 1.25)
+size = Vector3(1.25, 0.625, 1.25)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qe5pu"]
 size = Vector3(0.5, 0.75, 0.5)
