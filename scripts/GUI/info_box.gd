@@ -7,7 +7,6 @@ class_name InfoBox
 var partRef : Part;
 signal sellPart(part:Part);
 
-
 var icon_blank := preload("res://graphics/images/HUD/infobox/typeIcons/info_blank.png");
 var icon_utility := preload("res://graphics/images/HUD/infobox/typeIcons/info_utility.png");
 var icon_melee := preload("res://graphics/images/HUD/infobox/typeIcons/info_melee.png");
@@ -77,6 +76,7 @@ func clear_info():
 	$Description.text = "[color=e0dede]No [color=ffffff]description [color=e0dede]given.";
 	areYouSure = false;
 
+@export var sellButton : Button;
 var areYouSure := false;
 func _on_sell_button_pressed():
 	if areYouSure:
