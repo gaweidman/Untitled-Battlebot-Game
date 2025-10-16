@@ -9,7 +9,7 @@ var rotationDeg := 0.0;
 var sawSoundVolume := 0.0;
 var sawSoundPitch := 1.0;
 var snd : SND;
-var hitboxScaleOffset := 1.0;
+var hitboxScaleOffset := 0.0;
 var bladeScaleOffset := 1.0;
 var bladeScaleBase := 0.713;
 
@@ -17,6 +17,10 @@ var reflectingBullets := false;
 var reflectingTime := 0;
 
 @export var blade : MeshInstance3D;
+
+func phys_process_pre(delta):
+	super(delta);
+	#hitboxCollisionHolder.piv
 
 func stat_registry():
 	super();
@@ -31,13 +35,14 @@ func ability_registry():
 
 func phys_process_timers(delta):
 	super(delta);
-	bladeScaleOffset = lerp(bladeScaleOffset, 1.0, delta * 12) 
 	if reflectingTime > 0:
 		reflectingTime -= 1;
+		get_host_robot().set_invincibility(0.1);
 	else:
-		hitboxScaleOffset = lerp(hitboxScaleOffset, 1.0, delta * 12) 
-	reflectingBullets = hitboxScaleOffset > 1.1;
-	damageModifier = lerp(damageModifier, 1.0, delta * 12)
+		hitboxScaleOffset = lerp(hitboxScaleOffset, 0.0, delta * 12) 
+		bladeScaleOffset = lerp(bladeScaleOffset, 1.0, delta * 12) 
+		damageModifier = lerp(damageModifier, 1.0, delta * 12)
+	reflectingBullets = hitboxScaleOffset > 0.1;
 
 func phys_process_collision(delta):
 	super(delta);
@@ -46,7 +51,10 @@ func phys_process_collision(delta):
 		##var curCooldown = get_cooldown_active();
 		##var ratio = curCooldown / maxCooldown;
 		##hitboxCollisionHolder.scale
-	hitboxCollisionHolder.scale = Vector3.ONE * hitboxScaleOffset;
+	hitboxCollisionHolder.scale.x = 1.0 + hitboxScaleOffset;
+	hitboxCollisionHolder.scale.y = 1.0 + (hitboxScaleOffset * 8);
+	hitboxCollisionHolder.scale.z = 1.0 + hitboxScaleOffset;
+	#print(hitboxCollisionHolder.scale.y)
 	#else:
 		#hitboxCollisionHolder.scale = Vector3.ONE;
 
@@ -97,19 +105,18 @@ func cooldown_behavior(onCooldown : bool = on_cooldown()):
 		hitboxCollisionHolder.scale.lerp(Vector3.ONE * bladeScaleOffset, get_physics_process_delta_time() * 12)
 		return;
 	if on_cooldown_passive():
-		#bladeScaleOffset = 0.5;
 		hitboxCollisionHolder.scale.lerp(Vector3.ONE * 0.5, get_physics_process_delta_time() * 12)
 		return;
 	pass;
 
 func deflect():
 	bladeScaleOffset *= 1.75;
-	hitboxScaleOffset *= 2.5;
-	reflectingTime = 5;
-	rotationSpeed *= 3;
+	hitboxScaleOffset += .75;
+	reflectingTime = 15;
+	rotationSpeed *= 6;
 	#$ShapeCast3D.enabled = true;
 	#$Timer.start();
-	damageModifier *= 3;
+	damageModifier *= 2;
 	sawSoundPitch = 0.9;
 	sawSoundVolume = 1.0;
 	get_host_robot().set_invincibility(0.25);
@@ -119,18 +126,20 @@ func bullet_hit_hitbox(bullet:Bullet):
 	##TODO: Add enemies so this can actually be tested. Lol.
 	if bullet.get_attacker() != get_host_robot():
 		print_rich("[color=orange]Bullet hit the hitbox.")
+		pass;
 	if reflectingBullets:
 		if bullet.get_attacker() != get_host_robot():
 			#var posDif = global_position - bullet.global_position;
 			#bullet.flip_direction();
 			#bullet.set_attacker(get_host_robot())
-			reflectingTime += 2;
+			reflectingTime += 5;
 			var thisBot = get_host_robot();
 			thisBot.call_deferred("take_knockback",(bullet.dir + Vector3(0,0.1,0)) * 1000);
 			var dir = bullet.dir * -1;
 			bullet.change_direction(dir);
 			bullet.set_attacker(thisBot);
-			bullet.verticalVelocity = 0.1;
+			bullet.verticalVelocity /= 2.0;
+			bullet.speed *= 1.25;
 			
 			##Particles!!!
 			var particlePos = Vector3(randf_range(0.1,-0.1), 0, randf_range(0.1,-0.1))

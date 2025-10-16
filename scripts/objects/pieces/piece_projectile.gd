@@ -97,19 +97,25 @@ func get_firing_offset():
 
 ################### FIRING
 
+func make_new_bullets():
+	magazine.clear();
+	var magazineMax = get_magazine_max();
+	var tries = magazineMax + 1;
+	while magazine.size() < magazineMax and tries > 0:
+		var bullet : Bullet;
+		bullet = bulletRef.instantiate();
+		if bullet is Bullet:
+			var wrld = GameState.get_game_board();
+			if wrld == null: return;
+			wrld.add_child(bullet);
+			magazine.append(bullet);
+		tries -= 1;
+
 func fireBullet():
 	#print("pew");
 	var bullet : Bullet;
 	
 #	##Create new bullets when there are less than there should be
-	var magazineMax = get_magazine_max();
-	
-	if magazine.size() < magazineMax:
-		bullet = bulletRef.instantiate();
-		var wrld = get_node_or_null("/root/GameBoard")
-		if wrld == null: return;
-		wrld.add_child(bullet);
-		magazine.append(bullet);
 	
 	bullet = nextBullet();
 	
@@ -127,6 +133,11 @@ func fireBullet():
 		prints("Firing offset",get_firing_offset())
 		bullet.fire_from_robot(bot, self, pos, get_damage_data(), firingAngle, fireSpeed, bulletLifetime, get_bullet_gravity());
 		SND.play_sound_at(firingSoundString, pos, GameState.get_game_board(), firingSoundVolumeAdjust, randf_range(firingSoundPitchAdjust * 1.15, firingSoundPitchAdjust * 0.85))
+	else:
+		for bullt in magazine:
+			print(bullet)
+		make_new_bullets();
+		print("Invalid bullet")
 	leak_timer_start();
 	pass
 
@@ -148,9 +159,12 @@ func can_fire() -> bool:
 ##Checks the magazine for the next non-fired bullet.
 func nextBullet():
 	for bullet in magazine:
-		if is_instance_valid(bullet) && (not bullet.fired):
-			#print("not fired?");
-			return bullet;
+		var bulletIDX = magazine.find(bullet);
+		if is_instance_valid(bullet):
+			if (not bullet.fired):
+				return bullet;
+	make_new_bullets();
+	return magazine[0];
 	return null;
 
 ##Deletes the entire magazine.
@@ -166,6 +180,7 @@ func leak_timer_start():
 
 func leak_timer_timeout():
 	leakPrevention();
+	leak_timer_start();
 
 func _exit_tree():
 	leakPrevention();

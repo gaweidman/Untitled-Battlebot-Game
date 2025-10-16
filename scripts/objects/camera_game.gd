@@ -201,6 +201,7 @@ func _input(event):
 
 
 func in_camera_tilt_state():
+	return true;
 	return GameState.get_in_state_of_building();
 
 func get_camera_offset():

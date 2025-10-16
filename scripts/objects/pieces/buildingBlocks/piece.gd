@@ -640,8 +640,11 @@ var transmittingPower := true; ##While false, no power is transmitted from this 
 ##The amount of time needed between uses of this Piece's Active Abilities.
 @export var activeCooldownTime := 0.5;
 var activeCooldownTimer := 0.0;
-func set_cooldown_active():
-	set_deferred("activeCooldownTimer", get_stat("ActiveCooldown"));
+func set_cooldown_active(immediate := false):
+	if immediate:
+		activeCooldownTimer = get_stat("PassiveCooldown");
+	else:
+		set_deferred("activeCooldownTimer", get_stat("ActiveCooldown"));
 var passiveCooldownTimer := 0.0;
 func on_cooldown_active() -> bool:
 	return get_cooldown_active() > 0;
@@ -651,8 +654,11 @@ func get_cooldown_active() -> float:
 	return activeCooldownTimer;
 
 ##Never called in base, but to be used for stuff like Bumpers needing a cooldown before they can Bump again.
-func set_cooldown_passive():
-	set_deferred("passiveCooldownTimer", get_stat("PassiveCooldown"));
+func set_cooldown_passive(immediate := false):
+	if immediate:
+		passiveCooldownTimer = get_stat("PassiveCooldown");
+	else:
+		set_deferred("passiveCooldownTimer", get_stat("PassiveCooldown"));
 func on_cooldown_passive() -> bool:
 	return get_cooldown_passive() > 0;
 func get_cooldown_passive() -> float:

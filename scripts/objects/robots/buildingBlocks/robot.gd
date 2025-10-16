@@ -25,6 +25,7 @@ func _ready():
 	reassign_body_collision();
 	detach_pipette();
 	freeze(true, true);
+	start_all_cooldowns(true);
 
 func _process(delta):
 	process_pre(delta);
@@ -190,7 +191,7 @@ func live():
 	body.show();
 	spawned = true;
 	alive = true;
-	start_all_cooldowns();
+	start_all_cooldowns(true);
 	set_stat("Health", get_max_health());
 	
 	update_stash_hud();
@@ -364,14 +365,16 @@ func detach_pipette():
 signal health_or_energy_changed();
 
 func _on_health_or_energy_changed():
+	if is_zero_approx(get_health()):
+		die();
 	pass # Replace with function body.
 
 @export var deathSound := "Combatant.Die";
 
-func start_all_cooldowns():
+func start_all_cooldowns(immediate := false):
 	for piece in get_all_pieces():
-		piece.set_cooldown_active();
-		piece.set_cooldown_passive();
+		piece.set_cooldown_active(immediate);
+		piece.set_cooldown_passive(immediate);
 
 @export_category("Health Management")
 ##Game statistics.
@@ -416,7 +419,7 @@ func take_damage(damage:float):
 		print(damage," damage being taken.")
 		var health = get_health();
 		var isInvincible = is_invincible();
-		TextFunc.flyaway(damage, get_global_body_position() + Vector3(0,20,0), "unaffordable")
+		TextFunc.flyaway(damage, get_global_body_position() + Vector3(0,-20,0), "unaffordable")
 		if damage > 0:
 			if !isInvincible:
 				health -= damage;
@@ -440,9 +443,9 @@ var alive := false;
 
 ##Replaces the invincible timer with the value given (Or maxInvincibleTimer by default) if that value is greater than the current invincibility timer.
 func set_invincibility(amountOverride : float = maxInvincibleTimer):
-	print("old invincibility time: ",invincibleTimer)
+	#print("old invincibility time: ",invincibleTimer)
 	invincibleTimer = max(invincibleTimer, amountOverride);
-	print("new invincibility time: ",invincibleTimer)
+	#print("new invincibility time: ",invincibleTimer)
 	health_or_energy_changed.emit();
 
 func is_invincible() -> bool:

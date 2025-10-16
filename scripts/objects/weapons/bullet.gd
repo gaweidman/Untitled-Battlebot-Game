@@ -18,6 +18,7 @@ var positionAppend := Vector3.ZERO;
 var launcher : PartActive; 
 var launcherPiece : Piece;
 var attacker : Node3D;
+var originalAttacker : Node3D;
 @export var tracerFXString := "BulletTracer_small";
 var damageData : DamageData;
 @export var hitbox : Area3D;
@@ -64,6 +65,7 @@ func phys_process_timers(delta):
 ## @deprecated : This is here for compatibility reasons until we can completely flush out all references to Combatants.
 func fire(_attacker : Combatant, _launcher : Node ,_initPosition : Vector3, _direction := Vector3(1,0,0), _fireSpeed := 30.0, _lifetime := 1.0, _damage := 1.0):
 	set_attacker(_attacker);
+	originalAttacker = _attacker;
 	if ! is_instance_valid(attacker): 
 		die()
 		return
@@ -134,6 +136,7 @@ func die():
 	fired = false;
 	collision.set("disabled", true);
 	hide();
+	set_attacker(originalAttacker);
 	if leaking:
 		queue_free();
 	pass
