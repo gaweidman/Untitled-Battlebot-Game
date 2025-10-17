@@ -17,7 +17,7 @@ var currentRobot : Robot;
 func _ready():
 	scrollContainer.get_v_scroll_bar().custom_minimum_size.x = 6;
 	scrollContainer.get_v_scroll_bar().update_minimum_size();
-	btn_Equipped.icon = null; ##TODO: Make icons for this.
+	btn_Equipped.icon = null;
 	is_robot_being_referenced();
 	rotate_equipped_status(); ##Rotates off of NONE.
 	rotate_sort(); ##Rotates off of NONE.
@@ -161,9 +161,15 @@ func _on_piece_button_clicked(tiedPiece:Piece, button : StashButton):
 	deselect_all_buttons(button);
 	if is_instance_valid(currentRobot):
 		if ! tiedPiece.has_robot_host():
-			currentRobot.prepare_pipette(tiedPiece);
+			if currentRobot.get_current_pipette() != tiedPiece:
+				currentRobot.prepare_pipette(tiedPiece);
+			else:
+				currentRobot.unreference_pipette();
 		else:
-			currentRobot.select_piece(tiedPiece);
+			if !tiedPiece.selected:
+				currentRobot.select_piece(tiedPiece);
+			else:
+				currentRobot.deselect_all_pieces();
 	pass # Replace with function body.
 
 func deselect_all_buttons(ignoredButton : StashButton):

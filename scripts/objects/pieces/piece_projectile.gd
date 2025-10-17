@@ -164,8 +164,7 @@ func nextBullet():
 			if (not bullet.fired):
 				return bullet;
 	make_new_bullets();
-	return magazine[0];
-	return null;
+	return magazine.front();
 
 ##Deletes the entire magazine.
 func leakPrevention():

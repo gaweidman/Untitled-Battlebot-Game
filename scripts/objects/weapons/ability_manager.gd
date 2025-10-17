@@ -33,11 +33,10 @@ func register(partOrPiece : Node, actionSlot : int, _abilityName : String = "Act
 		functionWhenUsed = _functionWhenUsed;
 		statsUsed = _statsUsed;
 
-func call_ability():
+func call_ability() -> bool:
 	if is_instance_valid(assignedPieceOrPart):
 		if assignedPieceOrPart is PartActive:
-			assignedPieceOrPart._activate();
-			return;
+			return assignedPieceOrPart._activate();
 		if assignedPieceOrPart is Piece:
-			assignedPieceOrPart.use_active(assignedActionSlot);
-			return;
+			return assignedPieceOrPart.use_active(assignedActionSlot);
+	return false;

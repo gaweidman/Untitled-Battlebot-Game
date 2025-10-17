@@ -7,6 +7,7 @@ class_name StatTracker
 @export var statName : String;
 var statID : int;
 @export var statIcon : Texture2D = preload("res://graphics/images/HUD/statIcons/magazineIconStriped.png");
+var textColor := TextFunc.get_color("lightblue");
 @export var baseStat : float;
 var currentValue : float;
 var bonusAdd : float = 0.0; ##Adds this value to baseStat.

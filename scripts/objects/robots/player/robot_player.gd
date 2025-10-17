@@ -6,8 +6,6 @@ var gameHUD : GameHUD;
 var barHP : healthBar;
 var barEnergy : healthBar;
 
-var engineViewer : PartsHolder_Engine;
-
 func _ready():
 	super();
 
@@ -29,21 +27,27 @@ func grab_references():
 
 ######################## INPUT MANAGEMENT
 
+func phys_process_timers(delta):
+	super(delta);
+	forcedUpdateTimerHUD -= 1;
+	if forcedUpdateTimerHUD <= 0:
+		forcedUpdateTimerHUD = 5;
+		update_bars();
+
 func phys_process_combat(delta):
 	super(delta);
 	if Input.is_action_just_pressed("Fire0"):
-		fire_active(0);
-		print("Ability? ",active_abilities[0].abilityName)
+		if fire_active(0):
+			print("Ability? ",active_abilities[0].abilityName)
 	if Input.is_action_just_pressed("Fire1"):
-		fire_active(1);
-		
-		print("Ability? ",active_abilities[1].abilityName)
+		if fire_active(1):
+			print("Ability? ",active_abilities[1].abilityName)
 	if Input.is_action_just_pressed("Fire2"):
-		fire_active(2);
-		#print("Ability? ",active_abilities[2].abilityName)
+		if fire_active(2):
+			print("Ability? ",active_abilities[2].abilityName)
 	if Input.is_action_just_pressed("Fire3"):
-		fire_active(3);
-		#print("Ability? ",active_abilities[3].abilityName)
+		if fire_active(3):
+			print("Ability? ",active_abilities[3].abilityName)
 	#if Input.is_action_just_pressed("Fire4"):
 		#fire_active(4);
 
@@ -132,64 +136,6 @@ func update_bars():
 func _on_health_or_energy_changed():
 	super();
 	update_bars();
-	pass # Replace with function body.
-
-func select_piece(piece):
-	var result = super(piece);
-	#if super(piece) != null and is_instance_valid(engineViewer):
-		#engineViewer.open_with_new_piece(piece);
-	if is_instance_valid(engineViewer):
-		queue_update_engine_with_selected_or_pipette();
-	return result;
-
-func deselect_all_pieces(ignoredPiece : Piece = null):
-	super(ignoredPiece);
-	#if ignoredPiece == null or selectedPiece != ignoredPiece:
-		#engineViewer.close_and_clear();
-	if is_instance_valid(engineViewer):
-		queue_update_engine_with_selected_or_pipette();
-
-
+	pass # Replace with function body
 
 ############# HUD
-
-var forcedUpdateTimerHUD := 0;
-var queueCloseEngine := false;
-## Updates the HUD for player stuff.
-func process_hud(delta):
-	super(delta);
-	forcedUpdateTimerHUD -= 1;
-	if forcedUpdateTimerHUD <= 0:
-		forcedUpdateTimerHUD = 5;
-		update_bars();
-	
-	
-	if is_instance_valid(engineViewer):
-		if queueUpdateEngineWithSelectedOrPipette:
-			var selectionResult = get_selected_or_pipette();
-			#print("Selection result ", selectionResult)
-			if selectionResult != null:
-				if selectionResult is Piece:
-					engineViewer.open_with_new_piece(selectionResult);
-			else:
-				queue_close_engine();
-			
-			queueUpdateEngineWithSelectedOrPipette = false;
-		
-		if queueCloseEngine:
-			engineViewer.close_and_clear();
-			queueCloseEngine = false;
-	pass;
-
-
-func queue_close_engine():
-	queueCloseEngine = true;
-
-func deselect_everything():
-	super();
-	queue_update_engine_with_selected_or_pipette();
-
-
-var queueUpdateEngineWithSelectedOrPipette := false;
-func queue_update_engine_with_selected_or_pipette():
-	queueUpdateEngineWithSelectedOrPipette = true;

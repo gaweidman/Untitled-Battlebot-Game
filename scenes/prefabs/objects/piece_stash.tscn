@@ -14,7 +14,6 @@ stashButtonScene = ExtResource("2_pkixk")
 scrollContainer = NodePath("ScrollContainer")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-clip_contents = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,4 +32,8 @@ vertical_scroll_mode = 2
 layout_direction = 2
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 theme = ExtResource("4_js1gq")
+alignment = 1
+last_wrap_alignment = 2
+reverse_fill = true

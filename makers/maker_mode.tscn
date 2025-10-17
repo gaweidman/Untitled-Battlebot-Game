@@ -84,7 +84,7 @@ theme = ExtResource("2_8384o")
 text = "Back To Game"
 metadata/_edit_use_anchors_ = true
 
-[node name="RobotMaker" type="Control" parent="." node_paths=PackedStringArray("manager", "txt_botName", "txt_botNameInternal", "lbl_filepathName", "tree_robot", "tree_pieces", "tree_parts", "engine", "stash", "botSpawnPoint", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs", "tree_abilities")]
+[node name="RobotMaker" type="Control" parent="." node_paths=PackedStringArray("manager", "txt_botName", "txt_botNameInternal", "lbl_filepathName", "tree_robot", "tree_pieces", "tree_parts", "engine", "stash", "inspector", "botSpawnPoint", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs", "tree_abilities")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -102,6 +102,7 @@ tree_pieces = NodePath("PiecesTree")
 tree_parts = NodePath("PartsTree")
 engine = NodePath("PartsHolder_Engine")
 stash = NodePath("PieceInspector/StashViewer/PieceStash")
+inspector = NodePath("PieceInspector")
 botSpawnPoint = NodePath("RobotSpawnPoint")
 save_txt_newPath = NodePath("ConfirmSavePopup/NewPath")
 save_txt_oldPath = NodePath("ConfirmSavePopup/OldPath")

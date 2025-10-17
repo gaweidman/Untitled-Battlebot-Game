@@ -19,6 +19,7 @@ class_name MakerMode_Robots
 @export_subgroup("Engine")
 @export var engine : PartsHolder_Engine;
 @export var stash : PieceStash;
+@export var inspector : Inspector;
 
 func _ready():
 	initialize();
@@ -217,6 +218,7 @@ func spawn_inpspected_robot(data):
 			newBot.engineViewer = engine;
 		
 		newBot.stashHUD = stash;
+		newBot.inspectorHUD = inspector;
 		stash.currentRobot = newBot;
 		
 		botSpawnPoint.add_child(botBeingInspected);

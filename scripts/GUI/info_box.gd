@@ -4,7 +4,10 @@ class_name InfoBox
 
 @export var iconBase : TextureRect;
 @export var lbl_partName : Label;
+@export var rlbl_desc : RichTextLabel;
+#@export var rlbl_desc : RichTextLabel;
 var partRef : Part;
+var pieceRef : Piece;
 signal sellPart(part:Part);
 
 var icon_blank := preload("res://graphics/images/HUD/infobox/typeIcons/info_blank.png");
@@ -15,11 +18,35 @@ var icon_passive := preload("res://graphics/images/HUD/infobox/typeIcons/info_pa
 var icon_scrap := preload("res://graphics/images/HUD/infobox/typeIcons/info_scrap.png");
 var icon_warning := preload("res://graphics/images/HUD/infobox/typeIcons/info_warning.png");
 var icon_error := preload("res://graphics/images/HUD/infobox/typeIcons/info_error.png");
+var icon_piece := preload("res://graphics/images/HUD/infobox/typeIcons/info_piece.png");
+var icon_piece_unequipped := preload("res://graphics/images/HUD/infobox/typeIcons/info_piece_unequipped.png");
+var icon_part := preload("res://graphics/images/HUD/infobox/typeIcons/info_part.png");
+var icon_part_unequipped := preload("res://graphics/images/HUD/infobox/typeIcons/info_part_unequipped.png");
 
 func _ready():
 	clear_info();
 
-func populate_info(part:Part):
+func populate_info(thing):
+	clear_info(thing);
+	if thing is Part:
+		populate_info_part(thing);
+	if thing is Piece:
+		populate_info_piece(thing);
+	calculate_required_height();
+
+func get_required_height() -> int:
+	return int(requiredHeight);
+
+var requiredHeight := 272.0;
+func calculate_required_height():
+	var h = size.y;
+	for child in get_children():
+		var y = child.position.y;
+		h = maxi(h, y + child.size.y);
+	requiredHeight = h;
+	return requiredHeight;
+
+func populate_info_part(part:Part):
 	partRef = part;
 	lbl_partName.text = part.partName;
 	if part.ownedByPlayer:
@@ -61,20 +88,39 @@ func populate_info(part:Part):
 	elif part._get_part_type() == Part.partTypes.PASSIVE:
 		iconBase.texture = load("res://graphics/images/HUD/infobox/info_passive.png");
 
-func clear_info():
-	partRef = null;
-	lbl_partName.text = "No Part Selected";
-	iconBase.texture = icon_blank;
-	$DamageIcon.hide();
-	$CooldownIcon.hide();
-	$EnergyIcon.hide();
-	$MagazineIcon.hide();
-	$SellButton/Label.hide();
-	$SellButton.disabled = true;
-	$MoveButton.button_pressed = false;
-	$MoveButton.disabled = true;
-	$Description.text = "[color=e0dede]No [color=ffffff]description [color=e0dede]given.";
-	areYouSure = false;
+func populate_info_piece(piece:Piece):
+	pieceRef = piece;
+	lbl_partName.text = piece.pieceName;
+	rlbl_desc.text = piece.pieceDescription;
+	if piece.is_equipped():
+		iconBase.texture = icon_piece;
+	else:
+		iconBase.texture = icon_piece_unequipped;
+	pass;
+
+func clear_info(thingToCheck = null):
+	if thingToCheck != get_ref():
+		partRef = null;
+		lbl_partName.text = "Nothing Selected";
+		iconBase.texture = icon_blank;
+		#$DamageIcon.hide();
+		#$CooldownIcon.hide();
+		#$EnergyIcon.hide();
+		#$MagazineIcon.hide();
+		#$SellButton/Label.hide();
+		#$SellButton.disabled = true;
+		#$MoveButton.button_pressed = false;
+		#$MoveButton.disabled = true;
+		#rlbl_desc.text = "[color=e0dede]No [color=ffffff]Description [color=e0dede]Found.";
+		rlbl_desc.text = "[color=e0dede]Closing...";
+		var col = TextFunc.get_color("lightred")
+		print_rich("[color="+str(col.to_html())+"]test")
+		areYouSure = false;
+
+func get_ref():
+	if is_instance_valid(partRef): return partRef;
+	if is_instance_valid(pieceRef): return pieceRef;
+	return null;
 
 @export var sellButton : Button;
 var areYouSure := false;

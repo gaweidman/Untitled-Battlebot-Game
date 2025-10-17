@@ -6,6 +6,7 @@ class_name Piece
 
 func _ready():
 	hide();
+	declare_names();
 	assign_references();
 	ability_registry();
 	super(); #Stat registry.
@@ -241,6 +242,12 @@ func phys_process_pre(delta):
 
 @export_category("Piece Data")
 @export var pieceName : StringName = "Piece";
+##If you don't want to manually type all the bbcode, you can use this to construct the description.
+@export var descriptionConstructor : Array[RichTextConstructor] = [];
+func declare_names():
+	if not descriptionConstructor.is_empty():
+		pieceDescription = TextFunc.parse_text_constructor_array(descriptionConstructor);
+	pass;
 @export_multiline var pieceDescription := "No Description Found.";
 @export var weightBase := 1.0;
 

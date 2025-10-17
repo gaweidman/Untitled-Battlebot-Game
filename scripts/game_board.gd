@@ -313,6 +313,7 @@ func in_one_of_given_states(states:Array)->bool:
 
 #################### ENTITY SPAWNING 
 
+@export var inspectorHUD : Inspector;
 @export var stashHUD : PieceStash;
 
 func spawn_player(_in_position := playerSpawnPosition) -> Node3D:
@@ -327,7 +328,7 @@ func spawn_player(_in_position := playerSpawnPosition) -> Node3D:
 	
 	player.live();
 	stashHUD.currentRobot = player;
-	player.stashHUD = stashHUD;
+	player.inspectorHUD = inspectorHUD;
 	stashHUD.regenerate_list();
 	
 	return player;

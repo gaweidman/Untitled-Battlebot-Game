@@ -26,6 +26,7 @@ func _ready():
 	detach_pipette();
 	freeze(true, true);
 	start_all_cooldowns(true);
+	update_stash_hud();
 
 func _process(delta):
 	process_pre(delta);
@@ -145,14 +146,52 @@ func load_from_startup_generator():
 
 ########## HUD
 
+var forcedUpdateTimerHUD := 0;
+var queueCloseEngine := false;
+var engineViewer : PartsHolder_Engine;
+
+func queue_close_engine():
+	queueCloseEngine = true;
+
+var queueUpdateEngineWithSelectedOrPipette := false;
+func queue_update_engine_with_selected_or_pipette():
+	queueUpdateEngineWithSelectedOrPipette = true;
+
 func process_hud(delta):
-	if Input.is_action_just_pressed("StashSelected"):
+	if Input.is_action_just_pressed("StashSelected") and GameState.get_in_state_of_building():
 		print("Stash button pressed")
 		stash_selected_piece();
 		update_stash_hud();
 	if Input.is_action_just_pressed("Unselect"):
 		print("Unselect button pressed")
 		deselect_everything();
+	if is_instance_valid(engineViewer):
+		if queueUpdateEngineWithSelectedOrPipette:
+			var selectionResult = get_selected_or_pipette();
+			#print("Selection result ", selectionResult)
+			if selectionResult != null:
+				if selectionResult is Piece:
+					engineViewer.open_with_new_piece(selectionResult);
+			else:
+				queue_close_engine();
+			
+			queueUpdateEngineWithSelectedOrPipette = false;
+		
+		if queueCloseEngine:
+			engineViewer.close_and_clear();
+			queueCloseEngine = false;
+
+func update_stash_hud():
+	if is_instance_valid(inspectorHUD):
+		inspectorHUD.regenerate_stash(self);
+		update_inspector_hud(get_selected_or_pipette());
+func queue_update_engine_hud():
+	if is_instance_valid(engineViewer):
+		queue_update_engine_with_selected_or_pipette();
+
+func update_inspector_hud(input = null):
+	if is_instance_valid(inspectorHUD):
+		inspectorHUD.update_selection(input);
 
 ######################### STATE CONTROL
 
@@ -209,6 +248,7 @@ func die():
 
 ################################# STASH
 
+var inspectorHUD : Inspector;
 var stashHUD : PieceStash;
 ##The effective "inventory" of this robot. Inaccessible outside of Maker Mode for [@Robot]s that are not a [@Robot_Player].
 var stashPieces : Array[Piece] = []
@@ -294,10 +334,6 @@ func add_instantiated_part_to_stash(inPiece : Part):
 	Utils.append_unique(stashParts, inPiece);
 	update_stash_hud();
 
-func update_stash_hud():
-	if is_instance_valid(stashHUD):
-		stashHUD.regenerate_list(self);
-
 ##The path to the scene the Piece placement pipette is using.
 var pipettePiecePath := "";
 var pipettePieceScene : PackedScene;
@@ -343,6 +379,8 @@ func prepare_pipette(override : Variant = get_current_pipette()):
 		prepare_pipette_from_piece(override);
 	if override is Part: 
 		prepare_pipette_from_part(override);
+	
+	update_inspector_hud(get_current_pipette());
 
 func unreference_pipette():
 	pipettePiecePath = "";
@@ -350,6 +388,8 @@ func unreference_pipette():
 	pipettePieceInstance = null;
 	pipettePartInstance = null;
 	update_stash_hud();
+	update_inspector_hud();
+	queue_update_engine_hud();
 
 func detach_pipette():
 	if is_instance_valid(pipettePieceInstance):
@@ -752,6 +792,7 @@ func on_add_piece(piece:Piece):
 		if ability is AbilityManager:
 			print("Adding ability ", ability.abilityName)
 			assign_ability_to_next_active_slot(ability);
+	update_stash_hud();
 	pass;
 
 ## Fired by a Piece when it is removed from the Robot.
@@ -843,12 +884,13 @@ func check_abilities_are_valid():
 				unassign_ability_slot(slot);
 
 ##Attempts to fire the active ability in the given slot, if that slot has one.
-func fire_active(slotNum):
+func fire_active(slotNum) -> bool:
 	check_abilities_are_valid();
 	if slotNum in active_abilities.keys():
 		var ability = active_abilities[slotNum];
 		if ability is AbilityManager:
-			ability.call_ability();
+			return ability.call_ability();
+	return false;
 
 ##Grabs the next ability slot that is currently null.
 func get_next_available_active_slot():
@@ -898,19 +940,21 @@ func get_selected():
 	return null;
 
 func deselect_everything():
-	detach_pipette();
+	unreference_pipette();
 	deselect_all_parts();
 	deselect_all_pieces();
 
 func deselect_all_pieces(ignoredPiece : Piece = null):
+	unreference_pipette();
 	for piece in get_all_pieces():
 		if ignoredPiece == null or piece != ignoredPiece:
 			if piece.get_selected():
 				piece.deselect();
 	if ignoredPiece == null or selectedPiece != ignoredPiece:
 		selectedPiece = null;
-	#detach_pipette()
 	update_stash_hud();
+	update_inspector_hud(get_selected_or_pipette());
+	queue_update_engine_hud();
 	pass;
 
 func select_piece(piece : Piece):
@@ -920,6 +964,8 @@ func select_piece(piece : Piece):
 			selectedPiece = piece;
 			print("Selected Piece: ", selectedPiece)
 			deselect_all_pieces(piece);
+			update_inspector_hud(piece);
+			queue_update_engine_hud();
 			return piece;
 		else:
 			deselect_all_pieces();

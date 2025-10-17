@@ -40,6 +40,7 @@ script = ExtResource("1_gm1wa")
 swivelNode = NodePath("Meshes/SwivelTop")
 force_visibility = true
 pieceName = &"BodyCube"
+removable = false
 meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
