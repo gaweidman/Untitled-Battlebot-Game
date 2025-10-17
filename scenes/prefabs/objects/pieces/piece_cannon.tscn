@@ -12,7 +12,7 @@
 
 [sub_resource type="Resource" id="Resource_861xr"]
 script = ExtResource("2_52v1y")
-string = "Shoots "
+string = "Shoots"
 color = 1
 newline = false
 endingSpace = false
