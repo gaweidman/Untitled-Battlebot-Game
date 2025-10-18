@@ -39,7 +39,7 @@ tile_map_data = PackedByteArray("AAD/////AAAEAAIAAAD//wAAAAAEAAEAAAD//wEAAAAEAAE
 tile_set = ExtResource("3_5nxix")
 metadata/_edit_group_ = true
 
-[node name="InfoBox" type="Control" parent="." node_paths=PackedStringArray("iconBase", "lbl_partName", "rlbl_desc")]
+[node name="InfoBox" type="Control" parent="." node_paths=PackedStringArray("iconBase", "lbl_partName", "rlbl_desc", "abilityScrollContainer", "abilityHolder")]
 unique_name_in_owner = true
 clip_contents = true
 layout_mode = 1
@@ -59,6 +59,8 @@ script = ExtResource("8_o1n0x")
 iconBase = NodePath("InfoIconBase")
 lbl_partName = NodePath("Name")
 rlbl_desc = NodePath("Description")
+abilityScrollContainer = NodePath("AbilityScrollContainer")
+abilityHolder = NodePath("AbilityScrollContainer/AbilityHolder")
 
 [node name="InfoIconBase" type="TextureRect" parent="InfoBox"]
 layout_mode = 1

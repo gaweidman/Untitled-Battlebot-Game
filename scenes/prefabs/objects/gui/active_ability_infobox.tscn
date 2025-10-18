@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bwiv2trs8p6vk" path="res://graphics/images/HUD/buttonGFX/digitalOutline_normal.png" id="3_fgv2p"]
 [ext_resource type="PackedScene" uid="uid://dqajmobt7ehra" path="res://scenes/prefabs/objects/gui/stat_icon.tscn" id="4_ri6cs"]
 
-[node name="ActiveAbilityInfobox" type="MarginContainer" node_paths=PackedStringArray("outlineBox")]
+[node name="ActiveAbilityInfobox" type="MarginContainer" node_paths=PackedStringArray("outlineBox", "lbl_name", "rlbl_desc")]
 custom_minimum_size = Vector2(252, 0)
 offset_right = 252.0
 offset_bottom = 103.0
@@ -16,6 +16,8 @@ theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 script = ExtResource("1_mmcvq")
 outlineBox = NodePath("Box")
+lbl_name = NodePath("Box/Name")
+rlbl_desc = NodePath("Box/AbilityDescription")
 
 [node name="Box" type="NinePatchRect" parent="."]
 texture_filter = 1
@@ -38,7 +40,7 @@ offset_bottom = 21.0
 theme_type_variation = &"HeaderLarge"
 text = "Ability"
 
-[node name="Description" type="RichTextLabel" parent="Box"]
+[node name="AbilityDescription" type="RichTextLabel" parent="Box"]
 clip_contents = false
 layout_mode = 2
 offset_left = 4.0
@@ -50,11 +52,18 @@ text = "No Description Found."
 fit_content = true
 
 [node name="HBoxContainer" type="HFlowContainer" parent="Box"]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 51.0
-offset_right = 240.0
-offset_bottom = 91.0
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -118.5
+offset_top = -44.0
+offset_right = 117.5
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
 
 [node name="StatIcon" parent="Box/HBoxContainer" instance=ExtResource("4_ri6cs")]
 layout_mode = 2

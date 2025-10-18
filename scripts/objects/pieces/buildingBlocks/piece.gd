@@ -825,10 +825,14 @@ func ability_validation():
 	pass;
 
 ## returns an array of all abilities, active and passive.
-func get_all_abilities() -> Array[AbilityManager]:
+func get_all_abilities(passiveFirst := false) -> Array[AbilityManager]:
 	var abilitiesToCheck : Array[AbilityManager] = [];
-	abilitiesToCheck.append_array(activeAbilities);
-	abilitiesToCheck.append(passiveAbility);
+	if passiveFirst:
+		abilitiesToCheck.append(passiveAbility);
+		abilitiesToCheck.append_array(activeAbilities);
+	else:
+		abilitiesToCheck.append_array(activeAbilities);
+		abilitiesToCheck.append(passiveAbility);
 	return abilitiesToCheck;
 
 ## This should be run in ability_registry() only.

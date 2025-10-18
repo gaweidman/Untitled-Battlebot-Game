@@ -101,6 +101,8 @@ func populate_info_piece(piece:Piece):
 		iconBase.texture = icon_piece;
 	else:
 		iconBase.texture = icon_piece_unequipped;
+	
+	populate_abilities(piece);
 	pass;
 
 func clear_info(thingToCheck = null):
@@ -121,6 +123,8 @@ func clear_info(thingToCheck = null):
 		var col = TextFunc.get_color("lightred")
 		print_rich("[color="+str(col.to_html())+"]test")
 		areYouSure = false;
+		
+		clear_abilities();
 
 func get_ref():
 	if is_instance_valid(partRef): return partRef;
@@ -138,9 +142,27 @@ func _on_sell_button_pressed():
 		$SellButton/Label.text = "SURE? "+ TextFunc.format_stat(partRef._get_sell_price(), 0);
 	pass # Replace with function body.
 
+@export var abilityInfoboxScene := preload("res://scenes/prefabs/objects/gui/active_ability_infobox.tscn");
+@export var abilityScrollContainer : ScrollContainer;
+@export var abilityHolder : VBoxContainer;
 func populate_abilities(thing):
+	clear_abilities();
+	var effectiveSize := 0;
 	if thing is Piece:
-		var abilities = thing.activeAbilities;
+		var abilities = thing.get_all_abilities();
+		for ability in abilities:
+			if is_instance_valid(ability) and ability is AbilityManager:
+				var newBox = abilityInfoboxScene.instantiate();
+				if newBox is AbilityInfobox:
+					newBox.populate_with_ability(ability);
+					abilityHolder.add_child(newBox);
+					effectiveSize += 1;
+	abilityScrollContainer.visible = effectiveSize > 0;
+
+func clear_abilities():
+	##Clear out the abilities.
+	for ability in abilityHolder.get_children():
+		ability.queue_free();
 
 ## Gets connected to when an AbilityInfobox gets made during the PopulateAbilities function.
 func _on_ability_assignment_button_pressed(ability:AbilityManager):
