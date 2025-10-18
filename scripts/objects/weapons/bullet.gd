@@ -112,6 +112,7 @@ func fire_from_robot(_attacker : Robot, _launcher : Piece ,_initPosition : Vecto
 	rotateTowardVector3(dir);
 	
 	show();
+	unfreeze();
 	ParticleFX.play("SmokePuffSingle", GameState.get_game_board(), Vector3.ZERO, 0.5, self);
 	ParticleFX.play(tracerFXString, GameState.get_game_board(), Vector3.ZERO, sizeMult, self,);
 	fired = true;
@@ -150,7 +151,7 @@ func _on_body_entered(body):
 	pass # Replace with function body.
 
 func _on_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
-	if body is RobotBody and body.get_parent() != get_attacker():
+	if not leaking and body is RobotBody and body.get_parent() != get_attacker():
 		print("tis a robot. from ", name)
 		var other_shape_owner = body.shape_find_owner(body_shape_index)
 		var other_shape_node = body.shape_owner_get_owner(other_shape_owner)
@@ -170,6 +171,7 @@ func _on_body_shape_entered(body_rid, body, body_shape_index, local_shape_index)
 func shot_something(inbody):
 	if leaking: return;
 	if ! is_instance_valid(inbody): return;
+	if ! visible: return;
 	var validTarget = false;
 	var parent = inbody.get_parent();
 	if parent == attacker:

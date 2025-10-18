@@ -326,7 +326,7 @@ func spawn_player(_in_position := playerSpawnPosition) -> Node3D:
 		newPlayer.global_position = _in_position;
 		player = newPlayer;
 	
-	player.live();
+	player.queue_live();
 	stashHUD.currentRobot = player;
 	player.inspectorHUD = inspectorHUD;
 	stashHUD.regenerate_list();

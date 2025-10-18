@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=80 format=3 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena/arena_floor.tres" id="2_4jixe"]
@@ -49,6 +49,7 @@
 [ext_resource type="Texture2D" uid="uid://djth0eo8kvkcm" path="res://graphics/images/HUD/sell_unselected.png" id="26_4upc1"]
 [ext_resource type="Texture2D" uid="uid://btfetdy0ahup8" path="res://graphics/images/HUD/sell_selected.png" id="27_iqmcf"]
 [ext_resource type="Texture2D" uid="uid://b71g2q13wr7do" path="res://graphics/images/HUD/sell_disabled.png" id="28_2kc6q"]
+[ext_resource type="FontFile" uid="uid://qklyfj282mg3" path="res://graphics/font/Scrap8x14.ttf" id="28_o0v2b"]
 [ext_resource type="Texture2D" uid="uid://dsl0x2nq48gga" path="res://graphics/images/HUD/move_unselected.png" id="29_o0v2b"]
 [ext_resource type="Texture2D" uid="uid://cxeur7wg8nvq7" path="res://graphics/images/HUD/move_selected.png" id="30_lb2e7"]
 [ext_resource type="Texture2D" uid="uid://dnu6ivnxlduxo" path="res://graphics/images/HUD/move_hover.png" id="31_vehjn"]
@@ -905,15 +906,16 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -74.0
-offset_top = -49.0
+offset_top = -45.0
 offset_right = 87.0
-offset_bottom = -22.0
+offset_bottom = -18.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 19
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("28_o0v2b")
+theme_override_font_sizes/font_size = 16
 text = "00/00"
 
 [node name="LeftSide" type="TextureRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud"]
@@ -1196,15 +1198,16 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -87.0
-offset_top = -49.0
+offset_top = -45.0
 offset_right = 74.0
-offset_bottom = -22.0
+offset_bottom = -18.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 0.431373, 0.286275, 1)
 theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 19
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("28_o0v2b")
+theme_override_font_sizes/font_size = 16
 text = "00/00"
 horizontal_alignment = 2
 

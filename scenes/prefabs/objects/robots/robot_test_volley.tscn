@@ -1,8 +1,7 @@
-[gd_scene load_steps=31 format=3 uid="uid://bbsfkqad6ok8r"]
+[gd_scene load_steps=22 format=3 uid="uid://bbsfkqad6ok8r"]
 
 [ext_resource type="Script" uid="uid://bds06vyivfdpe" path="res://scripts/objects/robots/robot_test_volley.gd" id="1_fhm5l"]
 [ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_hkyix"]
-[ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="3_sdywp"]
 [ext_resource type="Texture2D" uid="uid://cnfat2kqvmdcd" path="res://graphics/images/HUD/statIcons/damageIconStriped.png" id="4_h283g"]
 [ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="5_jreh5"]
 [ext_resource type="Script" uid="uid://cd3dvyejdjvlg" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="6_yalvc"]
@@ -11,78 +10,6 @@
 [ext_resource type="Texture2D" uid="uid://b775d1fn78gcv" path="res://graphics/images/HUD/statIcons/weightIconStriped.png" id="9_r24ui"]
 [ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="10_qh4bp"]
 [ext_resource type="PackedScene" uid="uid://b4adm8wxo7ym0" path="res://scenes/prefabs/objects/robots/buildingBlocks/treads.tscn" id="11_f703s"]
-
-[sub_resource type="Resource" id="Resource_f703s"]
-resource_name = "Energy31"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Energy"
-statName = "Energy31"
-statIcon = ExtResource("3_sdywp")
-baseStat = 3.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_qh4bp"]
-resource_name = "EnergyMax31"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Energy Max"
-statName = "EnergyMax31"
-statIcon = ExtResource("4_h283g")
-baseStat = 3.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_pv5pf"]
-resource_name = "EnergyRefreshRate31"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Energy Refresh Rate"
-statName = "EnergyRefreshRate31"
-statIcon = ExtResource("3_sdywp")
-baseStat = 1.65
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_r24ui"]
-resource_name = "Health31"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Health"
-statName = "Health31"
-statIcon = ExtResource("4_h283g")
-baseStat = 3.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_wbk27"]
-resource_name = "HealthMax31"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Health Max"
-statName = "HealthMax31"
-statIcon = ExtResource("4_h283g")
-baseStat = 3.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_m1bml"]
-resource_name = "InvincibilityTime31"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Invincibility Time"
-statName = "InvincibilityTime31"
-statIcon = ExtResource("5_jreh5")
-baseStat = 0.25
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_5mid7"]
-resource_name = "MovementSpeedAcceleration31"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Movement Speed Acceleration"
-statName = "MovementSpeedAcceleration31"
-statIcon = ExtResource("5_jreh5")
-baseStat = 6000.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_4n7kk"]
-resource_name = "MovementSpeedMax31"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Movement Speed Max"
-statName = "MovementSpeedMax31"
-statIcon = ExtResource("5_jreh5")
-baseStat = 20.0
-roundingMode = 0
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
 friction = 200.0
@@ -171,9 +98,11 @@ roundingMode = 0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_kynhc"]
 
-[node name="Robot_Base" type="Node3D"]
+[node name="Robot_TestVolley" type="Node3D"]
 visible = false
 script = ExtResource("1_fhm5l")
+robotNameInternal = "TestVolley"
+robotName = "Test Volley"
 startupGenerator = {
 &"occupant": {
 "res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn": {
@@ -239,16 +168,6 @@ startupGenerator = {
 },
 &"rotation": Vector3(0, 0, 0)
 }
-statCollection = Dictionary[String, ExtResource("2_hkyix")]({
-"Energy31": SubResource("Resource_f703s"),
-"EnergyMax31": SubResource("Resource_qh4bp"),
-"EnergyRefreshRate31": SubResource("Resource_pv5pf"),
-"Health31": SubResource("Resource_r24ui"),
-"HealthMax31": SubResource("Resource_wbk27"),
-"InvincibilityTime31": SubResource("Resource_m1bml"),
-"MovementSpeedAcceleration31": SubResource("Resource_5mid7"),
-"MovementSpeedMax31": SubResource("Resource_4n7kk")
-})
 filepathForThisEntity = "res://scenes/prefabs/objects/robots/robot_test_volley.tscn"
 
 [node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Driveable", "Metal"]]

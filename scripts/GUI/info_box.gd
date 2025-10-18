@@ -28,11 +28,16 @@ func _ready():
 
 func populate_info(thing):
 	clear_info(thing);
-	if thing is Part:
-		populate_info_part(thing);
-	if thing is Piece:
-		populate_info_piece(thing);
+	var good = false;
+	if is_instance_valid(thing):
+		if thing is Part:
+			populate_info_part(thing);
+			good = true;
+		if thing is Piece:
+			populate_info_piece(thing);
+			good = true;
 	calculate_required_height();
+	return good;
 
 func get_required_height() -> int:
 	return int(requiredHeight);
@@ -132,3 +137,11 @@ func _on_sell_button_pressed():
 		areYouSure = true;
 		$SellButton/Label.text = "SURE? "+ TextFunc.format_stat(partRef._get_sell_price(), 0);
 	pass # Replace with function body.
+
+func populate_abilities(thing):
+	if thing is Piece:
+		var abilities = thing.activeAbilities;
+
+## Gets connected to when an AbilityInfobox gets made during the PopulateAbilities function.
+func _on_ability_assignment_button_pressed(ability:AbilityManager):
+	pass;

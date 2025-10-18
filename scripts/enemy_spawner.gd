@@ -11,7 +11,10 @@ func spawn_enemy():
 	#newEnemy.global_position = global_position;
 	#if not newEnemy.pr
 	if is_instance_valid(newEnemy):
-		newEnemy.live();
+		if newEnemy is Combatant:
+			newEnemy.live();
+		if newEnemy is Robot:
+			newEnemy.queue_live();
 	queue_free();
 
 func assign_enemy_type_from_string_path(inPath : String):

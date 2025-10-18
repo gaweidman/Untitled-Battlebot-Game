@@ -76,6 +76,7 @@ func regenerate_stats():
 func get_stat(statName : String, roundModeOverride := StatTracker.roundingModes.NoOverride):
 	var stat = get_stat_resource(statName);
 	if stat != null:
+		#if stat.statFriendlyName.contains("Max"): print("Max health found?", stat.statFriendlyName)
 		if roundModeOverride != StatTracker.roundingModes.NoOverride:
 			return stat.get_stat(roundModeOverride);
 		else:
@@ -88,6 +89,9 @@ var nonexistentStats = []
 ## Returns the stat's StatTracker resource.[br]
 ## If the stat given doesn't exist, and it's trying to get that stat, then 
 func get_stat_resource(statName : StringName, ignoreNonexistent := false) -> StatTracker:
+	#if statName == "HealthMax": 
+		#print_all_stats();
+		#pass;
 	if (not ignoreNonexistent) and nonexistentStats.has(stat_name_with_id(statName)):
 		return null;
 	if statCollection.has(stat_name_with_id(statName)):
@@ -99,6 +103,7 @@ func get_stat_resource(statName : StringName, ignoreNonexistent := false) -> Sta
 	return null;
 
 func print_all_stats():
+	print("Printing stats... ", statCollection.size())
 	for statName in statCollection.keys():
 		var stat = statCollection[statName]
 		if stat is StatTracker:
@@ -167,3 +172,6 @@ func get_stat_holder_id():
 
 func stat_name_with_id(statName):
 	return statName + str(get_stat_holder_id());
+
+func stat_exists(statName):
+	return get_stat_resource(statName, true) != null;

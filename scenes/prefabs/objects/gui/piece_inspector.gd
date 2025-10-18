@@ -28,9 +28,9 @@ func change_mode(newMode:inspectorModes, fromModes:Array[inspectorModes] = []):
 	queuedMode = null;
 	queuedModeFilter = [];
 	if newMode == get_current_mode(): return;
-	print("Changing modes to ", str(inspectorModes.keys()[newMode]))
+	#print("Changing modes to ", str(inspectorModes.keys()[newMode]))
 	if not ((fromModes.is_empty()) or (get_current_mode() in fromModes)): return; ##if the array is empty, skip this step. If it is not, only change modes if you're in one of the given modes.
-	print("Mode passed the array check.")
+	#print("Mode passed the array check.")
 	curMode = newMode;
 	enter_mode(newMode);
 	pass;
@@ -51,7 +51,7 @@ var updateFrame := true;
 ## Runs when we enter a new mode from [enum inspectorModes]. 
 func enter_mode(newMode : inspectorModes):
 	#await infobox.ready
-	print("Changed modes to ", str(inspectorModes.keys()[newMode]))
+	#print("Changed modes to ", str(inspectorModes.keys()[newMode]))
 	updateFrame = false;
 	match newMode:
 		inspectorModes.CLOSED:
@@ -79,9 +79,11 @@ func enter_mode(newMode : inspectorModes):
 			calc_target_stash_height();
 			pass;
 		inspectorModes.PART:
+			set_deferred("queued_thing", null);
 			inspectorOpen = true;
 			pass;
 		inspectorModes.PIECE:
+			set_deferred("queued_thing", null);
 			inspectorOpen = true;
 			pass;
 	
@@ -102,10 +104,12 @@ const stashHeightWhenClosed := 439;
 @export var stashSeparator : TextureRect;
 
 func calc_target_stash_height(_infoboxHeight := infobox.get_required_height()):
-	if !in_modes([inspectorModes.OPENING, inspectorModes.PART, inspectorModes.PIECE]): 
+	#if !in_modes([inspectorModes.OPENING, inspectorModes.PART, inspectorModes.PIECE]): 
+	if !is_instance_valid(inspectedThing): 
 		_infoboxHeight = 0; 
 		targetStashHeight = stashHeightWhenClosed;
 		#print("Not in the correct mode to get a new height. Returning ",stashHeightWhenClosed)
+		#print("Inspected thing is invalid.")
 		return targetStashHeight;
 	#print_rich("[color=red]" + str(_infoboxHeight))
 	infoboxHeight = _infoboxHeight;
@@ -147,10 +151,6 @@ func _process(delta):
 	stash.size.y = currentStashHeight;
 	stash.position.y = startingStashY + dif;
 	
-	
-	#print(dif2)
-	#print(get_current_mode())
-	
 	match get_current_mode():
 		inspectorModes.CLOSED:
 			#print("closed mode")
@@ -161,17 +161,17 @@ func _process(delta):
 		inspectorModes.OPENING:
 			#print("opening mode")
 			inspectorOpen = true;
-			print(dif2)
+			#print(dif2)
 			if dif2 <= 0.0: 
 				#change_mode(inspectorModes.CLOSED);
 				if queued_thing is Part:
-					change_mode_next_frame(inspectorModes.PART);
+					change_mode(inspectorModes.PART);
 				if queued_thing is Piece:
-					change_mode_next_frame(inspectorModes.PIECE);
+					change_mode(inspectorModes.PIECE);
 			pass;
 		inspectorModes.CLOSING:
 			inspectorOpen = true;
-			print(dif2)
+			#print(dif2)
 			if dif2 >= 0: 
 				change_mode_next_frame(inspectorModes.CLOSED);
 			pass;
@@ -192,17 +192,14 @@ func _process(delta):
 			infobox.size.y = targetInfoboxHeight;
 		else:
 			inspectorOpen = false;
-	#print(inspectorOpen)
-	#print(str(inspectorModes.keys()[get_current_mode()]))
+	
 	infobox.visible = inspectorOpen;
 	stashSeparator.visible = ! (dif < 4);
-
 
 ## Clears [member queued_thing] after populating the inspector with it.
 func populate_from_queued():
 	if is_instance_valid(queued_thing):
 		populate_inspector(queued_thing);
-		queued_thing = null;
 	else:
 		queued_thing = null;
 		close_inspector();
@@ -210,7 +207,8 @@ func populate_from_queued():
 ## Populates the infobox with Part or Piece details.
 func populate_inspector(thing):
 	#prints("Inspector is being populated by ",thing)
-	infobox.populate_info(thing);
+	if infobox.populate_info(thing):
+		inspectedThing = thing;
 
 ## Changes modes to closing.
 func close_inspector():
@@ -221,8 +219,9 @@ func close_inspector():
 ## If we're already inspecting the thing being asked to update, it repopulates the infobox with updated data.
 func update_selection(thing):
 	#print("Currently inspected: ",inspectedThing)
-	if !is_instance_valid(thing):
-		#print("Invalid thing to inspect... ", thing)
+	if thing == null:
+		close_inspector();
+	if !is_instance_valid(thing) and queued_thing == null:
 		close_inspector();
 	else:
 		#print("Valid thing to inspect. ", thing)
@@ -235,12 +234,9 @@ func update_selection(thing):
 			open_inspector(thing);
 			return;
 
-##Queues a new thing to open the inspector for.
+## Queues a new thing to open the inspector for.
 func open_inspector(thing):
-	inspectedThing = null;
 	if queued_thing != thing:
-		#print("Opening inspector for real.")
-		#print("INSPECTOR actually opening with ", thing)
 		queued_thing = thing;
 		change_mode(inspectorModes.OPEN_QUEUED, [inspectorModes.CLOSED, inspectorModes.CLOSING, inspectorModes.PIECE, inspectorModes.PART]);
 	else:

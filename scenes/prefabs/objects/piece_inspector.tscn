@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://dpal3hy2d8lig"]
+[gd_scene load_steps=19 format=4 uid="uid://dpal3hy2d8lig"]
 
 [ext_resource type="Texture2D" uid="uid://dggphix4dl3qu" path="res://graphics/images/HUD/screenGFX/screenBG.png" id="1_kj7fi"]
 [ext_resource type="PackedScene" uid="uid://cwe7m6fguo8yh" path="res://scenes/prefabs/objects/piece_stash.tscn" id="2_5kns5"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://btfetdy0ahup8" path="res://graphics/images/HUD/sell_selected.png" id="14_rr8so"]
 [ext_resource type="Texture2D" uid="uid://b71g2q13wr7do" path="res://graphics/images/HUD/sell_disabled.png" id="15_ioju6"]
 [ext_resource type="Texture2D" uid="uid://dsl0x2nq48gga" path="res://graphics/images/HUD/move_unselected.png" id="16_8ba3m"]
+[ext_resource type="PackedScene" uid="uid://dy07swne0b8h0" path="res://scenes/prefabs/objects/gui/active_ability_infobox.tscn" id="16_ppwmp"]
 [ext_resource type="Texture2D" uid="uid://cxeur7wg8nvq7" path="res://graphics/images/HUD/move_selected.png" id="17_p4om5"]
 [ext_resource type="Texture2D" uid="uid://dnu6ivnxlduxo" path="res://graphics/images/HUD/move_hover.png" id="18_uwuke"]
 [ext_resource type="Texture2D" uid="uid://dyotls8fcbklx" path="res://graphics/images/HUD/move_disabled.png" id="19_10qlh"]
@@ -90,10 +91,9 @@ offset_top = 32.0
 offset_right = 254.0
 offset_bottom = 143.0
 theme = ExtResource("5_rirx1")
-theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
-theme_override_constants/outline_size = 5
 bbcode_enabled = true
 text = "[color=e0dede]No [color=ffffff]description [color=e0dede]given."
+fit_content = true
 
 [node name="SellButton" type="TextureButton" parent="InfoBox"]
 layout_mode = 1
@@ -156,6 +156,22 @@ offset_left = 5.99995
 offset_top = 236.04
 offset_right = 29.9999
 offset_bottom = 273.04
+
+[node name="AbilityScrollContainer" type="ScrollContainer" parent="InfoBox"]
+layout_mode = 0
+offset_top = 50.0
+offset_right = 256.0
+offset_bottom = 227.0
+theme = ExtResource("5_rirx1")
+theme_type_variation = &"AbilityListHolder"
+
+[node name="AbilityHolder" type="VBoxContainer" parent="InfoBox/AbilityScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ActiveAbilityInfobox" parent="InfoBox/AbilityScrollContainer/AbilityHolder" instance=ExtResource("16_ppwmp")]
+layout_mode = 2
 
 [node name="StashViewer" type="Control" parent="."]
 layout_mode = 1

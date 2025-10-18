@@ -16,7 +16,6 @@ var camera : Camera;
 
 
 ################################## GODOT PROCESSING FUNCTIONS
-
 func _ready():
 	hide();
 	load_from_startup_generator();
@@ -43,6 +42,8 @@ func _physics_process(delta):
 
 ##Process and Physics process that run before anything else.
 func process_pre(delta):
+	if is_ready and queuedLife:
+		live();
 	grab_references();
 	pass;
 
@@ -95,9 +96,9 @@ func stat_registry():
 		null, 
 		func(newValue): 
 			health_or_energy_changed.emit(); 
-			var newValFixed = clampf(newValue, 0.0, self.get_stat("HealthMax")); 
-			if newValFixed <= 0.0 or is_equal_approx(newValFixed, 0.0): self.die();
-			print("new health value", newValFixed); 
+			var newValFixed = clampf(newValue, 0.0, self.get_max_health()); 
+			if (is_alive() and not is_frozen()) and (newValFixed <= 0.0 or is_equal_approx(newValFixed, 0.0)): self.die();
+			#print("new health value", newValFixed); 
 			return newValFixed;
 			,
 		StatTracker.roundingModes.None
@@ -121,6 +122,7 @@ func prepare_to_save():
 	hide();
 	reset_collision_helpers();
 	create_startup_generator();
+	clear_stats();
 
 ############################## SAVE/LOAD
 
@@ -161,7 +163,7 @@ func process_hud(delta):
 	if Input.is_action_just_pressed("StashSelected") and GameState.get_in_state_of_building():
 		print("Stash button pressed")
 		stash_selected_piece();
-		update_stash_hud();
+		update_hud();
 	if Input.is_action_just_pressed("Unselect"):
 		print("Unselect button pressed")
 		deselect_everything();
@@ -181,10 +183,16 @@ func process_hud(delta):
 			engineViewer.close_and_clear();
 			queueCloseEngine = false;
 
+func update_hud():
+	if is_ready:
+		update_inspector_hud(get_selected_or_pipette());
+		queue_update_engine_hud();
+		update_stash_hud();
+		return true;
+
 func update_stash_hud():
 	if is_instance_valid(inspectorHUD):
 		inspectorHUD.regenerate_stash(self);
-		update_inspector_hud(get_selected_or_pipette());
 func queue_update_engine_hud():
 	if is_instance_valid(engineViewer):
 		queue_update_engine_with_selected_or_pipette();
@@ -225,15 +233,23 @@ func enter_shop():
 
 ##Function run when the bot first spawns in.
 func live():
+	queuedLife = false;
 	unfreeze(true);
 	show();
 	body.show();
 	spawned = true;
 	alive = true;
 	start_all_cooldowns(true);
-	set_stat("Health", get_max_health());
+	var healthMax = get_max_health()
+	#print_rich("[color=pink]Max health is ", healthMax, ". Does stat exist: ", stat_exists("HealthMax"), ". Checking from: ", robotName);
+	set_stat("Health", healthMax);
 	
-	update_stash_hud();
+	update_hud();
+
+var queuedLife := false;
+func queue_live():
+	queuedLife = true;
+	pass;
 
 func die():
 	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
@@ -311,7 +327,7 @@ func add_something_to_stash(inThing):
 		add_packed_piece_or_part_to_stash(inThing);
 		update_stash_hud();
 		return true;
-	print(inThing, " failed to add to stash.")
+	#print(inThing, " failed to add to stash.")
 	update_stash_hud();
 	return false;
 
@@ -323,7 +339,7 @@ func add_packed_piece_or_part_to_stash(inPieceScene : PackedScene):
 	if newPiece is Part:
 		add_instantiated_part_to_stash(newPiece);
 		return true;
-	print(inPieceScene, " failed to add to stash at packedScene step.")
+	#print(inPieceScene, " failed to add to stash at packedScene step.")
 	return false;
 
 func add_instantiated_piece_to_stash(inPiece : Piece):
@@ -380,16 +396,14 @@ func prepare_pipette(override : Variant = get_current_pipette()):
 	if override is Part: 
 		prepare_pipette_from_part(override);
 	
-	update_inspector_hud(get_current_pipette());
+	update_hud();
 
 func unreference_pipette():
 	pipettePiecePath = "";
 	pipettePieceScene = null;
 	pipettePieceInstance = null;
 	pipettePartInstance = null;
-	update_stash_hud();
-	update_inspector_hud();
-	queue_update_engine_hud();
+	update_hud();
 
 func detach_pipette():
 	if is_instance_valid(pipettePieceInstance):
@@ -405,7 +419,7 @@ func detach_pipette():
 signal health_or_energy_changed();
 
 func _on_health_or_energy_changed():
-	if is_zero_approx(get_health()):
+	if not is_frozen() and is_zero_approx(get_health()):
 		die();
 	pass # Replace with function body.
 
@@ -454,27 +468,29 @@ func take_damage_from_damageData(damageData : DamageData):
 	##TODO: Readd Hooks functionality.
 
 func take_damage(damage:float):
-	print("Damage being taken: ", damage)
+	#print("Damage being taken: ", damage)
 	if is_playing() && damage != 0.0:
-		print(damage," damage being taken.")
+		#print(damage," damage being taken.")
 		var health = get_health();
 		var isInvincible = is_invincible();
 		TextFunc.flyaway(damage, get_global_body_position() + Vector3(0,-20,0), "unaffordable")
 		if damage > 0:
 			if !isInvincible:
+				#print("Health b4 taking", damage, "damage:", health)
 				health -= damage;
 			else:
-				print("Health was not subtracted. Bot was invincible!")
+				#print("Health was not subtracted. Bot was invincible!")
 				return;
 		set_invincibility();
+		#print("Health after taking", damage, "damage:", health)
 		set_stat("Health", health);
-		print("Health was subtracted. Nothing prevented it.", get_health())
+		#print("Health was subtracted. Nothing prevented it. ", get_health())
 
 func heal(health:float):
 	take_damage(-health);
 
 func is_alive():
-	return alive;
+	return is_ready and alive;
 
 var invincible := false;
 var invincibleTimer := 0.0;
@@ -792,7 +808,7 @@ func on_add_piece(piece:Piece):
 		if ability is AbilityManager:
 			print("Adding ability ", ability.abilityName)
 			assign_ability_to_next_active_slot(ability);
-	update_stash_hud();
+	update_hud();
 	pass;
 
 ## Fired by a Piece when it is removed from the Robot.
@@ -936,7 +952,10 @@ func get_selected():
 	if is_instance_valid(selectedPart):
 		return selectedPart;
 	if is_instance_valid(selectedPiece):
-		return selectedPiece;
+		if selectedPiece.selected:
+			return selectedPiece;
+		else:
+			selectedPiece.select(true);
 	return null;
 
 func deselect_everything():
@@ -952,10 +971,10 @@ func deselect_all_pieces(ignoredPiece : Piece = null):
 				piece.deselect();
 	if ignoredPiece == null or selectedPiece != ignoredPiece:
 		selectedPiece = null;
-	update_stash_hud();
-	update_inspector_hud(get_selected_or_pipette());
-	queue_update_engine_hud();
+	
+	update_hud();
 	pass;
+
 
 func select_piece(piece : Piece):
 	if is_instance_valid(piece):
@@ -964,8 +983,7 @@ func select_piece(piece : Piece):
 			selectedPiece = piece;
 			print("Selected Piece: ", selectedPiece)
 			deselect_all_pieces(piece);
-			update_inspector_hud(piece);
-			queue_update_engine_hud();
+			update_hud();
 			return piece;
 		else:
 			deselect_all_pieces();

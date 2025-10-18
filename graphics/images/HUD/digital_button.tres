@@ -1,6 +1,7 @@
-[gd_resource type="Theme" load_steps=13 format=3 uid="uid://8f0fg65uxivb"]
+[gd_resource type="Theme" load_steps=14 format=3 uid="uid://8f0fg65uxivb"]
 
 [ext_resource type="StyleBox" uid="uid://crpgbmifpd3vw" path="res://graphics/images/HUD/buttonGFX/digitalButton_disabled.tres" id="1_cnrgg"]
+[ext_resource type="StyleBox" uid="uid://nan46x6ubn8g" path="res://graphics/images/HUD/buttonGFX/digitalOutline_disabled.tres" id="1_pkauu"]
 [ext_resource type="FontFile" uid="uid://doo4kfsytv2c1" path="res://graphics/font/ScrapFives.ttf" id="1_xcf2r"]
 [ext_resource type="StyleBox" uid="uid://c15v120gq5yhm" path="res://graphics/images/HUD/buttonGFX/digitalButton_hover.tres" id="2_bm331"]
 [ext_resource type="Texture2D" uid="uid://dac8flnws1ce" path="res://graphics/images/HUD/buttonGFX/digitalButton_focusOutline.png" id="3_7gicb"]
@@ -26,6 +27,10 @@ axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
 [resource]
+Ability/base_type = &"RichTextLabel"
+AbilityListHolder/base_type = &"ScrollContainer"
+AbilityListHolder/styles/panel = ExtResource("1_pkauu")
+ActiveAbilityInfobox/base_type = &"MarginContainer"
 Button/colors/font_disabled_color = Color(0.47451, 0.47451, 0.47451, 1)
 Button/colors/font_hover_color = Color(0.94902, 0.92549, 0.419608, 1)
 Button/colors/font_hover_pressed_color = Color(0.666667, 0.878431, 0.356863, 1)
@@ -49,6 +54,8 @@ Label/colors/font_outline_color = Color(0.223529, 0.160784, 0.160784, 1)
 Label/constants/outline_size = 8
 Label/font_sizes/font_size = 10
 Label/fonts/font = ExtResource("1_xcf2r")
+RichTextLabel/colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+RichTextLabel/constants/outline_size = 4
 RichTextLabel/font_sizes/normal_font_size = 16
 RichTextLabel/fonts/mono_font = ExtResource("7_evyqx")
 RichTextLabel/fonts/normal_font = ExtResource("7_evyqx")

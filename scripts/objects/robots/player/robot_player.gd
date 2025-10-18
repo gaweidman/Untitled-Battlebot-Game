@@ -31,8 +31,8 @@ func phys_process_timers(delta):
 	super(delta);
 	forcedUpdateTimerHUD -= 1;
 	if forcedUpdateTimerHUD <= 0:
-		forcedUpdateTimerHUD = 5;
-		update_bars();
+		forcedUpdateTimerHUD = 20;
+		update_hud();
 
 func phys_process_combat(delta):
 	super(delta);
@@ -101,25 +101,30 @@ func is_inputting_movement() -> bool:
 	return inputtingMovementThisFrame;
 
 func die():
-	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
-	alive = false;
-	hide();
-	freeze(true, true);
-	gameBoard.game_over();
-	
-	##Play the death sound
-	if GameState.get_in_state_of_play():
-		#SND.play_sound_nondirectional(deathSound);
-		SND.play_sound_nondirectional("Combatant.Die");
-	##Play the death particle effects.
-	ParticleFX.play("NutsBolts", GameState.get_game_board(), get_global_body_position());
-	ParticleFX.play("BigBoom", GameState.get_game_board(), get_global_body_position());
-	
+	if is_alive():
+		#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
+		alive = false;
+		hide();
+		freeze(true, true);
+		gameBoard.game_over();
+		
+		##Play the death sound
+		if GameState.get_in_state_of_play():
+			#SND.play_sound_nondirectional(deathSound);
+			SND.play_sound_nondirectional("Combatant.Die");
+		##Play the death particle effects.
+		ParticleFX.play("NutsBolts", GameState.get_game_board(), get_global_body_position());
+		ParticleFX.play("BigBoom", GameState.get_game_board(), get_global_body_position());
+		
 	#print("Searching for Sockets ", Utils.get_all_children(self).size())
 	#print("Searching for Sockets, checking ownership ", Utils.get_all_children(self, self).size())
 	#print(Utils.get_all_children(self, self))
 
 #################### COMBAT HANDLING
+
+func update_hud():
+	if super():
+		update_bars();
 
 func update_bars():
 	if is_instance_valid(barHP) and is_instance_valid(barEnergy):

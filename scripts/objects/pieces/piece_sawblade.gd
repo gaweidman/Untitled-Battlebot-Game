@@ -30,8 +30,10 @@ func add_rotation(deg):
 	if deg >= 360:
 		deg -= 360;
 
+
 func ability_registry():
-	register_active_ability("Deflect", "Spin the sawblade with extreme speed, causing it to deflect projectiles and deal extra damage.", func (): deflect())
+	#register_active_ability("Deflect", "Spin the sawblade with extreme speed, causing it to deflect projectiles and deal extra damage.", func (): deflect())
+	pass;
 
 func phys_process_timers(delta):
 	super(delta);

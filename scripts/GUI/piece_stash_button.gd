@@ -44,12 +44,11 @@ func _on_pressed():
 	pass 
 
 var selected := false;
-
 func get_selected() -> bool:
-	if is_instance_valid(pieceReferenced) and pieceReferenced.get_selected(): return true;
+	if is_instance_valid(pieceReferenced) and pieceReferenced.get_selected(): selected = true; return true;
 	if stashHUD.get_current_robot() != null:
 		if is_instance_valid(pieceReferenced) and stashHUD.get_current_robot().get_current_pipette() == pieceReferenced:
-			return true;
+			selected = true;
 	return selected;
 
 func select(foo := not get_selected()):

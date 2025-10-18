@@ -6,6 +6,9 @@ class_name FreezableEntity
 @export var body : RigidBody3D;
 
 
+var is_ready := false;
+func _ready():
+	set_deferred("is_ready", true);
 func _physics_process(delta):
 	phys_process_pre(delta);
 	if not is_paused():
@@ -20,7 +23,7 @@ func phys_process_timers(delta):
 	pass;
 
 
-var frozen := false;
+var frozen := true;
 var frozenBeforePaused = false;
 var paused := false;
 func pause(foo: bool, force := false):
@@ -45,7 +48,7 @@ func is_paused():
 	return paused;
 
 var linearVelocityBeforeFreeze = null;
-func freeze(doFreeze := (not frozen), force := false):
+func freeze(doFreeze := (not is_frozen()), force := false):
 	#print("Freeze attempt for ",name,", doFreeze:", str(doFreeze), " force:", str(force), " frozen already:", str(frozen));
 	freezeQueued = false; ##Cancel the freeze queue.
 	if not force: if frozen == doFreeze: return;
@@ -82,7 +85,7 @@ func freeze(doFreeze := (not frozen), force := false):
 func unfreeze(force := false):
 	freeze(false, force);
 ##Returns true if the game is paused or if the bot is frozen.
-func is_frozen(): return frozen or is_paused();
+func is_frozen() -> bool: return frozen or is_paused();
 var freezeQueued := false;
 ##This function sets a flag to freeze the robot during the next frame.
 func queue_freeze_next_frame():

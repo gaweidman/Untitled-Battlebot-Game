@@ -9,6 +9,7 @@ func _ready():
 	declare_names();
 	assign_references();
 	ability_registry();
+	ability_validation();
 	super(); #Stat registry.
 	gather_colliders_and_meshes();
 
@@ -158,10 +159,10 @@ func process_draw(delta):
 		if visible: hide()
 	else:
 		if not visible: show()
-		
 		##Hide/show the male socket based on plugged-in status.
 		if is_instance_valid(maleSocketMesh):
-			if has_host(true, false, false):
+			if has_host(true, false, false): ##If you're on a socket:
+				if not selected: set_selection_mode(selectionModes.NOT_SELECTED);
 				if maleSocketMesh.visible:
 					maleSocketMesh.hide();
 			else:
@@ -445,7 +446,6 @@ func disable_hurtbox(foo:bool):
 ##Fired whent he camera finds this piece.
 ##TODO: Fancy stuff. 
 var selected := false;
-
 func get_selected() -> bool:
 	if selected: set_selection_mode(selectionModes.SELECTED);
 	return selected;
@@ -455,10 +455,13 @@ func select(foo : bool = not get_selected()):
 	if foo: deselect_other_pieces(self);
 	else: deselect_other_pieces();
 	selected = foo;
+	var bot = get_host_robot()
 	if selected: 
+		if bot: bot.selectedPiece = self;
 		if selectionMode == selectionModes.NOT_SELECTED:
 			set_selection_mode(selectionModes.SELECTED);
-	else: set_selection_mode(selectionModes.NOT_SELECTED);
+	else: 
+		set_selection_mode(selectionModes.NOT_SELECTED);
 	print(pieceName)
 	return selected;
 	pass;
@@ -631,6 +634,12 @@ func get_all_pieces() -> Array[Piece]:
 ####################### ABILITY AND ENERGY MANAGEMENT
 
 @export_category("Ability")
+
+@export_subgroup("AbilityManagers")
+@export var activeAbilities : Dictionary[int, AbilityManager] = {};
+@export var passiveAbility : AbilityManager;
+
+@export_subgroup("Ability Details")
 @export var hurtboxAlwaysEnabled := false;
 
 @export var input : InputEvent;
@@ -764,6 +773,8 @@ func can_use_active(actionSlot : int):
 
 ##Returns true if energyDrawPassive is 0, or if the power draw would not exceed incoming power.
 func can_use_passive():
+	if (passiveAbility != null) and (passiveAbility is AbilityManager) and (passiveAbility.is_disabled()): 
+		return false;
 	if is_paused():
 		#print_rich("[color=yellow]Passive call was interrupted because the game is paused.")
 		return false;
@@ -789,11 +800,29 @@ func use_passive():
 		return true;
 	return false;
 
-var activeAbilities : Dictionary[int, AbilityManager] = {};
-
-## Where any and all register_active_ability() or related calls should go. Runs at _ready().
+## Where any and all [method register_active_ability()] or related calls should go. Runs at _ready().
+## IDEALLY, this should be done thru the export instead of thru code, but it can be done here.
 func ability_registry():
 	pass;
+
+## This runs directly after [method ability_registry] and cleans up all the abilities in the dictionary, as well as the passive ability.[br]
+## Checks to see if they were initialized with [method register_active_ability]. If not, then it builds it out, as it assumes it was made with the editor.
+func ability_validation():
+	var abilitiesToCheck = get_all_abilities();
+	for ability in abilitiesToCheck:
+		if ability is AbilityManager:
+			if ! ability.initialized:
+				ability.assign_references(self);
+			ability.construct_description();
+			ability.initialized = true;
+	pass;
+
+## returns an array of all abilities, active and passive.
+func get_all_abilities() -> Array[AbilityManager]:
+	var abilitiesToCheck : Array[AbilityManager] = [];
+	abilitiesToCheck.append_array(activeAbilities.values());
+	abilitiesToCheck.append(passiveAbility);
+	return abilitiesToCheck;
 
 func get_next_available_ability_slot():
 	var num := 0;
@@ -813,6 +842,7 @@ func register_active_ability(abilityName : String = "Active Ability", abilityDes
 	if slot == null: slot = get_next_available_ability_slot();
 	newAbility.register(self, slot, abilityName, abilityDescription, functionWhenUsed, statsUsed);
 	activeAbilities[slot] = newAbility;
+	newAbility.initialized = true;
 	pass;
 
 func get_active_ability(actionSlot : int) -> AbilityManager:
@@ -826,12 +856,9 @@ func use_active(actionSlot : int):
 		energyDrawCurrent += get_active_energy_cost();
 		set_cooldown_active();
 		var activeAbility = get_active_ability(actionSlot);
-		var call = activeAbility.functionWhenUsed;
-		call.call();
+		activeAbility.use_ability();
 		return true;
 	return false;
-
-
 
 ####################### INVENTORY STUFF
 @export_category("Stash")
