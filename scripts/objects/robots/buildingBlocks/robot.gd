@@ -803,8 +803,7 @@ func on_add_piece(piece:Piece):
 	remove_something_from_stash(piece);
 	reassign_body_collision();
 	piece.owner = self;
-	for abilityKey in piece.activeAbilities.keys():
-		var ability = piece.activeAbilities[abilityKey];
+	for ability in piece.activeAbilities:
 		if ability is AbilityManager:
 			print("Adding ability ", ability.abilityName)
 			assign_ability_to_next_active_slot(ability);
@@ -905,6 +904,7 @@ func fire_active(slotNum) -> bool:
 	if slotNum in active_abilities.keys():
 		var ability = active_abilities[slotNum];
 		if ability is AbilityManager:
+			print("ROBOT FIRING ABILITY ", ability.abilityName)
 			return ability.call_ability();
 	return false;
 

@@ -613,10 +613,14 @@ func assign_selected_socket(socket):
 func deselect_all_sockets():
 	for socket in get_all_female_sockets():
 		socket.select(false);
+var allPieces : Array[Piece] = [];
+func get_all_pieces() -> Array[Piece]:
+	if allPieces.size() == 0:
+		return get_all_pieces_regenerate();
+	return allPieces;
 
 var allPiecesLoops := 0;
-
-func get_all_pieces() -> Array[Piece]:
+func get_all_pieces_regenerate() -> Array[Piece]:
 	var ret : Array[Piece] = []
 	#print("ALL FEMALE SOCKETS: ", get_all_female_sockets())
 	for socket in get_all_female_sockets():
@@ -627,7 +631,7 @@ func get_all_pieces() -> Array[Piece]:
 			#print("ALL PIECES OCCUPANT :", occupant, " SELF : ", self)
 			if occupant != self:
 				ret.append(occupant);
-	print("ALL PIECES : ", ret)
+	print("ALL PIECES REGENRATED: ", ret)
 	return ret;
 
 
@@ -636,7 +640,7 @@ func get_all_pieces() -> Array[Piece]:
 @export_category("Ability")
 
 @export_subgroup("AbilityManagers")
-@export var activeAbilities : Dictionary[int, AbilityManager] = {};
+@export var activeAbilities : Array[AbilityManager] = [];
 @export var passiveAbility : AbilityManager;
 
 @export_subgroup("Ability Details")
@@ -761,14 +765,16 @@ func get_passive_energy_cost():
 	return ( get_stat("PassiveEnergyDraw") * get_physics_process_delta_time() );
 
 ##Returns true if the actionSlot has an ability assigned and energy draw post-use would not exceed the incoming energy pool.
-func can_use_active(actionSlot : int): 
+func can_use_active(action : AbilityManager): 
 	if is_paused():
 		#print_rich("[color=yellow]Active call was interrupted because the game is paused.")
 		return false;
-	if get_active_ability(actionSlot) == null:
+	if get_active_ability(action) == null:
+		print("Ability in slot ",action," is null.")
 		return false;
 	if get_host_robot() == null:
 		return false;
+	prints("ABILITY ENERGY: ", get_current_energy_draw(), get_active_energy_cost(), get_incoming_energy())
 	return (not on_cooldown_active()) and (( get_current_energy_draw() + get_active_energy_cost() ) <= get_incoming_energy());
 
 ##Returns true if energyDrawPassive is 0, or if the power draw would not exceed incoming power.
@@ -815,20 +821,15 @@ func ability_validation():
 				ability.assign_references(self);
 			ability.construct_description();
 			ability.initialized = true;
+			print("Ability ",ability.abilityName," validated.")
 	pass;
 
 ## returns an array of all abilities, active and passive.
 func get_all_abilities() -> Array[AbilityManager]:
 	var abilitiesToCheck : Array[AbilityManager] = [];
-	abilitiesToCheck.append_array(activeAbilities.values());
+	abilitiesToCheck.append_array(activeAbilities);
 	abilitiesToCheck.append(passiveAbility);
 	return abilitiesToCheck;
-
-func get_next_available_ability_slot():
-	var num := 0;
-	while activeAbilities.keys().has(num):
-		num += 1;
-	return num;
 
 ## This should be run in ability_registry() only.
 ## abilityName = name of ability.
@@ -836,27 +837,40 @@ func get_next_available_ability_slot():
 ## functionWhenUsed = the function that gets called when this ability is called for.
 ## statsUsed = an Array of strings. This should hold any and all stats you want to have displayed on this ability's card.
 ## slotOverride is if you want to have this ability use a specific numbered slot.
-func register_active_ability(abilityName : String = "Active Ability", abilityDescription : String = "No Description Found.", functionWhenUsed : Callable = func(): pass, statsUsed : Array[String] = [], slotOverride = null):
+func register_active_ability(abilityName : String = "Active Ability", abilityDescription : String = "No Description Found.", functionWhenUsed : Callable = func(): pass, statsUsed : Array[String] = []):
 	var newAbility = AbilityManager.new();
-	var slot = slotOverride;
-	if slot == null: slot = get_next_available_ability_slot();
-	newAbility.register(self, slot, abilityName, abilityDescription, functionWhenUsed, statsUsed);
-	activeAbilities[slot] = newAbility;
+	newAbility.register(self, abilityName, abilityDescription, functionWhenUsed, statsUsed);
+	activeAbilities.append(newAbility);
 	newAbility.initialized = true;
 	pass;
 
-func get_active_ability(actionSlot : int) -> AbilityManager:
-	if activeAbilities.keys().has(actionSlot):
-		return activeAbilities[actionSlot];
+func get_active_ability(action : AbilityManager) -> AbilityManager:
+	if activeAbilities.has(action):
+		return action;
 	return null;
 
 ##Calls the ability in the given slot if it's able to do so.
-func use_active(actionSlot : int):
-	if can_use_active(actionSlot):
+func use_active(action : AbilityManager):
+	if can_use_active(action):
+		print("ABILITY IN SLOT ",action," CAN BE USED...");
 		energyDrawCurrent += get_active_energy_cost();
 		set_cooldown_active();
-		var activeAbility = get_active_ability(actionSlot);
-		activeAbility.use_ability();
+		var activeAbility = get_active_ability(action);
+		
+		var functionNameWhenUsed = activeAbility.functionNameWhenUsed;
+		if functionNameWhenUsed != null and functionNameWhenUsed != "":
+			if has_method(functionNameWhenUsed):
+				print("ABILITY ",activeAbility.abilityName," CALLED BY STRING NAME: ", get(functionNameWhenUsed))
+				print()
+				get(functionNameWhenUsed).call()
+			else:
+				print_rich("[b][color=red]ABILITY DELETED.")
+		else:
+			print("ABILITY ",activeAbility.abilityName," CALLED ITS FUNCTION.")
+			var call = activeAbility.functionWhenUsed;
+			call.call();
+		pass;
+
 		return true;
 	return false;
 

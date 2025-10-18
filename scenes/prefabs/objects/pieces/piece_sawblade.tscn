@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://dl1v6eiy0gi1q"]
+[gd_scene load_steps=26 format=3 uid="uid://dl1v6eiy0gi1q"]
 
 [ext_resource type="Script" uid="uid://021qwhyd0air" path="res://scripts/objects/pieces/piece_sawblade.gd" id="1_5k0fg"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_k1jne"]
@@ -13,9 +13,45 @@
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="12_k1jne"]
 [ext_resource type="ArrayMesh" uid="uid://bd8g8qktqly2e" path="res://graphics/models/obj/botparts/StaticSwivel.obj" id="13_erqxd"]
 
+[sub_resource type="Resource" id="Resource_i7bft"]
+script = ExtResource("3_erqxd")
+string = "Spin the blade with extreme speed, causing it to "
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_k1jne"]
+script = ExtResource("3_erqxd")
+string = "deflect bullets"
+color = 4
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_erqxd"]
+script = ExtResource("3_erqxd")
+string = "and deal extra "
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_8yny5"]
+script = ExtResource("3_erqxd")
+string = "melee damage"
+color = 6
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
 [sub_resource type="Resource" id="Resource_j66hk"]
 script = ExtResource("3_erqxd")
-string = "Spin the blade with "
+string = "for a bit."
 color = 1
 newline = false
 endingSpace = false
@@ -23,74 +59,11 @@ startingSpace = true
 metadata/_custom_type_script = "uid://cybmjhuctmfaw"
 
 [sub_resource type="Resource" id="Resource_kb5ak"]
-script = ExtResource("3_erqxd")
-string = "extreme speed"
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_r0nuw"]
-script = ExtResource("3_erqxd")
-string = ", causing it to "
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_3l8sh"]
-script = ExtResource("3_erqxd")
-string = "reflect "
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_77x47"]
-script = ExtResource("3_erqxd")
-string = "projectiles"
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_wnofn"]
-script = ExtResource("3_erqxd")
-string = "and deal "
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_4m8sh"]
-script = ExtResource("3_erqxd")
-string = "extra damage"
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_4rrfy"]
-script = ExtResource("3_erqxd")
-string = "for a short time."
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_6gd0t"]
 script = ExtResource("2_k1jne")
 abilityName = "Spin Out"
 abilityDescription = "No Description Found."
-abilityDescriptionConstructor = Array[ExtResource("3_erqxd")]([SubResource("Resource_j66hk"), SubResource("Resource_kb5ak"), SubResource("Resource_r0nuw"), SubResource("Resource_3l8sh"), SubResource("Resource_77x47"), SubResource("Resource_wnofn"), SubResource("Resource_4m8sh"), SubResource("Resource_4rrfy")])
-statsUsed = Array[String](["ActiveEnergyDraw", "ActiveCooldownTime"])
+abilityDescriptionConstructor = Array[ExtResource("3_erqxd")]([SubResource("Resource_i7bft"), SubResource("Resource_k1jne"), SubResource("Resource_erqxd"), SubResource("Resource_8yny5"), SubResource("Resource_j66hk")])
+statsUsed = Array[String]([])
 icon = ExtResource("4_8yny5")
 functionNameWhenUsed = &"deflect"
 metadata/_custom_type_script = "uid://crpa3dbgxwyeg"
@@ -131,9 +104,7 @@ meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
-activeAbilities = Dictionary[int, ExtResource("2_k1jne")]({
-0: SubResource("Resource_6gd0t")
-})
+activeAbilities = Array[ExtResource("2_k1jne")]([SubResource("Resource_kb5ak")])
 energyDrawPassive = 0.1
 passiveCooldownTime = 0.25
 activeCooldownTime = 2.0

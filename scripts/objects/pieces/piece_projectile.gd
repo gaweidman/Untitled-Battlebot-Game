@@ -82,7 +82,7 @@ func get_inaccuracy():
 
 func ability_registry():
 	super();
-	register_active_ability(firingName, firingDescription, func(): fireBullet(); pass, [], 0)
+	register_active_ability(firingName, firingDescription, func(): fireBullet(); pass, [])
 	pass;
 
 func can_use_active(slot):
