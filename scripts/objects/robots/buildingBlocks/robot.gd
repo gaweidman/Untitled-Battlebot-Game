@@ -166,7 +166,7 @@ func process_hud(delta):
 		update_hud();
 	if Input.is_action_just_pressed("Unselect"):
 		print("Unselect button pressed")
-		deselect_everything();
+		deselect_in_hierarchy();
 	if is_instance_valid(engineViewer):
 		if queueUpdateEngineWithSelectedOrPipette:
 			var selectionResult = get_selected_or_pipette();
@@ -958,9 +958,24 @@ func get_selected():
 			selectedPiece.select(true);
 	return null;
 
+## Deselects based on a predetermined hierarchy.[br]
+## Pipette > Part > Piece;
+func deselect_in_hierarchy():
+	if get_current_pipette() != null:
+		unreference_pipette();
+		return;
+	var selectionResult = get_selected();
+	if selectionResult != null:
+		if selectionResult is Part:
+			deselect_all_parts();
+			return;
+		if selectionResult is Piece:
+			deselect_all_pieces();
+			return;
+	deselect_everything();
+
 func deselect_everything():
 	unreference_pipette();
-	deselect_all_parts();
 	deselect_all_pieces();
 
 func deselect_all_pieces(ignoredPiece : Piece = null):

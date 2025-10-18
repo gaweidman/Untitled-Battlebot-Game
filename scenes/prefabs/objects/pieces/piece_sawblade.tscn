@@ -65,7 +65,10 @@ abilityDescription = "No Description Found."
 abilityDescriptionConstructor = Array[ExtResource("3_erqxd")]([SubResource("Resource_i7bft"), SubResource("Resource_k1jne"), SubResource("Resource_erqxd"), SubResource("Resource_8yny5"), SubResource("Resource_j66hk")])
 statsUsed = Array[String]([])
 icon = ExtResource("4_8yny5")
+initialized = false
+disabled = false
 functionNameWhenUsed = &"deflect"
+functionWhenUsed = Callable()
 metadata/_custom_type_script = "uid://crpa3dbgxwyeg"
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_g4w8c"]

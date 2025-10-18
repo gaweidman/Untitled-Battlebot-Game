@@ -8,8 +8,8 @@ func _ready():
 	hide();
 	declare_names();
 	assign_references();
-	ability_registry();
 	ability_validation();
+	ability_registry();
 	super(); #Stat registry.
 	gather_colliders_and_meshes();
 
@@ -811,17 +811,31 @@ func use_passive():
 func ability_registry():
 	pass;
 
-## This runs directly after [method ability_registry] and cleans up all the abilities in the dictionary, as well as the passive ability.[br]
-## Checks to see if they were initialized with [method register_active_ability]. If not, then it builds it out, as it assumes it was made with the editor.
+## This runs directly before [method ability_registry] and cleans up all the abilities set up in the editor, as well as the passive ability.[br]
+## Checks to see if they were initialized with [method register_active_ability]. If not, then it fills its references out, as it assumes it was made with the editor.
 func ability_validation():
-	var abilitiesToCheck = get_all_abilities();
-	for ability in abilitiesToCheck:
+	##Duplicate the resources so the ability doesn't get joint custody with another piece of the same type.
+	## Construct the description FIRST, because the constructor array is not going to get copied over.
+	var activesNew : Array[AbilityManager] = []
+	for ability in activeAbilities:
 		if ability is AbilityManager:
-			if ! ability.initialized:
-				ability.assign_references(self);
 			ability.construct_description();
-			ability.initialized = true;
-			print("Ability ",ability.abilityName," validated.")
+			var dupe = ability.duplicate(true);
+			activesNew.append(dupe);
+			if ! dupe.initialized:
+				dupe.assign_references(self);
+			dupe.initialized = true;
+	activeAbilities.clear();
+	activeAbilities = activesNew;
+	
+	## Do the same with the passive.
+	if passiveAbility != null and passiveAbility is AbilityManager:
+		passiveAbility.construct_description();
+		var dupe = passiveAbility.duplicate(true);
+		if ! dupe.initialized:
+			dupe.assign_references(self);
+		dupe.initialized = true;
+		passiveAbility = dupe;
 	pass;
 
 ## returns an array of all abilities, active and passive.
@@ -874,7 +888,6 @@ func use_active(action : AbilityManager):
 			var call = activeAbility.functionWhenUsed;
 			call.call();
 		pass;
-
 		return true;
 	return false;
 

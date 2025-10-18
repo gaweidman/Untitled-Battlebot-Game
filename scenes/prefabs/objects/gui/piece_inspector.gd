@@ -225,11 +225,8 @@ func update_selection(thing):
 		close_inspector();
 	else:
 		#print("Valid thing to inspect. ", thing)
-		if get_current_mode() == inspectorModes.PART or get_current_mode() == inspectorModes.PIECE and thing == inspectedThing:
-			#print("Thing is already being displayed. Refurnishing inspector.")
-			populate_inspector(inspectedThing);
-			return;
-		else:
+		if thing == inspectedThing: return;
+		if ! get_current_mode() == inspectorModes.PART or get_current_mode() == inspectorModes.PIECE and thing == inspectedThing:
 			#prints("Attempting opening inspector with thing",thing)
 			open_inspector(thing);
 			return;

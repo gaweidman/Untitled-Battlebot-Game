@@ -142,6 +142,7 @@ func _on_sell_button_pressed():
 		$SellButton/Label.text = "SURE? "+ TextFunc.format_stat(partRef._get_sell_price(), 0);
 	pass # Replace with function body.
 
+##### ABILITIES BOX
 @export var abilityInfoboxScene := preload("res://scenes/prefabs/objects/gui/active_ability_infobox.tscn");
 @export var abilityScrollContainer : ScrollContainer;
 @export var abilityHolder : VBoxContainer;
@@ -158,6 +159,29 @@ func populate_abilities(thing):
 					abilityHolder.add_child(newBox);
 					effectiveSize += 1;
 	abilityScrollContainer.visible = effectiveSize > 0;
+	if abilityScrollContainer.visible:
+		queueAbilityPostUpdate1 = true;
+		for child in abilityHolder.get_children():
+			child.queue_show();
+
+var queueAbilityPostUpdate1 := false;
+var queueAbilityPostUpdate2 := false;
+func update_ability_height():
+	var v = 0;
+	for child in abilityHolder.get_children():
+		v += child.size.y;
+	abilityScrollContainer.custom_minimum_size.y = min(180, v + 6)
+	abilityScrollContainer.size.y = min(180, v)
+	pass;
+
+func _process(delta):
+	if queueAbilityPostUpdate2:
+		queueAbilityPostUpdate2 = false;
+		update_ability_height();
+	if queueAbilityPostUpdate1:
+		queueAbilityPostUpdate1 = false;
+		queueAbilityPostUpdate2 = true;
+	pass;
 
 func clear_abilities():
 	##Clear out the abilities.

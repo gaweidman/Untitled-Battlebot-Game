@@ -7,10 +7,10 @@ class_name AbilityManager
 @export var abilityDescriptionConstructor : Array[RichTextConstructor] = [];
 @export var statsUsed : Array[String] = []; 
 @export var icon : Texture2D;
-var initialized := false;
-var disabled := false;
+@export var initialized := false;
+@export var disabled := false;
 @export var functionNameWhenUsed : StringName;
-var functionWhenUsed : Callable;
+@export var functionWhenUsed : Callable;
 
 var assignedRobot : Robot;
 var assignedPieceOrPart;
