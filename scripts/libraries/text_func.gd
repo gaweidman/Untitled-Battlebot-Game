@@ -1,15 +1,21 @@
 extends Node
 
 
-func format_stat(num:float, decimals:int=2) -> String:
+func format_stat(num:float, decimals:int=2, addSpaces := true) -> String:
+	var s = str(int(num))
+	var sLength = s.length();
+	var targetLength = sLength + decimals + 1; ## The amount of numbers without the decimals, then the amount of decimals, then the literal decimal "." .
 	if decimals <= 0:
 		return str(int(round_to_dec(num, 0)));
 	else:
-		return str(round_to_dec(num, decimals));
+		s = str(round_to_dec(num, decimals))
+		if addSpaces:
+			while s.length() < targetLength:
+				s += " ";
+		return s;
 
 func round_to_dec(num, digit):
 	return round(num * pow(10.0, digit)) / pow(10.0, digit)
-
 
 # Colors for text.
 enum textColorsEnum {

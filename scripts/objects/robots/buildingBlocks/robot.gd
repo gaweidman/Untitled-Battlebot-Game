@@ -21,6 +21,7 @@ func _ready():
 	load_from_startup_generator();
 	grab_references();
 	super();
+	grab_references();
 	reassign_body_collision();
 	detach_pipette();
 	freeze(true, true);
@@ -82,7 +83,7 @@ func grab_references():
 	if not is_instance_valid(bodySocket):
 		bodySocket = $Body/Meshes/Socket;
 	if not is_instance_valid(bodyPiece):
-		bodyPiece = $Body/Meshes/Socket/Piece_BodyCube;
+		set_deferred("bodyPiece",$Body/Meshes/Socket/Piece_BodyCube);
 	if not is_instance_valid(treads):
 		treads = $Treads;
 
@@ -123,6 +124,7 @@ func prepare_to_save():
 	reset_collision_helpers();
 	create_startup_generator();
 	clear_stats();
+	bodyPiece.queue_free();
 
 ############################## SAVE/LOAD
 
@@ -182,7 +184,8 @@ func process_hud(delta):
 		if queueCloseEngine:
 			engineViewer.close_and_clear();
 			queueCloseEngine = false;
-
+func queue_update_hud():
+	call_deferred("update_hud");
 func update_hud():
 	if is_ready:
 		update_inspector_hud(get_selected_or_pipette());
@@ -212,7 +215,7 @@ func is_asleep() -> bool:
 
 ##This function returns true only if the game is not paused, and the bot is spawned in, alive, awake, and not frozen.
 func is_conscious():
-	return (not paused) and spawned and (not is_asleep()) and (not is_frozen()) and is_alive();
+	return (not paused) and spawned and (not is_asleep()) and (not is_frozen()) and is_alive() and is_ready;
 
 ##This function returns true only if the game is not paused, the bot is not frozen, alive, and we're in a game state of play.
 func is_playing():
@@ -240,9 +243,11 @@ func live():
 	spawned = true;
 	alive = true;
 	start_all_cooldowns(true);
-	var healthMax = get_max_health()
+	var healthMax = get_max_health();
 	#print_rich("[color=pink]Max health is ", healthMax, ". Does stat exist: ", stat_exists("HealthMax"), ". Checking from: ", robotName);
 	set_stat("Health", healthMax);
+	var energyMax = get_maximum_energy();
+	set_stat("Energy", energyMax);
 	
 	update_hud();
 
@@ -396,14 +401,14 @@ func prepare_pipette(override : Variant = get_current_pipette()):
 	if override is Part: 
 		prepare_pipette_from_part(override);
 	
-	update_hud();
+	queue_update_hud();
 
 func unreference_pipette():
 	pipettePiecePath = "";
 	pipettePieceScene = null;
 	pipettePieceInstance = null;
 	pipettePartInstance = null;
-	update_hud();
+	queue_update_hud();
 
 func detach_pipette():
 	if is_instance_valid(pipettePieceInstance):
@@ -427,8 +432,7 @@ func _on_health_or_energy_changed():
 
 func start_all_cooldowns(immediate := false):
 	for piece in get_all_pieces():
-		piece.set_cooldown_active(immediate);
-		piece.set_cooldown_passive(immediate);
+		piece.set_all_cooldowns();
 
 @export_category("Health Management")
 ##Game statistics.
@@ -537,13 +541,15 @@ func get_maximum_energy() -> float:
 
 ##Returns true or false depending on whether the sap would work or not.
 func try_sap_energy(amount):
-	var energy = get_available_energy();
-	if amount <= energy:
-		energy -= amount;
-		set_stat("Energy", energy);
-		return true;
-	else:
-		return false;
+	if is_conscious():
+		var energy = get_available_energy();
+		if amount <= energy:
+			energy -= amount;
+			set_stat("Energy", energy);
+			return true;
+		else:
+			return false;
+	return false;
 
 ##Adds to the energy total. 
 ##If told to "cap at max" it will not add energy if it is above or at the current maximum, and will clamp it at the max. 
@@ -925,6 +931,25 @@ func assign_ability_to_next_active_slot(abilityManager : AbilityManager):
 	if slot == null: return;
 	assign_ability_to_slot(slot, abilityManager);
 
+var abilityPipette : AbilityManager;
+## Gets the currently selected ability.
+func get_ability_pipette() -> AbilityManager:
+	if abilityPipette != null and abilityPipette is AbilityManager:
+		return abilityPipette;
+	return null;
+
+func clear_ability_pipette():
+	var pip = get_ability_pipette()
+	if pip != null and is_instance_valid(pip):
+		abilityPipette.deselect();
+	abilityPipette = null;
+
+func set_ability_pipette(new : AbilityManager):
+	var cur = get_ability_pipette();
+	if cur != null:
+		clear_ability_pipette();
+	abilityPipette = new;
+	abilityPipette.select();
 
 ########################## SELECTION
 
@@ -961,6 +986,9 @@ func get_selected():
 ## Deselects based on a predetermined hierarchy.[br]
 ## Pipette > Part > Piece;
 func deselect_in_hierarchy():
+	if abilityPipette != null:
+		clear_ability_pipette();
+		return;
 	if get_current_pipette() != null:
 		unreference_pipette();
 		return;
@@ -987,7 +1015,7 @@ func deselect_all_pieces(ignoredPiece : Piece = null):
 	if ignoredPiece == null or selectedPiece != ignoredPiece:
 		selectedPiece = null;
 	
-	update_hud();
+	queue_update_hud();
 	pass;
 
 

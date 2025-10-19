@@ -56,13 +56,13 @@ size = Vector3(1.75, 0.625, 1.25)
 
 [node name="Piece_T-Junction" type="Node3D" node_paths=PackedStringArray("meshesHolder", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_lmodm")
-force_visibility = true
 pieceName = &"T-Junction"
+hurtboxAlwaysEnabled = true
+force_visibility = true
 meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
-hurtboxAlwaysEnabled = true
 engineSlots = {
 Vector2i(1, 2): null,
 Vector2i(2, 2): null,

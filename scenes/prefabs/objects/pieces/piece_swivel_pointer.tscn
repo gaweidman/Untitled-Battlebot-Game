@@ -1,6 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://djgwiuexucnqm"]
+[gd_scene load_steps=17 format=3 uid="uid://djgwiuexucnqm"]
 
 [ext_resource type="Script" uid="uid://lqnydwh6c74e" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="1_bn4l8"]
+[ext_resource type="Resource" uid="uid://bws20ksxfdagg" path="res://scenes/prefabs/abilities/passive/swivel_pointer_target.tres" id="3_noc8o"]
+[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_pqjj1"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_8xo3d"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="5_pqjj1"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="6_vph73"]
@@ -33,8 +35,9 @@ albedo_texture = ExtResource("9_psn5c")
 visible = false
 script = ExtResource("1_bn4l8")
 swivelNode = NodePath("SwivelTop")
-force_visibility = true
 pieceName = &"Pointer Swivel"
+passiveAbilities = Array[ExtResource("3_pqjj1")]([ExtResource("3_noc8o")])
+force_visibility = true
 meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")

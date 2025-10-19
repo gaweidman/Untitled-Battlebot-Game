@@ -11,8 +11,7 @@ func stat_registry():
 	register_stat("RotationSpeed", rotationSpeed, statIconCooldown);
 
 func phys_process_collision(delta):
-	
-	if !can_use_passive():
+	if !can_use_passive_any():
 		targetRotation = 0.0;
 	
 	swivelNode.rotation.y = lerp_angle(swivelNode.rotation.y, targetRotation, delta * 30.0 * get_stat("RotationSpeed"))

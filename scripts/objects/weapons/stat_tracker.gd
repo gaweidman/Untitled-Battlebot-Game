@@ -67,14 +67,14 @@ func return_rounded_stat(stat, roundingModeOverride : roundingModes = roundingMo
 
 ##Sets the stat by calling [param setFunc].
 func set_stat(newValue):
-	print(is_instance_valid(setFunc))
+	#print(is_instance_valid(setFunc))
 	if (! is_queued_for_deletion()
 	 #and is_instance_valid(setFunc)
 	and is_instance_valid(self)
 	):
-		prints(get_reference_count())
-		print(setFunc)
-		prints("Stat",statName,"was set properly.")
+		#prints(get_reference_count())
+		#print(setFunc)
+		#prints("Stat",statName,"was set properly.")
 		currentValue = setFunc.call(newValue);
 		
 	#print( get_property_list())

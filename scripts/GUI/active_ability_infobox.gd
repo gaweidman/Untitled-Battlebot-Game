@@ -3,19 +3,16 @@ extends Control
 class_name AbilityInfobox
 
 @export_subgroup("Outlines")
-@export var outlineDisabled := preload("res://graphics/images/HUD/buttonGFX/digitalOutline_disabled.png");
-@export var outlineNotEquipped := preload("res://graphics/images/HUD/buttonGFX/digitalOutline_normal.png");
-@export var outlineHover := preload("res://graphics/images/HUD/buttonGFX/digitalOutline_hover.png");
-@export var outlineSelected := preload("res://graphics/images/HUD/buttonGFX/digitalOutline_selected.png");
-@export var outlineEquipped := preload("res://graphics/images/HUD/buttonGFX/digitalOutline_equipped.png");
-@export var outlineEquippedAndSelected := preload("res://graphics/images/HUD/buttonGFX/digitalOutline_equippedAndSelected.png");
-@export var outlineEquippedAndDisabled := preload("res://graphics/images/HUD/buttonGFX/digitalOutline_equippedAndDisabled.png");
+@export var outlineDisabled := "res://graphics/images/HUD/buttonGFX/digitalOutline_disabled.png";
+@export var outlineEquippedAndDisabled := "res://graphics/images/HUD/buttonGFX/digitalOutline_equippedAndDisabled.png";
+@export var outlineDisabled_Selected := "res://graphics/images/HUD/buttonGFX/digitalOutline_disabledAndSelected.png";
 
-
-func update_outline():
-	pass;
-
-var isPassive : bool;
+@export var outlineNotEquipped := "res://graphics/images/HUD/buttonGFX/digitalOutline_normal.png";
+@export var outlineHover := "res://graphics/images/HUD/buttonGFX/digitalOutline_hover.png";
+@export var outlineHoverAndDisabled := "res://graphics/images/HUD/buttonGFX/digitalOutline_hoverAndDisabled.png";
+@export var outlineNotEquipped_Selected := "res://graphics/images/HUD/buttonGFX/digitalOutline_selected.png";
+@export var outlineEquipped := "res://graphics/images/HUD/buttonGFX/digitalOutline_equipped.png";
+@export var outlineEquipped_Selected := "res://graphics/images/HUD/buttonGFX/digitalOutline_equippedAndSelected.png";
 
 @export_subgroup("Node refs")
 @export var lbl_name : Label;
@@ -26,24 +23,124 @@ var isPassive : bool;
 @export var separatorName : TextureRect;
 @export var separatorStats : TextureRect;
 
+func _ready():
+	hide();
+
+func update_outline():
+	var img = outlineNotEquipped;
+	if disabled:
+		if equipped:
+			if selected:
+				img = outlineDisabled_Selected;
+			else:
+				img = outlineEquippedAndDisabled;
+		else:
+			if selected:
+				img = outlineDisabled_Selected;
+			else:
+				if hovering or focused:
+					img = outlineHoverAndDisabled;
+				else:
+					img = outlineDisabled;
+	else:
+		if equipped:
+			if selected:
+				img = outlineDisabled_Selected;
+			else:
+				img = outlineEquippedAndDisabled;
+		else:
+			if selected:
+				img = outlineNotEquipped_Selected;
+			else:
+				if hovering or focused:
+					img = outlineHover;
+				else:
+					img = outlineNotEquipped;
+	if FileAccess.file_exists(img):
+		outlineBox.texture = load(img);
+	else:
+		print(img, "does not exist dummy")
+	
+	if isPassive:
+		if disabled:
+			assignButton.text = "ENABLE"
+		else:
+			assignButton.text = "DISABLE"
+	else:
+		assignButton.text = "ASSIGN"
+	pass;
+
+var referencedAbility : AbilityManager;
+var isPassive : bool;
+var selected := false;
+var disabled := false;
+var equipped := false;
+var bot : Robot;
+
+var referencedThing : Node;
+var statsUsed : Array = [];
+
+func update_ability_stats():
+	isPassive = referencedAbility.isPassive;
+	disabled = referencedAbility.disabled;
+	var assignedBot = referencedAbility.assignedRobot;
+	referencedThing = referencedAbility.get_assigned_piece_or_part();
+	if referencedThing is Piece:
+		var _bot = referencedThing.get_host_robot();
+		if is_instance_valid(_bot):
+			bot = referencedThing.get_host_robot();
+	if referencedThing is Part:
+		bot = referencedThing.thisBot;
+	equipped = assignedBot != null;
+	statsUsed = referencedAbility.statsUsed;
+	
+	update_outline();
+@export var statIcon := preload("res://scenes/prefabs/objects/gui/stat_icon.tscn");
+func populate_stats():
+	for child in statHolder.get_children():
+		child.queue_free();
+	
+	if referencedThing is Piece:
+		##Make a dummy stat.
+		var energyStat = StatTracker.new();
+		energyStat.statIcon = load("res://graphics/images/HUD/statIcons/energyIconStriped.png");
+		energyStat.baseStat  = referencedAbility.get_energy_cost();
+		energyStat.set_stat(referencedAbility.get_energy_cost());
+		if isPassive:
+			energyStat.statFriendlyName = "Passive Energy Draw";
+		else:
+			energyStat.statFriendlyName = "Active Energy Draw";
+		add_stat_icon(energyStat)
+		
+		for statName in statsUsed:
+			var stat = referencedThing.get_stat_resource(statName);
+			add_stat_icon(stat);
+
+func add_stat_icon(stat:StatTracker):
+	var newIcon : InspectorStatIcon = statIcon.instantiate();
+	newIcon.load_data_from_statTracker(stat);
+	statHolder.add_child(newIcon);
+
 func populate_with_ability(ability:AbilityManager):
 	if !is_instance_valid(ability): queue_free(); return;
-	isPassive = ability.isPassive;
-	var bot = ability.assignedRobot;
-	var thing = ability.get_assigned_piece_or_part();
-	var statsUsed = ability.statsUsed;
+	referencedAbility = ability;
+	referencedAbility.currentAbilityInfobox = self;
+	update_ability_stats();
+	populate_stats();
 	
-	if !isPassive:
-		## Any of the reassignment stuff should go here.
-		pass;
+	var nametxt = "";
+	if isPassive:
+		nametxt += "Passive: "
+	else:
+		nametxt += "Active: "
+	nametxt += referencedAbility.abilityName
+	lbl_name.text = nametxt;
+	rlbl_desc.text = referencedAbility.abilityDescription;
 	
-	lbl_name.text = ability.abilityName;
-	rlbl_desc.text = ability.abilityDescription;
-	
-	if thing is Part:
+	if referencedThing is Part:
 		for stat in statsUsed:
 			pass;
-	if thing is Piece:
+	if referencedThing is Piece:
 		pass;
 	pass;
 
@@ -72,20 +169,11 @@ func resize_box():
 	v += statHolder.size.y;
 	v += v_margin;
 	outlineBox.custom_minimum_size.y = v;
-	##v -= outlineBox.global_position.y;
-	#v += max(statHolder.size.y, assignButton.size.y, 50.0);
-	#v += lbl_name.size.y;
-	#v += rlbl_desc.get_line_count() * 16;
-	#v += statHolder.size.y;
-	#outlineBox.custom_minimum_size.y = v;
-	#outlineBox.size.y = v;
-	#v += 8;
-	#custom_minimum_size.y = v;
-	#size.y = v;
 
 var queueShow = false;
 func queue_show():
 	set_deferred("queueShow", true);
+
 signal doneWithSetup;
 func _process(delta):
 	if queueShow:
@@ -97,3 +185,51 @@ func showtime():
 	resize_box();
 	update_outline();
 	call_deferred("show");
+
+var hovering := false;
+func _on_mouse_entered():
+	hovering = true;
+	pass # Replace with function body.
+func _on_mouse_exited():
+	hovering = false;
+	pass # Replace with function body.
+
+var focused := false;
+func _on_focus_entered():
+	focused = true;
+	pass # Replace with function body.
+func _on_focus_exited():
+	focused = false;
+	pass # Replace with function body.
+
+func _exit_tree():
+	if is_instance_valid(referencedAbility):
+		referencedAbility.currentAbilityInfobox = null;
+
+## When the assignment button gets pressed, it should either start up the active assignment pipette if it is active, or toggle disabled if it is passive.
+func _on_assign_pressed():
+	if is_instance_valid(referencedAbility):
+		referencedAbility.currentAbilityInfobox = self;
+		if isPassive:
+			referencedAbility.disable();
+			update_ability_stats();
+			pass;
+		else:
+			if is_instance_valid(bot):
+				print("ability yeees")
+				if selected:
+					bot.clear_ability_pipette();
+				else:
+					bot.set_ability_pipette(referencedAbility);
+				pass;
+			else:
+				print("ability what")
+		update_outline();
+	pass # Replace with function body.
+
+func select(foo):
+	if foo:
+		print("ability selecting")
+	else:
+		print("ability unselecting")
+	selected = foo;

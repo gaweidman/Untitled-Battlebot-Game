@@ -5,5 +5,3 @@
 
 [node name="Piece_Swivel" instance=ExtResource("1_lwqng")]
 script = ExtResource("2_jbgvx")
-energyDrawActive = 0.2
-activeCooldownTime = 0.0

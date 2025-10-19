@@ -27,6 +27,10 @@ func grab_references():
 
 ######################## INPUT MANAGEMENT
 
+func _physics_process(delta):
+	super(delta)
+	update_bars(); ##Bars should be updated at the very end.
+
 func phys_process_timers(delta):
 	super(delta);
 	forcedUpdateTimerHUD -= 1;
@@ -36,16 +40,16 @@ func phys_process_timers(delta):
 
 func phys_process_combat(delta):
 	super(delta);
-	if Input.is_action_just_pressed("Fire0"):
+	if Input.is_action_pressed("Fire0"):
 		if fire_active(0):
 			print("Ability? ",active_abilities[0].abilityName)
-	if Input.is_action_just_pressed("Fire1"):
+	if Input.is_action_pressed("Fire1"):
 		if fire_active(1):
 			print("Ability? ",active_abilities[1].abilityName)
-	if Input.is_action_just_pressed("Fire2"):
+	if Input.is_action_pressed("Fire2"):
 		if fire_active(2):
 			print("Ability? ",active_abilities[2].abilityName)
-	if Input.is_action_just_pressed("Fire3"):
+	if Input.is_action_pressed("Fire3"):
 		if fire_active(3):
 			print("Ability? ",active_abilities[3].abilityName)
 	#if Input.is_action_just_pressed("Fire4"):
@@ -121,10 +125,6 @@ func die():
 	#print(Utils.get_all_children(self, self))
 
 #################### COMBAT HANDLING
-
-func update_hud():
-	if super():
-		update_bars();
 
 func update_bars():
 	if is_instance_valid(barHP) and is_instance_valid(barEnergy):

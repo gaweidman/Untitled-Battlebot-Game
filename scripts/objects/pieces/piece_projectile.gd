@@ -58,10 +58,6 @@ func assign_references():
 			#newRay.add_exception(hurtboxCollisionHolder);
 			if is_instance_valid(rangeRay):
 				meshesHolder.add_child(newRay);
-	if is_instance_valid(firingOffsetNode) and !is_instance_valid(firingOffset):
-		firingOffset = firingOffsetNode.position;
-	elif !is_instance_valid(firingOffsetNode) and !is_instance_valid(firingOffset):
-		firingOffset = Vector3(0,0,0);
 
 func stat_registry():
 	super();
@@ -82,18 +78,16 @@ func get_inaccuracy():
 
 func ability_registry():
 	super();
-	register_active_ability(firingName, firingDescription, func(): fireBullet(); pass, [])
+	#register_active_ability(firingName, firingDescription, func(): fireBullet(); pass, [])
 	pass;
 
-func can_use_active(slot):
-	if super(slot):
-		return can_fire();
-
+func can_use_active(slot : AbilityManager):
+	return super(slot) and can_fire();
 
 func get_firing_offset():
-	var bot = get_host_robot();
+	if is_instance_valid(firingOffsetNode):
+		return firingOffsetNode.global_position;
 	return firingOffset + global_position;
-
 
 ################### FIRING
 
@@ -135,7 +129,7 @@ func fireBullet():
 		SND.play_sound_at(firingSoundString, pos, GameState.get_game_board(), firingSoundVolumeAdjust, randf_range(firingSoundPitchAdjust * 1.15, firingSoundPitchAdjust * 0.85))
 	else:
 		for bullt in magazine:
-			print(bullet)
+			print(bullt)
 		make_new_bullets();
 		print("Invalid bullet")
 	leak_timer_start();

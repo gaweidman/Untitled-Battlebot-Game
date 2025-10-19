@@ -1,75 +1,18 @@
-[gd_scene load_steps=26 format=3 uid="uid://dl1v6eiy0gi1q"]
+[gd_scene load_steps=21 format=3 uid="uid://dl1v6eiy0gi1q"]
 
 [ext_resource type="Script" uid="uid://021qwhyd0air" path="res://scripts/objects/pieces/piece_sawblade.gd" id="1_5k0fg"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_k1jne"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="3_erqxd"]
+[ext_resource type="Resource" uid="uid://cmw2cjlyx2jfh" path="res://scenes/prefabs/abilities/ability_sawblade_whirl.tres" id="3_i7bft"]
 [ext_resource type="ArrayMesh" uid="uid://q6bj0b082swx" path="res://graphics/models/obj/botparts/blade2.obj" id="3_omexb"]
-[ext_resource type="Texture2D" uid="uid://d0ha035m170v" path="res://graphics/images/HUD/parts/Icons/Sawblade.png" id="4_8yny5"]
+[ext_resource type="Resource" uid="uid://glery0fcuhq" path="res://scenes/prefabs/abilities/passive/ability_sawblade_spin.tres" id="4_k1jne"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="5_gfg0o"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_kb5ak"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="6_r0nuw"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="7_3l8sh"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="8_8yny5"]
+[ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="11_erqxd"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="12_k1jne"]
 [ext_resource type="ArrayMesh" uid="uid://bd8g8qktqly2e" path="res://graphics/models/obj/botparts/StaticSwivel.obj" id="13_erqxd"]
-
-[sub_resource type="Resource" id="Resource_i7bft"]
-script = ExtResource("3_erqxd")
-string = "Spin the blade with extreme speed, causing it to "
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_k1jne"]
-script = ExtResource("3_erqxd")
-string = "deflect bullets"
-color = 4
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_erqxd"]
-script = ExtResource("3_erqxd")
-string = "and deal extra "
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_8yny5"]
-script = ExtResource("3_erqxd")
-string = "melee damage"
-color = 6
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_j66hk"]
-script = ExtResource("3_erqxd")
-string = "for a bit."
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_kb5ak"]
-script = ExtResource("2_k1jne")
-abilityName = "Spin Out"
-abilityDescription = "No Description Found."
-abilityDescriptionConstructor = Array[ExtResource("3_erqxd")]([SubResource("Resource_i7bft"), SubResource("Resource_k1jne"), SubResource("Resource_erqxd"), SubResource("Resource_8yny5"), SubResource("Resource_j66hk")])
-statsUsed = Array[String]([])
-icon = ExtResource("4_8yny5")
-initialized = false
-disabled = false
-functionNameWhenUsed = &"deflect"
-functionWhenUsed = Callable()
-metadata/_custom_type_script = "uid://crpa3dbgxwyeg"
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_g4w8c"]
 size = Vector2(0.25, 0.25)
@@ -101,16 +44,19 @@ radius = 1.375
 [node name="Piece_Sawblade" type="Node3D" node_paths=PackedStringArray("blade", "meshesHolder", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_5k0fg")
 blade = NodePath("Blade2")
-force_visibility = true
 pieceName = &"Sawblade"
+activeAbilities = Array[ExtResource("2_k1jne")]([ExtResource("3_i7bft")])
+passiveAbilities = Array[ExtResource("2_k1jne")]([ExtResource("4_k1jne")])
+force_visibility = true
+damageBase = 1.0
+knockbackBase = 80.0
+kickbackBase = 80.0
+damageTypes = Array[int]([1])
+disableHitboxesWhileOnCooldown = false
 meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
-activeAbilities = Array[ExtResource("2_k1jne")]([SubResource("Resource_kb5ak")])
-energyDrawPassive = 0.1
-passiveCooldownTime = 0.25
-activeCooldownTime = 2.0
 engineSlots = {
 Vector2i(1, 1): null,
 Vector2i(1, 2): null,
@@ -121,11 +67,6 @@ Vector2i(3, 1): null,
 Vector2i(3, 2): null,
 Vector2i(3, 3): null
 }
-damageBase = 1.0
-knockbackBase = 80.0
-kickbackBase = 80.0
-damageTypes = Array[int]([1])
-disableHitboxesWhileOnCooldown = false
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"
@@ -197,6 +138,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
 [node name="Blade2" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.323604, 0, 0.635109, 0, 0.7128, 0, -0.635109, 0, 0.323604, 0, -0.0945297, 0)
 mesh = ExtResource("3_omexb")
+surface_material_override/0 = ExtResource("11_erqxd")
 
 [node name="PieceCollisionBox" parent="." instance=ExtResource("12_k1jne")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)

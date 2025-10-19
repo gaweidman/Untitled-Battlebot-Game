@@ -8,6 +8,7 @@ class_name InfoBox
 #@export var rlbl_desc : RichTextLabel;
 var partRef : Part;
 var pieceRef : Piece;
+var data_ready := false;
 signal sellPart(part:Part);
 
 var icon_blank := preload("res://graphics/images/HUD/infobox/typeIcons/info_blank.png");
@@ -40,16 +41,20 @@ func populate_info(thing):
 	return good;
 
 func get_required_height() -> int:
-	return int(requiredHeight);
+	return int(max(calculatedHeight, requiredHeight));
 
 var requiredHeight := 272.0;
 func calculate_required_height():
-	var h = size.y;
-	for child in get_children():
-		var y = child.position.y;
-		h = maxi(h, y + child.size.y);
-	requiredHeight = h;
+	update_ability_height();
+	requiredHeight = calculatedHeight;
 	return requiredHeight;
+	#var h = size.y;
+	#for child in get_children():
+		#var y = child.position.y;
+		#h = maxi(h, y + child.size.y);
+	#requiredHeight = h;
+	#print("REQUIRED HEIGHT: ", requiredHeight)
+	#return requiredHeight;
 
 func populate_info_part(part:Part):
 	partRef = part;
@@ -107,6 +112,8 @@ func populate_info_piece(piece:Piece):
 
 func clear_info(thingToCheck = null):
 	if thingToCheck != get_ref():
+		data_ready = false;
+		calculatedHeight = 0;
 		partRef = null;
 		lbl_partName.text = "Nothing Selected";
 		iconBase.texture = icon_blank;
@@ -131,7 +138,8 @@ func get_ref():
 	if is_instance_valid(pieceRef): return pieceRef;
 	return null;
 
-@export var sellButton : Button;
+@export var sellButton : Control;
+@export var moveButton : Control;
 var areYouSure := false;
 func _on_sell_button_pressed():
 	if areYouSure:
@@ -150,7 +158,7 @@ func populate_abilities(thing):
 	clear_abilities();
 	var effectiveSize := 0;
 	if thing is Piece:
-		var abilities = thing.get_all_abilities();
+		var abilities = thing.get_all_abilities(true);
 		for ability in abilities:
 			if is_instance_valid(ability) and ability is AbilityManager:
 				var newBox = abilityInfoboxScene.instantiate();
@@ -166,18 +174,42 @@ func populate_abilities(thing):
 
 var queueAbilityPostUpdate1 := false;
 var queueAbilityPostUpdate2 := false;
+var queueAbilityPostUpdate3 := false;
+@export var abilityBoxMaxSize := 300;
+var spaceBeforeDescription = 32;
+var spaceAfterDescription = 2;
+var spaceAfterAbilityContainer = 4;
+var spaceAfterButton = 4;
+
+var calculatedHeight = 0;
 func update_ability_height():
 	var v = 0;
 	for child in abilityHolder.get_children():
 		v += child.size.y;
-	abilityScrollContainer.custom_minimum_size.y = min(180, v + 6)
-	abilityScrollContainer.size.y = min(180, v)
+	abilityScrollContainer.custom_minimum_size.y = min(abilityBoxMaxSize, v + 6)
+	abilityScrollContainer.size.y = min(abilityBoxMaxSize, v)
+	
+	var descHeight = rlbl_desc.get_content_height();
+	var abilityPosY = descHeight + spaceAfterDescription + spaceBeforeDescription;
+	abilityScrollContainer.position.y = abilityPosY;
+	var abilityH = abilityScrollContainer.custom_minimum_size.y;
+	if not abilityScrollContainer.visible:
+		abilityH = 0;
+	var buttonPosY = abilityH + abilityPosY + spaceAfterAbilityContainer
+	
+	sellButton.position.y = buttonPosY;
+	moveButton.position.y = buttonPosY;
+	calculatedHeight = sellButton.size.y + sellButton.position.y + spaceAfterButton;
 	pass;
 
-func _process(delta):
+func _physics_process(delta):
+	if queueAbilityPostUpdate3:
+		queueAbilityPostUpdate3 = false;
+		data_ready = true;
 	if queueAbilityPostUpdate2:
 		queueAbilityPostUpdate2 = false;
-		update_ability_height();
+		calculate_required_height();
+		queueAbilityPostUpdate3 = true;
 	if queueAbilityPostUpdate1:
 		queueAbilityPostUpdate1 = false;
 		queueAbilityPostUpdate2 = true;
@@ -187,7 +219,3 @@ func clear_abilities():
 	##Clear out the abilities.
 	for ability in abilityHolder.get_children():
 		ability.queue_free();
-
-## Gets connected to when an AbilityInfobox gets made during the PopulateAbilities function.
-func _on_ability_assignment_button_pressed(ability:AbilityManager):
-	pass;

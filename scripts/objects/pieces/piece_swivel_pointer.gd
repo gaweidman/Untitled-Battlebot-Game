@@ -5,8 +5,8 @@ class_name Piece_SwivelPointer
 var cam : GameCamera;
 var pointerLocation := Vector3.ZERO;
 
-func can_use_passive():
-	if super():
+func can_use_passive(passiveAbility):
+	if super(passiveAbility):
 		var rot = global_rotation_degrees;
 		##Can only use the passive if it's not rotated.
 		if rot.x < 5.0 and rot.x > -5.0 and rot.z < 5.0 and rot.z > -5.0:
@@ -18,11 +18,11 @@ func phys_process_collision(delta):
 	if !is_instance_valid(cam):
 		cam = GameState.get_camera();
 
-func use_passive():
+func use_passive(passiveAbility : AbilityManager):
 	var prevRotation = targetRotation;
 	if host_is_player():
 		if is_instance_valid(cam):
-			if super():
+			if super(passiveAbility):
 				var rot = cam.get_rotation_to_fake_aiming(get_host_robot().get_global_body_position());
 				#print(rot)
 				if rot != null:

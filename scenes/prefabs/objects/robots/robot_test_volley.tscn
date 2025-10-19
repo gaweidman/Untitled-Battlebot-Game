@@ -1,100 +1,13 @@
-[gd_scene load_steps=22 format=3 uid="uid://bbsfkqad6ok8r"]
+[gd_scene load_steps=7 format=3 uid="uid://bbsfkqad6ok8r"]
 
 [ext_resource type="Script" uid="uid://bds06vyivfdpe" path="res://scripts/objects/robots/robot_test_volley.gd" id="1_fhm5l"]
-[ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="2_hkyix"]
-[ext_resource type="Texture2D" uid="uid://cnfat2kqvmdcd" path="res://graphics/images/HUD/statIcons/damageIconStriped.png" id="4_h283g"]
-[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="5_jreh5"]
 [ext_resource type="Script" uid="uid://cd3dvyejdjvlg" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="6_yalvc"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="7_0drid"]
-[ext_resource type="PackedScene" uid="uid://88se3nfd8vrt" path="res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn" id="8_wbk27"]
-[ext_resource type="Texture2D" uid="uid://b775d1fn78gcv" path="res://graphics/images/HUD/statIcons/weightIconStriped.png" id="9_r24ui"]
-[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="10_qh4bp"]
 [ext_resource type="PackedScene" uid="uid://b4adm8wxo7ym0" path="res://scenes/prefabs/objects/robots/buildingBlocks/treads.tscn" id="11_f703s"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
 friction = 200.0
 bounce = 0.3
-
-[sub_resource type="Resource" id="Resource_7deh5"]
-resource_name = "Damage32"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Damage"
-statName = "Damage32"
-statIcon = ExtResource("4_h283g")
-baseStat = 0.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_1msyv"]
-resource_name = "Kickback32"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Kickback"
-statName = "Kickback32"
-statIcon = ExtResource("9_r24ui")
-baseStat = 0.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_jjjef"]
-resource_name = "Knockback32"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Knockback"
-statName = "Knockback32"
-statIcon = ExtResource("9_r24ui")
-baseStat = 0.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_1vv7c"]
-resource_name = "PassiveCooldown32"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Passive Cooldown"
-statName = "PassiveCooldown32"
-statIcon = ExtResource("5_jreh5")
-baseStat = 0.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_7rigy"]
-resource_name = "RotationSpeed32"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Rotation Speed"
-statName = "RotationSpeed32"
-statIcon = ExtResource("5_jreh5")
-baseStat = 1.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_2ac1c"]
-resource_name = "ScrapCost32"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Scrap Cost"
-statName = "ScrapCost32"
-statIcon = ExtResource("10_qh4bp")
-baseStat = 0.0
-roundingMode = 6
-
-[sub_resource type="Resource" id="Resource_gon2w"]
-resource_name = "ScrapSalvageModifier32"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Scrap Salvage Modifier"
-statName = "ScrapSalvageModifier32"
-statIcon = ExtResource("10_qh4bp")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_ajape"]
-resource_name = "ScrapSellModifier32"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Scrap Sell Modifier"
-statName = "ScrapSellModifier32"
-statIcon = ExtResource("10_qh4bp")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_cr3q1"]
-resource_name = "Weight32"
-script = ExtResource("2_hkyix")
-statFriendlyName = "Weight"
-statName = "Weight32"
-statIcon = ExtResource("9_r24ui")
-baseStat = 1.0
-roundingMode = 0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_kynhc"]
 
@@ -182,27 +95,9 @@ script = ExtResource("6_yalvc")
 [node name="Meshes" type="Node3D" parent="Body"]
 transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
 
-[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("occupant", "hostRobot") instance=ExtResource("7_0drid")]
+[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("hostRobot") instance=ExtResource("7_0drid")]
 transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
-occupant = NodePath("Piece_BodyCube")
 hostRobot = NodePath("../../..")
-
-[node name="Piece_BodyCube" parent="Body/Meshes/Socket" node_paths=PackedStringArray("hurtboxCollisionHolder", "hostRobot", "hostSocket") instance=ExtResource("8_wbk27")]
-hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
-hostRobot = NodePath("../../../..")
-hostSocket = NodePath("..")
-assignedToSocket = true
-statCollection = Dictionary[String, ExtResource("2_hkyix")]({
-"Damage32": SubResource("Resource_7deh5"),
-"Kickback32": SubResource("Resource_1msyv"),
-"Knockback32": SubResource("Resource_jjjef"),
-"PassiveCooldown32": SubResource("Resource_1vv7c"),
-"RotationSpeed32": SubResource("Resource_7rigy"),
-"ScrapCost32": SubResource("Resource_2ac1c"),
-"ScrapSalvageModifier32": SubResource("Resource_gon2w"),
-"ScrapSellModifier32": SubResource("Resource_ajape"),
-"Weight32": SubResource("Resource_cr3q1")
-})
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
 shape = SubResource("SphereShape3D_kynhc")

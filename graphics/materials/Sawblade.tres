@@ -1,4 +1,20 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://byypqaapcf25c"]
+[gd_resource type="StandardMaterial3D" load_steps=7 format=3 uid="uid://byypqaapcf25c"]
+
+[ext_resource type="Texture2D" uid="uid://b56d608wjitdw" path="res://graphics/images/models/blade/blade_color.png" id="1_3hnhe"]
+[ext_resource type="Texture2D" uid="uid://cyfpshvq4cemm" path="res://graphics/images/models/blade/blade_emissive.png" id="2_7elu8"]
+[ext_resource type="Texture2D" uid="uid://dnw47rx6o7ml8" path="res://graphics/images/models/blade/blade_height.png" id="3_c5pxg"]
+[ext_resource type="Texture2D" uid="uid://bor423n4ii3sk" path="res://graphics/images/models/blade/blade_metallic.png" id="4_8jb7v"]
+[ext_resource type="Texture2D" uid="uid://ctyo4j2e0gjbq" path="res://graphics/images/models/blade/blade_normal.png" id="5_io3s8"]
+[ext_resource type="Texture2D" uid="uid://elobh5egkn5u" path="res://graphics/images/models/blade/blade_roughness.png" id="6_22k8l"]
 
 [resource]
-albedo_color = Color(0.374139, 0.374139, 0.374139, 1)
+albedo_texture = ExtResource("1_3hnhe")
+metallic = 0.63
+metallic_texture = ExtResource("4_8jb7v")
+roughness_texture = ExtResource("6_22k8l")
+emission_enabled = true
+emission_texture = ExtResource("2_7elu8")
+normal_enabled = true
+normal_texture = ExtResource("5_io3s8")
+heightmap_scale = 1.0
+heightmap_texture = ExtResource("3_c5pxg")

@@ -27,13 +27,17 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("7_x1ea0")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_jxej0"]
-size = Vector3(0.75, 1, 0.75)
+[sub_resource type="SphereShape3D" id="SphereShape3D_jdn6p"]
+radius = 0.375
 
 [node name="Piece_Horn" type="Node3D" node_paths=PackedStringArray("meshesHolder", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_jdn6p")
-force_visibility = true
 pieceName = &"Horn"
+pieceDescription = "Seems like someone tore this off some hunting trophy and stuck a plug inside the base.\\nIt sure is pointy!"
+force_visibility = true
+damageBase = 1.75
+knockbackBase = 20.0
+damageTypes = Array[int]([1])
 meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
@@ -119,8 +123,8 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 
 mesh = ExtResource("9_jxej0")
 
 [node name="PieceCollisionBox2" parent="." instance=ExtResource("6_jxej0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("BoxShape3D_jxej0")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.125)
+shape = SubResource("SphereShape3D_jdn6p")
 isPlacementBox = false
 isHurtbox = false
 isHitbox = true

@@ -1,0 +1,65 @@
+[gd_resource type="Resource" script_class="AbilityManager" load_steps=9 format=3 uid="uid://cmw2cjlyx2jfh"]
+
+[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_0ldao"]
+[ext_resource type="Texture2D" uid="uid://d0ha035m170v" path="res://graphics/images/HUD/parts/Icons/Sawblade.png" id="2_pbcqu"]
+[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_7rl4w"]
+
+[sub_resource type="Resource" id="Resource_i7bft"]
+script = ExtResource("1_0ldao")
+string = "Spin the blade with extreme speed, causing it to "
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_k1jne"]
+script = ExtResource("1_0ldao")
+string = "deflect bullets"
+color = 4
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_erqxd"]
+script = ExtResource("1_0ldao")
+string = "and deal extra "
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_8yny5"]
+script = ExtResource("1_0ldao")
+string = "melee damage"
+color = 6
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_j66hk"]
+script = ExtResource("1_0ldao")
+string = "for a bit."
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[resource]
+script = ExtResource("3_7rl4w")
+abilityName = "Whirl"
+abilityDescriptionConstructor = Array[ExtResource("1_0ldao")]([SubResource("Resource_i7bft"), SubResource("Resource_k1jne"), SubResource("Resource_erqxd"), SubResource("Resource_8yny5"), SubResource("Resource_j66hk")])
+abilityDescription = null
+statsUsed = null
+icon = ExtResource("2_pbcqu")
+initialized = null
+disabled = null
+functionNameWhenUsed = &"deflect"
+functionWhenUsed = null
+energyCost = 2.0
+cooldownTimeBase = 3.0
+metadata/_custom_type_script = "uid://crpa3dbgxwyeg"

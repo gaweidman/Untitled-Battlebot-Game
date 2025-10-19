@@ -1,14 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://dy07swne0b8h0"]
+[gd_scene load_steps=7 format=3 uid="uid://dy07swne0b8h0"]
 
 [ext_resource type="Theme" uid="uid://8f0fg65uxivb" path="res://graphics/images/HUD/digital_button.tres" id="1_km24x"]
 [ext_resource type="Script" uid="uid://cs7564wakx0ln" path="res://scripts/GUI/active_ability_infobox.gd" id="1_mmcvq"]
 [ext_resource type="Texture2D" uid="uid://bwiv2trs8p6vk" path="res://graphics/images/HUD/buttonGFX/digitalOutline_normal.png" id="3_fgv2p"]
-[ext_resource type="PackedScene" uid="uid://dqajmobt7ehra" path="res://scenes/prefabs/objects/gui/stat_icon.tscn" id="4_ri6cs"]
 [ext_resource type="PackedScene" uid="uid://c3xdylsv62lyp" path="res://scenes/prefabs/objects/gui/separator.tscn" id="5_mxt8i"]
 [ext_resource type="Texture2D" uid="uid://dpqcoxkidln0c" path="res://graphics/images/HUD/screenGFX/screenBG_grey.png" id="6_jowbw"]
 [ext_resource type="Texture2D" uid="uid://fra5o6cwa5nn" path="res://graphics/images/HUD/screenGFX/screenBG_darkGrey.png" id="7_pt6ty"]
 
 [node name="ActiveAbilityInfobox" type="MarginContainer" node_paths=PackedStringArray("lbl_name", "rlbl_desc", "outlineBox", "statHolder", "assignButton", "separatorName", "separatorStats")]
+z_index = -1
 custom_minimum_size = Vector2(252, 0)
 offset_right = 252.0
 offset_bottom = 103.0
@@ -73,15 +73,6 @@ offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="StatIcon" parent="Box/Stats" instance=ExtResource("4_ri6cs")]
-layout_mode = 2
-
-[node name="StatIcon2" parent="Box/Stats" instance=ExtResource("4_ri6cs")]
-layout_mode = 2
-
-[node name="StatIcon3" parent="Box/Stats" instance=ExtResource("4_ri6cs")]
-layout_mode = 2
-
 [node name="Assign" type="Button" parent="Box"]
 layout_mode = 1
 anchors_preset = 3
@@ -116,3 +107,9 @@ offset_right = 1.0
 offset_bottom = 2.0
 brightTexture = ExtResource("6_jowbw")
 darkTexture = ExtResource("7_pt6ty")
+
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
+[connection signal="focus_exited" from="." to="." method="_on_focus_exited"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Box/Assign" to="." method="_on_assign_pressed"]

@@ -62,7 +62,7 @@ func phys_process_collision(delta):
 
 func phys_process_abilities(delta):
 	super(delta);
-	if can_use_passive() and not on_cooldown():
+	if can_use_passive_any() and not on_cooldown():
 		rotationSpeed = lerp(rotationSpeed, baseRotationSpeed, delta * 4);
 		pass;
 	else:
@@ -77,10 +77,10 @@ func process_draw(delta):
 	blade.scale = Vector3.ONE * bladeScaleOffset * bladeScaleBase;
 
 func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, thisPieceCollider : PieceCollisionBox):
-	if can_use_passive():
+	if can_use_passive_any():
 		if super(otherPiece, otherPieceCollider, thisPieceCollider):
 			#print("HUzzah!")
-			set_cooldown_passive();
+			set_cooldown_passive(passiveAbilities.front());
 			bladeScaleOffset /= 1.5;
 		else:
 			#print_rich("[color=orange]Sawblade tried to do contact damage, but is on passive cooldown for ",get_cooldown_passive()," seconds.")
@@ -103,10 +103,10 @@ func cooldown_behavior(onCooldown : bool = on_cooldown()):
 	#if onCooldown:
 		#
 		#return;
-	if on_cooldown_active():
+	if on_cooldown_active_any():
 		hitboxCollisionHolder.scale.lerp(Vector3.ONE * bladeScaleOffset, get_physics_process_delta_time() * 12)
 		return;
-	if on_cooldown_passive():
+	if on_cooldown_passive_any():
 		hitboxCollisionHolder.scale.lerp(Vector3.ONE * 0.5, get_physics_process_delta_time() * 12)
 		return;
 	pass;
