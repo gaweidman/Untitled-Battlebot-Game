@@ -5,9 +5,9 @@
 [ext_resource type="Theme" uid="uid://8f0fg65uxivb" path="res://graphics/images/HUD/digital_button.tres" id="3_x4c7b"]
 
 [node name="StatIcon" type="Control" node_paths=PackedStringArray("textureIcon", "lbl_amt")]
-custom_minimum_size = Vector2(24, 37)
+custom_minimum_size = Vector2(22, 37)
 layout_mode = 3
-anchor_right = 0.0125
+anchor_right = 0.0114583
 anchor_bottom = 0.0342593
 script = ExtResource("2_rhoqc")
 textureIcon = NodePath("Icon")
@@ -19,9 +19,9 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 2.0
+offset_left = 1.0
 offset_top = -22.834
-offset_right = 22.0
+offset_right = 21.0
 offset_bottom = 0.166019
 grow_vertical = 0
 texture = ExtResource("1_mv2jr")

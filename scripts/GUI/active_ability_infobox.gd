@@ -169,6 +169,10 @@ func resize_box():
 	v += statHolder.size.y;
 	v += v_margin;
 	outlineBox.custom_minimum_size.y = v;
+	
+	var marginBoxHeight = v + get("theme_override_constants/margin_bottom") + get("theme_override_constants/margin_top");
+	size.y = marginBoxHeight;
+	custom_minimum_size.y = marginBoxHeight;
 
 var queueShow = false;
 func queue_show():

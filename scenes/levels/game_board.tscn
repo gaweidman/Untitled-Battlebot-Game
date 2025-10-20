@@ -171,6 +171,9 @@ VOffsetInBuild = 0.0
 floor = NodePath("../../ArenaFloor/StaticBody3D")
 positionParent = NodePath("..")
 
+[node name="AudioListener3D" type="AudioListener3D" parent="CameraPointer/GameCamera"]
+current = true
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_fpy0w")
 

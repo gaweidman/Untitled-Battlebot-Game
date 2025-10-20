@@ -111,6 +111,8 @@ func calc_target_stash_height(_infoboxHeight := infobox.get_required_height()):
 		#print("Not in the correct mode to get a new height. Returning ",stashHeightWhenClosed)
 		#print("Inspected thing is invalid.")
 		return targetStashHeight;
+	if ! infobox.data_ready: 
+		_infoboxHeight = infoboxHeight;
 	#print_rich("[color=red]" + str(_infoboxHeight))
 	infoboxHeight = _infoboxHeight;
 	var calc = fullWindowHeight;
@@ -140,10 +142,6 @@ func _process(delta : float):
 	if queuedMode != null:
 		change_mode(queuedMode, queuedModeFilter);
 	var dif2 = currentStashHeight - targetStashHeight;
-	if infobox.data_ready:
-		moveFactor = roundi(lerp(float(moveFactor), 600.0 * delta, delta * 20));
-	else:
-		moveFactor = roundi(300.0 * delta);
 	currentStashHeight = move_toward(currentStashHeight, targetStashHeight, moveFactor);
 	dif2 = currentStashHeight - targetStashHeight;
 	
@@ -164,8 +162,9 @@ func _process(delta : float):
 			pass;
 		inspectorModes.OPENING:
 			#print("opening mode")
-			inspectorOpen = true;
+			calc_movefactor_for_opening(delta);
 			#print(dif2)
+			inspectorOpen = infobox.data_ready;
 			if dif2 <= 0.0: 
 				#change_mode(inspectorModes.CLOSED);
 				if queued_thing is Part:
@@ -175,30 +174,41 @@ func _process(delta : float):
 			pass;
 		inspectorModes.CLOSING:
 			inspectorOpen = true;
-			#print(dif2)
+			moveFactor = roundi(600 * delta);
 			if dif2 >= 0: 
 				change_mode_next_frame(inspectorModes.CLOSED);
 			pass;
 		inspectorModes.OPEN_QUEUED:
 			inspectorOpen = false;
+			moveFactor = 0;
 			pass;
 		inspectorModes.PART:
 			inspectorOpen = true;
+			calc_movefactor_for_opening(delta)
 			pass;
 		inspectorModes.PIECE:
 			inspectorOpen = true;
+			calc_movefactor_for_opening(delta)
 			pass;
 	
 	##Visibility 
 	if inspectorOpen:
 		calc_visible_infobox_height()
-		if targetInfoboxHeight> 0:
+		if targetInfoboxHeight > 0 and infobox.data_ready:
 			infobox.size.y = targetInfoboxHeight;
 		else:
 			inspectorOpen = false;
 	
 	infobox.visible = inspectorOpen;
 	stashSeparator.visible = ! (dif < 4);
+
+## Refreshes the stash height and gives an updated moveFactor depending on if the inspector has its data prepared.
+func calc_movefactor_for_opening(delta):
+	if infobox.data_ready: 
+		calc_target_stash_height();
+		moveFactor = roundi(600 * delta);
+	else: 
+		moveFactor = 0;
 
 ## Clears [member queued_thing] after populating the inspector with it.
 func populate_from_queued():

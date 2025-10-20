@@ -8,8 +8,10 @@ var magazine : Array[Bullet] = [];
 var magazineCount := 0;
 ##The base max amount of bullets in the magazine.
 @export var magazineMaxBase := 3;
+@export var magazineRefreshRate := 6.0;
 ##The base speed to launch fired projectiles.
-@export var fireSpeed := 30.0;
+@export var launchSpeed := 30.0;
+@export var fireRate := 0.5;
 ##Calculated.
 var firingAngle := Vector3.BACK;
 
@@ -61,13 +63,15 @@ func assign_references():
 
 func stat_registry():
 	super();
-	register_stat("MagazineSize", magazineMaxBase, statIconMagazine);
-	register_stat("ProjectileSpeed", fireSpeed, statIconCooldown);
+	register_stat("MagazineSize", magazineMaxBase, statIconMagazine, null, null, StatTracker.roundingModes.Floori);
+	register_stat("MagazineRefreshRate", magazineRefreshRate, statIconCooldown);
+	register_stat("ProjectileSpeed", launchSpeed, statIconCooldown);
 	register_stat("ProjectileLifetime", bulletLifetime, statIconCooldown);
-	register_stat("Inaccuracy", bulletLifetime, statIconWeight);
 	register_stat("ProjectileGravity", bulletGravity, statIconWeight);
+	register_stat("ProjectileFireRate", fireRate, statIconCooldown);
+	register_stat("Inaccuracy", bulletLifetime, statIconWeight);
 
-func get_magazine_max():
+func get_magazine_max() -> int:
 	return get_stat("MagazineSize");
 func get_projectile_speed():
 	return get_stat("ProjectileSpeed");
@@ -82,7 +86,9 @@ func ability_registry():
 	pass;
 
 func can_use_active(slot : AbilityManager):
-	return super(slot) and can_fire();
+	if can_fire():
+		return super(slot);
+	return false;
 
 func get_firing_offset():
 	if is_instance_valid(firingOffsetNode):
@@ -91,22 +97,40 @@ func get_firing_offset():
 
 ################### FIRING
 
-func make_new_bullets():
-	magazine.clear();
-	var magazineMax = get_magazine_max();
-	var tries = magazineMax + 1;
-	while magazine.size() < magazineMax and tries > 0:
+func refill_magazine(max := get_magazine_max()):
+	var newMagazine : Array[Bullet] = []
+	var count = 0;
+	for bullet in magazine:
+		if count < max:
+			if is_instance_valid(bullet):
+				count += 1;
+				newMagazine.append(bullet);
+	
+	while newMagazine.size() < max:
 		var bullet : Bullet;
 		bullet = bulletRef.instantiate();
 		if bullet is Bullet:
 			var wrld = GameState.get_game_board();
 			if wrld == null: return;
 			wrld.add_child(bullet);
-			magazine.append(bullet);
-		tries -= 1;
+			newMagazine.append(bullet);
+	
+	magazine = newMagazine;
+	pass;
+
+var availableBullets = 0;
+func add_one_bullet(max := get_magazine_max()):
+	print("Adding a bullet")
+	availableBullets = min(availableBullets + 1, max);
+	print(availableBullets)
+
+func get_available_bullets():
+	#print("Bulelts available: ", availableBullets)
+	return availableBullets;
 
 func fireBullet():
 	#print("pew");
+	
 	var bullet : Bullet;
 	
 #	##Create new bullets when there are less than there should be
@@ -124,27 +148,32 @@ func fireBullet():
 		var bot = get_host_robot();
 		var pos = bot.get_global_body_position() + firingOffset;
 		pos = get_firing_offset();
-		prints("Firing offset",get_firing_offset())
-		bullet.fire_from_robot(bot, self, pos, get_damage_data(), firingAngle, fireSpeed, bulletLifetime, get_bullet_gravity());
+		#prints("Firing offset",get_firing_offset())
+		bullet.fire_from_robot(bot, self, pos, get_damage_data(), firingAngle, launchSpeed, bulletLifetime, get_bullet_gravity());
 		SND.play_sound_at(firingSoundString, pos, GameState.get_game_board(), firingSoundVolumeAdjust, randf_range(firingSoundPitchAdjust * 1.15, firingSoundPitchAdjust * 0.85))
+		availableBullets -= 1;
 	else:
 		for bullt in magazine:
 			print(bullt)
-		make_new_bullets();
 		print("Invalid bullet")
+		#print(magazine)
 	leak_timer_start();
 	pass
 
 ##Checks the magazine for the amount of available bullets in there.
 func recountMagazine() -> int:
-	var count = get_magazine_max();
+	refill_magazine();
+	
+	var max = get_magazine_max();
+	var count = max;
 	for bullet in magazine:
 		if is_instance_valid(bullet):
-			if bullet.fired:
+			if ! bullet.available(true):
 				count -= 1;
 	var finalCount = max(count, 0);
 	magazineCount = finalCount;
-	return finalCount;
+	#print("recounting... final count is ", magazineCount)
+	return min(get_available_bullets(), finalCount);
 
 ##Checks the magazine to see if you're able to fire.
 func can_fire() -> bool: 
@@ -155,10 +184,10 @@ func nextBullet():
 	for bullet in magazine:
 		var bulletIDX = magazine.find(bullet);
 		if is_instance_valid(bullet):
-			if (not bullet.fired):
+			if bullet.available():
+				#print(bullet)
 				return bullet;
-	make_new_bullets();
-	return magazine.front();
+	return null;
 
 ##Deletes the entire magazine.
 func leakPrevention():
@@ -182,7 +211,7 @@ func _exit_tree():
 func calc_range():
 	await ready;
 	var delta = get_physics_process_delta_time();
-	var length = fireSpeed * delta * bulletLifetime * 60;
+	var length = launchSpeed * delta * bulletLifetime * 60;
 	rangeRay.target_position.x = length;
 	rangeRay.position = firingOffset;
 

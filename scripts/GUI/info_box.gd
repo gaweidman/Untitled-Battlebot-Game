@@ -10,6 +10,7 @@ var partRef : Part;
 var pieceRef : Piece;
 var data_ready := false;
 signal sellPart(part:Part);
+signal sellPiece(piece:Piece);
 
 var icon_blank := preload("res://graphics/images/HUD/infobox/typeIcons/info_blank.png");
 var icon_utility := preload("res://graphics/images/HUD/infobox/typeIcons/info_utility.png");
@@ -37,7 +38,6 @@ func populate_info(thing):
 		if thing is Piece:
 			populate_info_piece(thing);
 			good = true;
-	calculate_required_height();
 	return good;
 
 func get_required_height() -> int:
@@ -48,13 +48,6 @@ func calculate_required_height():
 	update_ability_height();
 	requiredHeight = calculatedHeight;
 	return requiredHeight;
-	#var h = size.y;
-	#for child in get_children():
-		#var y = child.position.y;
-		#h = maxi(h, y + child.size.y);
-	#requiredHeight = h;
-	#print("REQUIRED HEIGHT: ", requiredHeight)
-	#return requiredHeight;
 
 func populate_info_part(part:Part):
 	partRef = part;
@@ -133,21 +126,38 @@ func clear_info(thingToCheck = null):
 		
 		clear_abilities();
 
+var ref : Node;
 func get_ref():
-	if is_instance_valid(partRef): return partRef;
-	if is_instance_valid(pieceRef): return pieceRef;
+	if is_instance_valid(partRef): 
+		ref = partRef;
+		return partRef;
+	if is_instance_valid(pieceRef): 
+		ref = pieceRef;
+		return pieceRef;
+	ref = null;
 	return null;
 
-@export var sellButton : Control;
-@export var moveButton : Control;
+@export var btn_sellButton : Control;
+@export var lbl_sellButton : Control;
+@export var btn_moveButton : Control;
 var areYouSure := false;
 func _on_sell_button_pressed():
-	if areYouSure:
-		sellPart.emit(partRef);
-		clear_info();
-	else:
-		areYouSure = true;
-		$SellButton/Label.text = "SURE? "+ TextFunc.format_stat(partRef._get_sell_price(), 0);
+	if get_ref() is Part:
+		if areYouSure:
+			sellPart.emit(partRef);
+			clear_info();
+		else:
+			areYouSure = true;
+			var txt = "SURE? "
+			lbl_sellButton.text = txt + TextFunc.format_stat(partRef._get_sell_price(), 0);
+	elif get_ref() is Piece:
+		if areYouSure:
+			sellPiece.emit(pieceRef);
+			clear_info();
+		else:
+			areYouSure = true;
+			var txt = "SURE? "
+			lbl_sellButton.text = txt + TextFunc.format_stat(pieceRef.get_sell_price(), 0);
 	pass # Replace with function body.
 
 ##### ABILITIES BOX
@@ -186,7 +196,8 @@ func update_ability_height():
 	var v = 0;
 	for child in abilityHolder.get_children():
 		v += child.size.y;
-	abilityScrollContainer.custom_minimum_size.y = min(abilityBoxMaxSize, v + 6)
+		print(v)
+	abilityScrollContainer.custom_minimum_size.y = min(abilityBoxMaxSize, v + 10)
 	abilityScrollContainer.size.y = min(abilityBoxMaxSize, v)
 	
 	var descHeight = rlbl_desc.get_content_height();
@@ -197,9 +208,9 @@ func update_ability_height():
 		abilityH = 0;
 	var buttonPosY = abilityH + abilityPosY + spaceAfterAbilityContainer
 	
-	sellButton.position.y = buttonPosY;
-	moveButton.position.y = buttonPosY;
-	calculatedHeight = sellButton.size.y + sellButton.position.y + spaceAfterButton;
+	btn_sellButton.position.y = buttonPosY;
+	btn_moveButton.position.y = buttonPosY;
+	calculatedHeight = btn_sellButton.size.y + btn_sellButton.position.y + spaceAfterButton;
 	pass;
 
 func _physics_process(delta):

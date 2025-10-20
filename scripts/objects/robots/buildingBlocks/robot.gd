@@ -910,7 +910,7 @@ func fire_active(slotNum) -> bool:
 	if slotNum in active_abilities.keys():
 		var ability = active_abilities[slotNum];
 		if ability is AbilityManager:
-			print("ROBOT FIRING ABILITY ", ability.abilityName)
+			#print("ROBOT FIRING ABILITY ", ability.abilityName)
 			return ability.call_ability();
 	return false;
 

@@ -84,10 +84,12 @@ func get_stat(statName : String, roundModeOverride := StatTracker.roundingModes.
 	return 0.0;
 	pass;
 
-var nonexistentStats = []
+func has_stat(statName : StringName):
+	return get_stat_resource(statName) != null;
 
+var nonexistentStats = []
 ## Returns the stat's StatTracker resource.[br]
-## If the stat given doesn't exist, and it's trying to get that stat, then 
+## If the stat given doesn't exist, and it's trying to get that stat, then it adds its name to [member nonexistentStats] and knows not to try to load it in the future.
 func get_stat_resource(statName : StringName, ignoreNonexistent := false) -> StatTracker:
 	#if statName == "HealthMax": 
 		#print_all_stats();

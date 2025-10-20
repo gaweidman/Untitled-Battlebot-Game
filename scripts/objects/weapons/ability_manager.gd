@@ -7,6 +7,8 @@ class_name AbilityManager
 @export_multiline var abilityDescription : String = "No Description Found.";
 @export var energyCost : float = 0.0;
 @export var cooldownTimeBase : float = 0.0;
+##If you want to have the cooldown use a stat from within the host piece for its timer, put it here. Otherwise, leave it blank.
+@export var cooldownStatName : String; 
 @export var runType : runTypes = runTypes.Default; ## How this gets called. [br]Default makes the ability perform manually or on a loop, for Active and Passive abilities respectively.[br]Manual is the default for all Active abilities; You must fire it manually with the press of a button.[br]LoopingCooldown is the default for all Passive abilities; it runs automatically based on its [member cooldownTimeBase], attempting to restart when it hits 0.[br]OnContactDamage makes this passive go onto cooldown when the Piece it's on deals contact damage. Use this for passives that control how often a passive hitbox interaction is allowed to stay up.
 @export var functionNameWhenUsed : StringName;
 @export var statsUsed : Array[String] = []; ## Any stats from the host piece you want to be displayed in this ability's inspector box.
@@ -58,7 +60,7 @@ func construct_description():
 
 func call_ability() -> bool:
 	if is_instance_valid(assignedPieceOrPart):
-		print("ABILITY ",abilityName," HAS VALID HOST...");
+		#print("ABILITY ",abilityName," HAS VALID HOST...");
 		if assignedPieceOrPart is PartActive:
 			return assignedPieceOrPart._activate();
 		if assignedPieceOrPart is Piece:
@@ -108,11 +110,17 @@ func get_energy_cost_string():
 
 func tick_cooldown(delta):
 	cooldownTimer = max(0, cooldownTimer - delta);
+func get_cooldown_start_time(multiplier):
+	if cooldownStatName != null:
+		if assignedPieceOrPart is Piece:
+			if assignedPieceOrPart.has_stat(cooldownStatName):
+				cooldownTimeBase = assignedPieceOrPart.get_stat(cooldownStatName);
+	return cooldownTimeBase * multiplier;
 func queue_cooldown(multiplier):
-	set_deferred("cooldownTimer", cooldownTimeBase * multiplier)
+	set_deferred("cooldownTimer", get_cooldown_start_time(multiplier))
 func set_cooldown(multiplier):
 	if cooldownTimeBase > 0:
-		set("cooldownTimer", cooldownTimeBase * multiplier)
+		set("cooldownTimer", get_cooldown_start_time(multiplier))
 func get_cooldown()->float:
 	if cooldownTimer < 0:
 		cooldownTimer = 0;

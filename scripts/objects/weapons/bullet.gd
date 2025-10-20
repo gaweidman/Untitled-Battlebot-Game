@@ -24,14 +24,34 @@ var damageData : DamageData;
 @export var hitbox : Area3D;
 @export var gravity := -0.0987;
 var verticalVelocity := 0.0;
+var framesAlive := 0;
+#var hitSomething := false;
 
 var leaking := false;
 
 func _ready():
 	die();
 
+## Whether this bullet is available to be scooped up and fired or not.
+func available(printWhy := false):
+	if leaking: 
+		Utils.print_if_true("Bullet leaking", printWhy)
+		return false;
+	if fired: 
+		Utils.print_if_true("Already fired", printWhy)
+		return false;
+	if lifeDeltaTimer < 0: 
+		Utils.print_if_true(("Alive too long, "+str(lifeDeltaTimer)), printWhy)
+		return false;
+	if is_queued_for_deletion(): 
+		Utils.print_if_true("Queued for deletion", printWhy)
+		return false;
+	#if hitSomething: return false;
+	return true;
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
+	super(delta);
 	if not is_frozen():
 		if fired && visible:
 			positionAppend += (dir * speed * delta);
@@ -57,9 +77,12 @@ func _physics_process(delta):
 func phys_process_timers(delta):
 	super(delta);
 	if not is_frozen():
-		if lifeDeltaTimer < 0:
-			_on_life_timer_timeout();
-		lifeDeltaTimer -= delta;
+		if fired and visible:
+			if lifeDeltaTimer < 0:
+				_on_life_timer_timeout();
+			lifeDeltaTimer -= delta;
+		else:
+			lifeDeltaTimer = 0;
 
 
 ## @deprecated : This is here for compatibility reasons until we can completely flush out all references to Combatants.
@@ -81,6 +104,7 @@ func fire(_attacker : Combatant, _launcher : Node ,_initPosition : Vector3, _dir
 	set_deferred("scale", sizeMult);
 	position = initPosition;
 	collision.set_deferred("disabled", false);
+	raycast.set("enabled", true);
 	rotateTowardVector3(dir);
 	
 	show();
@@ -109,6 +133,7 @@ func fire_from_robot(_attacker : Robot, _launcher : Piece ,_initPosition : Vecto
 	set_deferred("scale", sizeMult);
 	position = initPosition;
 	collision.set_deferred("disabled", false);
+	raycast.set("enabled", true);
 	rotateTowardVector3(dir);
 	
 	show();
@@ -133,9 +158,10 @@ func flip_direction():
 func die():
 	if visible:
 		ParticleFX.play("SmokePuffSingle", GameState.get_game_board(), position, 0.5);
-	position = Vector3.ZERO;
+	#position = Vector3.ZERO;
 	fired = false;
 	collision.set("disabled", true);
+	raycast.set("enabled", false);
 	hide();
 	set_attacker(originalAttacker);
 	if leaking:
@@ -172,10 +198,10 @@ func shot_something(inbody):
 	if leaking: return;
 	if ! is_instance_valid(inbody): return;
 	if ! visible: return;
+	if get_current_position() == initPosition: return;
 	var validTarget = false;
 	var parent = inbody.get_parent();
 	if parent == attacker:
-		#print("                     entered my attacker")
 		return;
 	if parent is Combatant:
 		#print(inbody.get_parent())
@@ -202,13 +228,21 @@ func shot_something(inbody):
 		#;
 		
 	#Hooks.OnCollision(self, inbody);
-	SND.play_collision_sound(self, inbody, initPosition + positionAppend, 0.85, 1.5);
-	ParticleFX.play("Sparks", GameState.get_game_board(), initPosition + positionAppend, 0.5);
+	prints("Bullet hit a thing! If this doesn't show, then something borked...")
+	prints("BULLET INBODY: ", inbody)
+	prints(self, inbody)
+	prints(fired, lifeTimer, lifeDeltaTimer)
+	SND.play_collision_sound(self, inbody, get_current_position(), 0.85, 1.5);
+	ParticleFX.play("Sparks", GameState.get_game_board(), get_current_position(), 0.5);
 	
+	#hitSomething = true;
+	#print(validTarget)
 	die();
 
 func leak():
 	leaking = true;
+func get_current_position():
+	return initPosition + positionAppend;
 
 func get_attacker():
 	return attacker;
