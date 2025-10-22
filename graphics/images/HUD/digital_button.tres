@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=14 format=3 uid="uid://8f0fg65uxivb"]
+[gd_resource type="Theme" load_steps=15 format=3 uid="uid://8f0fg65uxivb"]
 
 [ext_resource type="StyleBox" uid="uid://crpgbmifpd3vw" path="res://graphics/images/HUD/buttonGFX/digitalButton_disabled.tres" id="1_cnrgg"]
 [ext_resource type="StyleBox" uid="uid://nan46x6ubn8g" path="res://graphics/images/HUD/buttonGFX/digitalOutline_disabled.tres" id="1_pkauu"]
@@ -10,6 +10,7 @@
 [ext_resource type="StyleBox" uid="uid://dk8xoef3dtmtp" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar.tres" id="7_e7eaa"]
 [ext_resource type="FontFile" uid="uid://qklyfj282mg3" path="res://graphics/font/Scrap8x14.ttf" id="7_evyqx"]
 [ext_resource type="StyleBox" uid="uid://bqmpffdsekde" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar_hover.tres" id="8_wb3yn"]
+[ext_resource type="StyleBox" uid="uid://bsjatrfdr3r52" path="res://graphics/images/HUD/buttonGFX/digitalTooltip.tres" id="9_eh4kr"]
 [ext_resource type="StyleBox" uid="uid://d2pfbht21vwtp" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar_pressed.tres" id="9_wb3yn"]
 [ext_resource type="StyleBox" uid="uid://cus1vmjxtuos0" path="res://graphics/images/HUD/buttonGFX/digitalScrollbar_bg.tres" id="10_7gicb"]
 
@@ -50,8 +51,12 @@ Button/styles/pressed = ExtResource("4_xcf2r")
 HeaderLarge/font_sizes/font_size = 16
 HeaderLarge/fonts/font = ExtResource("7_evyqx")
 Label/colors/font_color = Color(0.87451, 0.87451, 0.87451, 1)
-Label/colors/font_outline_color = Color(0.223529, 0.160784, 0.160784, 1)
-Label/constants/outline_size = 8
+Label/colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+Label/colors/font_shadow_color = Color(0.141176, 0.054902, 0.054902, 1)
+Label/constants/outline_size = 5
+Label/constants/shadow_offset_x = 1
+Label/constants/shadow_offset_y = 1
+Label/constants/shadow_outline_size = 5
 Label/font_sizes/font_size = 10
 Label/fonts/font = ExtResource("1_xcf2r")
 RichTextLabel/colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
@@ -59,6 +64,7 @@ RichTextLabel/constants/outline_size = 4
 RichTextLabel/font_sizes/normal_font_size = 16
 RichTextLabel/fonts/mono_font = ExtResource("7_evyqx")
 RichTextLabel/fonts/normal_font = ExtResource("7_evyqx")
+TooltipPanel/styles/panel = ExtResource("9_eh4kr")
 VScrollBar/styles/grabber = ExtResource("7_e7eaa")
 VScrollBar/styles/grabber_highlight = ExtResource("8_wb3yn")
 VScrollBar/styles/grabber_pressed = ExtResource("9_wb3yn")

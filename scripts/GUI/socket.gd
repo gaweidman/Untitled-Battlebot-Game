@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/socket.png")
 extends Node3D
 
 ##This object hosts Pieces.
@@ -10,6 +11,9 @@ class_name Socket
 var preview : Piece;
 var previewPlaceable := false;
 @onready var selectorRay = $SelectorRay;
+@export var collisionSphere : CollisionShape3D;
+@export var collisionScale := 0.25;
+@export var selectorRayExceptions : Array[CollisionObject3D]= [];
 
 @export var dontUsePieceForRobotHost := false;
 
@@ -24,6 +28,8 @@ func _ready():
 	else:
 		#queue_free();
 		pass;
+	collisionSphere.shape = collisionSphere.shape.duplicate();
+	collisionSphere.shape.radius = collisionScale;
 
 ####################### SETUP LOAD
 
@@ -69,6 +75,7 @@ func remove_occupant(delete := false):
 func add_occupant(newPiece : Piece, manual := false):
 	if is_instance_valid(newPiece):
 		occupant = newPiece;
+		print("SETTING AS OCCUPANT!")
 		if is_instance_valid(occupant.get_parent()):
 			occupant.reparent(self, false);
 		else:
@@ -95,14 +102,21 @@ func get_energy_transmitted():
 var available := false;
 func is_available():
 	#return GameState.get_in_state_of_building() && occupant == null && is_valid() && get_preview_placeable();
-	
-	available = occupant == null and is_valid() and get_preview_placeable() and (get_host_piece() != null) and (get_host_piece().is_assigned());
+	if dontUsePieceForRobotHost:
+		available = occupant == null and is_valid() and get_preview_placeable();
+	else:
+		available = occupant == null and is_valid() and get_preview_placeable() and (get_host_piece() != null) and (get_host_piece().is_assigned());
+	#print(available)
 	return available;
 
 var valid := false;
 func is_valid():
 	#print(is_instance_valid(get_robot()), get_host_piece() != null, get_host_piece().is_assigned());
-	valid = is_instance_valid(get_robot()) and get_host_piece() != null and get_host_piece().is_assigned()
+	if dontUsePieceForRobotHost:
+		valid = is_instance_valid(get_robot());
+	else:
+		valid = is_instance_valid(get_robot()) and get_host_piece() != null and get_host_piece().is_assigned();
+	#print(valid)
 	return valid;
 
 func set_host_piece(piece : Piece):
@@ -114,11 +128,15 @@ func set_host_robot(robot: Robot):
 	hostRobot = robot;
 
 func get_robot(forcePieceToGiveHostRobot := false) -> Robot:
-	if get_host_piece() == null: return null;
+	if (!dontUsePieceForRobotHost) and (get_host_piece() == null): return null;
 	#print("Has a piece...", get_host_piece().pieceName)
-	var bot = get_host_piece().get_host_robot(forcePieceToGiveHostRobot);
+	var bot
+	if dontUsePieceForRobotHost:
+		bot = hostRobot;
+	else:
+		bot = get_host_piece().get_host_robot(forcePieceToGiveHostRobot);
 	#print(bot)
-	if bot != null: hostRobot = bot;
+	if bot != null and is_instance_valid(bot): hostRobot = bot;
 	return bot;
 
 ## This ghets the host robot, but directly from the variable. Unsafe to use outside of scenarios where the host has been preset.
@@ -157,7 +175,6 @@ func _process(delta):
 		valid = is_valid();
 		selectionCheckLoop = 3;
 		if hoverResetFrameCounter <= 0:
-			#print("timer reset")
 			hover(false);
 		#
 		#var vp = get_viewport()
@@ -179,7 +196,10 @@ func _process(delta):
 		
 		if Input.is_action_just_pressed("Select"):
 			#print("SLECE")
-			hostPiece.assign_selected_socket(self);
+			if dontUsePieceForRobotHost:
+				select(true);
+			else:
+				hostPiece.assign_selected_socket(self);
 	else:
 		clear_preview();
 	
@@ -188,7 +208,10 @@ func _process(delta):
 		set_preview_as_occupant();
 		
 		if Input.is_action_just_pressed("Unselect"):
-			hostPiece.deselect_all_sockets();
+			if dontUsePieceForRobotHost:
+				select(false);
+			else:
+				hostPiece.deselect_all_sockets();
 	
 	##Change collision based on validity.
 	$CollisionShape3D.disabled = not valid;
@@ -210,7 +233,7 @@ func hover(foo):
 	if foo == hovering: return;
 	
 	if foo:
-		if is_available():
+		if is_available() or has_preview():
 			hovering = true;
 			hoverResetFrameCounter = 5;
 			return;
@@ -246,6 +269,7 @@ func show_preview_of_pipette():
 			preview.rotation = Vector3(0,0,0);
 			preview.hostSocket = self;
 			preview.hurtboxCollisionHolder.set_collision_mask_value(8, true);
+			preview.isPreview = true;
 	return preview;
 
 func calc_preview_placeable():
@@ -292,9 +316,20 @@ func get_occupant() -> Piece:
 		return occupant;
 	return null;
 
+func get_occupant_or_child() -> Piece:
+	if get_occupant() != null: return get_occupant();
+	for child in get_children():
+		if child is Piece:
+			return child;
+	return null;
+
 func hover_from_camera(cam) -> Piece:
 	selectionCheckLoop = 4;
-	selectorRay.target_position = cam.global_position - selectorRay.global_position;
+	##Add exceptions.
+	for thing in selectorRayExceptions:
+		selectorRay.add_exception(thing);
+	
+	selectorRay.target_position = (cam.global_position - selectorRay.global_position);
 	selectorRay.global_rotation = Vector3(0,0,0);
 	hover(is_valid() and (not selectorRay.is_colliding()));
 	if is_instance_valid(preview):

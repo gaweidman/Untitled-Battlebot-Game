@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dpqcoxkidln0c" path="res://graphics/images/HUD/screenGFX/screenBG_grey.png" id="6_jowbw"]
 [ext_resource type="Texture2D" uid="uid://fra5o6cwa5nn" path="res://graphics/images/HUD/screenGFX/screenBG_darkGrey.png" id="7_pt6ty"]
 
-[node name="ActiveAbilityInfobox" type="MarginContainer" node_paths=PackedStringArray("lbl_name", "rlbl_desc", "outlineBox", "statHolder", "assignButton", "separatorName", "separatorStats")]
+[node name="ActiveAbilityInfobox" type="MarginContainer" node_paths=PackedStringArray("lbl_name", "rlbl_desc", "outlineBox", "statHolder", "assignButton", "separatorName", "scroll_separatorStats", "separatorStats")]
 z_index = -1
 custom_minimum_size = Vector2(252, 0)
 offset_right = 252.0
@@ -21,9 +21,10 @@ script = ExtResource("1_mmcvq")
 lbl_name = NodePath("Box/Name")
 rlbl_desc = NodePath("Box/AbilityDescription")
 outlineBox = NodePath("Box")
-statHolder = NodePath("Box/Stats")
+statHolder = NodePath("Box/StatsScroll/Stats")
 assignButton = NodePath("Box/Assign")
 separatorName = NodePath("Box/separator")
+scroll_separatorStats = NodePath("Box/StatsScroll")
 separatorStats = NodePath("Box/separator2")
 
 [node name="Box" type="NinePatchRect" parent="."]
@@ -59,20 +60,6 @@ bbcode_enabled = true
 text = "No Description Found."
 fit_content = true
 
-[node name="Stats" type="HFlowContainer" parent="Box"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -118.0
-offset_top = -44.0
-offset_right = 118.0
-offset_bottom = -4.0
-grow_horizontal = 2
-grow_vertical = 0
-
 [node name="Assign" type="Button" parent="Box"]
 layout_mode = 1
 anchors_preset = 3
@@ -107,6 +94,23 @@ offset_right = 1.0
 offset_bottom = 2.0
 brightTexture = ExtResource("6_jowbw")
 darkTexture = ExtResource("7_pt6ty")
+
+[node name="StatsScroll" type="ScrollContainer" parent="Box"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -118.0
+offset_top = -44.0
+offset_right = 41.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Stats" type="HBoxContainer" parent="Box/StatsScroll"]
+layout_mode = 2
 
 [connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
 [connection signal="focus_exited" from="." to="." method="_on_focus_exited"]

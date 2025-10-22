@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/inspector.png")
 extends Control
 
 class_name InfoBox
@@ -178,13 +179,14 @@ func populate_abilities(thing):
 					effectiveSize += 1;
 	abilityScrollContainer.visible = effectiveSize > 0;
 	if abilityScrollContainer.visible:
-		queueAbilityPostUpdate1 = true;
+		set_queue_ability_post_update();
 		for child in abilityHolder.get_children():
 			child.queue_show();
 
-var queueAbilityPostUpdate1 := false;
-var queueAbilityPostUpdate2 := false;
-var queueAbilityPostUpdate3 := false;
+var queueAbilityPostUpdateCounter = -1;
+
+func set_queue_ability_post_update():
+	queueAbilityPostUpdateCounter = 4;
 @export var abilityBoxMaxSize := 300;
 var spaceBeforeDescription = 32;
 var spaceAfterDescription = 2;
@@ -214,16 +216,22 @@ func update_ability_height():
 	pass;
 
 func _physics_process(delta):
-	if queueAbilityPostUpdate3:
-		queueAbilityPostUpdate3 = false;
+	if queueAbilityPostUpdateCounter == 1:
 		data_ready = true;
-	if queueAbilityPostUpdate2:
-		queueAbilityPostUpdate2 = false;
+		pass;
+	if queueAbilityPostUpdateCounter == 2:
 		calculate_required_height();
-		queueAbilityPostUpdate3 = true;
-	if queueAbilityPostUpdate1:
-		queueAbilityPostUpdate1 = false;
-		queueAbilityPostUpdate2 = true;
+		pass;
+	if queueAbilityPostUpdateCounter == 3:
+		#queueAbilityPostUpdate2 = false;
+		#queueAbilityPostUpdate3 = true;
+		pass;
+	if queueAbilityPostUpdateCounter == 4:
+		#queueAbilityPostUpdate1 = false;
+		pass;
+	
+	if queueAbilityPostUpdateCounter >= 0:
+		queueAbilityPostUpdateCounter -= 1;
 	pass;
 
 func clear_abilities():

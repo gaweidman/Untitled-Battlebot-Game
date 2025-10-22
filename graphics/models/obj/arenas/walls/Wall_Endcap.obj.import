@@ -4,14 +4,14 @@ importer="wavefront_obj"
 importer_version=1
 type="Mesh"
 uid="uid://c8kmil2is57xs"
-path="res://.godot/imported/Wall_EndCap.obj-47c8f966e46fc25e4723f2037b298f5c.mesh"
+path="res://.godot/imported/Wall_Endcap.obj-c94dfc283496f185ef79f80eb8037be4.mesh"
 
 [deps]
 
-files=["res://.godot/imported/Wall_EndCap.obj-47c8f966e46fc25e4723f2037b298f5c.mesh"]
+files=["res://.godot/imported/Wall_Endcap.obj-c94dfc283496f185ef79f80eb8037be4.mesh"]
 
-source_file="res://graphics/models/obj/arenas/walls/Wall_EndCap.obj"
-dest_files=["res://.godot/imported/Wall_EndCap.obj-47c8f966e46fc25e4723f2037b298f5c.mesh", "res://.godot/imported/Wall_EndCap.obj-47c8f966e46fc25e4723f2037b298f5c.mesh"]
+source_file="res://graphics/models/obj/arenas/walls/Wall_Endcap.obj"
+dest_files=["res://.godot/imported/Wall_Endcap.obj-c94dfc283496f185ef79f80eb8037be4.mesh", "res://.godot/imported/Wall_Endcap.obj-c94dfc283496f185ef79f80eb8037be4.mesh"]
 
 [params]
 

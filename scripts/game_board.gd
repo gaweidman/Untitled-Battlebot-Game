@@ -32,7 +32,7 @@ var scrapGained := 0;
 @export var LIGHT : DirectionalLight3D;
 
 func _ready():
-	spawn_player();
+	spawn_player_new_game();
 	get_tree().current_scene.ready.connect(_on_scenetree_ready);
 	#return_random_spawn_location()
 func _on_scenetree_ready():
@@ -126,18 +126,22 @@ enum gameState {
 }
 var curState := gameState.START
 
-var play_states = [
+const play_states = [
 	GameBoard.gameState.INIT_ROUND,
 	GameBoard.gameState.PLAY,
 	GameBoard.gameState.SHOP,
 ]
-var build_states = [
+const build_states = [
 	GameBoard.gameState.SHOP,
 	GameBoard.gameState.BUILD_MODE,
 ]
-var camera_tilt_states = [
+const camera_tilt_states = [
 	GameBoard.gameState.SHOP,
 	GameBoard.gameState.BUILD_MODE,
+]
+const game_over_states = [
+	GameBoard.gameState.PLAY,
+	GameBoard.gameState.SHOP,
 ]
 @export var gameCamera : GameCamera;
 func get_main_camera():
@@ -169,6 +173,7 @@ func exit_state(oldState:gameState):
 	elif oldState == gameState.PLAY:
 		pass
 	elif oldState == gameState.SHOP:
+		respawn_player()
 		pass
 	elif oldState == gameState.INIT_ROUND:
 		pass
@@ -220,7 +225,7 @@ func enter_state(newState:gameState):
 		scrapGained = 0;
 		enemiesKilled = 0;
 		
-		spawn_player(return_random_unoccupied_spawn_location());
+		spawn_player_new_game(return_random_unoccupied_spawn_location());
 		player.start_new_game();
 		#player.inventory.show();
 		change_state(gameState.INIT_ROUND);
@@ -232,6 +237,7 @@ func enter_state(newState:gameState):
 		MUSIC.change_state(MusicHandler.musState.SHOP);
 		
 		player.end_round();
+		move_player_to_workshop();
 		player.enter_shop();
 		pass
 	elif newState == gameState.INIT_ROUND:
@@ -306,6 +312,9 @@ func in_state_of_play()->bool:
 func in_state_of_building()->bool:
 	return in_one_of_given_states(build_states);
 
+func in_game_over_state()->bool:
+	return in_one_of_given_states(game_over_states) and player.aliveLastFrame;
+
 func in_one_of_given_states(states:Array)->bool:
 	var currentState = GameState.get_game_board_state();
 	return currentState in states;
@@ -315,8 +324,9 @@ func in_one_of_given_states(states:Array)->bool:
 
 @export var inspectorHUD : Inspector;
 @export var stashHUD : PieceStash;
+@export var abilityHUD : AbilitySlotManager;
 
-func spawn_player(_in_position := playerSpawnPosition) -> Node3D:
+func spawn_player_new_game(_in_position := playerSpawnPosition) -> Node3D:
 	if player != null:
 		#player.body.position = _in_position;
 		player.body.set_deferred("position", _in_position)
@@ -329,9 +339,18 @@ func spawn_player(_in_position := playerSpawnPosition) -> Node3D:
 	player.queue_live();
 	stashHUD.currentRobot = player;
 	player.inspectorHUD = inspectorHUD;
+	abilityHUD.currentRobot = player;
 	stashHUD.regenerate_list();
 	
 	return player;
+
+func teleport_player(_in_position := playerSpawnPosition):
+	if player != null:
+		#player.body.position = _in_position;
+		player.body.set_deferred("position", _in_position);
+
+func respawn_player():
+	teleport_player(return_random_unoccupied_spawn_location());
 
 ##Returns a spawn location that isn't occupied by the player
 func return_random_unoccupied_spawn_location():
@@ -419,6 +438,7 @@ func pause_all_robots_and_projectiles(foo : bool):
 
 ##Fired when the game is over.
 func game_over():
+	if not in_game_over_state(): return;
 	var devCheatsEnabled = GameState.get_setting("devMode")
 	if not devCheatsEnabled:
 		var saveData = GameState.save_high_scores(GameState.get_round_number(), enemiesKilled, scrapGained)
@@ -461,6 +481,9 @@ func game_over():
 		%GameOverStats.append_text("[color=ff0000]( HIGH SCORES DISABLED BY CHEATS )[/color]");
 	change_state(gameState.GAME_OVER);
 
+@export var workshopArea : Node3D;
+func move_player_to_workshop():
+	teleport_player(workshopArea.global_position);
 
 ############## BUTTON CALLS
 func _on_btn_play_pressed():

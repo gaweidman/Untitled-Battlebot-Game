@@ -105,7 +105,7 @@ func is_inputting_movement() -> bool:
 	return inputtingMovementThisFrame;
 
 func die():
-	if is_alive():
+	if is_alive() and aliveLastFrame:
 		#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
 		alive = false;
 		hide();

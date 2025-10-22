@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/inspector.png")
 extends Control
 
 class_name AbilityInfobox
@@ -18,9 +19,10 @@ class_name AbilityInfobox
 @export var lbl_name : Label;
 @export var rlbl_desc : RichTextLabel;
 @export var outlineBox : NinePatchRect;
-@export var statHolder : HFlowContainer;
+@export var statHolder : HBoxContainer;
 @export var assignButton : Button;
 @export var separatorName : TextureRect;
+@export var scroll_separatorStats : ScrollContainer;
 @export var separatorStats : TextureRect;
 
 func _ready():
@@ -47,7 +49,7 @@ func update_outline():
 			if selected:
 				img = outlineDisabled_Selected;
 			else:
-				img = outlineEquippedAndDisabled;
+				img = outlineEquipped;
 		else:
 			if selected:
 				img = outlineNotEquipped_Selected;
@@ -95,6 +97,7 @@ func update_ability_stats():
 	statsUsed = referencedAbility.statsUsed;
 	
 	update_outline();
+
 @export var statIcon := preload("res://scenes/prefabs/objects/gui/stat_icon.tscn");
 func populate_stats():
 	for child in statHolder.get_children():
@@ -151,6 +154,7 @@ var spaceBetweenNameAndDescription = 8;
 var spaceBetweenDescriptionAndStats = 8;
 var separator2DistBeforeStats = 6;
 var spaceAfter = 12;
+
 func resize_box():
 	var v = 0;
 	lbl_name.position.y = v_margin;
@@ -237,3 +241,4 @@ func select(foo):
 	else:
 		print("ability unselecting")
 	selected = foo;
+	update_outline();

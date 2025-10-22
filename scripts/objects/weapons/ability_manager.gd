@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/energy_white.png")
 extends Resource
 
 class_name AbilityManager
@@ -127,3 +128,18 @@ func get_cooldown()->float:
 	return cooldownTimer;
 func on_cooldown()->bool:
 	return cooldownTimer > 0;
+
+func get_ability_slot_data():
+	if not is_equipped():
+		return false;
+	var data = {};
+	if get_assigned_piece_or_part() is Piece:
+		data = assignedPieceOrPart.get_ability_slot_data();
+	
+	
+	return data;
+	
+
+func is_equipped():
+	return true;
+	pass;

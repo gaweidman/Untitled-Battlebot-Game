@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/shield.png")
 extends Area3D
 
 ##Exists to get

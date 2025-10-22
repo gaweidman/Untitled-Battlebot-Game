@@ -35,6 +35,8 @@ gdscript/warnings/unused_variable=0
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/initial_position_type=2
+window/size/extend_to_title=true
 window/stretch/mode="viewport"
 
 [global_group]
@@ -217,6 +219,7 @@ StashSelected={
 3d_physics/layer_8="Preview Piece Hurtboxes"
 3d_physics/layer_9="Aiming Helper"
 3d_physics/layer_10="Bullet"
+3d_physics/layer_11="Arena floors"
 
 [physics]
 

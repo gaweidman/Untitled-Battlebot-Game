@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://cgcnhigjynv0q"]
+[gd_scene load_steps=12 format=3 uid="uid://cgcnhigjynv0q"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_rh04g"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="2_wwjov"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="3_22kji"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="4_1tr1y"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="4_n062i"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="5_h3ost"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="5_s5jac"]
 
@@ -48,6 +49,7 @@ script = ExtResource("2_wwjov")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
+script = ExtResource("4_n062i")
 
 [node name="PieceCollisionBox" parent="." instance=ExtResource("3_22kji")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)

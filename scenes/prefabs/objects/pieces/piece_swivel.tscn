@@ -1,9 +1,10 @@
-[gd_scene load_steps=15 format=3 uid="uid://bfklqklhxtb2w"]
+[gd_scene load_steps=16 format=3 uid="uid://bfklqklhxtb2w"]
 
 [ext_resource type="Script" uid="uid://bxkvldgxyfk6p" path="res://scripts/objects/pieces/piece_swivel.gd" id="1_3tbmm"]
 [ext_resource type="ArrayMesh" uid="uid://cfvtjsean8sey" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="2_f1afw"]
 [ext_resource type="ArrayMesh" uid="uid://dddqhdde83f7e" path="res://graphics/models/obj/botparts/SwivelTop.obj" id="3_yjtb5"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="4_1a8uf"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="4_o2kdu"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="5_bso77"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_qbujc"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="6_p5af1"]
@@ -61,6 +62,7 @@ script = ExtResource("5_qbujc")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
+script = ExtResource("4_o2kdu")
 
 [node name="PieceCollisionBox" parent="." instance=ExtResource("6_p5af1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)

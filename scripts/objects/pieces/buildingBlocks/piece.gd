@@ -1,11 +1,13 @@
+@icon ("res://graphics/images/class_icons/piece.png")
+
 extends StatHolder3D
 
 class_name Piece
 
 ########## STANDARD GODOT PROCESSING FUNCTIONS
 func _ready():
-	if pieceName == "BodyCube":
-		print("BODYCUBE IS READYING!")
+	#if pieceName == "BodyCube":
+		#print("BODYCUBE IS READYING!")
 	hide();
 	declare_names();
 	assign_references();
@@ -179,6 +181,10 @@ func declare_names():
 @export var removable := true;
 
 ##TODO: Scrap sell/buy/salvage functions for when this has Parts inside of it.
+func get_sell_price(discountMultiplier := 1.0):
+	## TODO: Write this up so it adds the combined sell price of this piece as well as all parts contained within its engine.
+	return get_sell_price_piece_only(discountMultiplier);
+
 ##Gets the Scrap amount for when you sell this Piece. Does not take into account the price of any Parts inside its Engine.
 ##discountMultiplier is multiplied by the price.
 func get_sell_price_piece_only(discountMultiplier := 1.0):
@@ -611,15 +617,16 @@ var selectionModeMaterials = {
 	selectionModes.NOT_PLACEABLE : preload("res://graphics/materials/cannot_be_placed.tres"),
 }
 var selectionMode := selectionModes.NOT_SELECTED;
-func set_selection_mode(mode : selectionModes = selectionModes.NOT_SELECTED):
-	if selectionMode == mode: return;
-	selectionMode = mode;
-	if mode == selectionModes.NOT_SELECTED:
+func set_selection_mode(newMode : selectionModes = selectionModes.NOT_SELECTED):
+	if selectionMode == newMode: return;
+	if !assignedToSocket and newMode == selectionModes.SELECTED: return;
+	selectionMode = newMode;
+	if newMode == selectionModes.NOT_SELECTED:
 		for mesh in get_all_meshes():
 			mesh.set_surface_override_material(0, meshMaterials[mesh]);
 	else:
 		for mesh in get_all_meshes():
-			mesh.set_surface_override_material(0, selectionModeMaterials[mode]);
+			mesh.set_surface_override_material(0, selectionModeMaterials[newMode]);
 	pass;
 var meshMaterials = {};
 #var meshMaterials = Dictionary[MeshInstance3D, StandardMaterial3D] = {};
@@ -779,16 +786,11 @@ func bullet_hit_hitbox(bullet : Bullet):
 #var bodyMeshes : Dictionary[StringName, MeshInstance3D] = {};
 
 ##Frame timer that updates scale of hitboxes every 3 frames.
-var hitboxRescaleTimer := 0;
+var hitboxRescaleTimer := 1;
 func phys_process_collision(delta):
 	if hitboxRescaleTimer <= 0:
 		if has_host(true, true, true):
 			hitboxRescaleTimer = 3;
-			##TODO: Figure out how to scale the hurtboxes vertically real tall...... this ain't it.
-			#hitboxCollisionHolder.scale = Vector3.ONE;
-			#hitboxCollisionHolder.call_deferred("global_scale", Vector3(1, 1000, 1));
-			#hitboxCollisionHolder.set_deferred("global_position", Vector3((get_host_robot().get_global_body_position() + position) * Vector3(1, 0, 1) + Vector3(0,-5,0)));
-			
 			hurtboxCollisionHolder.collision_layer = 8 + 64; #Hurtbox layer and placed layer.
 		else:
 			hurtboxCollisionHolder.collision_layer = 8; #Hurtbox layer and hover layer.
@@ -801,7 +803,7 @@ func autoassign_child_sockets_to_self():
 
 ##This function assigns socket data and generates all hitboxes. Should only ever be run once at [method _ready()].
 func gather_colliders_and_meshes():
-	autograb_sockets();
+	get_all_female_sockets();
 	get_all_mesh_init_materials();
 	autoassign_child_sockets_to_self();
 	refresh_and_gather_collision_helpers();
@@ -875,6 +877,7 @@ func reset_collision_helpers():
 
 ##Should ping all of the placement hitboxes and return TRUE if it collides with a Piece, of FALSE if it doesn't.
 func ping_placement_validation():
+	var exceptionsToAddThenRemove = [];
 	if is_node_ready() and is_visible_in_tree() and is_instance_valid(get_parent()):
 		var collided := false;
 		#print(get_children())
@@ -895,7 +898,12 @@ func ping_placement_validation():
 							#print(self, collider.get_piece())
 							if self != collider.get_piece():
 								collided = true;
-						if collider is RobotBody:
+						elif collider is RobotBody:
+							var bot = collider.get_robot();
+							if bot.get_all_pieces().size() > 0:
+								print("size: ", bot.get_all_pieces())
+								collided = true;
+						elif collider is StaticBody3D:
 							collided = true;
 						else:
 							#print("what")
@@ -941,10 +949,17 @@ func get_selected() -> bool:
 	if selected: set_selection_mode(selectionModes.SELECTED);
 	return selected;
 
+var isPreview := false;
+func is_preview():
+	if get_parent() == null: return false;
+	if assignedToSocket: return false;
+	return isPreview;
 func select(foo : bool = not get_selected()):
 	if foo == selected: return foo;
 	if foo: deselect_other_pieces(self);
 	else: deselect_other_pieces();
+	if is_preview() and ! assignedToSocket:
+		return;
 	selected = foo;
 	var bot = get_host_robot()
 	if selected: 
@@ -995,16 +1010,17 @@ func get_socket_at_index(socketIndex : int) -> Socket:
 
 func autograb_sockets():
 	var sockets = Utils.get_all_children_of_type(self, Socket, self);
+	allSockets = [];
 	for socket : Socket in sockets:
 		Utils.append_unique(allSockets, socket);
 		socket.set_host_piece(self);
 		socket.set_host_robot(get_host_robot());
-	pass;
+	return allSockets;
 
 ##Returns a list of all sockets on this part.
 func get_all_female_sockets() -> Array[Socket]:
 	if allSockets.is_empty():
-		autograb_sockets();
+		return autograb_sockets();
 	return allSockets;
 
 func register_socket(socket : Socket):
@@ -1012,18 +1028,21 @@ func register_socket(socket : Socket):
 
 ##Assigns this [Piece] to a given [Socket]. This essentially places the thing onto the [Robot] the [Socket] has as its host.
 func assign_socket(socket:Socket):
+	print("ASSIGNING TO SOCKET")
 	#print("Children", get_children())
 	socket.add_occupant(self);
 	assign_socket_post(socket);
 	start_placing_animation();
 	pass;
 
-##Assigns this [Piece] to a given [Socket]. This portion is separated so it can have an entry point for manual assignment.
+##Assigns this [Piece] to a given [Socket]. This portion is separated so it can act as an entry point for manual assignment.
 func assign_socket_post(socket:Socket):
-	hostRobot.on_add_piece(self);
+	isPreview = false;
 	assignedToSocket = true;
+	hostRobot.on_add_piece(self);
 	hurtboxCollisionHolder.set_collision_mask_value(8, false);
 	set_selection_mode(selectionModes.NOT_SELECTED);
+	print("ASSIGNED TO SOCKET?")
 
 func is_assigned() -> bool:
 	return assignedToSocket;
@@ -1104,17 +1123,18 @@ func assign_selected_socket(socket):
 func deselect_all_sockets():
 	for socket in get_all_female_sockets():
 		socket.select(false);
+
 var allPieces : Array[Piece] = [];
 func get_all_pieces() -> Array[Piece]:
-	if allPieces.size() == 0:
+	if allPieces.is_empty():
 		return get_all_pieces_regenerate();
 	return allPieces;
 
 var allPiecesLoops := 0;
 func get_all_pieces_regenerate() -> Array[Piece]:
 	var ret : Array[Piece] = []
-	#print("ALL FEMALE SOCKETS: ", get_all_female_sockets())
-	for socket in get_all_female_sockets():
+	prints("ALL FEMALE SOCKETS ON ",pieceName,": ", get_all_female_sockets())
+	for socket : Socket in get_all_female_sockets():
 		allPiecesLoops += 1;
 		#print("ALL PIECES LOOOPS: ", allPiecesLoops);
 		var occupant = socket.get_occupant();
@@ -1122,7 +1142,7 @@ func get_all_pieces_regenerate() -> Array[Piece]:
 			#print("ALL PIECES OCCUPANT :", occupant, " SELF : ", self)
 			if occupant != self:
 				ret.append(occupant);
-	print("ALL PIECES REGENRATED: ", ret)
+	#print("ALL PIECES REGENRATED: ", ret)
 	return ret;
 
 ####################### INVENTORY STUFF
@@ -1132,8 +1152,7 @@ func get_all_pieces_regenerate() -> Array[Piece]:
 func remove_and_add_to_robot_stash(botOverride : Robot = get_host_robot(true)):
 	deselect();
 	##Stash everything below this.
-	for subPiece in get_all_pieces():
-		#print("PIECE IN ALL PIECES: ", subPiece.pieceName)
+	for subPiece in get_all_pieces_regenerate():
 		subPiece.remove_and_add_to_robot_stash(botOverride);
 	
 	remove_from_socket();
@@ -1201,3 +1220,7 @@ func get_stash_button_name(showTree := false, prelude := "") -> String:
 		for piece in get_all_pieces():
 			ret += "\n" + prelude + "-" + piece.get_stash_button_name(true, prelude + "-");
 	return ret;
+
+func get_ability_slot_data(action : AbilityManager):
+	return {};
+	pass;

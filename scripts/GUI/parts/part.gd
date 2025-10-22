@@ -1,6 +1,8 @@
+@icon ("res://graphics/images/class_icons/part.png")
 ##The base class for parts the player and enemies use.
 extends Control
 class_name Part
+
 
 var invPosition := Vector2i(-9,-9);
 var partBounds : Vector2i;

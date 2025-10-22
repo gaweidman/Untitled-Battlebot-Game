@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bw5pl1p6bmq61"
-path="res://.godot/imported/timer_blinky.png-b779a011769aa63aadffb650a603bf18.ctex"
+uid="uid://dubxuaxrp8suk"
+path="res://.godot/imported/particleEffect.png-c16edcd1c6e682eea15ba69d89a9dbbf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/timer_blinky.png"
-dest_files=["res://.godot/imported/timer_blinky.png-b779a011769aa63aadffb650a603bf18.ctex"]
+source_file="res://graphics/images/class_icons/particleEffect.png"
+dest_files=["res://.godot/imported/particleEffect.png-c16edcd1c6e682eea15ba69d89a9dbbf.ctex"]
 
 [params]
 

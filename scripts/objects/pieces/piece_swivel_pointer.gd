@@ -26,7 +26,7 @@ func use_passive(passiveAbility : AbilityManager):
 				var rot = cam.get_rotation_to_fake_aiming(get_host_robot().get_global_body_position());
 				#print(rot)
 				if rot != null:
-					targetRotation = rot - get_host_robot().get_global_body_rotation().y;
+					targetRotation = rot - get_host_robot().get_global_body_rotation().y - get_host_socket().rotation.y;
 				else:
 					targetRotation = prevRotation;
 		return false;

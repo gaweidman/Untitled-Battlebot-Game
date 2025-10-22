@@ -26,33 +26,33 @@ func changeState(newState:ShopStall.doorState):
 	if curState != newState:
 		##Before state change
 		if curState == ShopStall.doorState.OPEN:
-			#freezerBlinky.texture = load("res://graphics/images/HUD/shop/freezerblinky_off.png");
+			#freezerBlinky.texture = load("res://graphics/images/HUD/blinkies/freezerblinky_off.png");
 			doorsActuallyClosed = false;
 			pass;
 		if curState == ShopStall.doorState.CLOSED:
 			doorsActuallyClosed = false;
-			#freezerBlinky.texture = load("res://graphics/images/HUD/shop/freezerblinky_off.png");
+			#freezerBlinky.texture = load("res://graphics/images/HUD/blinkies/freezerblinky_off.png");
 			pass;
 		if curState == ShopStall.doorState.FROZEN:
 			$FreezeButton.button_pressed = false;
 			doorsActuallyClosed = false;
-			#freezerBlinky.texture = load("res://graphics/images/HUD/shop/freezerblinky_on.png");
+			#freezerBlinky.texture = load("res://graphics/images/HUD/blinkies/freezerblinky_on.png");
 		
 		curState = newState;
 		##After state change
 		if curState == ShopStall.doorState.OPEN:
 			if is_instance_valid(partRef):
 				partRef.disable(false);
-			freezerBlinky.texture = load("res://graphics/images/HUD/shop/freezerblinky_off.png");
+			freezerBlinky.texture = load("res://graphics/images/HUD/blinkies/freezerblinky_off.png");
 		if curState == ShopStall.doorState.CLOSED:
 			if is_instance_valid(partRef):
 				partRef.disable(true);
 			deselect();
-			freezerBlinky.texture = load("res://graphics/images/HUD/shop/freezerblinky_off.png");
+			freezerBlinky.texture = load("res://graphics/images/HUD/blinkies/freezerblinky_off.png");
 		if curState == ShopStall.doorState.FROZEN:
 			if is_instance_valid(partRef):
 				partRef.disable(false);
-			freezerBlinky.texture = load("res://graphics/images/HUD/shop/freezerblinky_on.png");
+			freezerBlinky.texture = load("res://graphics/images/HUD/blinkies/freezerblinky_on.png");
 
 func _ready():
 	leftDoor = $DoorHolder/DoorLeft;

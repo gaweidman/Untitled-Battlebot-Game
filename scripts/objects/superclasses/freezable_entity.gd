@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/freezable.png")
 extends MakesNoise
 
 ##This entity can be frozen and paused.

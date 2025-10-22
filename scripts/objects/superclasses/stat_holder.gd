@@ -1,5 +1,4 @@
 extends FreezableEntity
-
 ##This entity can have stats saved within it.
 class_name StatHolder3D
 

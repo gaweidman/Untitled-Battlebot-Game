@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/inspector.png")
 extends TextureRect
 
 class_name Inspector

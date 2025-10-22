@@ -1,3 +1,5 @@
+@icon ("res://graphics/images/class_icons/engine.png")
+
 extends Control
 
 class_name PartsHolder_Engine

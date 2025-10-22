@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/robot.png")
 extends StatHolder3D;
 
 ##This entity can be frozen and paused, and can hold stats.[br]
@@ -43,6 +44,7 @@ func _physics_process(delta):
 
 ##Process and Physics process that run before anything else.
 func process_pre(delta):
+	aliveLastFrame = is_alive();
 	if is_ready and queuedLife:
 		live();
 	grab_references();
@@ -82,6 +84,8 @@ func grab_references():
 		camera = GameState.get_camera();
 	if not is_instance_valid(bodySocket):
 		bodySocket = $Body/Meshes/Socket;
+	#if is_instance_valid(bodySocket):
+		#bodySocket.invisibleInGame = false;
 	if not is_instance_valid(bodyPiece):
 		set_deferred("bodyPiece",$Body/Meshes/Socket/Piece_BodyCube);
 	if not is_instance_valid(treads):
@@ -258,6 +262,7 @@ func queue_live():
 
 func die():
 	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
+	if ! aliveLastFrame: return false;
 	alive = false;
 	queue_free();
 	##Play the death sound
@@ -493,12 +498,16 @@ func take_damage(damage:float):
 func heal(health:float):
 	take_damage(-health);
 
+## WHether this bot was alive [i]last[/i] frame.[br]Updatied in [method process_pre].
+var aliveLastFrame := false;
+## Returns true if [member alive] and [member is_ready] are both true.
 func is_alive():
 	return is_ready and alive;
 
 var invincible := false;
 var invincibleTimer := 0.0;
 @export var maxInvincibleTimer := 0.25; #TODO: Add in bonuses for this.
+## Whether the bot is currently considered "alive".[br][b]Note:[/b] In order for [method is_alive] to return [code]true[/code], [member is_ready] must ALSO be true.
 var alive := false;
 
 ##Replaces the invincible timer with the value given (Or maxInvincibleTimer by default) if that value is greater than the current invincibility timer.
@@ -637,6 +646,17 @@ func phys_process_collision(delta):
 			var boxID = allHurtboxes.find(box)
 			allHurtboxes.remove_at(boxID);
 
+var wasOnFloorLastFrame := true;
+var coyoteTimer := 0;
+## Steps the "coyote timer" ([member coyoteTimer])- if you're off the ground for less than five frames, the game lets you drive.
+func step_coyote_timer():
+	if ! treads.is_on_driveable(): 
+		coyoteTimer = max(coyoteTimer - 1, 0);
+	else:
+		coyoteTimer = 5;
+	
+	return coyoteTimer > 0;
+
 ##Physics process step for motion.
 # custom physics handling for player movement. regular movement feels flat and boring.
 func phys_process_motion(delta):
@@ -667,7 +687,7 @@ func move_and_rotate_towards_movement_vector(delta : float):
 	var rotatedMV = movementVector.rotated(deg_to_rad(90.0));
 	#print("MV3",movementVector);
 
-	if is_inputting_movement():
+	if is_inputting_movement() and step_coyote_timer():
 		lastInputtedMV = movementVector;
 		var movementVectorRotated = movementVector.rotated(deg_to_rad(90.0 + randf()))
 		var vectorToRotTo = Vector2(movementVectorRotated.x, -movementVectorRotated.y)
@@ -807,20 +827,23 @@ var active_abilities : Dictionary[int, AbilityManager] = {
 ##Fired by a Piece when it is added to the Robot permanently.
 func on_add_piece(piece:Piece):
 	remove_something_from_stash(piece);
-	reassign_body_collision();
 	piece.owner = self;
 	for ability in piece.activeAbilities:
 		if ability is AbilityManager:
 			print("Adding ability ", ability.abilityName)
 			assign_ability_to_next_active_slot(ability);
+	reassign_body_collision();
+	get_all_pieces_regenerate();
 	update_hud();
 	pass;
 
 ## Fired by a Piece when it is removed from the Robot.
 func on_remove_piece(piece:Piece):
 	piece.owner = null;
+	piece.hostRobot = null;
 	remove_abilities_of_piece(piece);
 	reassign_body_collision();
+	#deselect_everything();
 	pass;
 
 ## Removes all abilities that were supplied by the given Piece.
@@ -843,8 +866,9 @@ func get_all_pieces() -> Array[Piece]:
 ## Saves it to [member allPieces].
 func get_all_pieces_regenerate() -> Array[Piece]:
 	var piecesGathered : Array[Piece] = [];
-	for child in Utils.get_all_children_of_type(body, Piece):
-		if child.hostRobot == self:
+	for child:Piece in Utils.get_all_children_of_type(body, Piece):
+		print("CHILD OF BOT BODY: ",child)
+		if child.hostRobot == self and child.assignedToSocket:
 			piecesGathered.append(child);
 	allPieces = piecesGathered;
 	return piecesGathered;
@@ -886,6 +910,7 @@ func assign_ability_to_slot(slotNum : int, abilityManager : AbilityManager):
 		if is_instance_valid(abilityManager):
 			abilityManager.assign_robot(self);
 			active_abilities[slotNum] = abilityManager;
+			clear_ability_pipette();
 
 ##Turns the given slot null and unassigns this robot from that ability on the resource.
 func unassign_ability_slot(slotNum : int):
@@ -981,6 +1006,7 @@ func get_selected():
 			return selectedPiece;
 		else:
 			selectedPiece.select(true);
+			return selectedPiece;
 	return null;
 
 ## Deselects based on a predetermined hierarchy.[br]
@@ -1018,9 +1044,15 @@ func deselect_all_pieces(ignoredPiece : Piece = null):
 	queue_update_hud();
 	pass;
 
+## Force-deselects one specific piece.
+func deselect_piece(piece:Piece):
+	piece.deselect();
 
+## Runs [member Piece.select] and then acts on the result.
 func select_piece(piece : Piece):
-	if is_instance_valid(piece):
+	if (is_instance_valid(piece) 
+	#)and (piece in allPieces
+	):
 		var result = piece.select();
 		if result:
 			selectedPiece = piece;
@@ -1055,6 +1087,7 @@ func stash_selected_piece():
 		print("Attempting to stash ", selectedPiece)
 		if selectedPiece.removable:
 			selectedPiece.remove_and_add_to_robot_stash(self);
+	get_all_pieces_regenerate();
 
 ##TODO: Parts and Engine bs.
 func stash_selected_part():
@@ -1062,3 +1095,4 @@ func stash_selected_part():
 		print("Attempting to stash ", selectedPart)
 		#if selectedPiece.removable:
 			#selectedPiece.remove_and_add_to_robot_stash(self);
+	get_all_parts_regenerate();

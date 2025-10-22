@@ -120,9 +120,9 @@ func refill_magazine(max := get_magazine_max()):
 
 var availableBullets = 0;
 func add_one_bullet(max := get_magazine_max()):
-	print("Adding a bullet")
+	#print("Adding a bullet")
 	availableBullets = min(availableBullets + 1, max);
-	print(availableBullets)
+	#print(availableBullets)
 
 func get_available_bullets():
 	#print("Bulelts available: ", availableBullets)

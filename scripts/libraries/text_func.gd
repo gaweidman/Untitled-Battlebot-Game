@@ -146,14 +146,14 @@ func parse_text_constructor_array(input : Array[RichTextConstructor]):
 		count += 1;
 		string = parse_text_constructor(constructor, count == 1, count == input.size());
 	if string is String:
-		print_rich("FINAL STRING: "+string)
+		#print_rich("FINAL STRING: "+string)
 		return string;
 	else:
-		print_rich("FINAL STRING DID NOT GO THROUGH")
+		#print_rich("FINAL STRING DID NOT GO THROUGH")
 		return "[color=red]ERROR!"
 
 func parse_text_constructor(constructor : RichTextConstructor, start : bool, end : bool):
-	print("STRING IS STARTING: "+str(start))
+	#print("STRING IS STARTING: "+str(start))
 	var base = get_stored_rich_string();
 	## Newline. Adds a newline character before the appending string, if it is not the first line.
 	if base.length() > 0:
@@ -186,7 +186,7 @@ func add_to_rich_string(start := false, append : String = "", _colorGet = get_co
 		newString = "[color=" + color.to_html() + "]"
 	newString += append;
 	var endString = baseString + newString
-	print_rich("CONTRUCTED STRING THUS FAR: "+endString)
+	#print_rich("CONTRUCTED STRING THUS FAR: "+endString)
 	storedString = endString;
 	return endString;
 
@@ -196,5 +196,5 @@ func clear_rich_string_construction():
 func get_final_rich_string():
 	var ret = get_stored_rich_string();
 	clear_rich_string_construction();
-	print_rich("FINAL STRING:" + ret)
+	#print_rich("FINAL STRING:" + ret)
 	return ret;

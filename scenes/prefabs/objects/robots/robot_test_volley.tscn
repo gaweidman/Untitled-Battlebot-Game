@@ -12,7 +12,6 @@ bounce = 0.3
 [sub_resource type="SphereShape3D" id="SphereShape3D_kynhc"]
 
 [node name="Robot_TestVolley" type="Node3D"]
-visible = false
 script = ExtResource("1_fhm5l")
 robotNameInternal = "TestVolley"
 robotName = "Test Volley"
@@ -95,9 +94,11 @@ script = ExtResource("6_yalvc")
 [node name="Meshes" type="Node3D" parent="Body"]
 transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
 
-[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("hostRobot") instance=ExtResource("7_0drid")]
+[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("hostRobot", "selectorRayExceptions") instance=ExtResource("7_0drid")]
 transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
 hostRobot = NodePath("../../..")
+selectorRayExceptions = [NodePath("../..")]
+dontUsePieceForRobotHost = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
 shape = SubResource("SphereShape3D_kynhc")

@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/sword.png")
 extends Area3D
 
 class_name HitboxHolder

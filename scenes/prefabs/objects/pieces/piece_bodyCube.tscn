@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://88se3nfd8vrt"]
+[gd_scene load_steps=21 format=3 uid="uid://88se3nfd8vrt"]
 
 [ext_resource type="Script" uid="uid://lqnydwh6c74e" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="1_gm1wa"]
 [ext_resource type="Resource" uid="uid://bws20ksxfdagg" path="res://scenes/prefabs/abilities/passive/swivel_pointer_target.tres" id="2_h4kss"]
@@ -7,6 +7,7 @@
 [ext_resource type="Resource" uid="uid://bfv01rslcmwqh" path="res://scenes/prefabs/abilities/passive/ability_generator.tres" id="4_dbydh"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="6_xcdtu"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_fvnuu"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="8_dbydh"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="8_x8ege"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="10_ese3e"]
 [ext_resource type="ArrayMesh" uid="uid://bnajrltu8pmd4" path="res://graphics/models/obj/botparts/BotBody.obj" id="10_h4kss"]
@@ -106,6 +107,7 @@ script = ExtResource("7_fvnuu")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
+script = ExtResource("8_dbydh")
 
 [node name="PieceCollisionBox_Body" parent="." instance=ExtResource("8_x8ege")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.625, 0)

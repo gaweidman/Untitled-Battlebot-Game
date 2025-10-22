@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/energy_green.png")
 extends Control
 
 class_name InspectorStatIcon

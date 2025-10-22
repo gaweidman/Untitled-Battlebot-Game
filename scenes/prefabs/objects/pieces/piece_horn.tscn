@@ -1,6 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://b4lxeohowt1xt"]
+[gd_scene load_steps=15 format=3 uid="uid://b4lxeohowt1xt"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_jdn6p"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="4_ayq0k"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="5_m0ax8"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_mvd27"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="6_jxej0"]
@@ -66,6 +67,7 @@ script = ExtResource("5_mvd27")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
+script = ExtResource("4_ayq0k")
 
 [node name="PieceCollisionBox" parent="." instance=ExtResource("6_jxej0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)

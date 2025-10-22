@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dmmr20oepj5va"]
+[gd_scene load_steps=7 format=3 uid="uid://dmmr20oepj5va"]
 
 [ext_resource type="Script" uid="uid://cjbf8lwy20s0y" path="res://scripts/objects/robots/buildingBlocks/robot.gd" id="1_wxap3"]
 [ext_resource type="Script" uid="uid://cd3dvyejdjvlg" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="2_x8553"]
@@ -9,8 +9,9 @@
 friction = 200.0
 bounce = 0.3
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_4a4i5"]
+
 [node name="Robot_Base" type="Node3D" node_paths=PackedStringArray("meshes", "bodySocket", "treads", "body")]
-visible = false
 script = ExtResource("1_wxap3")
 meshes = NodePath("Body/Meshes")
 bodySocket = NodePath("Body/Meshes/Socket")
@@ -77,9 +78,14 @@ script = ExtResource("2_x8553")
 [node name="Meshes" type="Node3D" parent="Body"]
 transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
 
-[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("hostRobot") instance=ExtResource("3_cppxk")]
+[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("hostRobot", "selectorRayExceptions") instance=ExtResource("3_cppxk")]
 transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
 hostRobot = NodePath("../../..")
+selectorRayExceptions = [NodePath("../..")]
+dontUsePieceForRobotHost = true
+
+[node name="BaseCollision" type="CollisionShape3D" parent="Body"]
+shape = SubResource("SphereShape3D_4a4i5")
 
 [node name="Treads" parent="." instance=ExtResource("5_6pmkl")]
 

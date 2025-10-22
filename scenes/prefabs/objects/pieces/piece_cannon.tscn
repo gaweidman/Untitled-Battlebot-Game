@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cj7wtreacnxtm"]
+[gd_scene load_steps=23 format=3 uid="uid://cj7wtreacnxtm"]
 
 [ext_resource type="Script" uid="uid://blmbkcjl8udq2" path="res://scripts/objects/pieces/piece_projectile.gd" id="1_f406y"]
 [ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_52v1y"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="8_o54vu"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="9_2dtav"]
 [ext_resource type="ArrayMesh" uid="uid://bxol2x25bhxpg" path="res://graphics/models/obj/botparts/cannon.res" id="9_861xr"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="9_d7xnu"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="10_861xr"]
 
 [sub_resource type="Resource" id="Resource_861xr"]
@@ -104,6 +105,7 @@ script = ExtResource("7_rjpgo")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
+script = ExtResource("9_d7xnu")
 
 [node name="Meshes" type="Node3D" parent="."]
 editor_description = "Put any and all mesh instances in here."
