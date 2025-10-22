@@ -1222,5 +1222,8 @@ func get_stash_button_name(showTree := false, prelude := "") -> String:
 	return ret;
 
 func get_ability_slot_data(action : AbilityManager):
-	return {};
+	return {
+		"incomingPower" : get_incoming_energy(),
+		"usable" : can_use_ability(action),
+	};
 	pass;

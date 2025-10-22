@@ -4,6 +4,7 @@ class_name healthBar
 
 @export var emptyBar : TextureRect;
 @export var width := 163.0;
+@export var offset := 0.0;
 @onready var targetPosX := width;
 @onready var lerpPosX := width;
 var currentAmt := 0.0;
@@ -29,6 +30,7 @@ func _ready():
 	%FullHealth.texture = fullTexture;
 	%EmptyHealth.texture = emptytexture;
 	material.set("shader_parameter/mask", maskTexture);
+	%BarHolder.size = size;
 	#material.shader_parameter.mask = maskTexture;
 	#set("material/shader_parameter/mask", maskTexture);
 	if not hasLabel:
@@ -37,24 +39,23 @@ func _ready():
 		$%Lbl_Health.size = size;
 
 func set_health(amt: float, max: float):
-	if not hasLabel:
-		return;
-	var percentage := amt/max;
+	var percentage : float = amt/max;
+	targetPosX = offset;
 	
 	match direction:
 		directions.FILL_TO_RIGHT:
 			vertical = false;
-			targetPosX = percentage * width;
+			targetPosX += percentage * width;
 		directions.FILL_TO_LEFT:
 			vertical = false;
-			targetPosX = -percentage* width;
+			targetPosX += -percentage* width;
 		directions.FILL_TO_TOP:
 			vertical = true;
-			targetPosX = percentage * width;
+			targetPosX += -percentage * width;
 			pass;
 		directions.FILL_TO_BOTTOM:
 			vertical = true;
-			targetPosX = percentage * width;
+			targetPosX += percentage * width;
 			pass;
 	
 	currentAmt = amt;
@@ -80,6 +81,8 @@ func _process(delta):
 		update_text(currentAmt, currentMax);
 
 func update_text(amt : float, max: float):
+	if not hasLabel:
+		return;
 	var stringHealth = "";
 	label.text = TextFunc.format_stat(amt) + "/" + TextFunc.format_stat(max);
 	if altColorOn:

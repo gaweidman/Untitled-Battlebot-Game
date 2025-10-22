@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://y4jreplx5if1"]
+[gd_scene load_steps=17 format=4 uid="uid://y4jreplx5if1"]
 
 [ext_resource type="TileSet" uid="uid://dicxuohkdpmlx" path="res://graphics/images/HUD/engine/engineTileMap.tres" id="1_3xq6w"]
 [ext_resource type="Script" uid="uid://midvysmd0e3e" path="res://scripts/GUI/ability_slot.gd" id="1_w0yrw"]
@@ -9,15 +9,19 @@
 [ext_resource type="Theme" uid="uid://8f0fg65uxivb" path="res://graphics/images/HUD/digital_button.tres" id="7_4isuo"]
 [ext_resource type="PackedScene" uid="uid://rwrbd0hg75ad" path="res://scenes/prefabs/utilities/health_bar.tscn" id="8_0tj24"]
 [ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="9_0tj24"]
-[ext_resource type="Texture2D" uid="uid://c5asvsgahkx0d" path="res://graphics/images/HUD/Health_EmptyOverlayMask.png" id="10_pb2ip"]
+[ext_resource type="Texture2D" uid="uid://52acr4axd20j" path="res://graphics/images/HUD/activeTab/energyTank_case.png" id="9_x17s8"]
+[ext_resource type="Texture2D" uid="uid://cpsb6spmlq300" path="res://graphics/images/HUD/activeTab/energyTank_overlayMask.png" id="11_g6gak"]
 [ext_resource type="Theme" uid="uid://bq0jig2pdkgtn" path="res://graphics/images/HUD/UI_theme.tres" id="11_pb2ip"]
+[ext_resource type="Texture2D" uid="uid://blati351et8sw" path="res://graphics/images/HUD/activeTab/energyTank_full.png" id="12_rf4fe"]
+[ext_resource type="Texture2D" uid="uid://cloe8kuvyhab5" path="res://graphics/images/HUD/activeTab/energyTank_empty.png" id="13_x17s8"]
+[ext_resource type="Texture2D" uid="uid://dpulrjp6s5ovo" path="res://graphics/images/HUD/blinkies/energy_blinky_on.png" id="16_kcg4f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jtnig"]
 resource_local_to_scene = true
 shader = ExtResource("9_0tj24")
-shader_parameter/mask = ExtResource("10_pb2ip")
+shader_parameter/mask = ExtResource("11_g6gak")
 
-[node name="AbilitySlot0" type="Control" node_paths=PackedStringArray("btn_assign", "lbl_name")]
+[node name="AbilitySlot0" type="Control" node_paths=PackedStringArray("btn_assign", "lbl_name", "bar_energy", "blinky_energy")]
 texture_filter = 1
 clip_contents = true
 layout_mode = 3
@@ -27,6 +31,8 @@ offset_bottom = 132.0
 script = ExtResource("1_w0yrw")
 btn_assign = NodePath("Assign")
 lbl_name = NodePath("NameBG/Name")
+bar_energy = NodePath("EnergyBar_Case/EnergyBar")
+blinky_energy = NodePath("EnergyBar_Case/Blinky")
 
 [node name="BG" type="Control" parent="."]
 layout_mode = 1
@@ -102,16 +108,6 @@ offset_bottom = 21.0
 theme = ExtResource("7_4isuo")
 theme_type_variation = &"HeaderLarge"
 text = "Ability Name Goes Here..."
-clip_text = true
-
-[node name="HealthBar" parent="." instance=ExtResource("8_0tj24")]
-material = SubResource("ShaderMaterial_jtnig")
-layout_mode = 1
-offset_left = -44.0
-offset_top = -66.0
-offset_right = 76.0
-offset_bottom = -28.0
-hasLabel = false
 
 [node name="Assign" type="Button" parent="."]
 visible = false
@@ -125,4 +121,45 @@ theme_type_variation = &"AssignmentButton"
 text = "ASSIGN ABILITY
 TO SLOT"
 
+[node name="EnergyBar_Case" type="TextureRect" parent="."]
+z_index = 1
+layout_mode = 0
+offset_left = 192.0
+offset_top = 48.0
+offset_right = 238.0
+offset_bottom = 113.0
+texture = ExtResource("9_x17s8")
+
+[node name="EnergyBar" parent="EnergyBar_Case" instance=ExtResource("8_0tj24")]
+z_index = -1
+material = SubResource("ShaderMaterial_jtnig")
+layout_mode = 1
+offset_left = -23.0
+offset_top = -65.0
+offset_right = 23.0
+offset_bottom = 0.0
+width = 65.0
+offset = 6.0
+maskTexture = ExtResource("11_g6gak")
+fullTexture = ExtResource("12_rf4fe")
+emptytexture = ExtResource("13_x17s8")
+hasLabel = false
+direction = 2
+
+[node name="SubViewport" parent="EnergyBar_Case/EnergyBar" index="0"]
+size = Vector2i(46, 65)
+
+[node name="FullHealth" parent="EnergyBar_Case/EnergyBar/SubViewport/BarHolder" index="0"]
+texture = ExtResource("12_rf4fe")
+
+[node name="Blinky" type="TextureRect" parent="EnergyBar_Case"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 3.0
+offset_right = 28.0
+offset_bottom = 14.0
+texture = ExtResource("16_kcg4f")
+
 [connection signal="pressed" from="Assign" to="." method="_on_assign_pressed"]
+
+[editable path="EnergyBar_Case/EnergyBar"]

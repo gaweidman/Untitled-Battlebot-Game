@@ -111,7 +111,7 @@ shader = ExtResource("16_1s3sj")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lb2e7"]
 resource_local_to_scene = true
 shader = ExtResource("21_sb58i")
-shader_parameter/mask = ExtResource("39_2kc6q")
+shader_parameter/mask = ExtResource("22_dcin4")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kjpyk"]
 atlas = ExtResource("14_m488k")

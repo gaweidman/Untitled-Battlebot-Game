@@ -134,9 +134,17 @@ func get_ability_slot_data():
 		return false;
 	var data = {};
 	if get_assigned_piece_or_part() is Piece:
-		data = assignedPieceOrPart.get_ability_slot_data();
+		data = assignedPieceOrPart.get_ability_slot_data(self);
 	
+	if not ("incomingPower" in data.keys()):
+		data["incomingPower"] = 0.0;
+	if not ("usable" in data.keys()):
+		data["usable"] = false;
+	data["requiredEnergy"] = get_energy_cost();
 	
+	data["cooldownTime"] = get_cooldown();
+	data["cooldownStartTime"] = get_cooldown_start_time(1.0);
+	data["onCooldown"] = on_cooldown();
 	return data;
 	
 
