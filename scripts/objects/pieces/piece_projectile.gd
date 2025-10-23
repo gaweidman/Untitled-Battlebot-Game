@@ -85,6 +85,16 @@ func ability_registry():
 	#register_active_ability(firingName, firingDescription, func(): fireBullet(); pass, [])
 	pass;
 
+func get_ability_slot_data(ability : AbilityManager):
+	var data = super(ability);
+	if ability.abilityName == "Fire":
+		data["showMagazine"] = true;
+		data["magazineSize"] = get_stat("MagazineSize");
+		data["magazineAmt"] = get_available_bullets();
+		data["regenBulletCooldownStart"] = get_stat("PassiveCooldown");
+		data["regenBulletCooldown"] = get_cooldown_passive(get_named_passive("Bullet Factory"));
+	return data;
+
 func can_use_active(slot : AbilityManager):
 	if can_fire():
 		return super(slot);

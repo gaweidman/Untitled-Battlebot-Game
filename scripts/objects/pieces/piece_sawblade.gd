@@ -77,10 +77,10 @@ func process_draw(delta):
 	blade.scale = Vector3.ONE * bladeScaleOffset * bladeScaleBase;
 
 func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, thisPieceCollider : PieceCollisionBox):
-	if can_use_passive_any():
+	if can_use_named_action("Spin"):
 		if super(otherPiece, otherPieceCollider, thisPieceCollider):
 			#print("HUzzah!")
-			set_cooldown_passive(passiveAbilities.front());
+			set_cooldown_passive(get_named_action("Spin"));
 			bladeScaleOffset /= 1.5;
 		else:
 			#print_rich("[color=orange]Sawblade tried to do contact damage, but is on passive cooldown for ",get_cooldown_passive()," seconds.")
@@ -103,10 +103,11 @@ func cooldown_behavior(onCooldown : bool = on_cooldown()):
 	#if onCooldown:
 		#
 		#return;
-	if on_cooldown_active_any():
+	if on_cooldown_named_action("Whirl"):
+		set_cooldown_for_ability(get_named_action("Spin"));
 		hitboxCollisionHolder.scale.lerp(Vector3.ONE * bladeScaleOffset, get_physics_process_delta_time() * 12)
 		return;
-	if on_cooldown_passive_any():
+	if on_cooldown_named_action("Spin"):
 		hitboxCollisionHolder.scale.lerp(Vector3.ONE * 0.5, get_physics_process_delta_time() * 12)
 		return;
 	pass;
@@ -148,3 +149,16 @@ func bullet_hit_hitbox(bullet:Bullet):
 			particlePos += bullet.global_position
 			ParticleFX.play("Sparks", GameState.get_game_board(), particlePos)
 			SND.play_sound_at("Weapon.Sawblade.Parry", particlePos, GameState.get_game_board(), 1.0, 0.5);
+
+func get_ability_slot_data(ability : AbilityManager):
+	var data = super(ability);
+	if ability.abilityName == "Whirl":
+		#print("what")
+		#print(get_named_action("Spin"))
+		#print(on_cooldown_named_action("Spin"));
+		if on_cooldown_named_action("Spin"):
+			data["miscText"] = "SPIN is on cooldown!"
+			print("SPIN is on cooldown!")
+			data["usable"] = false;
+	#data["miscText"] = "SPIN is on cooldown!"
+	return data;

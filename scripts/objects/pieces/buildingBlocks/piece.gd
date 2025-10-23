@@ -13,6 +13,7 @@ func _ready():
 	assign_references();
 	ability_validation();
 	ability_registry();
+	regen_namedActions() ## Regenerates the actions list
 	super(); #Stat registry.
 	gather_colliders_and_meshes();
 
@@ -32,6 +33,7 @@ func stat_registry():
 	if energyDrawPassiveMultiplier < 0:
 		register_stat("PassiveEnergyRegeneration", energyDrawPassiveMultiplier, statIconEnergy);
 	register_stat("PassiveCooldown", passiveCooldownTimeMultiplier, statIconCooldown);
+	register_stat("ContactCooldown", contactCooldown, statIconCooldown);
 	
 	#Stats that only matter if the thing has abilities.
 	if activeAbilities.size() > 0:
@@ -272,6 +274,11 @@ func get_cooldown_passive(passiveAbility : AbilityManager) -> float:
 	if is_instance_valid(passiveAbility):
 		return passiveAbility.get_cooldown();
 	return false;
+func on_cooldown_action(action : AbilityManager) -> bool:
+	return action.on_cooldown();
+func on_cooldown_named_action(actionName : String) -> bool:
+	var action = get_named_action(actionName);
+	return on_cooldown_action(action);
 
 func on_cooldown():
 	return on_cooldown_active_any() or on_cooldown_passive_any();
@@ -411,10 +418,13 @@ func can_use_passive(passiveAbility : AbilityManager):
 		if ! test_energy_available(get_passive_energy_cost(passiveAbility)):
 			return false;
 	return true;
-func can_use_passive_any():
+func can_use_passive_any() -> bool:
 	for passiveAbility in passiveAbilities:
 		if can_use_passive(passiveAbility) : return true;
 	return false;
+func can_use_named_action(actionName:String) -> bool:
+	var action = get_named_action(actionName);
+	return can_use_ability(action);
 
 var namedActions : Dictionary[String,AbilityManager] = {};
 func regen_namedActions():
@@ -647,6 +657,7 @@ func get_all_meshes() -> Array:
 @export var kickbackBase := 0.0;
 @export var damageTypes : Array[DamageData.damageTypes] = [];
 @export var disableHitboxesWhileOnCooldown := true;
+@export var contactCooldown := 0.0;
 
 var damageModifier := 1.0; ##This variable can be used to modify damage on the fly without needing to go thru set/get stat.
 

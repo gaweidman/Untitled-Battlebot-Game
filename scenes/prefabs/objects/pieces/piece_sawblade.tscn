@@ -54,6 +54,7 @@ knockbackBase = 80.0
 kickbackBase = 80.0
 damageTypes = Array[int]([1])
 disableHitboxesWhileOnCooldown = false
+contactCooldown = 0.15
 meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")

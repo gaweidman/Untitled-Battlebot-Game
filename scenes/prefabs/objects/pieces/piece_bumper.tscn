@@ -53,6 +53,7 @@ hurtboxAlwaysEnabled = true
 force_visibility = true
 knockbackBase = 75.0
 kickbackBase = 60.0
+contactCooldown = 0.15
 engineSlots = {
 Vector2i(1, 2): null,
 Vector2i(2, 2): null,

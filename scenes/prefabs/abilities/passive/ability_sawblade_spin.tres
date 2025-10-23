@@ -11,6 +11,7 @@ abilityDescriptionConstructor = Array[ExtResource("1_oawqs")]([])
 abilityDescription = "The blade passively spins, dealing contact damage."
 energyCost = 0.15
 cooldownTimeBase = 0.0
+cooldownStatName = "ContactCooldown"
 runType = 2
 functionNameWhenUsed = &""
 statsUsed = Array[String]([])

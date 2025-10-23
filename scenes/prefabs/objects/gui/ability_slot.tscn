@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://y4jreplx5if1"]
+[gd_scene load_steps=18 format=4 uid="uid://y4jreplx5if1"]
 
 [ext_resource type="TileSet" uid="uid://dicxuohkdpmlx" path="res://graphics/images/HUD/engine/engineTileMap.tres" id="1_3xq6w"]
 [ext_resource type="Script" uid="uid://midvysmd0e3e" path="res://scripts/GUI/ability_slot.gd" id="1_w0yrw"]
@@ -15,13 +15,14 @@
 [ext_resource type="Texture2D" uid="uid://blati351et8sw" path="res://graphics/images/HUD/activeTab/energyTank_full.png" id="12_rf4fe"]
 [ext_resource type="Texture2D" uid="uid://cloe8kuvyhab5" path="res://graphics/images/HUD/activeTab/energyTank_empty.png" id="13_x17s8"]
 [ext_resource type="Texture2D" uid="uid://dpulrjp6s5ovo" path="res://graphics/images/HUD/blinkies/energy_blinky_on.png" id="16_kcg4f"]
+[ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="16_x17s8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jtnig"]
 resource_local_to_scene = true
 shader = ExtResource("9_0tj24")
 shader_parameter/mask = ExtResource("11_g6gak")
 
-[node name="AbilitySlot0" type="Control" node_paths=PackedStringArray("btn_assign", "lbl_name", "bar_energy", "blinky_energy")]
+[node name="AbilitySlot0" type="Control" node_paths=PackedStringArray("btn_assign", "lbl_name", "lbl_energy", "bar_energy", "blinky_energy", "blinky_usable", "misc_energy", "energyCase", "misc_ammo", "misc_text")]
 texture_filter = 1
 clip_contents = true
 layout_mode = 3
@@ -31,8 +32,14 @@ offset_bottom = 132.0
 script = ExtResource("1_w0yrw")
 btn_assign = NodePath("Assign")
 lbl_name = NodePath("NameBG/Name")
+lbl_energy = NodePath("MiscBG/Energy/EnergyIconStriped/lbl_energy")
 bar_energy = NodePath("EnergyBar_Case/EnergyBar")
 blinky_energy = NodePath("EnergyBar_Case/Blinky")
+blinky_usable = NodePath("AbilityBlinky/AbilityBlinkyOn")
+misc_energy = NodePath("MiscBG/Energy")
+energyCase = NodePath("EnergyBar_Case")
+misc_ammo = NodePath("MiscBG/Ammo")
+misc_text = NodePath("MiscBG/MiscText")
 
 [node name="BG" type="Control" parent="."]
 layout_mode = 1
@@ -74,9 +81,9 @@ axis_stretch_vertical = 1
 [node name="AbilityBlinky" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 27.0
-offset_top = 50.0
+offset_top = 47.0
 offset_right = 41.0
-offset_bottom = 68.0
+offset_bottom = 65.0
 texture = ExtResource("4_jdlo6")
 
 [node name="AbilityBlinkyOn" type="TextureRect" parent="AbilityBlinky"]
@@ -130,7 +137,7 @@ offset_right = 238.0
 offset_bottom = 113.0
 texture = ExtResource("9_x17s8")
 
-[node name="EnergyBar" parent="EnergyBar_Case" instance=ExtResource("8_0tj24")]
+[node name="EnergyBar" parent="EnergyBar_Case" node_paths=PackedStringArray("label") instance=ExtResource("8_0tj24")]
 z_index = -1
 material = SubResource("ShaderMaterial_jtnig")
 layout_mode = 1
@@ -138,13 +145,18 @@ offset_left = -23.0
 offset_top = -65.0
 offset_right = 23.0
 offset_bottom = 0.0
+resourceName = "Incoming Energy"
 width = 65.0
 offset = 6.0
+label = NodePath("../../MiscBG/Energy/EnergyIconStriped/lbl_energy")
+colorAlt = "lightblue"
 maskTexture = ExtResource("11_g6gak")
 fullTexture = ExtResource("12_rf4fe")
 emptytexture = ExtResource("13_x17s8")
-hasLabel = false
 direction = 2
+addSpaces = false
+addZeroes = true
+decimalPlaces = 1
 
 [node name="SubViewport" parent="EnergyBar_Case/EnergyBar" index="0"]
 size = Vector2i(46, 65)
@@ -159,6 +171,75 @@ offset_top = 3.0
 offset_right = 28.0
 offset_bottom = 14.0
 texture = ExtResource("16_kcg4f")
+
+[node name="MiscBG" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 74.0
+offset_top = 70.0
+offset_right = 189.0
+offset_bottom = 114.0
+texture = ExtResource("6_ifvkn")
+patch_margin_left = 1
+patch_margin_top = 3
+patch_margin_right = 1
+patch_margin_bottom = 1
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Ammo" type="Control" parent="MiscBG"]
+anchors_preset = 0
+offset_right = 115.0
+offset_bottom = 44.0
+
+[node name="Magazine" type="HBoxContainer" parent="MiscBG/Ammo"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 4.0
+offset_right = 82.0
+offset_bottom = 21.0
+
+[node name="Energy" type="Control" parent="MiscBG"]
+anchors_preset = 0
+offset_left = 90.0
+offset_top = 3.0
+offset_right = 114.0
+offset_bottom = 43.0
+
+[node name="EnergyIconStriped" type="TextureRect" parent="MiscBG/Energy"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 16.0
+offset_right = 22.0
+offset_bottom = 39.0
+texture = ExtResource("16_x17s8")
+
+[node name="lbl_energy" type="Label" parent="MiscBG/Energy/EnergyIconStriped"]
+layout_mode = 0
+offset_left = -1.0
+offset_top = -15.0
+offset_right = 21.0
+offset_bottom = -8.0
+theme = ExtResource("7_4isuo")
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 0
+theme_override_font_sizes/font_size = 5
+text = "A"
+autowrap_mode = 1
+
+[node name="MiscText" type="Label" parent="MiscBG"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 89.0
+offset_bottom = 41.0
+theme = ExtResource("7_4isuo")
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 0
+theme_override_font_sizes/font_size = 5
+text = "THIS AMOUNT OF TEXT. Why does it newline? IDK. AAA asadskjabdfhjsbfk
+ asjnbdhjasbfkakkk"
+vertical_alignment = 2
+autowrap_mode = 3
 
 [connection signal="pressed" from="Assign" to="." method="_on_assign_pressed"]
 

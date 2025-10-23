@@ -12,9 +12,15 @@ var curMode : modes = modes.NONE;
 @export var nextSlot : AbilitySlot;
 @export var manager : AbilitySlotManager;
 @export var lbl_name : Label;
+@export var lbl_energy : Label;
 @export var bar_cooldown : healthBar;
 @export var bar_energy : healthBar;
 @export var blinky_energy : TextureRect;
+@export var blinky_usable : TextureRect;
+@export var misc_energy : Control;
+@export var energyCase : TextureRect;
+@export var misc_ammo : Control;
+@export var misc_text : Label;
 
 var index : int;
 var referencedAbility : AbilityManager;
@@ -71,15 +77,30 @@ func update_ability(ability : AbilityManager):
 	if not data is Dictionary: ## If the data is invalid, no more of it.
 		clear_assignment();
 		return;
+	
+	## Energy. Deals with both the bar, as well as the icon in the misc window.
 	var incomingEnergy = data.incomingPower;
 	var requiredEnergy = data.requiredEnergy;
-	print("what")
-	blinky_energy.visible = incomingEnergy >= requiredEnergy;
+	var hasAvailableEnergy = incomingEnergy >= requiredEnergy;
+	blinky_energy.visible = hasAvailableEnergy;
 	bar_energy.set_health(min(incomingEnergy, requiredEnergy), requiredEnergy);
+	bar_energy.set_alt_color(hasAvailableEnergy);
+	var barTooltip = bar_energy.tooltip_text;
+	misc_energy.tooltip_text = barTooltip;
+	energyCase.tooltip_text = barTooltip;
+	
+	var usable = data.usable;
+	blinky_usable.visible = usable;
+	
+	## Miscellaneous text.
+	var miscTextDat = "";
+	if data.has("miscText"):
+		miscTextDat = data["miscText"];
+	misc_text.text = miscTextDat;
 
 func clear_assignment():
 	referencedAbility = null;
 	lbl_name.text = "Ability Slot Empty";
 	#TextFunc.set_text_color(lbl_name, "lightred");
-	bar_energy.set_health(0, 3);
+	bar_energy.set_health(0, 0);
 	pass;
