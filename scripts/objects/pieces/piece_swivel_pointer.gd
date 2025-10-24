@@ -6,30 +6,39 @@ var cam : GameCamera;
 var pointerLocation := Vector3.ZERO;
 
 func can_use_passive(passiveAbility):
-	if super(passiveAbility):
+	if passiveAbility.abilityName == "Target":
 		var rot = global_rotation_degrees;
 		##Can only use the passive if it's not rotated.
 		if rot.x < 5.0 and rot.x > -5.0 and rot.z < 5.0 and rot.z > -5.0:
-			return true;
-	return false;
+			return super(passiveAbility);
+		return false;
+	return super(passiveAbility);
 
-func phys_process_collision(delta):
+func phys_process_pre(delta):
 	super(delta);
 	if !is_instance_valid(cam):
 		cam = GameState.get_camera();
 
 func use_passive(passiveAbility : AbilityManager):
-	var prevRotation = targetRotation;
-	if host_is_player():
+	if passiveAbility.abilityName == "Target":
 		if is_instance_valid(cam):
-			if super(passiveAbility):
-				var rot = cam.get_rotation_to_fake_aiming(get_host_robot().get_global_body_position());
-				#print(rot)
-				if rot != null:
-					targetRotation = rot - get_host_robot().get_global_body_rotation().y - get_host_socket().rotation.y;
+			if test_energy_available(passiveAbility.get_energy_cost()):
+				if can_use_passive(passiveAbility):
+					return use_active(passiveAbility);
 				else:
-					targetRotation = prevRotation;
+					targetRotation = 0.0;
 		return false;
 	else:
-		##TODO: Pointer Swivel: figure out non-player aiming methods for Robots, then plug that in here somehow. 
-		return false;
+		return super(passiveAbility);
+
+func target():
+	var prevRotation = targetRotation;
+	if host_is_player():
+		var rot = cam.get_rotation_to_fake_aiming(global_position);
+		
+		if rot != null:
+			targetRotation = rot - get_host_robot().get_global_body_rotation().y - get_host_socket().rotation.y;
+		else:
+			targetRotation = prevRotation;
+	else:
+		pass;

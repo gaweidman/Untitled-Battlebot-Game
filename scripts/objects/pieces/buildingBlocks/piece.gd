@@ -160,8 +160,10 @@ func phys_process_timers(delta):
 
 func phys_process_pre(delta):
 	super(delta);
-	##Reset current energy draw.
+	## Reset current energy draw.
 	energyDrawCurrent = 0.0;
+	## Calculate weightLoad.
+	get_weight_load();
 
 ################ PIECE MANAGEMENT
 
@@ -174,13 +176,48 @@ func declare_names():
 		pieceDescription = TextFunc.parse_text_constructor_array(descriptionConstructor);
 	pass;
 @export_multiline var pieceDescription := "No Description Found.";
+## If this piece fulfills the requirements for being a bot's "body", this is true. You aren't allowed to exit the shop if you don't have a body piece equipped.
+@export var isBody := false;
+## Whether this piece is removable.
+@export var removable := true;
+
 @export var weightBase := 1.0;
 
 @export var scrapCostBase : int;
 @export var scrapSellModifierBase := (2.0/3.0);
 @export var scrapSalvageModifierBase := (1.0/6.0);
 
-@export var removable := true;
+## How much weight this Piece is carrying, including itself.
+var weightLoad := 0.0;
+## If [member regenerateWeightLoad] is true, then [method get_weight_load()] is forced to regenerate [member weightLoad] the next time it is called.
+var regenerateWeightLoad := true;
+
+## Sets [member regenerateWeightLoad] to true. 
+func queue_regenerate_weight_load():
+	regenerateWeightLoad = true;
+
+## Gets the base weight stat for this piece.
+func get_weight():
+	return get_stat("Weight");
+
+## Gets [member Socket.weightLoad] from the specified [Socket].
+func get_socket_weight_load(specifiedSocket : Socket, forceRegenerate := false):
+	if is_instance_valid(specifiedSocket):
+		return specifiedSocket.get_weight_load(forceRegenerate);
+	return 0.0;
+
+## Returns [member weightLoad]. Regenerates it first if [member regenerateWeightLoad] is true.
+func get_weight_load():
+	if regenerateWeightLoad:
+		var _weight = get_weight();
+		for socket in get_all_female_sockets():
+			_weight += get_socket_weight_load(socket, true);
+		weightLoad = _weight;
+	return weightLoad;
+
+func get_regenerated_weight_load():
+	queue_regenerate_weight_load();
+	return get_weight_load();
 
 ##TODO: Scrap sell/buy/salvage functions for when this has Parts inside of it.
 func get_sell_price(discountMultiplier := 1.0):
@@ -218,6 +255,8 @@ func get_buy_price_piece_only(discountMultiplier := 1.0, fixedMarkup := 0):
 @export var input : InputEvent;
 @export var energyDrawPassiveMultiplier := 1.0; ##power drawn each frame, multiplied by time delta. If this is negative, it is instead power being generated each frame.
 @export var energyDrawActiveMultiplier := 1.0; ##power drawn when you use any this piece's active abilities, given that it has any.
+@export var energyDrawActiveBaseOverride : float;
+@export var energyDrawPassiveBaseOverride : float;
 var energyDrawCurrent := 0.0; ##Recalculated and updated each frame.
 
 var incomingPower := 0.0;
@@ -357,12 +396,12 @@ func get_current_energy_draw():
 
 func get_active_energy_cost(ability : AbilityManager):
 	##TODO: Bonuses
-	return ( ability.get_energy_cost_base() * get_stat("ActiveEnergyDraw") );
+	return ( ability.get_energy_cost_base(energyDrawActiveBaseOverride) * get_stat("ActiveEnergyDraw") );
 
 func get_passive_energy_cost(passiveAbility : AbilityManager, base := false):
 	var stat = get_stat("PassiveEnergyDraw");
 	if is_instance_valid(passiveAbility):
-		stat *= passiveAbility.get_energy_cost_base();
+		stat *= passiveAbility.get_energy_cost_base(energyDrawPassiveBaseOverride);
 	##TODO: Bonuses
 	return ( stat * get_physics_process_delta_time() );
 
@@ -372,59 +411,75 @@ func get_energy_cost(action):
 	else:
 		return get_active_energy_cost(action);
 
+## Returns true if there would be enough energy in the system to support the input energy amount.
 func test_energy_available(energyAmount) -> bool:
 	return (get_current_energy_draw() + energyAmount) <= get_incoming_energy()
 
-##Returns true if the actionSlot has an ability assigned and energy draw post-use would not exceed the incoming energy pool.
+## Standard checks shared by [method can_use_active] and [method can_use_passive] that must be passed.
+func standard_ability_checks(action : AbilityManager):
+	## Check that the thing is the correct type.
+	if action is not AbilityManager:
+		return false;
+	## Check if the Piece is paused.
+	if is_paused():
+		return false;
+	## Check that the ability is owned by this piece.
+	if get_local_ability(action) == null:
+		return false;
+	## Check if it's disabled.
+	if action.is_disabled():
+		return false;
+	## Check the bot, and also check aliveness.
+	var bot = get_host_robot();
+	if bot == null:
+		return false;
+	else:
+		if !bot.is_alive():
+			return false;
+	## Check that it's not on cooldown.
+	if on_cooldown_action(action):
+		return false;
+	## Passed. Moving on...
+	return true;
+
+## Checks if you can use a given passive ability.
 func can_use_active(action : AbilityManager): 
+	## Check that the thing is valid. If not, get the first ability in the relevant list.
 	if ! is_instance_valid(action):
 		if activeAbilities.size() > 0:
 			action = activeAbilities.front();
 		else:
 			return false
-	if is_paused():
-		#print_rich("[color=yellow]Active call was interrupted because the game is paused.")
+	## Check all the checks passives and actives share.
+	if not standard_ability_checks(action):
 		return false;
-	if get_local_ability(action) == null:
-		#print("Ability in slot ",action," is null.")
-		return false;
-	if get_host_robot() == null:
-		return false;
-	if on_cooldown_active(action):
-		return false;
+	## Check that there's enough energy to run this active.
 	if not test_energy_available(get_active_energy_cost(action)):
 		return false;
+	## You passed!
 	return true;
 
-##Returns true if energyDrawPassiveMultiplier is 0, or if the power draw would not exceed incoming power.
+## Checks if you can use a given passive ability.
 func can_use_passive(passiveAbility : AbilityManager):
+	## Check that the thing is valid. If not, get the first ability in the relevant list.
 	if ! is_instance_valid(passiveAbility):
 		if passiveAbilities.size() > 0:
 			passiveAbility = passiveAbilities.front();
 		else:
 			return false
-	if (passiveAbility != null) and (passiveAbility is AbilityManager) and (passiveAbility.is_disabled()): 
+	## Check all the checks passives and actives share.
+	if not standard_ability_checks(passiveAbility):
 		return false;
-	if is_paused():
-		#print_rich("[color=yellow]Passive call was interrupted because the game is paused.")
-		return false;
-	if get_host_robot() == null:
-		#print_rich("[color=yellow]Passive call was interrupted by lack of a host robot.")
-		return false;
-	if on_cooldown_passive(passiveAbility):
-		#print_rich("[color=yellow]Passive call was interrupted by being on cooldown.")
-		return false;
+	## Check that there's enough energy to run this passive.
 	if (get_passive_energy_cost(passiveAbility) > 0.0):
 		if ! test_energy_available(get_passive_energy_cost(passiveAbility)):
 			return false;
+	## You passed!
 	return true;
 func can_use_passive_any() -> bool:
 	for passiveAbility in passiveAbilities:
 		if can_use_passive(passiveAbility) : return true;
 	return false;
-func can_use_named_action(actionName:String) -> bool:
-	var action = get_named_action(actionName);
-	return can_use_ability(action);
 
 var namedActions : Dictionary[String,AbilityManager] = {};
 func regen_namedActions():
@@ -434,24 +489,24 @@ func regen_namedActions():
 	for action in passiveAbilities:
 		if is_instance_valid(action) and action is AbilityManager:
 			namedActions["P_"+action.abilityName] = action;
-func get_named_action(actionName : String):
+func get_named_action(actionName : String) -> AbilityManager:
 	if namedActions.is_empty(): regen_namedActions();
 	var activeTest = "A_"+actionName;
 	var passiveTest = "P_"+actionName;
 	if namedActions.keys().has(activeTest): return namedActions[activeTest];
 	if namedActions.keys().has(passiveTest): return namedActions[passiveTest];
 	return null;
-func get_named_passive(actionName : String):
+func get_named_passive(actionName : String) -> AbilityManager:
 	if namedActions.is_empty(): regen_namedActions();
 	var passiveTest = "P_"+actionName;
 	if namedActions.keys().has(passiveTest): return namedActions[passiveTest];
 	return null;
-func get_named_active(actionName : String):
+func get_named_active(actionName : String) -> AbilityManager:
 	if namedActions.is_empty(): regen_namedActions();
 	var activeTest = "A_"+actionName;
 	if namedActions.keys().has(activeTest): return namedActions[activeTest];
 	return null;
-func can_use_named_ability(actionName : String):
+func can_use_named_ability(actionName : String) -> bool:
 	var act = get_named_action(actionName);
 	if act != null:
 		return can_use_ability(act);
@@ -564,9 +619,9 @@ func use_active(action : AbilityManager) -> bool:
 				return false;
 		else:
 			#print("ABILITY ",activeAbility.abilityName," CALLED ITS FUNCTION.")
-			var call = activeAbility.functionWhenUsed;
-			if call != null and call is Callable and is_instance_valid(call):
-				call.call();
+			var _call = activeAbility.functionWhenUsed;
+			if _call != null and _call is Callable and is_instance_valid(_call):
+				_call.call();
 		pass;
 		return true;
 	return false;

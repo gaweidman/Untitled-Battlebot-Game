@@ -65,11 +65,10 @@ size = Vector3(0.5, 0.5, 1.5)
 
 [node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("firingOffsetNode") groups=["Piece"]]
 script = ExtResource("1_f406y")
-magazineMaxBase = 5
-magazineRefreshRate = 1.5
 firingOffsetNode = NodePath("Meshes/MeshInstance3D/FiringOffset")
 pieceName = &"Cannon"
 descriptionConstructor = Array[ExtResource("2_52v1y")]([SubResource("Resource_861xr"), SubResource("Resource_f406y"), SubResource("Resource_shgbd")])
+weightBase = 10.0
 activeAbilities = Array[ExtResource("3_f406y")]([ExtResource("4_f406y")])
 passiveAbilities = Array[ExtResource("3_f406y")]([ExtResource("5_shgbd")])
 force_visibility = true

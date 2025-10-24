@@ -59,12 +59,14 @@ func _ready():
 func available(printWhy := false):
 	if leaking: 
 		Utils.print_if_true("Bullet leaking", printWhy)
+		queue_free(); 
 		return false;
 	if fired: 
 		Utils.print_if_true("Already fired", printWhy)
 		return false;
 	if lifeDeltaTimer < 0: 
 		Utils.print_if_true(("Alive too long, "+str(lifeDeltaTimer)), printWhy)
+		leak();
 		return false;
 	if is_queued_for_deletion(): 
 		Utils.print_if_true("Queued for deletion", printWhy)

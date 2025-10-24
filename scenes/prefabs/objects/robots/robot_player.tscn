@@ -92,6 +92,7 @@ transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
 [node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("hostRobot", "selectorRayExceptions") instance=ExtResource("7_fj0lc")]
 transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
 hostRobot = NodePath("../../..")
+collisionScale = 0.55
 selectorRayExceptions = [NodePath("../..")]
 dontUsePieceForRobotHost = true
 

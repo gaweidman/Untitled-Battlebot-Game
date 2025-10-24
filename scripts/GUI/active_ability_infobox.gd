@@ -188,6 +188,9 @@ func _process(delta):
 		showtime();
 		queueShow = false;
 		doneWithSetup.emit();
+	## If the action assigned to this is not in a piece/part that's on the robot, disable the button.
+	if is_instance_valid(referencedAbility) and referencedAbility is AbilityManager:
+		assignButton.disabled = ! referencedAbility.is_on_assigned_piece();
 
 func showtime():
 	resize_box();

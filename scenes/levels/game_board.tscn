@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=3 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=83 format=4 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena/arena_floor.tres" id="2_4jixe"]
@@ -34,9 +34,11 @@
 [ext_resource type="Texture2D" uid="uid://okkoo55665rm" path="res://graphics/images/HUD/nextRound/screen_off.png" id="19_3a6ea"]
 [ext_resource type="AudioStream" uid="uid://uqulgohxvrq4" path="res://sounds/music/Battlebot(Perc2).ogg" id="19_4eh01"]
 [ext_resource type="AudioStream" uid="uid://bgos1qoehfh6w" path="res://sounds/music/Battlebot(Guitar).ogg" id="19_l8dsy"]
+[ext_resource type="Texture2D" uid="uid://o01v65x3ienk" path="res://graphics/images/HUD/screenGFX/insetScreen.png" id="19_vehjn"]
 [ext_resource type="AudioStream" uid="uid://criotxml8rknj" path="res://sounds/music/Battlebot(Swell).ogg" id="20_gj52v"]
 [ext_resource type="Script" uid="uid://dxmqurrcqgdl7" path="res://scripts/GUI/bgm.gd" id="20_l8dsy"]
 [ext_resource type="Texture2D" uid="uid://csqo5aaepfs34" path="res://graphics/images/HUD/nextRound/progressBar.png" id="20_ridgm"]
+[ext_resource type="TileSet" uid="uid://dicxuohkdpmlx" path="res://graphics/images/HUD/engine/engineTileMap.tres" id="20_u76c3"]
 [ext_resource type="Script" uid="uid://cdymr1vwdiwxo" path="res://scripts/GUI/info_box.gd" id="21_n0uq6"]
 [ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="21_sb58i"]
 [ext_resource type="Texture2D" uid="uid://24e2n07ox528" path="res://graphics/images/HUD/Energy_EmptyOverlayMask.png" id="22_dcin4"]
@@ -107,6 +109,8 @@ region = Rect2(960, 0, 960, 1080)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8hspa"]
 shader = ExtResource("16_1s3sj")
+
+[sub_resource type="Theme" id="Theme_k23rv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lb2e7"]
 resource_local_to_scene = true
@@ -655,6 +659,7 @@ offset_right = -304.0
 offset_bottom = -48.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_default_cursor_shape = 3
 stretch = true
 mouse_target = true
 
@@ -697,6 +702,7 @@ grow_vertical = 2
 pivot_offset = Vector2(576, 314)
 size_flags_horizontal = 3
 size_flags_vertical = 3
+mouse_filter = 1
 theme = ExtResource("9_mlcvp")
 script = ExtResource("18_wbopo")
 MainMenuLogo = NodePath("MainMenu/LogoSmall")
@@ -806,19 +812,43 @@ offset_right = -8.0
 offset_bottom = 18.0
 texture = ExtResource("15_s0uw0")
 
-[node name="EnemyProgressBar" type="Control" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide"]
+[node name="ProgressBarBG" type="NinePatchRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide"]
+layout_mode = 0
+offset_left = 678.0
+offset_top = 143.0
+offset_right = 932.0
+offset_bottom = 177.0
+texture = ExtResource("19_vehjn")
+patch_margin_left = 1
+patch_margin_top = 3
+patch_margin_right = 1
+patch_margin_bottom = 1
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Edge" type="TileMapLayer" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/ProgressBarBG"]
+position = Vector2(7, 5)
+tile_map_data = PackedByteArray("AAD/////AAAEAAIAAAAAAP//AAAGAAAAAAABAP//AAAGAAAAAAACAP//AAAGAAAAAAADAP//AAAGAAAAAAAEAP//AAAGAAAAAAAFAP//AAAGAAAAAAAGAP//AAAGAAAAAAAHAP//AAAGAAAAAAAIAP//AAAGAAAAAAAJAP//AAAGAAAAAAAKAP//AAAHAAEAAAD//wEAAAAEAAMAAAAAAAEAAAAGAAMAAAABAAEAAAAGAAMAAAACAAEAAAAGAAMAAAADAAEAAAAGAAMAAAAEAAEAAAAGAAMAAAAFAAEAAAAGAAMAAAAGAAEAAAAGAAMAAAAHAAEAAAAGAAMAAAAIAAEAAAAGAAMAAAAJAAEAAAAGAAMAAAAKAAEAAAAHAAMAAAD//wAAAAAEAAEAAAAKAAAAAAAHAAIAAAA=")
+tile_set = ExtResource("20_u76c3")
+metadata/_edit_group_ = true
+
+[node name="EnemyProgressBar" type="Control" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/ProgressBarBG" node_paths=PackedStringArray("nextWaveButton_gfx", "nextWaveButton_big", "progressBar", "Lbl_EnemiesLeft")]
 clip_contents = true
 layout_mode = 1
-anchor_left = 0.7125
-anchor_top = 0.0222222
-anchor_right = 0.975
-anchor_bottom = 0.05
+anchor_left = 0.00393701
+anchor_top = 0.0882346
+anchor_right = 0.996063
+anchor_bottom = 0.970588
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 script = ExtResource("15_7w2xj")
+nextWaveButton_gfx = NodePath("NextWaveButton")
+nextWaveButton_big = NodePath("../NextWaveButton_big")
+progressBar = NodePath("ProgressBar")
+Lbl_EnemiesLeft = NodePath("ProgressBar/Lbl_EnemiesLeft")
 metadata/_edit_use_anchors_ = true
 
-[node name="NextWaveButton" type="TextureButton" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/EnemyProgressBar"]
+[node name="NextWaveButton" type="TextureButton" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/ProgressBarBG/EnemyProgressBar"]
 material = SubResource("ShaderMaterial_8hspa")
 layout_mode = 0
 offset_right = 252.0
@@ -829,13 +859,13 @@ texture_pressed = ExtResource("18_q68mx")
 texture_hover = ExtResource("17_pwbo8")
 texture_disabled = ExtResource("19_3a6ea")
 
-[node name="ProgressBar" type="TextureRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/EnemyProgressBar"]
+[node name="ProgressBar" type="TextureRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/ProgressBarBG/EnemyProgressBar"]
 layout_mode = 0
 offset_right = 252.0
 offset_bottom = 30.0
 texture = ExtResource("20_ridgm")
 
-[node name="Lbl_EnemiesLeft" type="Label" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/EnemyProgressBar/ProgressBar"]
+[node name="Lbl_EnemiesLeft" type="Label" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/ProgressBarBG/EnemyProgressBar/ProgressBar"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -851,6 +881,16 @@ theme_override_font_sizes/font_size = 15
 text = "0"
 horizontal_alignment = 2
 vertical_alignment = 1
+
+[node name="NextWaveButton_big" type="Button" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/ProgressBarBG"]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = -3.0
+offset_top = -7.0
+offset_right = 257.0
+offset_bottom = 38.0
+theme = SubResource("Theme_k23rv")
+theme_type_variation = &"FlatButton"
 
 [node name="EnergyBar" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide" instance=ExtResource("25_4upc1")]
 unique_name_in_owner = true
@@ -1897,7 +1937,8 @@ material_override = ExtResource("4_jhciq")
 mesh = ExtResource("5_4jixe")
 
 [connection signal="body_entered" from="ArenaFloor/DeathPlane" to="ArenaFloor/DeathPlane" method="_on_body_entered"]
-[connection signal="pressed" from="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/EnemyProgressBar/NextWaveButton" to="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/EnemyProgressBar" method="_on_next_wave_button_pressed"]
+[connection signal="pressed" from="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/ProgressBarBG/EnemyProgressBar/NextWaveButton" to="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/ProgressBarBG/EnemyProgressBar" method="_on_next_wave_button_pressed"]
+[connection signal="pressed" from="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/ProgressBarBG/NextWaveButton_big" to="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/ProgressBarBG/EnemyProgressBar" method="_on_next_wave_button_pressed"]
 [connection signal="pressed" from="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/LeftSide/InfoBox/SellButton" to="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/LeftSide/InfoBox" method="_on_sell_button_pressed"]
 [connection signal="pressed" from="HUDCanvas/HUD Viewport/SubViewport/HUD/MainMenu/Btn_Play" to="." method="_on_btn_play_pressed"]
 [connection signal="pressed" from="HUDCanvas/HUD Viewport/SubViewport/HUD/MainMenu/Btn_Credits" to="." method="_on_btn_credits_pressed"]

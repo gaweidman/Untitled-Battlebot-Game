@@ -65,7 +65,8 @@ func call_ability() -> bool:
 		if assignedPieceOrPart is PartActive:
 			return assignedPieceOrPart._activate();
 		if assignedPieceOrPart is Piece:
-			return assignedPieceOrPart.use_active(self);
+			if is_on_assigned_piece():
+				return assignedPieceOrPart.use_active(self);
 	return false;
 
 func is_disabled() -> bool:
@@ -95,7 +96,10 @@ func select(foo:= not get_selected()):
 func deselect():
 	select(false);
 
-func get_energy_cost_base()->float:
+func get_energy_cost_base(override = null)->float:
+	if override is float: 
+		if override < 999.0:
+			return override;
 	return energyCost;
 func get_energy_cost():
 	if assignedPieceOrPart is Piece:
@@ -109,8 +113,23 @@ func get_energy_cost_string():
 		s += "/s"
 	return s
 
+var freezeFrames := 0;
+func add_freeze_frames(amt := 1):
+	freezeFrames += amt;
+var freezeTime := 0.0;
+func add_freeze_time(amt := 1.0):
+	freezeTime += amt;
 func tick_cooldown(delta):
-	cooldownTimer = max(0, cooldownTimer - delta);
+	if freezeFrames > 0:
+		freezeFrames -= 1;
+	else:
+		if freezeTime > 0:
+			freezeTime -= delta;
+		else:
+			if freezeTime < 0: ## Add negative freezeTime to delta as compensation for rollover.
+				delta -= freezeTime;
+				freezeTime = 0;
+			cooldownTimer = max(0, cooldownTimer - delta);
 func get_cooldown_start_time(multiplier):
 	if cooldownStatName != null:
 		if assignedPieceOrPart is Piece:
@@ -123,11 +142,13 @@ func set_cooldown(multiplier):
 	if cooldownTimeBase > 0:
 		set("cooldownTimer", get_cooldown_start_time(multiplier))
 func get_cooldown()->float:
+	if is_disabled():
+		return get_cooldown_start_time(1.0);
 	if cooldownTimer < 0:
 		cooldownTimer = 0;
 	return cooldownTimer;
 func on_cooldown()->bool:
-	return cooldownTimer > 0;
+	return cooldownTimer > 0 or freezeTime > 0 or freezeFrames > 0;
 
 func get_ability_slot_data():
 	if not is_equipped():
@@ -146,8 +167,14 @@ func get_ability_slot_data():
 	data["cooldownStartTime"] = get_cooldown_start_time(1.0);
 	data["onCooldown"] = on_cooldown();
 	return data;
-	
 
-func is_equipped():
+
+func is_equipped() -> bool:
 	return true;
 	pass;
+
+func is_on_piece() -> bool:
+	return assignedPieceOrPart is Piece;
+
+func is_on_assigned_piece() -> bool:
+	return is_on_piece() and assignedPieceOrPart.assignedToSocket;

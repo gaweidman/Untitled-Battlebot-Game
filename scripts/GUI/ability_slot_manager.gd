@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/abilitySlot.png")
 extends Control
 
 class_name AbilitySlotManager

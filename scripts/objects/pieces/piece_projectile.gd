@@ -7,8 +7,8 @@ class_name Piece_Projectile
 var magazine : Array[Bullet] = [];
 var magazineCount := 0;
 ##The base max amount of bullets in the magazine.
-@export var magazineMaxBase := 3;
-@export var magazineRefreshRate := 6.0;
+@export var magazineMaxBase := 5;
+@export var magazineRefreshRate := 1.5;
 ##The base speed to launch fired projectiles.
 @export var launchSpeed := 30.0;
 @export var fireRate := 0.5;
@@ -43,23 +43,27 @@ var leakTimer := 3.0;
 ############ INIT STUFF
 
 func phys_process_timers(delta):
+	## If the magazine is full, stop adding new ones.
+	if get_available_bullets() == get_magazine_max():
+		var factory = get_named_passive("Bullet Factory");
+		factory.add_freeze_frames(1);
+	
 	super(delta);
+	
 	leakTimer -= delta;
 
 func assign_references():
 	super();
 	if !is_instance_valid(rangeRay):
-		var nodeCheck = get_node_or_null("Meshes/RangeRay")
-		if nodeCheck != null:
-			rangeRay = nodeCheck;
-		else:
-			var newRay = RayCast3D.new()
-			newRay.add_exception(hurtboxCollisionHolder);
-			newRay.exclude_parent = true;
-			newRay.collision_mask = 64 + 1; ##Hurtboxes and robots.
-			#newRay.add_exception(hurtboxCollisionHolder);
-			if is_instance_valid(rangeRay):
-				meshesHolder.add_child(newRay);
+		var newRay = RayCast3D.new();
+		newRay.add_exception(hurtboxCollisionHolder);
+		newRay.exclude_parent = true;
+		newRay.collision_mask = 64 + 1; ##Hurtboxes and robots.
+		#newRay.add_exception(hurtboxCollisionHolder);
+		rangeRay = newRay;
+		add_child(newRay);
+		rangeRay.show();
+		calc_range();
 
 func stat_registry():
 	super();
@@ -89,10 +93,15 @@ func get_ability_slot_data(ability : AbilityManager):
 	var data = super(ability);
 	if ability.abilityName == "Fire":
 		data["showMagazine"] = true;
-		data["magazineSize"] = get_stat("MagazineSize");
-		data["magazineAmt"] = get_available_bullets();
-		data["regenBulletCooldownStart"] = get_stat("PassiveCooldown");
-		data["regenBulletCooldown"] = get_cooldown_passive(get_named_passive("Bullet Factory"));
+		var magSize = get_stat("MagazineSize");
+		data["magazineSize"] = magSize;
+		var magAmt = get_available_bullets();
+		data["magazineAmt"] = magAmt;
+		data["regenBulletCooldownStart"] = get_stat("MagazineRefreshRate");
+		var factory = get_named_passive("Bullet Factory");
+		data["regenBulletCooldown"] = get_cooldown_passive(factory);
+		#data["regenBulletPercent"] = cooldown_percent_action(ability, true);
+		data["miscText"] = str("Magazine: ",int(magAmt), "/", int(magSize))
 	return data;
 
 func can_use_active(slot : AbilityManager):
@@ -105,18 +114,30 @@ func get_firing_offset():
 		return firingOffsetNode.global_position;
 	return firingOffset + global_position;
 
+func get_firing_direction() -> Vector3:
+	return Vector3.ZERO;
+	pass;
+
+func process_draw(delta):
+	super(delta);
+	meshesHolder.rotation.x = -0.35 * get_cooldown_active(get_named_action("Fire"));
+
+func phys_process_abilities(delta):
+	calc_range();
+	super(delta);
+
 ################### FIRING
 
-func refill_magazine(max := get_magazine_max()):
+func refill_magazine(_max := get_magazine_max()):
 	var newMagazine : Array[Bullet] = []
 	var count = 0;
 	for bullet in magazine:
-		if count < max:
+		if count < _max:
 			if is_instance_valid(bullet):
 				count += 1;
 				newMagazine.append(bullet);
 	
-	while newMagazine.size() < max:
+	while newMagazine.size() < _max:
 		var bullet : Bullet;
 		bullet = bulletRef.instantiate();
 		if bullet is Bullet:
@@ -129,9 +150,10 @@ func refill_magazine(max := get_magazine_max()):
 	pass;
 
 var availableBullets = 0;
-func add_one_bullet(max := get_magazine_max()):
+func add_one_bullet(_max := get_magazine_max()):
 	#print("Adding a bullet")
-	availableBullets = min(availableBullets + 1, max);
+	availableBullets = min(availableBullets + 1, _max);
+	var factory = get_named_passive("Bullet Factory");
 	#print(availableBullets)
 
 func get_available_bullets():
@@ -162,6 +184,9 @@ func fireBullet():
 		bullet.fire_from_robot(bot, self, pos, get_damage_data(), firingAngle, launchSpeed, bulletLifetime, get_bullet_gravity());
 		SND.play_sound_at(firingSoundString, pos, GameState.get_game_board(), firingSoundVolumeAdjust, randf_range(firingSoundPitchAdjust * 1.15, firingSoundPitchAdjust * 0.85))
 		availableBullets -= 1;
+		
+		var factory = get_named_passive("Bullet Factory");
+		factory.add_freeze_time(get_stat("ProjectileFireRate"));
 	else:
 		for bullt in magazine:
 			print(bullt)
@@ -174,8 +199,8 @@ func fireBullet():
 func recountMagazine() -> int:
 	refill_magazine();
 	
-	var max = get_magazine_max();
-	var count = max;
+	var _max = get_magazine_max();
+	var count = _max;
 	for bullet in magazine:
 		if is_instance_valid(bullet):
 			if ! bullet.available(true):
@@ -220,10 +245,18 @@ func _exit_tree():
 
 func calc_range():
 	await ready;
-	var delta = get_physics_process_delta_time();
-	var length = launchSpeed * delta * bulletLifetime * 60;
-	rangeRay.target_position.x = length;
-	rangeRay.position = firingOffset;
+	if !is_instance_valid(rangeRay):
+		assign_references();
+	#if can_use_named_ability("Fire"):
+		#rangeRay.enabled = true;
+		#rangeRay.show();
+		#var delta = get_physics_process_delta_time();
+		#var length = launchSpeed * delta * bulletLifetime * 60;
+		#rangeRay.target_position.x = length;
+		#rangeRay.global_position = get_firing_offset();
+	#else:
+		#rangeRay.hide();
+		#rangeRay.enabled = false;
 
 func get_closest_thing_in_line_of_fire():
 	if rangeRay.is_colliding():

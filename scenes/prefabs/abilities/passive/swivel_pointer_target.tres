@@ -1,11 +1,11 @@
-[gd_resource type="Resource" script_class="AbilityManager" load_steps=7 format=3 uid="uid://bws20ksxfdagg"]
+[gd_resource type="Resource" script_class="AbilityManager" load_steps=9 format=3 uid="uid://bws20ksxfdagg"]
 
 [ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_uygn2"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_b30ru"]
 
 [sub_resource type="Resource" id="Resource_3gd3v"]
 script = ExtResource("1_uygn2")
-string = "Rotates the top half of this "
+string = "Rotates the top segment of this "
 color = 1
 newline = false
 endingSpace = false
@@ -23,7 +23,25 @@ metadata/_custom_type_script = "uid://cybmjhuctmfaw"
 
 [sub_resource type="Resource" id="Resource_pqjj1"]
 script = ExtResource("1_uygn2")
-string = "towards your crosshair."
+string = "towards your "
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_uygn2"]
+script = ExtResource("1_uygn2")
+string = "crosshair"
+color = 0
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_b30ru"]
+script = ExtResource("1_uygn2")
+string = "."
 color = 1
 newline = false
 endingSpace = false
@@ -33,7 +51,7 @@ metadata/_custom_type_script = "uid://cybmjhuctmfaw"
 [sub_resource type="Resource" id="Resource_0rndb"]
 script = ExtResource("1_uygn2")
 string = "Only works when upright."
-color = 1
+color = 8
 newline = true
 endingSpace = false
 startingSpace = true
@@ -42,14 +60,14 @@ metadata/_custom_type_script = "uid://cybmjhuctmfaw"
 [resource]
 script = ExtResource("2_b30ru")
 abilityName = "Target"
-abilityDescriptionConstructor = Array[ExtResource("1_uygn2")]([SubResource("Resource_3gd3v"), SubResource("Resource_noc8o"), SubResource("Resource_pqjj1"), SubResource("Resource_0rndb")])
+abilityDescriptionConstructor = Array[ExtResource("1_uygn2")]([SubResource("Resource_3gd3v"), SubResource("Resource_noc8o"), SubResource("Resource_pqjj1"), SubResource("Resource_uygn2"), SubResource("Resource_b30ru"), SubResource("Resource_0rndb")])
 abilityDescription = "No Description Found."
 energyCost = 0.1
 cooldownTimeBase = 0.0
 cooldownStatName = ""
 runType = 0
-functionNameWhenUsed = &""
-statsUsed = Array[String]([])
+functionNameWhenUsed = &"target"
+statsUsed = Array[String](["RotationSpeed"])
 initialized = false
 disabled = false
 functionWhenUsed = Callable()

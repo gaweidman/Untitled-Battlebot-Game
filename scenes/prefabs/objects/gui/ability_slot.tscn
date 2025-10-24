@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://y4jreplx5if1"]
+[gd_scene load_steps=21 format=4 uid="uid://y4jreplx5if1"]
 
 [ext_resource type="TileSet" uid="uid://dicxuohkdpmlx" path="res://graphics/images/HUD/engine/engineTileMap.tres" id="1_3xq6w"]
 [ext_resource type="Script" uid="uid://midvysmd0e3e" path="res://scripts/GUI/ability_slot.gd" id="1_w0yrw"]
@@ -14,15 +14,18 @@
 [ext_resource type="Theme" uid="uid://bq0jig2pdkgtn" path="res://graphics/images/HUD/UI_theme.tres" id="11_pb2ip"]
 [ext_resource type="Texture2D" uid="uid://blati351et8sw" path="res://graphics/images/HUD/activeTab/energyTank_full.png" id="12_rf4fe"]
 [ext_resource type="Texture2D" uid="uid://cloe8kuvyhab5" path="res://graphics/images/HUD/activeTab/energyTank_empty.png" id="13_x17s8"]
+[ext_resource type="PackedScene" uid="uid://caehguv0cdrcg" path="res://scenes/prefabs/objects/gui/magazine_slicer.tscn" id="16_cclr1"]
 [ext_resource type="Texture2D" uid="uid://dpulrjp6s5ovo" path="res://graphics/images/HUD/blinkies/energy_blinky_on.png" id="16_kcg4f"]
 [ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="16_x17s8"]
+[ext_resource type="Texture2D" uid="uid://cr16um277it7e" path="res://graphics/images/HUD/blinkies/timer_blinky_off.png" id="18_ylxhx"]
+[ext_resource type="Texture2D" uid="uid://bw5pl1p6bmq61" path="res://graphics/images/HUD/blinkies/timer_blinky_on.png" id="19_he02q"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jtnig"]
 resource_local_to_scene = true
 shader = ExtResource("9_0tj24")
 shader_parameter/mask = ExtResource("11_g6gak")
 
-[node name="AbilitySlot0" type="Control" node_paths=PackedStringArray("btn_assign", "lbl_name", "lbl_energy", "bar_energy", "blinky_energy", "blinky_usable", "misc_energy", "energyCase", "misc_ammo", "misc_text")]
+[node name="AbilitySlot0" type="Control" node_paths=PackedStringArray("btn_assign", "lbl_name", "lbl_energy", "bar_energy", "blinky_energy", "blinky_usable", "misc_energy", "energyCase", "misc_ammo", "misc_magazine", "misc_text", "lbl_cooldownCurrent", "blinky_cooldown")]
 texture_filter = 1
 clip_contents = true
 layout_mode = 3
@@ -39,7 +42,10 @@ blinky_usable = NodePath("AbilityBlinky/AbilityBlinkyOn")
 misc_energy = NodePath("MiscBG/Energy")
 energyCase = NodePath("EnergyBar_Case")
 misc_ammo = NodePath("MiscBG/Ammo")
+misc_magazine = NodePath("MiscBG/Ammo/Magazine")
 misc_text = NodePath("MiscBG/MiscText")
+lbl_cooldownCurrent = NodePath("TimeBG/CooldownCurrentTime")
+blinky_cooldown = NodePath("CooldownBlinkyOff/CooldownBlinkyOn")
 
 [node name="BG" type="Control" parent="."]
 layout_mode = 1
@@ -61,7 +67,7 @@ tile_set = ExtResource("1_3xq6w")
 
 [node name="Main" type="TileMapLayer" parent="BG"]
 position = Vector2(0, -4)
-tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAABAAAAAAACAAAAAAABAAAAAAADAAAAAAABAAAAAAAEAAAAAAABAAAAAAAFAAAAAAABAAAAAAAGAAAAAAABAAAAAAAHAAAAAAABAAAAAAAIAAAAAAABAAAAAAACAAUAAAAAAAMAAAADAAUAAAACAAMAAAAEAAUAAAACAAMAAAAFAAUAAAACAAMAAAAGAAUAAAACAAMAAAAHAAUAAAACAAMAAAAIAAUAAAACAAMAAAAJAAUAAAACAAMAAAAAAAMAAAAAAAMAAAABAAMAAAACAAMAAAACAAMAAAADAAEAAAACAAQAAAAAAAEAAAAAAAIAAAAAAAEAAAAAAAEAAAAAAAEAAAAJAAQAAAAFAAMAAAAJAAMAAAAFAAMAAAAJAAIAAAAFAAMAAAAJAAEAAAAFAAMAAAAJAAAAAAABAAAAAAABAAEAAAAFAAMAAAABAAIAAAAFAAMAAAACAAIAAAAFAAMAAAADAAIAAAAFAAMAAAAEAAIAAAAFAAMAAAAFAAIAAAAFAAMAAAAGAAIAAAAFAAMAAAAHAAIAAAAFAAMAAAAIAAIAAAAFAAMAAAAIAAEAAAAFAAMAAAAHAAEAAAAFAAMAAAAGAAEAAAAFAAMAAAAFAAEAAAAFAAMAAAAEAAEAAAAFAAMAAAADAAEAAAAFAAMAAAACAAEAAAAFAAMAAAADAAMAAAAFAAMAAAADAAQAAAAFAAMAAAAEAAQAAAAFAAMAAAAFAAQAAAAFAAMAAAAGAAQAAAAFAAMAAAAHAAQAAAAFAAMAAAAIAAQAAAAFAAMAAAAIAAMAAAAFAAMAAAAHAAMAAAAFAAMAAAAGAAMAAAAFAAMAAAAFAAMAAAAFAAMAAAAEAAMAAAAFAAMAAAAKAAAAAAADAAAAAAAKAAEAAAADAAIAAAAKAAIAAAADAAIAAAAKAAMAAAADAAIAAAAKAAQAAAADAAIAAAAKAAUAAAADAAMAAAA=")
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAABAAAAAAACAAAAAAABAAAAAAADAAAAAAABAAAAAAAEAAAAAAABAAAAAAAFAAAAAAABAAAAAAAGAAAAAAABAAAAAAAHAAAAAAABAAAAAAAIAAAAAAABAAAAAAACAAUAAAAAAAMAAAADAAUAAAACAAMAAAAEAAUAAAACAAMAAAAFAAUAAAACAAMAAAAGAAUAAAACAAMAAAAHAAUAAAACAAMAAAAIAAUAAAACAAMAAAAJAAUAAAACAAMAAAABAAMAAAACAAMAAAACAAMAAAADAAEAAAACAAQAAAAAAAEAAAAAAAIAAAAAAAEAAAAAAAEAAAAAAAEAAAAJAAQAAAAFAAMAAAAJAAMAAAAFAAMAAAAJAAIAAAAFAAMAAAAJAAEAAAAFAAMAAAAJAAAAAAABAAAAAAABAAEAAAAFAAMAAAABAAIAAAAFAAMAAAACAAIAAAAFAAMAAAADAAIAAAAFAAMAAAAEAAIAAAAFAAMAAAAFAAIAAAAFAAMAAAAGAAIAAAAFAAMAAAAHAAIAAAAFAAMAAAAIAAIAAAAFAAMAAAAIAAEAAAAFAAMAAAAHAAEAAAAFAAMAAAAGAAEAAAAFAAMAAAAFAAEAAAAFAAMAAAAEAAEAAAAFAAMAAAADAAEAAAAFAAMAAAACAAEAAAAFAAMAAAADAAMAAAAFAAMAAAADAAQAAAAFAAMAAAAEAAQAAAAFAAMAAAAFAAQAAAAFAAMAAAAGAAQAAAAFAAMAAAAHAAQAAAAFAAMAAAAIAAQAAAAFAAMAAAAIAAMAAAAFAAMAAAAHAAMAAAAFAAMAAAAGAAMAAAAFAAMAAAAFAAMAAAAFAAMAAAAEAAMAAAAFAAMAAAAKAAAAAAADAAAAAAAKAAEAAAADAAIAAAAKAAIAAAADAAIAAAAKAAMAAAADAAIAAAAKAAQAAAADAAIAAAAKAAUAAAADAAMAAAAAAAMAAAAAAAMAAAA=")
 tile_set = ExtResource("1_3xq6w")
 
 [node name="InputBG" type="NinePatchRect" parent="BG"]
@@ -81,9 +87,9 @@ axis_stretch_vertical = 1
 [node name="AbilityBlinky" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 27.0
-offset_top = 47.0
+offset_top = 49.0
 offset_right = 41.0
-offset_bottom = 65.0
+offset_bottom = 67.0
 texture = ExtResource("4_jdlo6")
 
 [node name="AbilityBlinkyOn" type="TextureRect" parent="AbilityBlinky"]
@@ -115,18 +121,6 @@ offset_bottom = 21.0
 theme = ExtResource("7_4isuo")
 theme_type_variation = &"HeaderLarge"
 text = "Ability Name Goes Here..."
-
-[node name="Assign" type="Button" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 10.0
-offset_top = 5.0
-offset_right = 254.0
-offset_bottom = 129.0
-theme = ExtResource("11_pb2ip")
-theme_type_variation = &"AssignmentButton"
-text = "ASSIGN ABILITY
-TO SLOT"
 
 [node name="EnergyBar_Case" type="TextureRect" parent="."]
 z_index = 1
@@ -174,10 +168,10 @@ texture = ExtResource("16_kcg4f")
 
 [node name="MiscBG" type="NinePatchRect" parent="."]
 layout_mode = 0
-offset_left = 74.0
+offset_left = 73.0
 offset_top = 70.0
-offset_right = 189.0
-offset_bottom = 114.0
+offset_right = 190.0
+offset_bottom = 115.0
 texture = ExtResource("6_ifvkn")
 patch_margin_left = 1
 patch_margin_top = 3
@@ -191,18 +185,18 @@ anchors_preset = 0
 offset_right = 115.0
 offset_bottom = 44.0
 
-[node name="Magazine" type="HBoxContainer" parent="MiscBG/Ammo"]
+[node name="Magazine" parent="MiscBG/Ammo" instance=ExtResource("16_cclr1")]
 layout_mode = 0
-offset_left = 2.0
-offset_top = 4.0
-offset_right = 82.0
+offset_left = 3.0
+offset_top = 5.0
+offset_right = 89.0
 offset_bottom = 21.0
 
 [node name="Energy" type="Control" parent="MiscBG"]
 anchors_preset = 0
-offset_left = 90.0
+offset_left = 92.0
 offset_top = 3.0
-offset_right = 114.0
+offset_right = 116.0
 offset_bottom = 43.0
 
 [node name="EnergyIconStriped" type="TextureRect" parent="MiscBG/Energy"]
@@ -236,10 +230,61 @@ theme = ExtResource("7_4isuo")
 theme_override_constants/outline_size = 4
 theme_override_constants/shadow_outline_size = 0
 theme_override_font_sizes/font_size = 5
-text = "THIS AMOUNT OF TEXT. Why does it newline? IDK. AAA asadskjabdfhjsbfk
- asjnbdhjasbfkakkk"
 vertical_alignment = 2
 autowrap_mode = 3
+
+[node name="Assign" type="Button" parent="."]
+visible = false
+z_index = 2
+layout_mode = 0
+offset_left = 10.0
+offset_top = 5.0
+offset_right = 254.0
+offset_bottom = 129.0
+theme = ExtResource("11_pb2ip")
+theme_type_variation = &"AssignmentButton"
+text = "ASSIGN ABILITY
+TO SLOT"
+
+[node name="CooldownBlinkyOff" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 51.0
+offset_right = 135.0
+offset_bottom = 62.0
+texture = ExtResource("18_ylxhx")
+
+[node name="CooldownBlinkyOn" type="TextureRect" parent="CooldownBlinkyOff"]
+layout_mode = 0
+offset_right = 10.0
+offset_bottom = 11.0
+texture = ExtResource("19_he02q")
+
+[node name="TimeBG" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 136.0
+offset_top = 46.0
+offset_right = 190.0
+offset_bottom = 69.0
+texture = ExtResource("6_ifvkn")
+patch_margin_left = 1
+patch_margin_top = 3
+patch_margin_right = 1
+patch_margin_bottom = 1
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="CooldownCurrentTime" type="Label" parent="TimeBG"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 4.0
+offset_right = 49.0
+offset_bottom = 20.0
+theme = ExtResource("11_pb2ip")
+theme_type_variation = &"Clock"
+theme_override_font_sizes/font_size = 15
+text = "00.00"
+horizontal_alignment = 2
 
 [connection signal="pressed" from="Assign" to="." method="_on_assign_pressed"]
 

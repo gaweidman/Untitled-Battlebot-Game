@@ -1,6 +1,7 @@
+@icon ("res://graphics/images/class_icons/healthbar.png")
 extends SubViewportContainer
 
-class_name healthBar
+class_name HealthBar
 
 @export var resourceName := "HP";
 @export var emptyBar : TextureRect;
@@ -35,7 +36,7 @@ func _ready():
 	%FullHealth.texture = fullTexture;
 	%EmptyHealth.texture = emptytexture;
 	material.set("shader_parameter/mask", maskTexture);
-	%BarHolder.size = size;
+	#%BarHolder.set_deferred("size", size);
 	#material.shader_parameter.mask = maskTexture;
 	#set("material/shader_parameter/mask", maskTexture);
 	if not hasLabel:

@@ -58,7 +58,7 @@ func set_text_color(node, _color):
 		#print("Thing in thing")
 		var color = get_color(_color);
 		if node.get("theme_override_colors/font_color") != color:
-			print("color for ",node, " being set from: ", node.get("theme_override_colors/font_color"), "to: ",color);
+			#print("color for ",node, " being set from: ", node.get("theme_override_colors/font_color"), "to: ",color);
 			node.set_deferred("theme_override_colors/font_color", color);
 
 ## Returns a predefined color from [member textColors] if given a String key, or returns a given Color input as-is. Returns Color.WHITE if the input is not a String or Color.

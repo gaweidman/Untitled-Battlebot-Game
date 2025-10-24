@@ -46,6 +46,7 @@ radius = 1.375
 script = ExtResource("1_5k0fg")
 blade = NodePath("Blade2")
 pieceName = &"Sawblade"
+weightBase = 8.0
 activeAbilities = Array[ExtResource("2_k1jne")]([ExtResource("3_i7bft")])
 passiveAbilities = Array[ExtResource("2_k1jne")]([ExtResource("4_k1jne")])
 force_visibility = true

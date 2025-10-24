@@ -12,7 +12,7 @@ var preview : Piece;
 var previewPlaceable := false;
 @onready var selectorRay = $SelectorRay;
 @export var collisionSphere : CollisionShape3D;
-@export var collisionScale := 0.25;
+@export var collisionScale := 0.45;
 @export var selectorRayExceptions : Array[CollisionObject3D]= [];
 
 @export var dontUsePieceForRobotHost := false;
@@ -335,3 +335,20 @@ func hover_from_camera(cam) -> Piece:
 	if is_instance_valid(preview):
 		return preview;
 	return null;
+
+## How much weight this Socket is supporting, NOT including its host.
+var weightLoad = -1.0;
+func get_weight_load(forceRegenerate := false):
+	if weightLoad < 0 or forceRegenerate:
+		return get_weight_starting_from_occupant();
+	return weightLoad;
+
+## Recalculates weightLoad.
+func get_weight_starting_from_occupant():
+	var occ = get_occupant();
+	if occ != null:
+		weightLoad = occ.get_regenerated_weight_load();
+		#print(weightLoad);
+		return weightLoad;
+	weightLoad = 0.0;
+	return weightLoad;

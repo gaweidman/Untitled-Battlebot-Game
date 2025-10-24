@@ -34,6 +34,7 @@ transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
 transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
 occupant = NodePath("Piece_BodyCube")
 hostRobot = NodePath("../../..")
+collisionScale = 0.55
 selectorRayExceptions = [NodePath("../..")]
 dontUsePieceForRobotHost = true
 

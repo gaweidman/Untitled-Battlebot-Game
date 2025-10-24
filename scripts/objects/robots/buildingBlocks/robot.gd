@@ -23,7 +23,7 @@ func _ready():
 	grab_references();
 	super();
 	grab_references();
-	reassign_body_collision();
+	regen_piece_tree_stats();
 	detach_pipette();
 	freeze(true, true);
 	start_all_cooldowns(true);
@@ -48,6 +48,7 @@ func process_pre(delta):
 	if is_ready and queuedLife:
 		live();
 	grab_references();
+	#prints(get_weight(), get_weight_speed_modifier());
 	pass;
 
 func phys_process_pre(delta):
@@ -526,6 +527,14 @@ func take_knockback(inDir:Vector3):
 	body.call_deferred("apply_impulse", inDir);
 	pass
 
+var weightLoad = -1.0;
+func get_weight_regenerate():
+	weightLoad = bodySocket.get_weight_load(true);
+func get_weight(forceRegen := false):
+	if weightLoad < 0 or forceRegen:
+		return get_weight_regenerate();
+	return weightLoad;
+
 ##Physics process for combat. 
 func phys_process_combat(delta):
 	if not is_frozen():
@@ -589,6 +598,13 @@ func get_global_body_rotation():
 func on_hitbox_collision(body : PhysicsBody3D, pieceHit : Piece):
 	pass;
 
+## Regenerates all the things that need to be regenerated when changing piece data around.
+func regen_piece_tree_stats():
+	reassign_body_collision();
+	get_all_pieces_regenerate();
+	get_weight(true);
+	has_body_piece(true);
+
 ##Gives the Body new collision based on its Parts.
 func reassign_body_collision():
 	allHurtboxes = [];
@@ -628,6 +644,7 @@ var bodyRotationSpeed := bodyRotationSpeedBase;
 var lastLinearVelocity : Vector3 = Vector3(0,0,0);
 @export var treadsRotationSpeed : float = 6.0;
 @export var treadsRotationSpeedClamp : float = 1.0;
+@export var weightSpeedPenaltyMultiplier := 0.01;
 
 ##Physics process step to adjust collision box positions according to the parts they're attached to.
 func phys_process_collision(delta):
@@ -703,7 +720,7 @@ func move_and_rotate_towards_movement_vector(delta : float):
 	
 	##Get 
 	if is_inputting_movement():
-		var accel = get_stat("MovementSpeedAcceleration")
+		var accel = get_movement_speed_acceleration();
 		#print("HI")
 		var forceVector = Vector3.ZERO;
 		var bodBasis := body.global_basis;
@@ -764,17 +781,17 @@ func update_treads_rotation(delta : float):
 	if angleDif < PI/-2:
 		angleDif += PI;
 	
-	var treadsMVAlerped = lerp_angle(treadsMVA, treadsMVA + angleDif, delta * (treadsRotationSpeed + (get_movement_speed_length() / 5)));
+	var treadsMVAlerped = lerp_angle(treadsMVA, treadsMVA + angleDif, delta * (treadsRotationSpeed + (get_current_movement_speed_length() / 5)));
 	treadsMVAlerped = clamp(treadsMVAlerped, treadsMVA - treadsRotationSpeedClamp, treadsMVA + treadsRotationSpeedClamp)
 	
 	var angleDifFromLerp = treadsMVA - treadsMVAlerped;
 	
-	if !is_zero_approx(get_movement_speed_length()):
+	if !is_zero_approx(get_current_movement_speed_length()):
 		treads.rotation.y = treadsMVAlerped;
 	
 	var angleDif3 = 0;
 	
-	treads.update_visuals_to_match_rotation( - angleDifFromLerp, get_movement_speed_length());
+	treads.update_visuals_to_match_rotation( - angleDifFromLerp, get_current_movement_speed_length());
 
 func update_treads_position():
 	treads.global_position = get_global_body_position();
@@ -787,14 +804,29 @@ func get_movement_vector(rotatedByCamera : bool = false) -> Vector2:
 	return movementVector.normalized();
 
 var inputtingMovementThisFrame := false; ##This should be set by AI bots before phys_process_motion is called to notify whether to update their position or not this frame.
-func is_inputting_movement():
+func is_inputting_movement() -> bool:
 	return inputtingMovementThisFrame;
-func get_movement_speed_length():
+func get_current_movement_speed_length() -> float:
 	return body.linear_velocity.length();
 
-func get_rotation_speed():
-	var spd = get_movement_speed_length();
-	return min(bodyRotationSpeedBase * spd, bodyRotationSpeedMaxBase);
+func get_movement_speed_acceleration() -> float:
+	var base = get_stat("MovementSpeedAcceleration");
+	var mod = get_weight_speed_modifier(1.5);
+	#print(max(0, base * mod))
+	#print("HI")
+	return max(0, base * mod);
+
+func get_rotation_speed() -> float:
+	var spd = get_current_movement_speed_length();
+	var mod = get_weight_speed_modifier(1.5);
+	return min(bodyRotationSpeedBase * spd * mod, bodyRotationSpeedMaxBase);
+
+func get_weight_speed_modifier(baseValue := 1.5) -> float:
+	var mod = 0.0;
+	mod += baseValue;
+	mod -= get_weight() * weightSpeedPenaltyMultiplier;
+	#print(mod);
+	return max(0, mod);
 
 func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = body):
 	SND.play_collision_sound(thisComponent, collider, Vector3.ZERO, 0.45)
@@ -832,7 +864,7 @@ func on_add_piece(piece:Piece):
 		if ability is AbilityManager:
 			print("Adding ability ", ability.abilityName)
 			assign_ability_to_next_active_slot(ability);
-	reassign_body_collision();
+	regen_piece_tree_stats()
 	get_all_pieces_regenerate();
 	update_hud();
 	pass;
@@ -842,7 +874,7 @@ func on_remove_piece(piece:Piece):
 	piece.owner = null;
 	piece.hostRobot = null;
 	remove_abilities_of_piece(piece);
-	reassign_body_collision();
+	regen_piece_tree_stats()
 	#deselect_everything();
 	pass;
 
@@ -872,6 +904,19 @@ func get_all_pieces_regenerate() -> Array[Piece]:
 			piecesGathered.append(child);
 	allPieces = piecesGathered;
 	return piecesGathered;
+
+## UNRELATED TO [member bodyPiece]. This is whether the bot has a piece that isBody.
+var hasBodyPiece := false;
+func has_body_piece(forceRecalculate := false) -> bool:
+	if forceRecalculate:
+		for piece in get_all_pieces():
+			if piece.isBody:
+				hasBodyPiece = true;
+				return true;
+		hasBodyPiece = false;
+		return false;
+	else:
+		return hasBodyPiece;
 
 ## A list of all Parts attached to this Robot within the engines all of its Parts.
 var allParts : Array[Part]=[];
@@ -970,6 +1015,12 @@ func clear_ability_pipette():
 	abilityPipette = null;
 
 func set_ability_pipette(new : AbilityManager):
+	var assignedThing = new.assignedPieceOrPart;
+	if assignedThing is Piece:
+		if ! assignedThing.assignedToSocket:
+			clear_ability_pipette();
+			return;
+		pass;
 	var cur = get_ability_pipette();
 	if cur != null:
 		clear_ability_pipette();

@@ -45,7 +45,8 @@ func pause(foo: bool, force := false):
 ##Checks for game state pause, attempts to re-pause or re-unpause, then returns the result.
 func is_paused():
 	var isPaused = GameState.is_paused();
-	pause(isPaused, true);
+	if paused != isPaused:
+		pause(isPaused, true);
 	return paused;
 
 var linearVelocityBeforeFreeze = null;

@@ -77,7 +77,7 @@ func process_draw(delta):
 	blade.scale = Vector3.ONE * bladeScaleOffset * bladeScaleBase;
 
 func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, thisPieceCollider : PieceCollisionBox):
-	if can_use_named_action("Spin"):
+	if can_use_named_ability("Spin"):
 		if super(otherPiece, otherPieceCollider, thisPieceCollider):
 			#print("HUzzah!")
 			set_cooldown_passive(get_named_action("Spin"));
@@ -158,7 +158,7 @@ func get_ability_slot_data(ability : AbilityManager):
 		#print(on_cooldown_named_action("Spin"));
 		if on_cooldown_named_action("Spin"):
 			data["miscText"] = "SPIN is on cooldown!"
-			print("SPIN is on cooldown!")
+			#print("SPIN is on cooldown!")
 			data["usable"] = false;
 	#data["miscText"] = "SPIN is on cooldown!"
 	return data;

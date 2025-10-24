@@ -35,6 +35,7 @@ radius = 0.375
 script = ExtResource("1_jdn6p")
 pieceName = &"Horn"
 pieceDescription = "Seems like someone tore this off some hunting trophy and stuck a plug inside the base.\\nIt sure is pointy!"
+weightBase = 1.75
 force_visibility = true
 damageBase = 1.75
 knockbackBase = 20.0

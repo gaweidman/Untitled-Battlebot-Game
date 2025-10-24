@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://cft427yneqjgp"]
+
+[ext_resource type="Script" uid="uid://bws8jb1k3n7k7" path="res://scripts/GUI/bullet_slice.gd" id="1_cg1yl"]
+[ext_resource type="Texture2D" uid="uid://c3rrcsth8kgjk" path="res://graphics/images/HUD/screenGFX/screenBG_blue.png" id="2_cg1yl"]
+[ext_resource type="Texture2D" uid="uid://dxpbgi2y7na5f" path="res://graphics/images/HUD/screenGFX/screenBG_indigo.png" id="2_xsrtt"]
+
+[node name="BulletRep" type="MarginContainer"]
+offset_right = 12.0
+offset_bottom = 16.0
+size_flags_horizontal = 3
+script = ExtResource("1_cg1yl")
+
+[node name="Empty" type="TextureRect" parent="."]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 2
+texture = ExtResource("2_xsrtt")
+stretch_mode = 1
+
+[node name="Full" type="TextureRect" parent="Empty"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("2_cg1yl")
+stretch_mode = 1

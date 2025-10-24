@@ -3,8 +3,8 @@ extends Robot
 class_name Robot_Player
 
 var gameHUD : GameHUD;
-var barHP : healthBar;
-var barEnergy : healthBar;
+var barHP : HealthBar;
+var barEnergy : HealthBar;
 
 func _ready():
 	super();
