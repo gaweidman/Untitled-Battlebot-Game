@@ -41,7 +41,7 @@ func regenerate_list(robotToReference : Robot = get_current_robot(), mode : mode
 	var badButtons = []; ## Buttons that are referencing something invalid or not in the gathered stash list.
 	var newButtons = []; ## Stash items to be turned into buttons.
 	## Get all of the references currently used by all of the buttons.
-	for button in _allButtons:
+	for button : StashButton in _allButtons:
 		if is_instance_valid(button):
 			var ref = button.get_reference();
 			if ref != null:

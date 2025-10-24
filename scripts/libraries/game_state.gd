@@ -106,6 +106,13 @@ func get_player_position():
 		return bdy.global_position;
 	return Vector3(0,0,0);
 
+func get_camera_pointer() -> Node3D:
+	var board = get_game_board();
+	
+	if board != null:
+		return board.get_camera_pointer();
+	return null;
+
 func get_player_pos_offset(inGlobalPosition: Vector3):
 	var pos = get_player_position();
 	return pos - inGlobalPosition;

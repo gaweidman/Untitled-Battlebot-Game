@@ -62,6 +62,9 @@ func get_selected() -> bool:
 var ref;
 ## gets this button's reference, sets the value to [member ref], then returns it, or [null] if neither. Prioritizes [member partReferenced] over [member pieceReferenced].
 func get_reference():
+	if get_robot() == null:
+		ref = null;
+		return null;
 	if is_instance_valid(partReferenced):
 		ref = partReferenced;
 		return partReferenced;
@@ -110,4 +113,6 @@ func update_bg():
 	img_equippedBG.visible = mode == modes.NotSelectedEquipped;
 
 func _process(delta):
+	if !is_instance_valid(robot) or !is_instance_valid(get_reference()):
+		queue_free();
 	update_bg();

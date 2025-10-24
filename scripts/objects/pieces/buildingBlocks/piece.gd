@@ -96,6 +96,11 @@ func assign_references():
 		#print("References for piece ", name, " were invalid. ")
 		queue_free();
 
+func destroy():
+	select(false);
+	clear_stats();
+	queue_free();
+
 ######### SAVING/LOADING
 
 ##Creates a dictionary with data pertinent to generating a new piece.

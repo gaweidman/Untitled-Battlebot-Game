@@ -85,10 +85,9 @@ func grab_references():
 		camera = GameState.get_camera();
 	if not is_instance_valid(bodySocket):
 		bodySocket = $Body/Meshes/Socket;
-	#if is_instance_valid(bodySocket):
-		#bodySocket.invisibleInGame = false;
 	if not is_instance_valid(bodyPiece):
-		set_deferred("bodyPiece",$Body/Meshes/Socket/Piece_BodyCube);
+		if is_instance_valid(bodySocket):
+			set_deferred("bodyPiece",bodySocket.get_occupant());
 	if not is_instance_valid(treads):
 		treads = $Treads;
 
@@ -191,8 +190,8 @@ func process_hud(delta):
 			queueCloseEngine = false;
 func queue_update_hud():
 	call_deferred("update_hud");
-func update_hud():
-	if is_ready:
+func update_hud(forced := false):
+	if is_ready or forced:
 		update_inspector_hud(get_selected_or_pipette());
 		queue_update_engine_hud();
 		update_stash_hud();
@@ -265,13 +264,21 @@ func die():
 	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
 	if ! aliveLastFrame: return false;
 	alive = false;
-	queue_free();
 	##Play the death sound
 	if GameState.get_in_state_of_play():
 		SND.play_sound_nondirectional(deathSound);
 	##Play the death particle effects.
 	ParticleFX.play("NutsBolts", GameState.get_game_board(), get_global_body_position());
 	ParticleFX.play("BigBoom", GameState.get_game_board(), get_global_body_position());
+	
+	
+	destroy();
+
+func destroy():
+	for thing in get_stash_all(PieceStash.equippedStatus.ALL):
+		thing.destroy();
+	queue_free();
+	update_hud(true);
 
 ################################# STASH
 
@@ -604,6 +611,7 @@ func regen_piece_tree_stats():
 	get_all_pieces_regenerate();
 	get_weight(true);
 	has_body_piece(true);
+	
 
 ##Gives the Body new collision based on its Parts.
 func reassign_body_collision():

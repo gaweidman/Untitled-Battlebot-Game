@@ -32,7 +32,6 @@ var scrapGained := 0;
 @export var LIGHT : DirectionalLight3D;
 
 func _ready():
-	spawn_player_new_game();
 	get_tree().current_scene.ready.connect(_on_scenetree_ready);
 	#return_random_spawn_location()
 func _on_scenetree_ready():
@@ -146,6 +145,12 @@ const game_over_states = [
 @export var gameCamera : GameCamera;
 func get_main_camera():
 	return gameCamera;
+@export var backupCamPointer : Node3D;
+func get_camera_pointer() -> Node3D:
+	if player != null:
+		return player.body;
+	else:
+		return backupCamPointer;
 
 func change_state(newState : gameState):
 	var changeToDefer = func change(newState):
@@ -194,9 +199,7 @@ func enter_state(newState:gameState):
 		HUD_options.load_settings();
 		MUSIC.change_state(MusicHandler.musState.MENU);
 		
-		destroy_all_enemies();
-		player.body.global_position = Vector3(0,20,30);
-		player.freeze(true);
+		destroy_all_enemies(true);
 		HUD_mainMenu.show();
 		pass
 	elif newState == gameState.GAME_OVER:
@@ -333,7 +336,8 @@ func spawn_player_new_game(_in_position := playerSpawnPosition) -> Node3D:
 	else:
 		var newPlayer = playerScene.instantiate();
 		add_child(newPlayer);
-		newPlayer.global_position = _in_position;
+		newPlayer.global_position = Vector3.ZERO;
+		newPlayer.body.set_deferred("position", _in_position)
 		player = newPlayer;
 	
 	player.queue_live();
@@ -417,11 +421,16 @@ func check_round_completion() -> float:
 func get_enemies_left_for_wave() -> int:
 	return roundEnemies + check_alive_enemies();
 
-func destroy_all_enemies():
+func destroy_all_enemies(destroyPlayer := false):
 	check_alive_enemies();
 	for enemy in enemiesAlive:
 		if enemy:
 			enemy.call_deferred("die");
+	
+	if destroyPlayer:
+		if is_instance_valid(player):
+			player.destroy();
+			player = null;
 
 ##Run only when GameState.pause() is called.
 func pause(foo : bool):

@@ -102,7 +102,7 @@ func get_energy_cost_base(override = null)->float:
 			return override;
 	return energyCost;
 func get_energy_cost():
-	if assignedPieceOrPart is Piece:
+	if is_instance_valid(get_assigned_piece_or_part()) and get_assigned_piece_or_part() is Piece:
 		return assignedPieceOrPart.get_active_energy_cost(self);
 	return get_energy_cost_base();
 
@@ -132,9 +132,10 @@ func tick_cooldown(delta):
 			cooldownTimer = max(0, cooldownTimer - delta);
 func get_cooldown_start_time(multiplier):
 	if cooldownStatName != null:
-		if assignedPieceOrPart is Piece:
-			if assignedPieceOrPart.has_stat(cooldownStatName):
-				cooldownTimeBase = assignedPieceOrPart.get_stat(cooldownStatName);
+		if is_instance_valid(get_assigned_piece_or_part()):
+			if assignedPieceOrPart is Piece:
+				if assignedPieceOrPart.has_stat(cooldownStatName):
+					cooldownTimeBase = assignedPieceOrPart.get_stat(cooldownStatName);
 	return cooldownTimeBase * multiplier;
 func queue_cooldown(multiplier):
 	set_deferred("cooldownTimer", get_cooldown_start_time(multiplier))
@@ -154,7 +155,7 @@ func get_ability_slot_data():
 	if not is_equipped():
 		return false;
 	var data = {};
-	if get_assigned_piece_or_part() is Piece:
+	if is_instance_valid(get_assigned_piece_or_part()) and get_assigned_piece_or_part() is Piece:
 		data = assignedPieceOrPart.get_ability_slot_data(self);
 	
 	if not ("incomingPower" in data.keys()):
@@ -174,7 +175,7 @@ func is_equipped() -> bool:
 	pass;
 
 func is_on_piece() -> bool:
-	return assignedPieceOrPart is Piece;
+	return is_instance_valid(get_assigned_piece_or_part()) and get_assigned_piece_or_part() is Piece;
 
 func is_on_assigned_piece() -> bool:
-	return is_on_piece() and assignedPieceOrPart.assignedToSocket;
+	return is_on_piece() and is_instance_valid(get_assigned_piece_or_part()) and get_assigned_piece_or_part().assignedToSocket;
