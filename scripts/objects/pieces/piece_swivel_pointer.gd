@@ -1,6 +1,9 @@
 extends Piece_Swivel
 
 class_name Piece_SwivelPointer
+## On a [Robot_Player], points at your crosshair.[br]
+## On a [Robot], points at the player, or another target that's been manually plugged in.[br]
+## Will not function if it is not sitting roughly vertically relative to the ground.
 
 var cam : GameCamera;
 var pointerLocation := Vector3.ZERO;
@@ -24,7 +27,7 @@ func use_passive(passiveAbility : AbilityManager):
 		if is_instance_valid(cam):
 			if test_energy_available(passiveAbility.get_energy_cost()):
 				if can_use_passive(passiveAbility):
-					return use_active(passiveAbility);
+					return use_ability(passiveAbility);
 				else:
 					targetRotation = 0.0;
 		return false;

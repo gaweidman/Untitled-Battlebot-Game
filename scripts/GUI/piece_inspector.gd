@@ -167,11 +167,13 @@ func _process(delta : float):
 			#print(dif2)
 			inspectorOpen = infobox.data_ready;
 			if dif2 <= 0.0: 
-				#change_mode(inspectorModes.CLOSED);
-				if queued_thing is Part:
-					change_mode(inspectorModes.PART);
-				if queued_thing is Piece:
-					change_mode(inspectorModes.PIECE);
+				if ! is_instance_valid(queued_thing):
+					change_mode(inspectorModes.CLOSING);
+				else:
+					if queued_thing is Part:
+						change_mode(inspectorModes.PART);
+					if queued_thing is Piece:
+						change_mode(inspectorModes.PIECE);
 			pass;
 		inspectorModes.CLOSING:
 			inspectorOpen = true;
@@ -258,4 +260,5 @@ func open_inspector(thing):
 
 ## Regenerates all the stash buttons.
 func regenerate_stash(bot : Robot, mode : PieceStash.modes = stash.get_current_mode()):
+	stash.currentRobot = bot;
 	stash.regenerate_list(bot, mode);

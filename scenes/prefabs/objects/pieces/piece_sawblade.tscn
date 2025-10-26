@@ -70,6 +70,7 @@ Vector2i(3, 1): null,
 Vector2i(3, 2): null,
 Vector2i(3, 3): null
 }
+filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_sawblade.tscn"
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"

@@ -1,6 +1,7 @@
 extends Robot
 
 class_name Robot_Player
+##It's you![br]Still untitled.
 
 var gameHUD : GameHUD;
 var barHP : HealthBar;
@@ -70,13 +71,14 @@ func get_movement_vector(rotatedByCamera : bool = true) -> Vector2:
 	if Input.is_action_pressed("MoveDown"):
 		movementVector += Vector2.DOWN;
 	
-	if rotatedByCamera:
-		if not is_instance_valid(camera):
-			camera = GameState.get_camera();
+	if is_instance_valid(camera):
+		if rotatedByCamera:
 		
-		var camRotY = - camera.targetRotationY;
-		
-		movementVector = movementVector.rotated(camRotY);
+			var camRotY = - camera.targetRotationY;
+			
+			movementVector = movementVector.rotated(camRotY);
+	else:
+		camera = GameState.get_camera();
 	
 	if is_inputting_movement():
 		movementVectorRotation = movementVector.angle();

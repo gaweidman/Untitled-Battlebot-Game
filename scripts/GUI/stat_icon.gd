@@ -2,6 +2,7 @@
 extends Control
 
 class_name InspectorStatIcon
+## Displays a [StatTracker] and what its [method StatTracker.get_stat] value was upon the initialization of this node.
 
 @export var textureIcon : TextureRect;
 @export var lbl_amt : Label;

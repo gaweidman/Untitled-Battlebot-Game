@@ -15,7 +15,7 @@ var waveTimer := 0.0;
 var wave := 0;
 var roundEnemiesInit := 1;
 var roundEnemies := 0;
-var round := 0;
+var roundNum := 0;
 var enemiesAlive = [];
 var player : Robot_Player;
 
@@ -222,7 +222,7 @@ func enter_state(newState:gameState):
 		MUSIC.change_state(MusicHandler.musState.SHOP);
 		
 		GameState.start_death_timer(120.0,true)
-		round = 0;
+		roundNum = 0;
 		roundEnemiesInit = 1;
 		clear_enemy_spawn_list();
 		scrapGained = 0;
@@ -246,8 +246,8 @@ func enter_state(newState:gameState):
 	elif newState == gameState.INIT_ROUND:
 		MUSIC.change_state(MusicHandler.musState.PREGAME);
 		
-		round += 1;
-		set_enemy_spawn_waves(round);
+		roundNum += 1;
+		set_enemy_spawn_waves(roundNum);
 		#player.start_round();
 		waveTimer = 3;
 		wave = 0;
@@ -281,7 +281,7 @@ func process_state(delta : float, state : gameState):
 				wave += 1;
 				var amtAlive = check_alive_enemies()
 				#print("alive: ", amtAlive)
-				var amtToSpawn = max(0, min(3+round,10,roundEnemies))
+				var amtToSpawn = max(0, min(3+roundNum,10,roundEnemies))
 				#var amtToSpawn = max(0, min(1, 1 - amtAlive))
 				#print(amtToSpawn, amtAlive)
 				spawn_wave(amtToSpawn)

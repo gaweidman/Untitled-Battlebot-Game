@@ -110,7 +110,6 @@ func stat_registry():
 		);
 	register_stat("EnergyMax", maxEnergy, statIconDamage);
 	register_stat("Energy", maxEnergy, statIconEnergy, null, (func(newValue): self.health_or_energy_changed.emit(); return clampf(newValue, 0.0, self.get_stat("EnergyMax"))));
-	register_stat("EnergyRefreshRate", energyRefreshRate, statIconEnergy);
 	register_stat("InvincibilityTime", maxInvincibleTimer, statIconCooldown);
 	register_stat("MovementSpeedAcceleration", acceleration, statIconCooldown);
 	register_stat("MovementSpeedMax", maxSpeed, statIconCooldown);
@@ -128,6 +127,7 @@ func prepare_to_save():
 	reset_collision_helpers();
 	create_startup_generator();
 	clear_stats();
+	is_ready = false;
 	bodyPiece.queue_free();
 
 ############################## SAVE/LOAD
@@ -149,7 +149,7 @@ func load_from_startup_generator():
 		#print(startupGenerator);
 		bodySocket.hostRobot = self;
 		print("SOCKET HOST BEFORE ADDING STARTUP DATA:", bodySocket, bodySocket.hostRobot)
-		bodySocket.load_startup_data(startupGenerator)
+		bodySocket.load_startup_data(startupGenerator, self)
 	pass;
 
 ########## HUD
@@ -283,12 +283,11 @@ func destroy():
 ################################# STASH
 
 var inspectorHUD : Inspector;
-var stashHUD : PieceStash;
 ##The effective "inventory" of this robot. Inaccessible outside of Maker Mode for [@Robot]s that are not a [@Robot_Player].
 var stashPieces : Array[Piece] = []
 var stashParts : Array[Part] = []
 
-func get_stash_pieces(equippedStatus : PieceStash.equippedStatus):
+func get_stash_pieces(equippedStatus : PieceStash.equippedStatus = PieceStash.equippedStatus.ALL):
 	var ret = [];
 	match equippedStatus:
 		PieceStash.equippedStatus.ALL:
@@ -299,7 +298,7 @@ func get_stash_pieces(equippedStatus : PieceStash.equippedStatus):
 		PieceStash.equippedStatus.NOT_EQUIPPED:
 			ret.append_array(stashPieces);
 	return ret;
-func get_stash_parts(equippedStatus : PieceStash.equippedStatus):
+func get_stash_parts(equippedStatus : PieceStash.equippedStatus = PieceStash.equippedStatus.ALL):
 	var ret = [];
 	match equippedStatus:
 		PieceStash.equippedStatus.ALL:
@@ -310,10 +309,11 @@ func get_stash_parts(equippedStatus : PieceStash.equippedStatus):
 		PieceStash.equippedStatus.NOT_EQUIPPED:
 			ret.append_array(stashParts);
 	return ret;
-func get_stash_all(equippedStatus : PieceStash.equippedStatus):
+## Gets everything currently in either [member stashParts] or [member stashPieces].
+func get_stash_all(equippedStatus : PieceStash.equippedStatus = PieceStash.equippedStatus.ALL):
 	var ret = [];
-	ret.append_array(stashPieces);
-	ret.append_array(stashParts);
+	ret.append_array(get_stash_pieces());
+	ret.append_array(get_stash_parts());
 	return ret;
 
 func remove_something_from_stash(inThing):
@@ -551,7 +551,6 @@ func phys_process_combat(delta):
 
 @export_category("Energy Management")
 @export var maxEnergy := 3.0;
-@export var energyRefreshRate := 1.65;
 
 ##Returns available power. Whenever something is used in a frame, it should detract from the energy variable.
 func get_available_energy() -> float:
@@ -853,6 +852,7 @@ func reset_collision_helpers():
 ##################################################### 3D INVENTORY STUFF
 
 @export_category("Piece Management")
+## Holds [AbilityManager] resources to be fired at the press of a button input is this is a [Robot_Player], or by code elsewise.[br]There's presently only 5 slots.
 var active_abilities : Dictionary[int, AbilityManager] = {
 	0 : null,
 	1 : null,
@@ -868,10 +868,11 @@ var active_abilities : Dictionary[int, AbilityManager] = {
 func on_add_piece(piece:Piece):
 	remove_something_from_stash(piece);
 	piece.owner = self;
-	for ability in piece.activeAbilities:
-		if ability is AbilityManager:
-			print("Adding ability ", ability.abilityName)
-			assign_ability_to_next_active_slot(ability);
+	if is_ready: ## Prevent the Piece from automatically adding abilities if we aren't fully initialized yet.
+		for ability in piece.activeAbilities:
+			if ability is AbilityManager:
+				print("Adding ability ", ability.abilityName)
+				assign_ability_to_next_active_slot(ability);
 	regen_piece_tree_stats()
 	get_all_pieces_regenerate();
 	update_hud();
@@ -899,7 +900,10 @@ var allPieces : Array[Piece]= [];
 ## Returns [member allPieces]. Calls [method get_all_pieces_regenerate()] before returning if [member allPieces] is empty.
 func get_all_pieces() -> Array[Piece]:
 	if allPieces.is_empty():
-		get_all_pieces_regenerate();
+		return get_all_pieces_regenerate();
+	for piece in allPieces:
+		if !is_instance_valid(piece) or piece.is_queued_for_deletion():
+			return get_all_pieces_regenerate();
 	return allPieces;
 
 ##Returns a freshly gathered array of all Pieces attached to this Robot and which have it set as their host.[br]
@@ -961,7 +965,7 @@ func get_all_gathered_hurtboxes():
 func assign_ability_to_slot(slotNum : int, abilityManager : AbilityManager):
 	if slotNum in active_abilities.keys():
 		if is_instance_valid(abilityManager):
-			abilityManager.assign_robot(self);
+			abilityManager.assign_robot(self, slotNum);
 			active_abilities[slotNum] = abilityManager;
 			clear_ability_pipette();
 
@@ -971,16 +975,24 @@ func unassign_ability_slot(slotNum : int):
 		if active_abilities[slotNum] is AbilityManager: 
 			var abilityManager = active_abilities[slotNum];
 			if is_instance_valid(abilityManager):
-				abilityManager.unassign_robot();
+				abilityManager.unassign_slot(slotNum);
 	active_abilities[slotNum] = null;
+	print_rich("[color=red][b]ABILITY IN SLOT ",slotNum," INVALID.");
 
 ##Runs thru active_abilities and deletes AbilityManager resources that no longer have a valid Piece or Part reference.
 func check_abilities_are_valid():
-	for slot in active_abilities.keys():
-		var ability = active_abilities[slot];
-		if ability is AbilityManager:
-			if !is_instance_valid(ability.assignedPieceOrPart):
-				unassign_ability_slot(slot);
+	if is_ready:
+		for slot in active_abilities.keys():
+			var ability = active_abilities[slot];
+			if ability is AbilityManager:
+				var assignedPieceOrPart = ability.assignedPieceOrPart
+				if !is_instance_valid(assignedPieceOrPart):
+					unassign_ability_slot(slot);
+				else:
+					if assignedPieceOrPart is Piece:
+						if !assignedPieceOrPart.is_equipped():
+							unassign_ability_slot(slot);
+				##TODO: Part support
 
 ##Attempts to fire the active ability in the given slot, if that slot has one.
 func fire_active(slotNum) -> bool:

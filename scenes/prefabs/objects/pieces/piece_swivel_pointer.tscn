@@ -32,7 +32,7 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("9_psn5c")
 
-[node name="Piece_Pointer Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Pointer Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
 script = ExtResource("1_bn4l8")
 swivelNode = NodePath("SwivelTop")
@@ -43,6 +43,7 @@ passiveAbilities = Array[ExtResource("3_pqjj1")]([ExtResource("3_noc8o")])
 force_visibility = true
 meshesHolder = NodePath("Meshes")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
+hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
@@ -50,6 +51,7 @@ Vector2i(2, 1): null,
 Vector2i(2, 2): null,
 Vector2i(2, 3): null
 }
+filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_swivel_pointer.tscn"
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"

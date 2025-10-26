@@ -14,6 +14,8 @@ func _ready() -> void:
 	## Cursor stuff!
 	#Input.set_default_cursor_shape(Input.CURSOR_BUSY)
 	#Input.set_custom_mouse_cursor(load("res://graphics/images/HUD/statIcons/scrapIconStriped.png"),Input.CURSOR_BUSY,Vector2(9.5,11.5));
+	
+	DisplayServer.window_set_current_screen.call_deferred(1);
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -43,7 +45,10 @@ func get_game_board_state():
 func get_round_number():
 	var board = get_game_board();
 	
-	return board.round;
+	if board == null:
+		return -1;
+	
+	return board.roundNum;
 
 func get_round_completion():
 	var board = get_game_board();
@@ -70,7 +75,7 @@ func get_in_state_of_building() ->bool:
 	if is_instance_valid(board):
 		return board.in_state_of_building();
 	else:
-		return false;
+		return true;
 
 func set_game_board_state(state : GameBoard.gameState):
 	var board = get_game_board();

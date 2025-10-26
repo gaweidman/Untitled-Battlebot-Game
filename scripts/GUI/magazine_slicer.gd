@@ -1,6 +1,7 @@
 @icon ("res://graphics/images/class_icons/magazine_green.png")
 extends HBoxContainer
 class_name MagazineSlicer
+## Displays a line of [BulletSlice] nodes representing the magazine of a [Piece_Projectile] for use on each [AbilitySlot].
 
 var currentMagSize := -1;
 var slices : Array[BulletSlice] = [];
@@ -14,11 +15,11 @@ var currentMarginSize = 1;
 func _ready():
 	maxSizeX = size.x;
 	
-	##Testing.
-	var maxAmt = randi_range(1, 40);
-	var amt = min(maxAmt, randi_range(1, 10));
-	count = amt;
-	update_contents(maxAmt, amt, 0.5, 1);
+	###For Testing.
+	#var maxAmt = randi_range(1, 40);
+	#var amt = min(maxAmt, randi_range(1, 10));
+	#count = amt;
+	#update_contents(maxAmt, amt, 0.5, 1);
 
 var count = 0.;
 var max = 7.;
@@ -34,14 +35,17 @@ func _process(delta):
 	#update_contents(max, amt, count, 1);
 	pass;
 
+## Updates the magazine.[br]Evaluates [param currentAmount] and [param cooldownTimeCurrent], then passes them into [method update_contents_percent] as a valid percentage.
 func update_contents(magSize:int, currentAmount:int, cooldownTimeCurrent:float, cooldownTimeStart:float):
 	if magSize != currentMagSize:
 		currentMagSize = magSize;
 		fill_to_mag_size();
+	
 	var percent = (cooldownTimeStart - cooldownTimeCurrent) / cooldownTimeStart;
 	update_contents_percent(magSize, currentAmount, percent);
 	pass;
 
+## Updates the magazine.[br]All bullets represented are either full or empty, except for the singular bullet directly after the last available one in the magazine, which gets its percentage filled by the bullet refresh cooldown that's been plugged in.
 func update_contents_percent(magSize:int, currentAmount:int, cooldownPercent):
 	if magSize != currentMagSize:
 		currentMagSize = magSize;
@@ -58,6 +62,7 @@ func update_contents_percent(magSize:int, currentAmount:int, cooldownPercent):
 			pool -= 1.0;
 	pass;
 
+## Updates the amount of child [BulletSlice] nodes to represent [member currentMagSize]. Also updates [member size] to match.[br][i]Kinda pricey![/i] Only runs in [method update_contents] and [method update_contents_percent] if the new magazine size does not match the present one.
 func fill_to_mag_size():
 	## loop over children. If any go over the max, delete.
 	var count = 0;
@@ -118,6 +123,7 @@ func fill_to_mag_size():
 	set("theme_override_constants/separation", currentMarginSize);
 	size.x = min(currentSize, maxSizeX);
 
+## Returns the potential width of all child [BulletSlice]s, given [param currentSize] is the width each child would be.
 func get_widths_of_all_children(currentSize):
 	var w = 0;
 	for num in currentMagSize:

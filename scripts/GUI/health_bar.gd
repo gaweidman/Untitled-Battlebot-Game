@@ -57,7 +57,7 @@ func set_health(amt: float, max: float):
 			targetPosX += percentage * width;
 		directions.FILL_TO_LEFT:
 			vertical = false;
-			targetPosX += -percentage* width;
+			targetPosX += -percentage * width;
 		directions.FILL_TO_TOP:
 			vertical = true;
 			targetPosX += -percentage * width;
@@ -79,9 +79,9 @@ func _process(delta):
 	lerpPosX = lerp(lerpPosX, targetPosX, delta*20);
 	if vertical:
 		emptyBar.position.x = 0;
-		emptyBar.position.y = lerpPosX;
+		emptyBar.position.y = clamp(lerpPosX, offset - width, offset + width);
 	else:
-		emptyBar.position.x = lerpPosX;
+		emptyBar.position.x = clamp(lerpPosX, offset - width, offset + width);
 		emptyBar.position.y = 0;
 	
 	counter -= 1;

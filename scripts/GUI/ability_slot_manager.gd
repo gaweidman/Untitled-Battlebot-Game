@@ -2,6 +2,7 @@
 extends Control
 
 class_name AbilitySlotManager
+## Holds an [Array] of [AbilitySlot]s on the [GameHUD].
 
 signal button_pressed(slot:AbilitySlot)
 

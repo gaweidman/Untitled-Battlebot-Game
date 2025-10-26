@@ -54,9 +54,11 @@ func make_shapecast():
 	shapeCastNew.collide_with_bodies = true;
 	shapeCastNew.enabled = true;
 	shapeCastNew.debug_shape_custom_color = Color("af7f006b");
-	shapeCastNew.set_collision_mask_value(4, true);
-	shapeCastNew.set_collision_mask_value(5, true);
-	shapeCastNew.set_collision_mask_value(11, true);
+	shapeCastNew.set_collision_mask_value(1, false); ## Robot bodies no
+	shapeCastNew.set_collision_mask_value(4, true); ## Piece hurtboxes yes
+	shapeCastNew.set_collision_mask_value(5, false); ## Piece hitboxes no
+	shapeCastNew.set_collision_mask_value(7, true); ## Placed piece hurtboxes yes
+	shapeCastNew.set_collision_mask_value(11, true); ## Arena floors yes
 	
 	copiedShapecast = true;
 	

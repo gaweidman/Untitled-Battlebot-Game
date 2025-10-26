@@ -84,9 +84,9 @@ func fix_angle_rad_to_rad(inAngle : float) -> float:
 	return deg_to_rad(inAngle);
 
 ##Runs look_at() only if the target and node do not share a position.
-func look_at_safe(node : Node3D, target : Vector3):
+func look_at_safe(node : Node3D, target : Vector3, up := Vector3(0,1,0)):
 	if node.global_transform.origin.is_equal_approx(target): return;
-	node.look_at(target);
+	node.look_at(target, up);
 
 ## Prints the input only when the boolean value is true.
 func print_if_true(printable, boolean : bool):

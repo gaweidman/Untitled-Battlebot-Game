@@ -1,6 +1,7 @@
 extends Piece
 
 class_name Piece_Projectile
+## A [Piece] that can fire [Bullet] projectiles.
 
 @export_subgroup("Bullet Stuff")
 @export var bulletRef : PackedScene = preload("res://scenes/prefabs/objects/bullets/bullet.tscn");
@@ -115,8 +116,18 @@ func get_firing_offset():
 	return firingOffset + global_position;
 
 func get_firing_direction() -> Vector3:
-	return Vector3.ZERO;
-	pass;
+	#return Vector3.ZERO;
+	
+	
+	firingAngle = Vector3(0,0,1);
+	firingAngle += inaccuracy * Vector3(randf_range(-1,1),randf_range(0,0),randf_range(-1,1));
+	firingAngle = firingAngle.rotated(Vector3(1,0,0), global_rotation.x)
+	firingAngle = firingAngle.rotated(Vector3(0,1,0), global_rotation.y)
+	firingAngle = firingAngle.rotated(Vector3(0,0,1), global_rotation.z)
+	#Hooks.OnFireProjectile(self, bullet); ##TODO: Hooks implementation
+	firingAngle = firingAngle.normalized();
+	
+	return firingAngle;
 
 func process_draw(delta):
 	super(delta);
@@ -170,23 +181,18 @@ func fireBullet():
 	bullet = nextBullet();
 	
 	if is_instance_valid(bullet):
-		firingAngle = Vector3(0,0,1);
-		firingAngle += inaccuracy * Vector3(randf_range(-1,1),randf_range(0,0),randf_range(-1,1));
-		firingAngle = firingAngle.rotated(Vector3(1,0,0), global_rotation.x)
-		firingAngle = firingAngle.rotated(Vector3(0,1,0), global_rotation.y)
-		firingAngle = firingAngle.rotated(Vector3(0,0,1), global_rotation.z)
-		#Hooks.OnFireProjectile(self, bullet); ##TODO: Hooks implementation
-		firingAngle = firingAngle.normalized();
+		## Calculates firingAngle.
+		firingAngle = get_firing_direction();
+		
 		var bot = get_host_robot();
-		var pos = bot.get_global_body_position() + firingOffset;
-		pos = get_firing_offset();
+		var pos = get_firing_offset();
 		#prints("Firing offset",get_firing_offset())
 		bullet.fire_from_robot(bot, self, pos, get_damage_data(), firingAngle, launchSpeed, bulletLifetime, get_bullet_gravity());
 		SND.play_sound_at(firingSoundString, pos, GameState.get_game_board(), firingSoundVolumeAdjust, randf_range(firingSoundPitchAdjust * 1.15, firingSoundPitchAdjust * 0.85))
 		availableBullets -= 1;
 		
 		var factory = get_named_passive("Bullet Factory");
-		factory.add_freeze_time(get_stat("ProjectileFireRate"));
+		factory.add_freeze_time(get_stat("ProjectileFireRate") + get_physics_process_delta_time());
 	else:
 		for bullt in magazine:
 			print(bullt)
@@ -203,7 +209,7 @@ func recountMagazine() -> int:
 	var count = _max;
 	for bullet in magazine:
 		if is_instance_valid(bullet):
-			if ! bullet.available(true):
+			if ! bullet.available():
 				count -= 1;
 	var finalCount = max(count, 0);
 	magazineCount = finalCount;
@@ -243,20 +249,23 @@ func _exit_tree():
 	leakPrevention();
 	pass;
 
+## RANGE RAY STUFF
+
+## Moves the range ray in accordance with 
 func calc_range():
-	await ready;
 	if !is_instance_valid(rangeRay):
 		assign_references();
-	#if can_use_named_ability("Fire"):
-		#rangeRay.enabled = true;
-		#rangeRay.show();
-		#var delta = get_physics_process_delta_time();
-		#var length = launchSpeed * delta * bulletLifetime * 60;
-		#rangeRay.target_position.x = length;
-		#rangeRay.global_position = get_firing_offset();
-	#else:
-		#rangeRay.hide();
-		#rangeRay.enabled = false;
+	if is_instance_valid(rangeRay): 
+		if can_use_named_ability("Fire"):
+			rangeRay.enabled = true;
+			rangeRay.show();
+			var delta = get_physics_process_delta_time();
+			var length = get_stat("ProjectileLifetime") * delta * get_stat("ProjectileSpeed") * 60;
+			rangeRay.target_position.z = length;
+			rangeRay.global_position = get_firing_offset();
+		else:
+			rangeRay.hide();
+			rangeRay.enabled = false;
 
 func get_closest_thing_in_line_of_fire():
 	if rangeRay.is_colliding():

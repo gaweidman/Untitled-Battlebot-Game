@@ -3,6 +3,8 @@
 extends StatHolder3D
 
 class_name Piece
+## A 3D chunk of scrap electronics you found or bought and decided was a good idea to slap onto your [Robot].
+## Can hold Stats (as per [StatHolder3D]) and [Part]s (TODO).
 
 ########## STANDARD GODOT PROCESSING FUNCTIONS
 func _ready():
@@ -13,7 +15,7 @@ func _ready():
 	assign_references();
 	ability_validation();
 	ability_registry();
-	regen_namedActions() ## Regenerates the actions list
+	regen_namedActions(); ## Regenerates the actions list
 	super(); #Stat registry.
 	gather_colliders_and_meshes();
 
@@ -120,6 +122,7 @@ func destroy():
 ##[/codeblock]
 func create_startup_data():
 	var engineDict = {};
+	##TODO: Part data goes here
 	var socketDict = {};
 	for socket:Socket in get_all_female_sockets():
 		var index = get_index_of_socket(socket);
@@ -131,24 +134,43 @@ func create_startup_data():
 		else:
 			occupantVal = "null";
 		var socketData = { "rotation" : rotationVal, "occupant" : occupantVal};
-		socketDict[index] = socketData
+		socketDict[index] = socketData;
+	
+	## Abilities. If an ability has been assigned to a slot and is not passive, add its name and assigned slots to the data.
+	var abilityDict := {}
+	for ability in get_all_abilities():
+		if ! ability.isPassive:
+			var slots = ability.get_assigned_slots();
+			if ! slots.is_empty():
+				abilityDict[ability.abilityName] = slots;
 		
 	var dict = { filepathForThisEntity : {
 			#"engine" : engineDict,
 			"sockets" : socketDict,
+			"abilityAssignments" : abilityDict,
 		}
 	}
 	#print("SAVE: Startup data dictionary: ", dict)
 	return dict;
 
-func load_startup_data(data):
-	#print(data)
+func load_startup_data(data, robot : Robot):
+	print_rich("[color=pink]REALLY INIT ACTIVES:", activeAbilities);
+	
 	for socketIndex in data["sockets"].keys():
 		var socketData = data["sockets"][socketIndex];
 		autoassign_child_sockets_to_self();
 		var socket = get_socket_at_index(socketIndex);
 		if is_instance_valid(socket):
-			socket.load_startup_data(socketData);
+			socket.load_startup_data(socketData, robot);
+	
+	
+	if data.keys().has("abilityAssignments"):
+		for abilityName in data["abilityAssignments"].keys():
+			var abilitySlots = data["abilityAssignments"][abilityName];
+			var ability = get_named_action(abilityName);
+			if is_instance_valid(ability):
+				for slotNum in abilitySlots:
+					robot.assign_ability_to_slot(slotNum, ability);
 	pass;
 
 ######################## TIMERS
@@ -165,10 +187,14 @@ func phys_process_timers(delta):
 
 func phys_process_pre(delta):
 	super(delta);
+	##Re-assign references, if any are borked.
+	assign_references();
 	## Reset current energy draw.
 	energyDrawCurrent = 0.0;
 	## Calculate weightLoad.
 	get_weight_load();
+	## Refresh incoming energy for the frame.
+	queue_refresh_incoming_energy();
 
 ################ PIECE MANAGEMENT
 
@@ -260,8 +286,8 @@ func get_buy_price_piece_only(discountMultiplier := 1.0, fixedMarkup := 0):
 @export var input : InputEvent;
 @export var energyDrawPassiveMultiplier := 1.0; ##power drawn each frame, multiplied by time delta. If this is negative, it is instead power being generated each frame.
 @export var energyDrawActiveMultiplier := 1.0; ##power drawn when you use any this piece's active abilities, given that it has any.
-@export var energyDrawActiveBaseOverride : float;
-@export var energyDrawPassiveBaseOverride : float;
+@export var energyDrawActiveBaseOverride : float = 999;
+@export var energyDrawPassiveBaseOverride : float = 999;
 var energyDrawCurrent := 0.0; ##Recalculated and updated each frame.
 
 var incomingPower := 0.0;
@@ -322,7 +348,9 @@ func on_cooldown_action(action : AbilityManager) -> bool:
 	return action.on_cooldown();
 func on_cooldown_named_action(actionName : String) -> bool:
 	var action = get_named_action(actionName);
-	return on_cooldown_action(action);
+	if action != null:
+		return on_cooldown_action(action);
+	return true;
 
 func on_cooldown():
 	return on_cooldown_active_any() or on_cooldown_passive_any();
@@ -361,7 +389,9 @@ func try_sap_energy(amt:float):
 	if bot != null:
 		bot.try_sap_energy(amt);
 		energyDrawCurrent += amt;
+		queue_refresh_incoming_energy();
 		return false;
+	queue_refresh_incoming_energy();
 	return true;
 
 func get_outgoing_energy():
@@ -372,9 +402,19 @@ func get_outgoing_energy():
 func is_transmitting():
 	return hasIncomingPower and transmittingPower;
 
-##If this part is plugged into a socket, returns that socket's power.
-##If not, then it's probably a robot body or not plugged in, and returns 0.
+## If this [Piece] is plugged into a [Socket], returns that [Socket]'s power.[br]
 func get_incoming_energy():
+	if refreshIncomingEnergy:
+		return calc_incoming_energy();
+	return incomingPower;
+
+## If this [Piece] is plugged into a [Socket], returns that [Socket]'s power.[br]
+var refreshIncomingEnergy := true;
+func queue_refresh_incoming_energy():
+	refreshIncomingEnergy = true;
+
+func calc_incoming_energy():
+	refreshIncomingEnergy = false;
 	if get_host_socket() != null:
 		#print(get_host_socket().get_energy_transmitted())
 		var powerTransmitted = get_host_socket().get_energy_transmitted();
@@ -395,18 +435,23 @@ func get_incoming_energy():
 	hasIncomingPower = false;
 	return incomingPower;
 
-
 func get_current_energy_draw():
 	return energyDrawCurrent;
 
 func get_active_energy_cost(ability : AbilityManager):
 	##TODO: Bonuses
-	return ( ability.get_energy_cost_base(energyDrawActiveBaseOverride) * get_stat("ActiveEnergyDraw") );
+	var override = null;
+	if energyDrawActiveBaseOverride != 999:
+		override = energyDrawActiveBaseOverride;
+	return ( ability.get_energy_cost_base(override) * get_stat("ActiveEnergyDraw") );
 
-func get_passive_energy_cost(passiveAbility : AbilityManager, base := false):
+func get_passive_energy_cost(passiveAbility : AbilityManager):
 	var stat = get_stat("PassiveEnergyDraw");
 	if is_instance_valid(passiveAbility):
-		stat *= passiveAbility.get_energy_cost_base(energyDrawPassiveBaseOverride);
+		var override = null;
+		if energyDrawPassiveBaseOverride != 999:
+			override = energyDrawPassiveBaseOverride;
+		stat *= passiveAbility.get_energy_cost_base(override);
 	##TODO: Bonuses
 	return ( stat * get_physics_process_delta_time() );
 
@@ -533,7 +578,7 @@ func use_contact_passives():
 			use_passive(passiveAbility);
 func use_passive(passiveAbility:AbilityManager):
 	if can_use_passive(passiveAbility):
-		use_active(passiveAbility);
+		use_ability(passiveAbility);
 		return true;
 	return false;
 
@@ -547,6 +592,8 @@ func ability_registry():
 func ability_validation():
 	## Duplicate the resources so the ability doesn't get joint custody with another piece of the same type.
 	## Construct the description FIRST, because the constructor array is not going to get copied over.
+	print_rich("[color=pink]INIT ACTIVES:", activeAbilities);
+	
 	var activesNew : Array[AbilityManager] = []
 	for ability in activeAbilities:
 		if ability is AbilityManager:
@@ -556,7 +603,7 @@ func ability_validation():
 			if ! dupe.initialized:
 				dupe.assign_references(self);
 			dupe.initialized = true;
-	activeAbilities.clear();
+	#activeAbilities.clear();
 	activeAbilities = activesNew;
 	
 	## Do the same with the passive.
@@ -571,7 +618,7 @@ func ability_validation():
 			dupe.isPassive = true;
 			dupe.initialized = true;
 			passiveAbility = dupe;
-	passiveAbilities.clear();
+	#passiveAbilities.clear();
 	passiveAbilities = passivesNew;
 	
 	pass;
@@ -606,7 +653,7 @@ func get_local_ability(action : AbilityManager) -> AbilityManager:
 	return null;
 
 ##Calls the ability in the given slot if it's able to do so.
-func use_active(action : AbilityManager) -> bool:
+func use_ability(action : AbilityManager) -> bool:
 	if can_use_ability(action):
 		#print("ABILITY ",action.abilityName," CAN BE USED...");
 		try_sap_energy(get_energy_cost(action));
@@ -893,6 +940,8 @@ func refresh_and_gather_collision_helpers():
 	for child in hitboxCollisionHolder.get_children():
 		child.queue_free();
 	
+	#hurtboxCollisionHolder.scale = Vector3.ONE * 0.95;
+	#placementCollisionHolder.scale = Vector3.ONE * 0.95;
 	
 	var identifyingNum = 0;
 	for child in get_children():
@@ -964,22 +1013,24 @@ func ping_placement_validation():
 					#shapecasts.append(child);
 					child.force_shapecast_update();
 					if child.is_colliding(): 
-						var collider = child.get_collider(0);
-						if collider is HurtboxHolder:
-							#print(self, collider.get_piece())
-							if self != collider.get_piece():
+						for colliderIDX in child.get_collision_count():
+							var collider = child.get_collider(colliderIDX);
+							#var colShape = child.get_collider_shape(colliderIDX);
+							if collider is HurtboxHolder:
+								if self != collider.get_piece():
+									collided = true;
+									print("collided with another HURTbox... ", collider.get_piece())
+							#if collider is RobotBody:
+								#if colShape is PieceCollisionBox:
+									#if self != collider.get_piece():
+										#collided = true;
+										#print("collided with another box... ", collider.get_piece())
+							elif collider is StaticBody3D:
 								collided = true;
-						elif collider is RobotBody:
-							var bot = collider.get_robot();
-							if bot.get_all_pieces().size() > 0:
-								print("size: ", bot.get_all_pieces())
-								collided = true;
-						elif collider is StaticBody3D:
-							collided = true;
-						else:
-							#print("what")
-							#print(collider)
-							pass;
+							else:
+								#print("what")
+								#print(collider)
+								pass;
 	
 	##Put all the shapecasts back.
 	#for cast in shapecasts:

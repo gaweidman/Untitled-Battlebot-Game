@@ -1,6 +1,7 @@
 @icon ("res://graphics/images/class_icons/bullet_green_v.png")
 extends MarginContainer
 class_name BulletSlice;
+## Represents a single [Bullet] within a [Piece_Projectile] as displayed by [MagazineSlicer]. Fills up with cooldown.
 
 @export var bg_empty := preload("res://graphics/images/HUD/screenGFX/screenBG_indigo.png")
 @export var bg_filling := preload("res://graphics/images/HUD/screenGFX/screenBG_darkBlue.png")

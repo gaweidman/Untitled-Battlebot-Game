@@ -819,9 +819,9 @@ texture = ExtResource("15_s0uw0")
 [node name="ProgressBarBG" type="NinePatchRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide"]
 layout_mode = 0
 offset_left = 678.0
-offset_top = 143.0
+offset_top = 142.0
 offset_right = 932.0
-offset_bottom = 177.0
+offset_bottom = 176.0
 texture = ExtResource("19_vehjn")
 patch_margin_left = 1
 patch_margin_top = 3
@@ -831,7 +831,7 @@ axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
 [node name="Edge" type="TileMapLayer" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/ProgressBarBG"]
-position = Vector2(7, 5)
+position = Vector2(7, 6)
 tile_map_data = PackedByteArray("AAD/////AAAEAAIAAAAAAP//AAAGAAAAAAABAP//AAAGAAAAAAACAP//AAAGAAAAAAADAP//AAAGAAAAAAAEAP//AAAGAAAAAAAFAP//AAAGAAAAAAAGAP//AAAGAAAAAAAHAP//AAAGAAAAAAAIAP//AAAGAAAAAAAJAP//AAAGAAAAAAAKAP//AAAHAAEAAAD//wEAAAAEAAMAAAAAAAEAAAAGAAMAAAABAAEAAAAGAAMAAAACAAEAAAAGAAMAAAADAAEAAAAGAAMAAAAEAAEAAAAGAAMAAAAFAAEAAAAGAAMAAAAGAAEAAAAGAAMAAAAHAAEAAAAGAAMAAAAIAAEAAAAGAAMAAAAJAAEAAAAGAAMAAAAKAAEAAAAHAAMAAAD//wAAAAAEAAEAAAAKAAAAAAAHAAIAAAA=")
 tile_set = ExtResource("20_u76c3")
 metadata/_edit_group_ = true

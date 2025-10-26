@@ -7,10 +7,15 @@
 
 [node name="Bullet" type="Node3D" node_paths=PackedStringArray("lifeTimer", "raycast", "collision", "hitbox") groups=["Metal", "Projectile"]]
 script = ExtResource("1_lph27")
+knockbackMult = null
+sizeMult = null
 lifeTimer = NodePath("LifeTimer")
 raycast = NodePath("RayCast3D")
 collision = NodePath("Hitbox/CollisionShape3D")
+tracerFXString = null
 hitbox = NodePath("Hitbox")
+gravity = null
+AudioSourceType = null
 
 [node name="Hitbox" type="Area3D" parent="."]
 

@@ -1,8 +1,8 @@
 @icon ("res://graphics/images/class_icons/socket.png")
 extends Node3D
 
-##This object hosts Pieces.
 class_name Socket
+##This object hosts [Piece]s.
 
 @export var invisibleInGame := false;
 @export var occupant : Piece;
@@ -33,7 +33,7 @@ func _ready():
 
 ####################### SETUP LOAD
 
-func load_startup_data(data):
+func load_startup_data(data, robot : Robot):
 	remove_occupant(true);
 	var rot = data["rotation"];
 	if rot is float:
@@ -50,7 +50,7 @@ func load_startup_data(data):
 		var result = add_occupant_from_scene_path(occupantPath);
 		if result != null:
 			print(result);
-			result.load_startup_data(occupantDataForwarded);
+			result.load_startup_data(occupantDataForwarded, robot);
 
 
 ########################
@@ -62,6 +62,7 @@ func add_occupant_from_scene_path(scenePath : String):
 		if newPiece is Piece:
 			add_child(newPiece);
 			add_occupant(newPiece, true)
+			newPiece.filepathForThisEntity = scenePath;
 			return newPiece;
 	return null;
 

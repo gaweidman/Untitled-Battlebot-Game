@@ -18,6 +18,7 @@ class_name AbilityManager
 @export var initialized := false;
 @export var disabled := false;
 @export var functionWhenUsed : Callable;
+var assignedSlots : Array[int] = [];
 
 var cooldownTimer := 0.0;
 enum runTypes {
@@ -32,11 +33,24 @@ var assignedPieceOrPart;
 
 var isPassive := false;
 
-func assign_robot(robot : Robot):
+func assign_robot(robot : Robot, slotNum : int):
 	assignedRobot = robot;
+	Utils.append_unique(assignedSlots, slotNum);
 
 func unassign_robot():
 	assignedRobot = null;
+	unassign_all_slots();
+
+func unassign_slot(slotNum : int):
+	assignedSlots.erase(slotNum);
+	if assignedSlots.is_empty():
+		unassign_robot();
+
+func unassign_all_slots():
+	assignedSlots.clear();
+
+func get_assigned_slots() -> Array[int]:
+	return assignedSlots;
 
 func get_assigned_piece_or_part():
 	return assignedPieceOrPart;
@@ -66,7 +80,7 @@ func call_ability() -> bool:
 			return assignedPieceOrPart._activate();
 		if assignedPieceOrPart is Piece:
 			if is_on_assigned_piece():
-				return assignedPieceOrPart.use_active(self);
+				return assignedPieceOrPart.use_ability(self);
 	return false;
 
 func is_disabled() -> bool:
@@ -74,7 +88,6 @@ func is_disabled() -> bool:
 
 func disable(foo:=not is_disabled()):
 	disabled = foo;
-
 
 var currentAbilityInfobox : AbilityInfobox;
 var selected := false;
@@ -101,6 +114,7 @@ func get_energy_cost_base(override = null)->float:
 		if override < 999.0:
 			return override;
 	return energyCost;
+
 func get_energy_cost():
 	if is_instance_valid(get_assigned_piece_or_part()) and get_assigned_piece_or_part() is Piece:
 		return assignedPieceOrPart.get_active_energy_cost(self);
@@ -113,12 +127,17 @@ func get_energy_cost_string():
 		s += "/s"
 	return s
 
+## 1 is removed from this each frame, if above 0.
 var freezeFrames := 0;
+## Adds to [member freezeFrames].
 func add_freeze_frames(amt := 1):
 	freezeFrames += amt;
+## delta time is removed from this each frame, if above 0.
 var freezeTime := 0.0;
+## Adds to [member freezeTime].
 func add_freeze_time(amt := 1.0):
 	freezeTime += amt;
+## Ticks all cooldowns variables.[br]If [member freezeFrames] > 0, removes 1 from that this frame, then ends.[br]If [member freezeTime] > 0, removes [param delta] from that this frame, then ends.[br]If [member cooldownTimer] > 0, removes [param delta] from that this frame. Additionally adds [member freezeTime] if < 0, as compensation for delta rollover.
 func tick_cooldown(delta):
 	if freezeFrames > 0:
 		freezeFrames -= 1;
@@ -168,7 +187,6 @@ func get_ability_slot_data():
 	data["cooldownStartTime"] = get_cooldown_start_time(1.0);
 	data["onCooldown"] = on_cooldown();
 	return data;
-
 
 func is_equipped() -> bool:
 	return true;

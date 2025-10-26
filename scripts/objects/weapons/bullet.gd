@@ -171,7 +171,8 @@ func fire_from_robot(_attacker : Robot, _launcher : Piece ,_initPosition : Vecto
 
 ## A function to make the bullet rotate its [member rotation.y] to look at the direction it's moving in.
 func rotateTowardVector3(dir : Vector3):
-	look_at(global_transform.origin + dir, Vector3.UP)
+	Utils.look_at_safe(self, global_transform.origin + dir, Vector3.UP);
+	#look_at(, Vector3.UP)
 	rotation.x = dir.y;
 
 ## Changes [member dir], and calls [method rotateTowardVector3] to update visuals.

@@ -49,10 +49,13 @@ func regenerate_list(robotToReference : Robot = get_current_robot(), mode : mode
 	if is_robot_being_referenced():
 		var stash = [];
 		## Get the stash based on the modes.
-		if mode == modes.PIECES or mode == modes.ALL:
-			stash.append_array(robotToReference.get_stash_pieces(get_current_equipped_status()));
-		if mode == modes.PARTS or mode == modes.ALL:
-			stash.append_array(robotToReference.get_stash_parts(get_current_equipped_status()));
+		match mode:
+			modes.PIECES:
+				stash.append_array(robotToReference.get_stash_pieces(get_current_equipped_status()));
+			modes.PARTS:
+				stash.append_array(robotToReference.get_stash_parts(get_current_equipped_status()));
+			modes.ALL:
+				stash.append_array(robotToReference.get_stash_all(get_current_equipped_status()));
 			#prints("Stash regen PRE", stash)
 		
 		## Check if the stash item is inside of the buttons currently existing.

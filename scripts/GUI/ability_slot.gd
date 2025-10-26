@@ -1,6 +1,7 @@
 @icon ("res://graphics/images/class_icons/abilitySlot.png")
 extends Control
 class_name AbilitySlot
+## The visual representation on the [GameHUD] for each of the player's currently equipped Active Abilities ([member Robot.active_abilities]).
 
 enum modes {
 	NONE,

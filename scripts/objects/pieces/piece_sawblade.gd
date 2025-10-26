@@ -1,6 +1,8 @@
 extends Piece
 
 class_name Piece_Sawblade
+## Has a [Bullet] parrying ability ([method deflect]).
+## [br]Deals contact damage, but only while recieving Energy.
 
 @export var baseRotationSpeed := 270.0;
 var rotationSpeed := baseRotationSpeed;
@@ -116,7 +118,8 @@ func deflect():
 	bladeScaleOffset *= 1.75;
 	hitboxScaleOffset += .75;
 	reflectingTime = 15;
-	rotationSpeed *= 6;
+	rotationSpeed = max(baseRotationSpeed, rotationSpeed);
+	rotationSpeed *= 9;
 	#$ShapeCast3D.enabled = true;
 	#$Timer.start();
 	damageModifier *= 2;

@@ -18,8 +18,11 @@ class_name MakerMode_Robots
 
 @export_subgroup("Engine")
 @export var engine : PartsHolder_Engine;
-@export var stash : PieceStash;
 @export var inspector : Inspector;
+@export var abilitiesManager : AbilitySlotManager;
+@export var dataPanel : StatAdjusterDataPanel;
+
+var curRobotData;
 
 func _ready():
 	initialize();
@@ -58,9 +61,16 @@ func _on_robot_tree_item_activated():
 			##Clear out the old.
 			clear_inspected_robot();
 			#set_inspected_piece(data);
+			##In with the new.
+			curRobotData = data;
 			spawn_inpspected_robot(data);
 	pass # Replace with function body.
 
+func refresh_current_robot():
+	##Clear out the old.
+	clear_inspected_robot();
+	if is_instance_valid(curRobotData):
+		spawn_inpspected_robot(curRobotData);
 
 func _on_pieces_tree_item_activated():
 	var mousePos = get_viewport().get_mouse_position() - tree_pieces.position
@@ -217,9 +227,9 @@ func spawn_inpspected_robot(data):
 		if newBot is Robot_Player:
 			newBot.engineViewer = engine;
 		
-		newBot.stashHUD = stash;
 		newBot.inspectorHUD = inspector;
-		stash.currentRobot = newBot;
+		abilitiesManager.currentRobot = newBot;
+		dataPanel.assign_new_thing(newBot);
 		
 		botSpawnPoint.add_child(botBeingInspected);
 		##Show the thing.
@@ -248,9 +258,9 @@ func get_inspected_robot() -> Robot:
 ##@deprecated: The stash is updated by the robot pretty regularly, I [i]think...[/i]
 func regenerate_stash(mode : PieceStash.modes):
 	if is_instance_valid(botBeingInspected):
-		stash.regenerate_list(botBeingInspected, mode);
+		inspector.regenerate_stash(botBeingInspected, mode);
 	else:
-		stash.regenerate_list(botBeingInspected, PieceStash.modes.NONE);
+		inspector.regenerate_stash(botBeingInspected, PieceStash.modes.NONE);
 
 func _on_piece_stash_piece_button_clicked(tiedPiece):
 	if is_instance_valid(botBeingInspected):
@@ -297,9 +307,7 @@ func _on_save_changes_as_pressed():
 		ResourceSaver.save(saveNode, savedPath);
 		#
 		#
-		bot.show();
-		
-		bot.reassign_body_collision();
+		refresh_current_robot();
 		#pieceBeingInspected.show();
 		#pieceBeingInspected.refresh_and_gather_collision_helpers();
 		#
@@ -347,6 +355,7 @@ func open_save_popup(open : bool):
 		save_lbl_success.hide();
 		btn_cancelSave.disabled = true;
 		btn_saveAs.disabled = true;
+		refresh_current_robot();
 
 func _on_cancel_save_pressed():
 	open_save_popup(false);
@@ -379,6 +388,9 @@ func update_abilities_tree():
 			else:
 				abilityText += "Empty";
 			child2.set_text(0, abilityText);
+	
+		bot.update_hud(true);
+		regenerate_stash(PieceStash.modes.ALL);
 
 var abilityViewerRefresh := 0;
 func _process(delta):

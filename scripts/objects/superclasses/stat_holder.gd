@@ -1,5 +1,6 @@
+@icon ("res://graphics/images/class_icons/statHolder.png")
 extends FreezableEntity
-##This entity can have stats saved within it.
+##This entity can have [StatTracker] resources saved within it.
 class_name StatHolder3D
 
 @export_category("Stats")
@@ -121,11 +122,11 @@ func set_stat(statName : String, newValue : float):
 func stat_plus(statName : String, numToAdd : float):
 	set_stat(statName, get_stat(statName) + numToAdd);
 
-##Subtracts the given value numToSubtract to the named stat by just running stat_plus() in reverse.
+##Subtracts the given value [param numToSubtract] to the named stat by just running stat_plus() in reverse.
 func stat_minus(statName : String, numToSubtract : float):
 	stat_plus(statName, - numToSubtract);
 
-## Registers new stats. Only ever call this from stat_registry().[br]In the getFunction field, you can define a new function that is called and returned when get_stat() is called.[br]In the setFunction field, you can define a new function that is called when set_stat() is called.[br]Both getFunction and setFunction can be set to null to have them use the default get or set.
+## Registers new stats. Only ever call this from stat_registry().[br]In the [param getFunction] field, you can define a new function that is called and returned when get_stat() is called.[br]In the setFunction field, you can define a new function that is called when set_stat() is called.[br]Both getFunction and setFunction can be set to null to have them use the default get or set.
 func register_stat(statName : String, baseStat : float, statIcon : Texture2D = get_stat_icon("Default"), getFunction : Variant = null, setFunction : Variant = null, roundingMode : StatTracker.roundingModes = StatTracker.roundingModes.None):
 	await ready;
 	#print_rich("[color=blue]Creating stat "+stat_name_with_id(statName)+" with value "+str(baseStat)+"[/color]")
@@ -164,15 +165,15 @@ func stat_registry():
 
 func set_stat_holder_id():
 	statHolderID = GameState.get_unique_stat_holder_id();
-	pass
+	return statHolderID;
 
 func get_stat_holder_id():
 	if statHolderID == -1:
-		set_stat_holder_id();
+		return set_stat_holder_id();
 	return statHolderID;
 
 func stat_name_with_id(statName):
-	return statName + str(get_stat_holder_id());
+	return str(statName, get_stat_holder_id());
 
 func stat_exists(statName):
 	return get_stat_resource(statName, true) != null;

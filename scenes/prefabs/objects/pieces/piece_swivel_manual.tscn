@@ -5,3 +5,4 @@
 
 [node name="Piece_Swivel" instance=ExtResource("1_lwqng")]
 script = ExtResource("2_jbgvx")
+filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_swivel_manual.tscn"
