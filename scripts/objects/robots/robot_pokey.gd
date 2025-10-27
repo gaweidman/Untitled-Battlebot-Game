@@ -1,0 +1,44 @@
+extends Robot_Enemy
+
+class_name Robot_Pokey
+
+##This is empty here, but the Player and Enemy varieties of this should have things for gathering input / getting player location respectively.
+func get_movement_vector(rotatedByCamera : bool = false) -> Vector2:
+	var vectorOut = Vector2.ZERO;
+	var speedMult = 1.;
+	inputtingMovementThisFrame = true;
+	#if frontRayCollision != null:
+		#speedMult = (1. - (frontRayDistance / 5.)) * 0.75;
+		#vectorOut = - randomizedVector;
+		#print(vectorOut, speedMult)
+	#else:
+	if player_in_chase_range():
+		var plyOffset = GameState.get_player_pos_offset(body.global_position);
+		var length = GameState.get_len_to_player(body.global_position);
+		#print(abs(angle_to_player(true)))
+		vectorOut = Vector2(-plyOffset.x, -plyOffset.z);
+		randomizedVector = Vector2.ZERO;
+		randomizedVectorTimer = 3.0;
+		vectorOut = rotate_movement_vector_to_dodge_walls_and_move_towards_player(vectorOut, PI/2);
+		match frontRayColType:
+			rayColTypes.WALL:
+				vectorOut *= -1;
+	else:
+		speedMult = 0.75;
+		vectorOut = randomizedVector;
+	
+	return vectorOut.normalized() * speedMult;
+
+var randomizedVector : Vector2;
+var randomizedVectorTimer := 0.0;
+func phys_process_timers(delta):
+	super(delta);
+	
+	randomizedVectorTimer -= delta;
+	
+	if randomizedVectorTimer < 0:
+		randomizedVectorTimer += randf_range(0.5,2.0);
+		if randi_range(0,10) > 3:
+			randomizedVector = Vector2(randf_range(-1,1), randf_range(-1,1)).normalized();
+		else:
+			randomizedVector = Vector2.ZERO;

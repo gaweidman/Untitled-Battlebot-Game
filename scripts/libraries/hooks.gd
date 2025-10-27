@@ -18,7 +18,7 @@ var list = {
 	"OnMeleeWeaponHit": {}, #
 	"OnMeleeWeaponSwing": {}, #
 	"OnActiveUse": {}, #
-	"OnWallCollision": {}, #
+	"OnHitWall": {}, #
 	"OnEnemyCollision": {}, #
 	"OnPlayerCollision": {},  #
 	"OnCollision": {}, #

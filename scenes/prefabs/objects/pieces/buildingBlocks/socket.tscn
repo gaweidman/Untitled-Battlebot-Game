@@ -56,3 +56,5 @@ collide_with_areas = true
 shape = SubResource("SphereShape3D_2fwr3")
 disabled = true
 debug_color = Color(0.615, 0, 0.9, 1)
+
+[node name="Marker3D" type="Marker3D" parent="."]

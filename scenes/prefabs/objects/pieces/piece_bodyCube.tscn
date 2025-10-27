@@ -39,7 +39,7 @@ size = Vector3(0.5, 0.5, 0.5)
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gm1wa"]
 radius = 0.75
 
-[node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "hitboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_gm1wa")
 swivelNode = NodePath("Meshes/SwivelTop")
 movingSockets = [NodePath("Meshes/SwivelTop/Socket")]
@@ -49,8 +49,8 @@ weightBase = 23.0
 passiveAbilities = Array[ExtResource("2_xcdtu")]([ExtResource("4_dbydh"), ExtResource("2_h4kss")])
 force_visibility = true
 meshesHolder = NodePath("Meshes")
-placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
 Vector2i(0, 1): null,

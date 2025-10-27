@@ -83,6 +83,17 @@ func fix_angle_rad_to_rad(inAngle : float) -> float:
 		inAngle += 360.0; 
 	return deg_to_rad(inAngle);
 
+##Returns the angle of difference between angle A and angle B, relative to A and wrapping around the circle.[br]
+func angle_difference_relative(A, B):
+	if A < -PI / 2:
+		if B > 0:
+			B -= PI * 2;
+	if A > PI / 2:
+		if B < 0:
+			B += PI * 2;
+	
+	return angle_difference(A, B);
+
 ##Runs look_at() only if the target and node do not share a position.
 func look_at_safe(node : Node3D, target : Vector3, up := Vector3(0,1,0)):
 	if node.global_transform.origin.is_equal_approx(target): return;

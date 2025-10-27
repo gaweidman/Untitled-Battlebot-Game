@@ -44,22 +44,30 @@ func _physics_process(delta):
 
 ##Process and Physics process that run before anything else.
 func process_pre(delta):
+	## Update whether the bot was alive last frame.
 	aliveLastFrame = is_alive();
+	## Take the bot out of reverse.
+	in_reverse = false;
+	## Make the bot come alive if it is queued to do so.
 	if is_ready and queuedLife:
 		live();
+	## Update any invalid references or nodes.
 	grab_references();
-	#prints(get_weight(), get_weight_speed_modifier());
 	pass;
 
 func phys_process_pre(delta):
 	super(delta);
 	grab_references();
+	for piece in get_all_pieces():
+		piece.freeze(is_frozen(), true);
+	body.set_deferred("mass", max(75, min(150, get_weight() * 2)));
 	pass;
 
 func phys_process_timers(delta):
 	super(delta);
 	##Freeze this bot before it can do physics stuff.
 	if not is_frozen():
+		#print("fuck")
 		##Sleep.
 		sleepTimer -= delta;
 		##Invincibility.
@@ -481,7 +489,7 @@ func modify_damage_based_on_immunities(damageData : DamageData):
 
 func take_damage_from_damageData(damageData : DamageData):
 	take_damage(modify_damage_based_on_immunities(damageData));
-	take_knockback(damageData.get_knockback());
+	take_knockback(damageData.get_knockback(), damageData.get_damage_position_local(true))
 	##TODO: Readd Hooks functionality.
 
 func take_damage(damage:float):
@@ -529,10 +537,18 @@ func is_invincible() -> bool:
 	invincible = invincibleTimer > 0 or (GameState.get_setting("godMode") == true && self is Robot_Player)
 	return invincible or invincibleTimer > 0 or (GameState.get_setting("godMode") == true && self is Robot_Player);
 
-func take_knockback(inDir:Vector3):
+func take_knockback(inDir:Vector3, posDir:=Vector3.ZERO):
 	##TODO: Weight calculation.
-	body.call_deferred("apply_impulse", inDir);
+	#inDir *= 100;
+	inDir.y = 0;
+	if treads.is_on_driveable():
+		inDir.y = 200;
+	body.call_deferred("apply_impulse", inDir, posDir);
 	pass
+
+func apply_force(inDir:Vector3):
+	body.apply_force(inDir);
+	#print(inDir)
 
 var weightLoad = -1.0;
 func get_weight_regenerate():
@@ -715,8 +731,11 @@ func move_and_rotate_towards_movement_vector(delta : float):
 		lastInputtedMV = movementVector;
 		var movementVectorRotated = movementVector.rotated(deg_to_rad(90.0 + randf()))
 		var vectorToRotTo = Vector2(movementVectorRotated.x, -movementVectorRotated.y)
-		bodyRotationAngle = vectorToRotTo
+		bodyRotationAngle = vectorToRotTo;
 		
+		if is_in_reverse():
+			bodyRotationAngle = bodyRotationAngle.rotated(deg_to_rad(180));
+	
 	
 	var rotateVector = Vector3(bodyRotationAngle.x, 0.0, bodyRotationAngle.y) + body.global_position
 	
@@ -725,8 +744,9 @@ func move_and_rotate_towards_movement_vector(delta : float):
 	body.update_target_rotation(bodyRotationAngle, delta * bodyRotationSpeed);
 	#Utils.look_at_safe(meshes, rotateVector);
 	
-	##Get 
+	##Get movement input.
 	if is_inputting_movement():
+		## Move the body.
 		var accel = get_movement_speed_acceleration();
 		#print("HI")
 		var forceVector = Vector3.ZERO;
@@ -769,19 +789,13 @@ func update_treads_rotation(delta : float):
 	if ! is_inputting_movement():
 		inputMV = prevMV;
 	inputMV.y *= -1;
+	
 	var inputMVA = inputMV.angle() - PI/2;
 	
 	var treadsMVA = treads.rotation.y;
 	var treadsMV = Vector2.from_angle(treadsMVA);
 	
-	if treadsMVA < -PI / 2:
-		if inputMVA > 0:
-			inputMVA -= PI * 2;
-	if treadsMVA > PI / 2:
-		if inputMVA < 0:
-			inputMVA += PI * 2;
-	
-	var angleDif = angle_difference(treadsMVA, inputMVA);
+	var angleDif = Utils.angle_difference_relative(treadsMVA, inputMVA);
 	
 	if angleDif > PI/2:
 		angleDif -= PI;
@@ -811,8 +825,13 @@ func get_movement_vector(rotatedByCamera : bool = false) -> Vector2:
 	return movementVector.normalized();
 
 var inputtingMovementThisFrame := false; ##This should be set by AI bots before phys_process_motion is called to notify whether to update their position or not this frame.
-func is_inputting_movement() -> bool:
+func is_inputting_movement() -> bool: ## Returns [member inputtingMovementThisFrame].
 	return inputtingMovementThisFrame;
+var in_reverse := false; ##@experimental: Whether the bot is 'reversing' or not. When true, [method move_and_rotate_towards_movement_vector] will rotate the target rotation 180* so the bot can move "backwards".[br][i]Note: Gets reset to false during [method phys_process_pre].[/i]
+func is_in_reverse() -> bool: ##@experimental: Returns [member in_reverse].
+	return in_reverse;
+func put_in_reverse(): ##@experimental: Sets [member in_reverse] to true for the frame.
+	in_reverse = true;
 func get_current_movement_speed_length() -> float:
 	return body.linear_velocity.length();
 
@@ -838,6 +857,9 @@ func get_weight_speed_modifier(baseValue := 1.5) -> float:
 func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = body):
 	SND.play_collision_sound(thisComponent, collider, Vector3.ZERO, 0.45)
 	Hooks.OnCollision(thisComponent, collider);
+	if collider.is_in_group("WorldWall"):
+		print("HIT WALL")
+		Hooks.OnHitWall(thisComponent);
 
 ## Makes sure the bot's speed doesn't go over its max speed.
 func clamp_speed():
@@ -911,7 +933,7 @@ func get_all_pieces() -> Array[Piece]:
 func get_all_pieces_regenerate() -> Array[Piece]:
 	var piecesGathered : Array[Piece] = [];
 	for child:Piece in Utils.get_all_children_of_type(body, Piece):
-		print("CHILD OF BOT BODY: ",child)
+		#print("CHILD OF BOT BODY: ",child)
 		if child.hostRobot == self and child.assignedToSocket:
 			piecesGathered.append(child);
 	allPieces = piecesGathered;
@@ -963,6 +985,8 @@ func get_all_gathered_hurtboxes():
 
 ##Adds an AbilityManager to the given slot index in active_abilities.
 func assign_ability_to_slot(slotNum : int, abilityManager : AbilityManager):
+	unassign_ability_slot(slotNum); ## Unassign whatever was in the slot.
+	
 	if slotNum in active_abilities.keys():
 		if is_instance_valid(abilityManager):
 			abilityManager.assign_robot(self, slotNum);

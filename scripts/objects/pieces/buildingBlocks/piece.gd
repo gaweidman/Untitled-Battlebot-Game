@@ -116,7 +116,9 @@ func destroy():
 ##         socket_index[int] : { 
 ##         "rotation" : float, 
 ##         "occupant" : null or Piece.create_startup_data() } 
-##      } 
+##      },
+##      "abilityAssignments" : { abilityName : slot }, ## Any abilities on this Piece that were assigned to an active slot.
+##      "disabledAbilities" : [ abilityName, abilityName, ... ] ## Disabled abilities on this Piece.
 ##   } 
 ##} 
 ##[/codeblock]
@@ -138,19 +140,25 @@ func create_startup_data():
 	
 	## Abilities. If an ability has been assigned to a slot and is not passive, add its name and assigned slots to the data.
 	var abilityDict := {}
+	var disabled := []
 	for ability in get_all_abilities():
 		if ! ability.isPassive:
 			var slots = ability.get_assigned_slots();
 			if ! slots.is_empty():
 				abilityDict[ability.abilityName] = slots;
-		
-	var dict = { filepathForThisEntity : {
+		else:
+			if ability.is_disabled():
+				disabled.append(ability.abilityName);
+	
+	var data = {
 			#"engine" : engineDict,
 			"sockets" : socketDict,
 			"abilityAssignments" : abilityDict,
+			"disabledAbilities" : disabled,
 		}
-	}
-	#print("SAVE: Startup data dictionary: ", dict)
+	
+	var dict = { filepathForThisEntity : data }
+	
 	return dict;
 
 func load_startup_data(data, robot : Robot):
@@ -171,6 +179,13 @@ func load_startup_data(data, robot : Robot):
 			if is_instance_valid(ability):
 				for slotNum in abilitySlots:
 					robot.assign_ability_to_slot(slotNum, ability);
+	
+	## An array of names that are disabled abilities.
+	if data.keys().has("disabledAbilities"):
+		for abilityName in data["disabledAbilities"]:
+			var ability = get_named_action(abilityName);
+			if is_instance_valid(ability):
+				ability.disable(true);
 	pass;
 
 ######################## TIMERS
@@ -760,7 +775,7 @@ func get_all_meshes() -> Array:
 
 @export_subgroup("Attack Stuff")
 @export var damageBase := 0.0;
-@export var knockbackBase := 0.0;
+@export var knockbackBase := 0.0; ## For context on how big this should be, the Bumper Piece has a value of 70 here.
 @export var kickbackBase := 0.0;
 @export var damageTypes : Array[DamageData.damageTypes] = [];
 @export var disableHitboxesWhileOnCooldown := true;
@@ -790,26 +805,39 @@ func get_knockback(positionOfTarget : Vector3, factorBodyVelocity := true) -> Ve
 
 func get_kickback_force() -> float:
 	return get_stat("Kickback");
+
 func get_kickback_direction(positionOfTarget : Vector3, factorBodyVelocity := true) -> Vector3:
-	var factor = (positionOfTarget - global_position).normalized();
+	var factor = global_position - positionOfTarget;
+	print("FACTOR", factor)
+	factor = factor.normalized();
 	if factorBodyVelocity:
 		var bodVel = get_host_robot().body.linear_velocity;
 		factor += bodVel;
-	return factor.rotated(Vector3(0,1,0), deg_to_rad(180));
+	
+	#factor = factor.rotated(Vector3(0,1,0), deg_to_rad(180));
+	factor -= global_position;
+	return factor;
 
 func get_damage_types() -> Array[DamageData.damageTypes]:
 	##TODO: Part stuff that adds damage types.
 	return damageTypes;
 
-## Creates a brand new [@DamageData] based on your current stats.
-func get_damage_data(_damageAmount := get_damage(), _knockbackForce := get_knockback_force(), _direction := Vector3(0,0,0), _damageTypes := get_damage_types()):
+## Creates a brand new [DamageData] based on your current stats.
+func get_damage_data(targetPosition := global_position, _damageAmount := get_damage(), _knockbackForce := get_knockback_force(), _direction := Vector3(0,0,0), _damageTypes := get_damage_types()) -> DamageData:
 	var DD = DamageData.new();
-	return DD.create(_damageAmount, _knockbackForce, _direction, _damageTypes);
+	DD.create(_damageAmount, _knockbackForce, _direction, _damageTypes);
+	DD.calc_damage_direction_based_on_targets(global_position, targetPosition, false);
+	return DD;
 
-## Creates a brand new [@DamageData] based on your current stats.
-func get_kickback_damage_data(_damageAmount := 0.0, _knockbackForce := get_kickback_force(), _direction := Vector3(0,0,0), _damageTypes :Array[DamageData.damageTypes]= []):
+## Creates a brand new [DamageData] based on your current stats.
+func get_kickback_damage_data(targetPosition := global_position, _damageAmount := 0.0, _knockbackForce := get_kickback_force(), _direction := Vector3(0,0,0), _damageTypes :Array[DamageData.damageTypes]= []):
 	var DD = DamageData.new();
-	return DD.create(_damageAmount, _knockbackForce, _direction, _damageTypes);
+	DD.create(_damageAmount, _knockbackForce, _direction, _damageTypes);
+	prints(targetPosition, global_position)
+	print(DD.calc_damage_direction_based_on_targets(global_position, targetPosition, true));
+	DD.calc_damage_direction_based_on_targets(global_position, targetPosition, true);
+	print(DD.damageDirection)
+	return DD;
 
 ##Fired AFTER a hitbox hits an enemy's hurtbox, via [method _on_hitbox_shape_entered]. Calculates the damage and knockback.
 func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, thisPieceCollider : PieceCollisionBox):
@@ -819,8 +847,7 @@ func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, 
 		#print("Target was not self.")
 		##Handle damaging the opposition.
 		var DD = get_damage_data();
-		var KB = get_impact_direction(otherPiece.global_position, true);
-		DD.damageDirection = KB;
+		#DD.damageDirection = KB;
 		otherPiece.hurtbox_collision_from_piece(self, DD);
 		
 		##Handle kickback.
@@ -832,10 +859,14 @@ func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, 
 	return false;
 
 func initiate_kickback(awayPos : Vector3):
-	var kb = get_kickback_damage_data();
-	var kick = get_kickback_direction(awayPos, false);
-	kb.damageDirection = kick;
-	hurtbox_collision_from_piece(self, kb)
+	var kb = get_kickback_damage_data(awayPos);
+	prints(awayPos, global_position)
+	hurtbox_collision_from_piece(self, kb);
+
+func move_robot_with_force(direction):
+	var bot = get_host_robot();
+	if is_instance_valid(bot):
+		bot.apply_force(direction);
 
 ## Fired when an enemy Piece hitbox hurts this.
 func hurtbox_collision_from_piece(otherPiece : Piece, damageData : DamageData):
@@ -898,9 +929,9 @@ func bullet_hit_hitbox(bullet : Bullet):
 @export var meshesHolder : Node3D;
 @export var maleSocketMesh : Node3D;
 @export_subgroup("Collision")
-@export var placementCollisionHolder : Node3D;
-@export var hurtboxCollisionHolder : HurtboxHolder;
 @export var hitboxCollisionHolder : HitboxHolder;
+@export var hurtboxCollisionHolder : HurtboxHolder;
+@export var placementCollisionHolder : PlacementShapecastHolder;
 #var bodyMeshes : Dictionary[StringName, MeshInstance3D] = {};
 
 ##Frame timer that updates scale of hitboxes every 3 frames.
@@ -1063,6 +1094,16 @@ func disable_hurtbox(foo:bool):
 		for child in hurtboxCollisionHolder.get_children():
 			if child is PieceCollisionBox:
 				child.disabled = foo;
+
+func get_facing_direction(front := Vector3(0,0,1), addPosition := false):
+	front = front.rotated(Vector3(1,0,0), global_rotation.x);
+	front = front.rotated(Vector3(0,1,0), global_rotation.y);
+	front = front.rotated(Vector3(0,0,1), global_rotation.z);
+	
+	if addPosition:
+		front += global_position;
+	
+	return front;
 
 ##Fired whent he camera finds this piece.
 ##TODO: Fancy stuff. 

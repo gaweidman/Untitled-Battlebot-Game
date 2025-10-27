@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="AbilityManager" load_steps=5 format=3 uid="uid://bewjw8jqgrdek"]
+
+[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_urt7v"]
+[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_h4am3"]
+[ext_resource type="Texture2D" uid="uid://6dla8kdo4d2f" path="res://graphics/images/HUD/parts/Icons/piston.png" id="2_uwnlf"]
+
+[sub_resource type="Resource" id="Resource_dhbo1"]
+script = ExtResource("1_urt7v")
+string = "Blasts fuel behind this Piece, launching your Robot with high speed in its direction."
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[resource]
+script = ExtResource("2_h4am3")
+abilityName = "Blastoff"
+abilityDescriptionConstructor = Array[ExtResource("1_urt7v")]([SubResource("Resource_dhbo1")])
+abilityDescription = "No Description Found."
+energyCost = 2.5
+cooldownTimeBase = 6.0
+cooldownStatName = ""
+runType = 0
+functionNameWhenUsed = &"blastoff"
+statsUsed = Array[String](["Kickback"])
+icon = ExtResource("2_uwnlf")
+initialized = false
+disabled = false
+functionWhenUsed = Callable()
+metadata/_custom_type_script = "uid://crpa3dbgxwyeg"

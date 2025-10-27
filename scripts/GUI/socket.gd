@@ -44,9 +44,9 @@ func load_startup_data(data, robot : Robot):
 	if occupantData != null and not occupantData is String:
 		print("OCCUPANT DATA: ", occupantData)
 		var occupantPath = occupantData.keys()[0]
-		print("OCCUPANT PATH: ", occupantPath)
+		#print("OCCUPANT PATH: ", occupantPath)
 		var occupantDataForwarded = occupantData[occupantPath];
-		print("OCCUPANT DATA TO FORWARD: ", occupantDataForwarded)
+		#print("OCCUPANT DATA TO FORWARD: ", occupantDataForwarded)
 		var result = add_occupant_from_scene_path(occupantPath);
 		if result != null:
 			print(result);
@@ -59,11 +59,12 @@ func add_occupant_from_scene_path(scenePath : String):
 	if FileAccess.file_exists(scenePath):
 		var newPieceScene = load(scenePath);
 		var newPiece = newPieceScene.instantiate();
-		if newPiece is Piece:
-			add_child(newPiece);
-			add_occupant(newPiece, true)
-			newPiece.filepathForThisEntity = scenePath;
-			return newPiece;
+		if is_instance_valid(newPiece):
+			if newPiece is Piece:
+				add_child(newPiece);
+				add_occupant(newPiece, true)
+				newPiece.filepathForThisEntity = scenePath;
+				return newPiece;
 	return null;
 
 func remove_occupant(delete := false):
@@ -76,7 +77,7 @@ func remove_occupant(delete := false):
 func add_occupant(newPiece : Piece, manual := false):
 	if is_instance_valid(newPiece):
 		occupant = newPiece;
-		print("SETTING AS OCCUPANT!")
+		#print("SETTING AS OCCUPANT!")
 		if is_instance_valid(occupant.get_parent()):
 			occupant.reparent(self, false);
 		else:
@@ -176,6 +177,9 @@ func _process(delta):
 		valid = is_valid();
 		selectionCheckLoop = 3;
 		if hoverResetFrameCounter <= 0:
+			#print_rich("MAN")
+			if hovering:
+				print_rich("MAN")	
 			hover(false);
 		#
 		#var vp = get_viewport()

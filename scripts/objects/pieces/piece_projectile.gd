@@ -126,7 +126,6 @@ func get_firing_direction() -> Vector3:
 	firingAngle = firingAngle.rotated(Vector3(0,0,1), global_rotation.z)
 	#Hooks.OnFireProjectile(self, bullet); ##TODO: Hooks implementation
 	firingAngle = firingAngle.normalized();
-	
 	return firingAngle;
 
 func process_draw(delta):
@@ -193,6 +192,8 @@ func fireBullet():
 		
 		var factory = get_named_passive("Bullet Factory");
 		factory.add_freeze_time(get_stat("ProjectileFireRate") + get_physics_process_delta_time());
+		
+		initiate_kickback(firingAngle + global_position);
 	else:
 		for bullt in magazine:
 			print(bullt)

@@ -63,7 +63,7 @@ size = Vector3(1, 0.5, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_shgbd"]
 size = Vector3(0.5, 0.5, 1.5)
 
-[node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("firingOffsetNode", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder") groups=["Piece"]]
+[node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("firingOffsetNode", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder") groups=["Piece"]]
 script = ExtResource("1_f406y")
 firingOffsetNode = NodePath("Meshes/MeshInstance3D/FiringOffset")
 pieceName = &"Cannon"
@@ -73,10 +73,12 @@ activeAbilities = Array[ExtResource("3_f406y")]([ExtResource("4_f406y")])
 passiveAbilities = Array[ExtResource("3_f406y")]([ExtResource("5_shgbd")])
 force_visibility = true
 damageBase = 1.0
+knockbackBase = 250.0
+kickbackBase = 250.0
 damageTypes = Array[int]([1])
-placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
-hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 engineSlots = {
 Vector2i(1, 2): null,
 Vector2i(1, 3): null,

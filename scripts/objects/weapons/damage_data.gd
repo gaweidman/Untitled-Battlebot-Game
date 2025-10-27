@@ -5,6 +5,8 @@ class_name DamageData
 var damageAmount := 1.0;
 var knockbackAmount := 0.0;
 var damageDirection := Vector3.ZERO;
+var targetDamagePosition := Vector3.ZERO;
+var attackerDamagePosition := Vector3.ZERO;
 enum damageTypes {
 	BLUDGEONING,
 	PIERCING,
@@ -30,6 +32,26 @@ func get_damage():
 
 func get_knockback():
 	return knockbackAmount * damageDirection;
+
+func calc_damage_direction_based_on_targets(_attackerPos : Vector3, _targetPos = null, towardsAttacker := false):
+	attackerDamagePosition = _attackerPos;
+	if _targetPos is Vector3:
+		#print("valid, ", _targetPos)
+		targetDamagePosition = _targetPos; ## Set it to this just to be safe.
+	else:
+		targetDamagePosition = _attackerPos; ## Set it to this just to be safe.
+	if towardsAttacker:
+		damageDirection = (attackerDamagePosition - targetDamagePosition).normalized();
+	else:
+		damageDirection = (targetDamagePosition - attackerDamagePosition).normalized();
+	
+	return damageDirection;
+
+func get_damage_position_local(forTarget := true):
+	if forTarget:
+		return targetDamagePosition - attackerDamagePosition;
+	else:
+		return attackerDamagePosition - targetDamagePosition;
 
 func has_type(tag : damageTypes):
 	return tags.has(tag);

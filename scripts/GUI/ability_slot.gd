@@ -28,6 +28,11 @@ var curMode : modes = modes.NONE;
 #@export var lbl_cooldownStart : Label;
 @export var blinky_cooldown : TextureRect;
 
+@export var tr_icon : TextureRect;
+@export var spr_icon : Sprite2D;
+@export var btn_selectReference : Button;
+@export var bg_icon : NinePatchRect;
+const bgIconBaseY := 77.0;
 
 var index : int;
 var referencedAbility : AbilityManager;
@@ -38,6 +43,10 @@ func _ready():
 	clear_assignment();
 
 func _process(delta):
+	
+	selectorButtonOffset = lerp(selectorButtonOffset, 0.0, 10 * delta);
+	bg_icon.position.y = bgIconBaseY + selectorButtonOffset;
+	
 	update_ability(referencedAbility);
 	
 	match curMode:
@@ -65,8 +74,15 @@ func assign_ability(ability : AbilityManager):
 	if is_instance_valid(ability):
 		print("Ability assigned!")
 		referencedAbility = ability;
+		
+		## Change the icon data.
+		spr_icon.texture = ability.icon;
+		
 		TextFunc.set_text_color(lbl_name, "white");
 		lbl_name.text = ability.abilityName;
+		
+		btn_selectReference.disabled = false;
+		
 		update_ability(ability);
 	else:
 		clear_assignment();
@@ -85,7 +101,30 @@ func update_ability(ability : AbilityManager):
 		clear_assignment();
 		return;
 	
-	## Energy. Deals with both the bar, as well as the icon in the misc window.
+	## Icon and the button.
+	var ref = referencedAbility.get_assigned_piece_or_part();
+	var iconBG = "res://graphics/images/HUD/screenGFX/screenBG.png";
+	if is_instance_valid(ref):
+		if ref is Piece:
+			if ref.get_selected():
+				iconBG = "res://graphics/images/HUD/screenGFX/screenBG_lightBlue.png";
+			else:
+				if selectorHovering or selectorFocused:
+					iconBG = "res://graphics/images/HUD/screenGFX/screenBG_yellow.png";
+				else:
+					iconBG = "res://graphics/images/HUD/screenGFX/screenBG_piece.png";
+		if ref is Part:
+			if selectorHovering or selectorFocused:
+				iconBG = "res://graphics/images/HUD/screenGFX/screenBG_yellow.png";
+			else:
+				iconBG = "res://graphics/images/HUD/screenGFX/screenBG_part.png";
+	else:
+		clear_assignment();
+		return;
+	tr_icon.texture = load(iconBG);
+	
+	
+	## Energy. Deals with both the bar, as well as the energy icon in the misc window.
 	var incomingEnergy = data.incomingPower;
 	var requiredEnergy = data.requiredEnergy;
 	var hasAvailableEnergy = incomingEnergy >= requiredEnergy;
@@ -131,6 +170,7 @@ func update_ability(ability : AbilityManager):
 	else:
 		blinky_cooldown.visible = true;
 		lbl_cooldownCurrent.text = "     ";
+	
 	#lbl_cooldownStart.text = TextFunc.format_stat(cooldownStartTime, 2, false, true);
 	#lbl_cooldownSlash.text = "/";
 
@@ -150,4 +190,42 @@ func clear_assignment():
 	lbl_cooldownCurrent.text = "";
 	#lbl_cooldownStart.text = "";
 	#lbl_cooldownSlash.text = "";
+	btn_selectReference.disabled = true;
+	
+	var iconBG = "res://graphics/images/HUD/screenGFX/screenBG.png";
+	tr_icon.texture = load(iconBG);
+	spr_icon.texture = null;
 	pass;
+
+
+func _on_select_reference_button_pressed():
+	selectorButtonPressGFX();
+	if is_instance_valid(referencedAbility):
+		var ref = referencedAbility.get_assigned_piece_or_part();
+		if is_instance_valid(ref):
+			if ref is Piece:
+				ref.select_via_robot();
+				return;
+			##TODO: Part support
+	pass # Replace with function body.
+
+var selectorFocused := false;
+func _on_select_reference_button_focus_entered():
+	selectorFocused = true;
+	pass # Replace with function body.
+func _on_select_reference_button_focus_exited():
+	selectorFocused = false;
+	pass # Replace with function body.
+
+
+var selectorHovering := false;
+func _on_select_reference_button_mouse_entered():
+	selectorHovering = true;
+	pass # Replace with function body.
+func _on_select_reference_button_mouse_exited():
+	selectorHovering = false;
+	pass # Replace with function body.
+
+var selectorButtonOffset := 0.0;
+func selectorButtonPressGFX():
+	selectorButtonOffset = 2;

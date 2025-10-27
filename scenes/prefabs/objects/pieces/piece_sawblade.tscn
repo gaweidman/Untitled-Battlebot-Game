@@ -42,7 +42,7 @@ radius = 1.125
 height = 0.5
 radius = 1.375
 
-[node name="Piece_Sawblade" type="Node3D" node_paths=PackedStringArray("blade", "meshesHolder", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Sawblade" type="Node3D" node_paths=PackedStringArray("blade", "meshesHolder", "hitboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_5k0fg")
 blade = NodePath("Blade2")
 pieceName = &"Sawblade"
@@ -51,14 +51,14 @@ activeAbilities = Array[ExtResource("2_k1jne")]([ExtResource("3_i7bft")])
 passiveAbilities = Array[ExtResource("2_k1jne")]([ExtResource("4_k1jne")])
 force_visibility = true
 damageBase = 1.0
-knockbackBase = 80.0
-kickbackBase = 80.0
+knockbackBase = 300.0
+kickbackBase = 500.0
 damageTypes = Array[int]([1])
 disableHitboxesWhileOnCooldown = false
 contactCooldown = 0.15
 meshesHolder = NodePath("Meshes")
-placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
 Vector2i(1, 1): null,

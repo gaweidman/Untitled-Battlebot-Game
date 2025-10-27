@@ -32,7 +32,7 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("9_psn5c")
 
-[node name="Piece_Pointer Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "placementCollisionHolder", "hurtboxCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Pointer Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
 script = ExtResource("1_bn4l8")
 swivelNode = NodePath("SwivelTop")
@@ -42,9 +42,9 @@ weightBase = 1.25
 passiveAbilities = Array[ExtResource("3_pqjj1")]([ExtResource("3_noc8o")])
 force_visibility = true
 meshesHolder = NodePath("Meshes")
-placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
-hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
 Vector2i(2, 1): null,

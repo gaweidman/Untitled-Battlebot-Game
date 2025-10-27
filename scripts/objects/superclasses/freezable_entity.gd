@@ -15,7 +15,7 @@ func _physics_process(delta):
 	if not is_paused():
 		phys_process_timers(delta);
 
-##Run before anything else.
+##Physics process stuff run before anything else.
 func phys_process_pre(delta):
 	if freezeQueued: freeze(true);
 

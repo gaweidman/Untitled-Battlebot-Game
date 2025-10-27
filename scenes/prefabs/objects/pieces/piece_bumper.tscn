@@ -51,8 +51,8 @@ pieceDescription = "Classic bumper car shenaniganery. Or maybe just regular car 
 passiveAbilities = Array[ExtResource("2_qe5pu")]([ExtResource("3_qe5pu")])
 hurtboxAlwaysEnabled = true
 force_visibility = true
-knockbackBase = 75.0
-kickbackBase = 60.0
+knockbackBase = 600.0
+kickbackBase = 300.0
 contactCooldown = 0.15
 engineSlots = {
 Vector2i(1, 2): null,

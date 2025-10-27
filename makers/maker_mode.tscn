@@ -443,7 +443,7 @@ suffix = "acceleration"
 [node name="maxSpeed" parent="RobotMaker/RobotData/RobotDataPanel/Movement/ScrollContainer/Control" instance=ExtResource("8_ccj5e")]
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
-step = 0.5
+step = 0.05
 value = 20.25
 suffix = "maxSpeed"
 

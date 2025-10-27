@@ -8,6 +8,8 @@ var blinkTimer := 0.0;
 var time := 120.0;
 var paused := true;
 
+@export var TimerBlinky : TextureRect;
+
 func _process(delta):
 	var isPaused = GameState.is_paused() or paused or !(GameState.get_game_board_state() == GameBoard.gameState.PLAY);
 	
@@ -24,9 +26,9 @@ func _process(delta):
 			
 			if blinkTimer > 0:
 				blinkTimer -= delta;
-				$TimerBlinky.show();
+				TimerBlinky.show();
 			else:
-				$TimerBlinky.hide();
+				TimerBlinky.hide();
 			
 			blinkCycle -= delta;
 			if blinkCycle < 0:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://y4jreplx5if1"]
+[gd_scene load_steps=23 format=4 uid="uid://y4jreplx5if1"]
 
 [ext_resource type="TileSet" uid="uid://dicxuohkdpmlx" path="res://graphics/images/HUD/engine/engineTileMap.tres" id="1_3xq6w"]
 [ext_resource type="Script" uid="uid://midvysmd0e3e" path="res://scripts/GUI/ability_slot.gd" id="1_w0yrw"]
@@ -19,13 +19,15 @@
 [ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="16_x17s8"]
 [ext_resource type="Texture2D" uid="uid://cr16um277it7e" path="res://graphics/images/HUD/blinkies/timer_blinky_off.png" id="18_ylxhx"]
 [ext_resource type="Texture2D" uid="uid://bw5pl1p6bmq61" path="res://graphics/images/HUD/blinkies/timer_blinky_on.png" id="19_he02q"]
+[ext_resource type="Texture2D" uid="uid://dggphix4dl3qu" path="res://graphics/images/HUD/screenGFX/screenBG.png" id="20_fefil"]
+[ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/Cannon.png" id="20_he02q"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jtnig"]
 resource_local_to_scene = true
 shader = ExtResource("9_0tj24")
 shader_parameter/mask = ExtResource("11_g6gak")
 
-[node name="AbilitySlot0" type="Control" node_paths=PackedStringArray("btn_assign", "lbl_name", "lbl_energy", "bar_energy", "blinky_energy", "blinky_usable", "misc_energy", "energyCase", "misc_ammo", "misc_magazine", "misc_text", "lbl_cooldownCurrent", "blinky_cooldown")]
+[node name="AbilitySlot0" type="Control" node_paths=PackedStringArray("btn_assign", "lbl_name", "lbl_energy", "bar_energy", "blinky_energy", "blinky_usable", "misc_energy", "energyCase", "misc_ammo", "misc_magazine", "misc_text", "lbl_cooldownCurrent", "blinky_cooldown", "tr_icon", "spr_icon", "btn_selectReference", "bg_icon")]
 texture_filter = 1
 clip_contents = true
 layout_mode = 3
@@ -46,6 +48,10 @@ misc_magazine = NodePath("MiscBG/Ammo/Magazine")
 misc_text = NodePath("MiscBG/MiscText")
 lbl_cooldownCurrent = NodePath("TimeBG/CooldownCurrentTime")
 blinky_cooldown = NodePath("CooldownBlinkyOff/CooldownBlinkyOn")
+tr_icon = NodePath("InputBG/AbilityIconBG/TextureRect")
+spr_icon = NodePath("InputBG/AbilityIconBG/Icon")
+btn_selectReference = NodePath("InputBG/AbilityIconBG/SelectReferenceButton")
+bg_icon = NodePath("InputBG")
 
 [node name="BG" type="Control" parent="."]
 layout_mode = 1
@@ -69,20 +75,6 @@ tile_set = ExtResource("1_3xq6w")
 position = Vector2(0, -4)
 tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAABAAAAAAACAAAAAAABAAAAAAADAAAAAAABAAAAAAAEAAAAAAABAAAAAAAFAAAAAAABAAAAAAAGAAAAAAABAAAAAAAHAAAAAAABAAAAAAAIAAAAAAABAAAAAAACAAUAAAAAAAMAAAADAAUAAAACAAMAAAAEAAUAAAACAAMAAAAFAAUAAAACAAMAAAAGAAUAAAACAAMAAAAHAAUAAAACAAMAAAAIAAUAAAACAAMAAAAJAAUAAAACAAMAAAABAAMAAAACAAMAAAACAAMAAAADAAEAAAACAAQAAAAAAAEAAAAAAAIAAAAAAAEAAAAAAAEAAAAAAAEAAAAJAAQAAAAFAAMAAAAJAAMAAAAFAAMAAAAJAAIAAAAFAAMAAAAJAAEAAAAFAAMAAAAJAAAAAAABAAAAAAABAAEAAAAFAAMAAAABAAIAAAAFAAMAAAACAAIAAAAFAAMAAAADAAIAAAAFAAMAAAAEAAIAAAAFAAMAAAAFAAIAAAAFAAMAAAAGAAIAAAAFAAMAAAAHAAIAAAAFAAMAAAAIAAIAAAAFAAMAAAAIAAEAAAAFAAMAAAAHAAEAAAAFAAMAAAAGAAEAAAAFAAMAAAAFAAEAAAAFAAMAAAAEAAEAAAAFAAMAAAADAAEAAAAFAAMAAAACAAEAAAAFAAMAAAADAAMAAAAFAAMAAAADAAQAAAAFAAMAAAAEAAQAAAAFAAMAAAAFAAQAAAAFAAMAAAAGAAQAAAAFAAMAAAAHAAQAAAAFAAMAAAAIAAQAAAAFAAMAAAAIAAMAAAAFAAMAAAAHAAMAAAAFAAMAAAAGAAMAAAAFAAMAAAAFAAMAAAAFAAMAAAAEAAMAAAAFAAMAAAAKAAAAAAADAAAAAAAKAAEAAAADAAIAAAAKAAIAAAADAAIAAAAKAAMAAAADAAIAAAAKAAQAAAADAAIAAAAKAAUAAAADAAMAAAAAAAMAAAAAAAMAAAA=")
 tile_set = ExtResource("1_3xq6w")
-
-[node name="InputBG" type="NinePatchRect" parent="BG"]
-layout_mode = 0
-offset_left = 18.0
-offset_top = 77.0
-offset_right = 64.0
-offset_bottom = 123.0
-texture = ExtResource("3_k6pxm")
-patch_margin_left = 6
-patch_margin_top = 6
-patch_margin_right = 6
-patch_margin_bottom = 7
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
 
 [node name="AbilityBlinky" type="TextureRect" parent="."]
 layout_mode = 0
@@ -248,9 +240,9 @@ TO SLOT"
 
 [node name="CooldownBlinkyOff" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 125.0
+offset_left = 123.0
 offset_top = 51.0
-offset_right = 135.0
+offset_right = 133.0
 offset_bottom = 62.0
 texture = ExtResource("18_ylxhx")
 
@@ -286,6 +278,61 @@ theme_override_font_sizes/font_size = 15
 text = "00.00"
 horizontal_alignment = 2
 
+[node name="InputBG" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 77.0
+offset_right = 64.0
+offset_bottom = 123.0
+texture = ExtResource("3_k6pxm")
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 7
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="AbilityIconBG" type="NinePatchRect" parent="InputBG"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 39.0
+texture = ExtResource("6_ifvkn")
+patch_margin_left = 1
+patch_margin_top = 3
+patch_margin_right = 1
+patch_margin_bottom = 1
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="TextureRect" type="TextureRect" parent="InputBG/AbilityIconBG"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 3.0
+offset_right = 33.0
+offset_bottom = 33.0
+texture = ExtResource("20_fefil")
+stretch_mode = 1
+
+[node name="SelectReferenceButton" type="Button" parent="InputBG/AbilityIconBG"]
+self_modulate = Color(1, 1, 1, 0)
+z_index = 1
+layout_mode = 0
+offset_left = -6.0
+offset_top = -5.0
+offset_right = 40.0
+offset_bottom = 41.0
+
+[node name="Icon" type="Sprite2D" parent="InputBG/AbilityIconBG"]
+position = Vector2(17, 18)
+texture = ExtResource("20_he02q")
+
 [connection signal="pressed" from="Assign" to="." method="_on_assign_pressed"]
+[connection signal="focus_entered" from="InputBG/AbilityIconBG/SelectReferenceButton" to="." method="_on_select_reference_button_focus_entered"]
+[connection signal="focus_exited" from="InputBG/AbilityIconBG/SelectReferenceButton" to="." method="_on_select_reference_button_focus_exited"]
+[connection signal="mouse_entered" from="InputBG/AbilityIconBG/SelectReferenceButton" to="." method="_on_select_reference_button_mouse_entered"]
+[connection signal="mouse_exited" from="InputBG/AbilityIconBG/SelectReferenceButton" to="." method="_on_select_reference_button_mouse_exited"]
+[connection signal="pressed" from="InputBG/AbilityIconBG/SelectReferenceButton" to="." method="_on_select_reference_button_pressed"]
 
 [editable path="EnergyBar_Case/EnergyBar"]
