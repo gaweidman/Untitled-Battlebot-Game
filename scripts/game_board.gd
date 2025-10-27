@@ -21,6 +21,8 @@ var player : Robot_Player;
 
 var enemiesKilled := 0;
 var scrapGained := 0;
+
+@export var currentArena : Arena;
 @export_category("HUD nodes")
 #@export var HUD_playerStats : Control;
 @export var HUD_mainMenu : Control;

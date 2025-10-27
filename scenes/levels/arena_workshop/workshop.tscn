@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://cacpmbuy5ck50"]
+
+[ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="1_vul8q"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_g7l54"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_vul8q"]
+size = Vector2(6, 6)
+
+[node name="Workshop" type="Node3D"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 1289
+collision_mask = 1025
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_g7l54")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("PlaneMesh_vul8q")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 1289
+script = ExtResource("1_vul8q")
+metadata/_custom_type_script = "uid://bkwxna02gqgqu"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("WorldBoundaryShape3D_g7l54")

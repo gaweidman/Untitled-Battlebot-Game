@@ -10,7 +10,7 @@ var directionRay : RayCast3D;
 var frontRayCollision = null;## Collider gathered in [method update_front_ray_result]. Set to null if invalid.
 var frontRayColType : rayColTypes = rayColTypes.NONE;## Collider type in [enum rayColTypes] gathered in [method update_front_ray_result] based on [member frontRayCollision]. 
 var frontRayNormal = Vector3(0,0,0).normalized();## Collision normal gathered in [method update_front_ray_result]. Set to null if invalid.
-var frontDirection = Vector2(0,1).normalized();## The front of the robot, determined by body rotation.
+var frontDirection := Vector2(0,1).normalized();## The front of the robot, determined by body rotation.
 @export var frontRayDistance = 5.0; ## How long the front collision ray should be.
 var frontRayDistanceToPoint = 0.0; ## Calculated in [method update_front_ray_result]. how far away from colliding the bot is directly in front of it.
 @export var chasesPlayerInReverse := false; ##@experimental: When set to true, this bot will go into reverse when the player is behind them.
@@ -49,8 +49,8 @@ func grab_references():
 		directionRay.set_debug_shape_thickness(5)
 		directionRay.set_debug_shape_custom_color(Color(1,0,1))
 
-func get_front_direction_vector3():
-	return Vector3(frontDirection.x, 0, frontDirection.y);
+func get_front_direction_vector3(inVector := frontDirection):
+	return Vector3(inVector.x, 0, inVector.y);
 
 func phys_process_pre(delta):
 	super(delta);
@@ -92,8 +92,12 @@ func phys_process_motion(delta):
 
 var playerInRaySight := false; ## Updated in [method update_if_ray_colliding_with_player]. True if [member playerRay] was colliding with the player that frame.
 var wallInWayOfPlayer := false; ## Updated in [method update_if_ray_colliding_with_player]. True if [member playerRay] was colliding with a wall that frame.
+var enemyInWayOfPlayer := false; ## Updated in [method update_if_ray_colliding_with_player]. True if [member playerRay] was colliding with a [Robot] that wasn't a [Robot_Player] that frame.
 ## Sets [member playerRay] directly forward and updates stuff based on what it hits. 
 func update_if_ray_colliding_with_player(rotationalOffset := 0.0) -> bool:
+	wallInWayOfPlayer = false;
+	playerInRaySight = false;
+	enemyInWayOfPlayer = false;
 	if is_instance_valid(playerRay) and player_in_chase_range():
 		playerRay.global_position = body.global_position;
 		playerRay.target_position = GameState.get_player_pos_offset(body.global_position);
@@ -101,30 +105,35 @@ func update_if_ray_colliding_with_player(rotationalOffset := 0.0) -> bool:
 			playerRay.target_position = playerRay.target_position.rotated(Vector3(0,1,0),rotationalOffset);
 		
 		playerRay.force_raycast_update();
-		wallInWayOfPlayer = false;
-		playerInRaySight = false;
+		var col = null;
 		if playerRay.is_colliding():
-			var col = playerRay.get_collider();
-			
-			if col is RobotBody:
-				var bot = col.get_robot();
-				if bot is Robot_Player:
-					playerInRaySight = true;
-			
-			wallInWayOfPlayer = col.is_in_group("World");
+			col = playerRay.get_collider();
 		
-		if playerInRaySight:
-			playerRay.set_debug_shape_custom_color(Color(0,1,0));
-		else:
-			if wallInWayOfPlayer:
-				playerRay.set_debug_shape_custom_color(Color(1,1,0));
-			else:
+		match parse_ray_collider_result(col):
+			rayColTypes.NONE:
 				playerRay.set_debug_shape_custom_color(Color(0.8,0.8,0.8));
+				pass;
+			rayColTypes.PLAYER:
+				playerRay.set_debug_shape_custom_color(Color(0,1,0));
+				playerInRaySight = true;
+				pass;
+			rayColTypes.ENEMY:
+				playerRay.set_debug_shape_custom_color(Color(0,0,1));
+				enemyInWayOfPlayer = true;
+				pass;
+			rayColTypes.OBSTACLE:
+				playerRay.set_debug_shape_custom_color(Color(1,1,0));
+				wallInWayOfPlayer = true;
+				pass;
+			rayColTypes.FLOOR:
+				playerRay.set_debug_shape_custom_color(Color(0.5,0.5,0));
+				wallInWayOfPlayer = true;
+				pass;
 		
 		return playerInRaySight;
 	
-	frontRay.set_debug_shape_custom_color(Color(0.0,0.0,0.0));
 	grab_references();
+	playerRay.set_debug_shape_custom_color(Color(0.0,0.0,0.0));
 	playerInRaySight = false;
 	return playerInRaySight;
 
@@ -166,21 +175,30 @@ func get_angle_to_player_from_front(inDegrees := false) -> float:
 func player_is_behind():
 	return get_angle_to_player_from_front(false) > PI/2;
 
+func get_basic_player_chase_vector():
+	var plyOffset = GameState.get_player_pos_offset(body.global_position);
+	var length = GameState.get_len_to_player(body.global_position);
+	var vectorOut = Vector2(-plyOffset.x, -plyOffset.z);
+	return vectorOut;
+
 ## Rotates the [param invector] in steps of [param degreeStep] until its absolute value reaches [param maxRotation] in either direction, or [method update_if_ray_colliding_with_player] returns a result that has the player not obscured by a wall ( [code]playerInRaySight == true[/code] ).[br][br]
 ## [color=pink][i]This is probably pretty pricey since it deals with raycasts.
-func rotate_movement_vector_to_dodge_walls_and_move_towards_player(invector : Vector2, maxRotation := PI/2, degreeStep := 20.) -> Vector2:
-	if playerInRaySight: return invector; ## If the player's in sight, ignore this function.
+func rotate_movement_vector_to_dodge_walls_and_move_towards_player(invector : Vector2 = get_basic_player_chase_vector(), maxRotation := PI * 2/3, degreeStep := 20.) -> Vector2:
+	if !(wallInWayOfPlayer or enemyInWayOfPlayer): 
+		if playerInRaySight: return invector; ## If the player's in sight, ignore this function.
 	
 	var amtOfRotation = 0.;
 	var angleToPlayer = get_angle_to_player_from_front();
 	var factor = 1;
+	
+	## Determine factor based on which angle to them would be closest.
 	if angleToPlayer < 0:
 		factor = -1;
 	## Loop over the rotation until it's reached its maximum.
 	while (
 		abs(amtOfRotation) < abs(maxRotation)
 		and 
-		wallInWayOfPlayer == true
+		(wallInWayOfPlayer or enemyInWayOfPlayer)
 	):
 		amtOfRotation += deg_to_rad(degreeStep * factor);
 		
@@ -200,7 +218,7 @@ func rotate_movement_vector_to_dodge_walls_and_move_towards_player(invector : Ve
 	while (
 		abs(amtOfRotation) < abs(maxRotation)
 		and 
-		wallInWayOfPlayer == true
+		(wallInWayOfPlayer or enemyInWayOfPlayer)
 		and 
 		abs(amtOfRotation) < abs(firstAmt) ## Don't keep looping if the next loop would bring us over the original check.
 	):
@@ -222,6 +240,7 @@ func rotate_movement_vector_to_dodge_walls_and_move_towards_player(invector : Ve
 	elif abs(secondAmt) > abs(firstAmt):
 		invector = invector.rotated(firstAmt);
 		return invector;
+	
 	## If neither of the checks passed, and both angles are equal, then it chooses either the second result or the input, at random (50%).
 	## The 2nd result is chosen because it will likely move the bot away from the player, and subsequently any walls in the way.
 	if randf() >= 0.5:
@@ -235,6 +254,7 @@ func player_in_chase_range(distanceOverride := playerChaseDistance):
 enum rayColTypes {
 	FLOOR,
 	WALL,
+	OBSTACLE,
 	NONE,
 	PLAYER,
 	ENEMY
@@ -247,6 +267,8 @@ func parse_ray_collider_result(collision : CollisionObject3D = frontRayCollision
 		if bot is Robot_Player:
 			rayColTypes.PLAYER;
 		return rayColTypes.ENEMY;
+	if collision.is_in_group("Obstacle"):
+		return rayColTypes.OBSTACLE;
 	if collision.is_in_group("WorldWall"):
 		return rayColTypes.WALL;
 	if collision.is_in_group("World"):

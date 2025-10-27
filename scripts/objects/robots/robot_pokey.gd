@@ -13,19 +13,18 @@ func get_movement_vector(rotatedByCamera : bool = false) -> Vector2:
 		#print(vectorOut, speedMult)
 	#else:
 	if player_in_chase_range():
-		var plyOffset = GameState.get_player_pos_offset(body.global_position);
-		var length = GameState.get_len_to_player(body.global_position);
-		#print(abs(angle_to_player(true)))
-		vectorOut = Vector2(-plyOffset.x, -plyOffset.z);
 		randomizedVector = Vector2.ZERO;
 		randomizedVectorTimer = 3.0;
-		vectorOut = rotate_movement_vector_to_dodge_walls_and_move_towards_player(vectorOut, PI/2);
+		vectorOut = rotate_movement_vector_to_dodge_walls_and_move_towards_player();
 		match frontRayColType:
 			rayColTypes.WALL:
 				vectorOut *= -1;
 	else:
 		speedMult = 0.75;
 		vectorOut = randomizedVector;
+	
+	directionRay.global_position = body.global_position;
+	directionRay.target_position = get_front_direction_vector3(-vectorOut) * speedMult;
 	
 	return vectorOut.normalized() * speedMult;
 

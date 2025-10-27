@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://b4lxeohowt1xt"]
+[gd_scene load_steps=16 format=3 uid="uid://b4lxeohowt1xt"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_jdn6p"]
 [ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="4_ayq0k"]
@@ -30,6 +30,10 @@ albedo_texture = ExtResource("7_x1ea0")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_jdn6p"]
 radius = 0.375
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ayq0k"]
+radius = 0.25
+height = 0.75
 
 [node name="Piece_Horn" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_jdn6p")
@@ -75,6 +79,7 @@ script = ExtResource("4_ayq0k")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
 shape = SubResource("BoxShape3D_l000f")
 debug_color = Color(0, 0.6, 0.701961, 0.419608)
+isHurtbox = false
 
 [node name="Meshes" type="Node3D" parent="."]
 editor_description = "Put any and all mesh instances in here."
@@ -132,5 +137,11 @@ shape = SubResource("SphereShape3D_jdn6p")
 isPlacementBox = false
 isHurtbox = false
 isHitbox = true
+
+[node name="PieceCollisionBox3" parent="." instance=ExtResource("6_jxej0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+shape = SubResource("CapsuleShape3D_ayq0k")
+debug_color = Color(0, 0.6, 0.701961, 0.419608)
+isPlacementBox = false
 
 [connection signal="body_shape_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_body_shape_entered"]
