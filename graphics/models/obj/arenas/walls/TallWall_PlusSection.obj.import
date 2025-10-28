@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dom6aioby50i7"
+path="res://.godot/imported/TallWall_PlusSection.obj-2d96f65b134bffc1d0626bcf53208311.mesh"
+
+[deps]
+
+files=["res://.godot/imported/TallWall_PlusSection.obj-2d96f65b134bffc1d0626bcf53208311.mesh"]
+
+source_file="res://graphics/models/obj/arenas/walls/TallWall_PlusSection.obj"
+dest_files=["res://.godot/imported/TallWall_PlusSection.obj-2d96f65b134bffc1d0626bcf53208311.mesh", "res://.godot/imported/TallWall_PlusSection.obj-2d96f65b134bffc1d0626bcf53208311.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
