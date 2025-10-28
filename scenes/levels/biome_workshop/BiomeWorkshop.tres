@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BiomeData" load_steps=4 format=3 uid="uid://c4h7ltn6kqll5"]
+
+[ext_resource type="PackedScene" uid="uid://cacpmbuy5ck50" path="res://scenes/levels/biome_workshop/arena_workshop/workshop.tscn" id="1_oc3b6"]
+[ext_resource type="Script" uid="uid://be0y0dj5fa4n7" path="res://scenes/prefabs/arenas/biome_data.gd" id="2_u22d0"]
+[ext_resource type="PackedScene" uid="uid://bv0ekk7r3u7a7" path="res://scenes/levels/biome_workshop/arena_old/arena_old.tscn" id="2_wyklq"]
+
+[resource]
+script = ExtResource("2_u22d0")
+biomeName = "Workshop"
+arenaScenes = Dictionary[String, PackedScene]({
+"Old": ExtResource("2_wyklq"),
+"Workshop": ExtResource("1_oc3b6")
+})
+metadata/_custom_type_script = "uid://be0y0dj5fa4n7"
