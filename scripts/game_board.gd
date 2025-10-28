@@ -22,8 +22,7 @@ var player : Robot_Player;
 var enemiesKilled := 0;
 var scrapGained := 0;
 
-@export var currentArena : Arena;
-@export_category("HUD nodes")
+@export_subgroup("HUD nodes")
 #@export var HUD_playerStats : Control;
 @export var HUD_mainMenu : Control;
 @export var HUD_credits : Control;
@@ -33,6 +32,8 @@ var scrapGained := 0;
 @export var MUSIC : MusicHandler;
 @export var LIGHT : DirectionalLight3D;
 
+
+#@export var bi
 func _ready():
 	get_tree().current_scene.ready.connect(_on_scenetree_ready);
 	#return_random_spawn_location()
@@ -54,7 +55,91 @@ func _on_scenetree_ready():
 func _process(delta):
 	process_state(delta, curState);
 
+################################# ENEMIES
+@export_subgroup("Arena stuff")
+var biomes : Dictionary[String,BiomeData] = {}
+@export var currentArena : Arena;
+@export var currentBiome : BiomeData;
+var currentBiomeName : String = "None";
 
+## Moves to the bime in [member Biomes] with the given biome name, or just stays in the biome you're currently in.[br]
+## Note: Does not actually affect anything regarding the current arena.
+func move_to_biome(newBiomeName) -> BiomeData:
+	if biomes.has(newBiomeName):
+		if newBiomeName != currentBiomeName:
+			currentBiomeName = newBiomeName;
+			currentBiome = biomes[newBiomeName];
+	return currentBiome;
+## Move to a new named arena in the biome you specify by name. Moves us to the new biome if it is indeed new, but keeps us there if it's the same.
+func move_to_named_arena_in_named_biome(newBiomeName : String, arenaName : String, putOldInStash := false):
+	## If the biome name is new, move there.
+	if biomes.has(newBiomeName):
+		move_to_biome(newBiomeName);
+	move_to_named_arena_in_current_biome(arenaName, putOldInStash);
+## Move to a new arena in the current biome. (Calls [method move_to_named_arena_in_biome] using [member currentBiome])
+func move_to_named_arena_in_current_biome(arenaName : String, putOldInStash := false):
+	move_to_named_arena_in_biome(currentBiome, arenaName, putOldInStash);
+func move_to_named_arena_in_biome(newBiome : BiomeData, arenaName : String, putOldInStash := false):
+	## Setup. Use the current arena as a fallback.
+	var arena = currentArena;
+	## Check if the biome has an arena by the name given.
+	if currentBiome.arenaScenes.has(arenaName):
+		var scene = currentBiome.get_named_arena(arenaName);
+		var new = create_new_arena(scene);
+		if new != null:
+			arena = new;
+	if putOldInStash:
+		cache_current_arena();
+	else:
+		destroy_current_arena();
+	set_new_arena_as_current(arena);
+func create_new_arena(arenaScene : PackedScene) -> Arena:
+	var new = arenaScene.instantiate();
+	if new is Arena:
+		add_child(new);
+		return new;
+	return null;
+func get_current_arena():
+	return currentArena;
+func set_new_arena_as_current(newArena):
+	if is_instance_valid(newArena):
+		currentArena = newArena;
+var cachedArena : Arena;
+## Chaches the current arena if there is one.
+func cache_current_arena():
+	cache_arena(currentArena);
+func cache_arena(inArena : Arena):
+	if is_instance_valid(inArena):
+		cachedArena = currentArena;
+		remove_child(currentArena);
+## Gets the arena out of the cache if there is one.
+func get_arena_from_cache() -> Arena:
+	if is_instance_valid(cachedArena):
+		return cachedArena;
+	return null;
+## Takes the arena out of the cache and returns it.
+func pop_arena_from_cache() -> Arena:
+	if is_instance_valid(cachedArena):
+		var c = cachedArena;
+		cachedArena = null;
+		return c;
+	return null;
+## Swaps the contents of the cache with the arena you give as input.
+func swap_arena_with_cache(oldArena : Arena):
+	var c = pop_arena_from_cache();
+	if is_instance_valid(c):
+		set_new_arena_as_current(c);
+	cache_arena(oldArena);
+## Destroys the current arena, then sets currentArena to null regardless of if the result was successful.
+func destroy_current_arena():
+	destroy_arena(get_current_arena());
+	currentArena = null;
+## Destroys the arena given as input.
+func destroy_arena(inArena : Arena) -> bool:
+	if is_instance_valid(currentArena):
+		currentArena.queue_free();
+		return true;
+	return false
 ############################ WAVES SETUP     TODO: Move a lot of the waves setup code to the individual game maps, when those exist.
 
 func set_enemy_spawn_waves(inWave:int):
