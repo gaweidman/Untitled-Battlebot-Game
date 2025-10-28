@@ -1,6 +1,6 @@
 [gd_scene load_steps=53 format=3 uid="uid://d362q6gsh8qit"]
 
-[ext_resource type="ArrayMesh" uid="uid://c8kmil2is57xs" path="res://graphics/models/obj/arenas/walls/Wall_EndCap.obj" id="1_x4skh"]
+[ext_resource type="ArrayMesh" uid="uid://c8kmil2is57xs" path="res://graphics/models/obj/arenas/walls/Wall_Endcap.obj" id="1_x4skh"]
 [ext_resource type="ArrayMesh" uid="uid://dk6w2cffevrsw" path="res://graphics/models/obj/arenas/walls/Wall_PlusSection.obj" id="2_dupjq"]
 [ext_resource type="ArrayMesh" uid="uid://mygwnqg0foc8" path="res://graphics/models/obj/arenas/walls/Wall_StraightSection.obj" id="3_ur070"]
 [ext_resource type="ArrayMesh" uid="uid://436w3t761jgc" path="res://graphics/models/obj/arenas/walls/Wall_TSection.obj" id="4_3man2"]
@@ -111,7 +111,7 @@ data = PackedVector3Array(-1.625, -0.2134, -0.1705, -1.625, -0.31, -0.315, -1.62
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -4)
 mesh = ExtResource("1_x4skh")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="WallEndCap"]
+[node name="StaticBody3D" type="StaticBody3D" parent="WallEndCap" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WallEndCap/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_d2k2l")
@@ -120,7 +120,7 @@ shape = SubResource("ConcavePolygonShape3D_d2k2l")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -4)
 mesh = ExtResource("2_dupjq")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="WallPlusSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="WallPlusSection" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WallPlusSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_iukr3")
@@ -129,7 +129,7 @@ shape = SubResource("ConcavePolygonShape3D_iukr3")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 4)
 mesh = ExtResource("3_ur070")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="WallStraightSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="WallStraightSection" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WallStraightSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_24dlt")
@@ -138,7 +138,7 @@ shape = SubResource("ConcavePolygonShape3D_24dlt")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 4)
 mesh = ExtResource("4_3man2")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="WallTSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="WallTSection" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WallTSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_sbovj")
@@ -147,7 +147,7 @@ shape = SubResource("ConcavePolygonShape3D_sbovj")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 4)
 mesh = ExtResource("5_5uv8p")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="WallCornerSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="WallCornerSection" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WallCornerSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_11pu3")
@@ -156,7 +156,7 @@ shape = SubResource("ConcavePolygonShape3D_11pu3")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 4)
 mesh = ExtResource("6_ldqpr")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="TallWallCornerSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="TallWallCornerSection" groups=["Metal", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TallWallCornerSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_8erwc")
@@ -165,7 +165,7 @@ shape = SubResource("ConcavePolygonShape3D_8erwc")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, -4)
 mesh = ExtResource("7_qxfs3")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="TallWallPlusSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="TallWallPlusSection" groups=["Metal", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TallWallPlusSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_ycbea")
@@ -174,7 +174,7 @@ shape = SubResource("ConcavePolygonShape3D_ycbea")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 4)
 mesh = ExtResource("8_h0jkf")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="TallWallStraightSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="TallWallStraightSection" groups=["Metal", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TallWallStraightSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_3irak")
@@ -183,7 +183,7 @@ shape = SubResource("ConcavePolygonShape3D_3irak")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -4)
 mesh = ExtResource("9_rkegy")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="TallWallTSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="TallWallTSection" groups=["Metal", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TallWallTSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_xigq1")
@@ -192,7 +192,7 @@ shape = SubResource("ConcavePolygonShape3D_xigq1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 20)
 mesh = ExtResource("10_0clx8")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="ShortWallCornerSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="ShortWallCornerSection" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ShortWallCornerSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_rt7o7")
@@ -201,7 +201,7 @@ shape = SubResource("ConcavePolygonShape3D_rt7o7")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 12)
 mesh = ExtResource("11_kp1d4")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="ShortWallEndCap"]
+[node name="StaticBody3D" type="StaticBody3D" parent="ShortWallEndCap" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ShortWallEndCap/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_2hxqv")
@@ -210,7 +210,7 @@ shape = SubResource("ConcavePolygonShape3D_2hxqv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 20)
 mesh = ExtResource("12_hkkxw")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="ShortWallPlusSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="ShortWallPlusSection" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ShortWallPlusSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_tcvxk")
@@ -219,7 +219,7 @@ shape = SubResource("ConcavePolygonShape3D_tcvxk")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 12)
 mesh = ExtResource("13_vnndi")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="ShortWallStraightSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="ShortWallStraightSection" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ShortWallStraightSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_j7037")
@@ -228,7 +228,7 @@ shape = SubResource("ConcavePolygonShape3D_j7037")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 20)
 mesh = ExtResource("14_88nyo")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="ShortWallTSection"]
+[node name="StaticBody3D" type="StaticBody3D" parent="ShortWallTSection" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ShortWallTSection/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_13341")
@@ -237,7 +237,7 @@ shape = SubResource("ConcavePolygonShape3D_13341")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 4)
 mesh = ExtResource("20_jqblj")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MtoTConnector"]
+[node name="StaticBody3D" type="StaticBody3D" parent="MtoTConnector" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MtoTConnector/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_whmq6")
@@ -246,7 +246,7 @@ shape = SubResource("ConcavePolygonShape3D_whmq6")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 12)
 mesh = ExtResource("21_go0jo")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="StoMConnector"]
+[node name="StaticBody3D" type="StaticBody3D" parent="StoMConnector" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StoMConnector/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_owep7")
@@ -255,7 +255,7 @@ shape = SubResource("ConcavePolygonShape3D_owep7")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 20)
 mesh = ExtResource("22_6f7tc")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="StoTConnector"]
+[node name="StaticBody3D" type="StaticBody3D" parent="StoTConnector" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StoTConnector/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_rhanr")
@@ -264,7 +264,7 @@ shape = SubResource("ConcavePolygonShape3D_rhanr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, -4)
 mesh = ExtResource("23_l607m")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Cone"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Cone" groups=["Obstacle", "Plastic"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Cone/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_l8iqr")
@@ -273,7 +273,7 @@ shape = SubResource("ConcavePolygonShape3D_l8iqr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -12)
 mesh = ExtResource("24_3arvc")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CrateBig"]
+[node name="StaticBody3D" type="StaticBody3D" parent="CrateBig" groups=["Obstacle", "Wood"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CrateBig/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_lcfxf")
@@ -282,7 +282,7 @@ shape = SubResource("ConcavePolygonShape3D_lcfxf")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, -12)
 mesh = ExtResource("25_u7mw1")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CrateSmall"]
+[node name="StaticBody3D" type="StaticBody3D" parent="CrateSmall" groups=["Obstacle", "Wood"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CrateSmall/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_rld2o")
@@ -291,7 +291,7 @@ shape = SubResource("ConcavePolygonShape3D_rld2o")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -4)
 mesh = ExtResource("26_t2nxm")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Pillar"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Pillar" groups=["Concrete", "Obstacle"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Pillar/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_hr0fb")
@@ -300,7 +300,7 @@ shape = SubResource("ConcavePolygonShape3D_hr0fb")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0, 20)
 mesh = ExtResource("22_5uv8p")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="PipeCorner"]
+[node name="StaticBody3D" type="StaticBody3D" parent="PipeCorner" groups=["Obstacle", "Plastic"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PipeCorner/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_0clx8")
@@ -309,7 +309,7 @@ shape = SubResource("ConcavePolygonShape3D_0clx8")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 12)
 mesh = ExtResource("23_ldqpr")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="PipeEndCap"]
+[node name="StaticBody3D" type="StaticBody3D" parent="PipeEndCap" groups=["Obstacle", "Plastic"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PipeEndCap/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_kp1d4")
@@ -318,7 +318,7 @@ shape = SubResource("ConcavePolygonShape3D_kp1d4")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 20)
 mesh = ExtResource("24_qxfs3")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="PipePlus"]
+[node name="StaticBody3D" type="StaticBody3D" parent="PipePlus" groups=["Obstacle", "Plastic"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PipePlus/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_hkkxw")
@@ -327,7 +327,7 @@ shape = SubResource("ConcavePolygonShape3D_hkkxw")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 12)
 mesh = ExtResource("25_h0jkf")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="PipeStraight"]
+[node name="StaticBody3D" type="StaticBody3D" parent="PipeStraight" groups=["Obstacle", "Plastic"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PipeStraight/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_vnndi")
@@ -336,7 +336,7 @@ shape = SubResource("ConcavePolygonShape3D_vnndi")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 20)
 mesh = ExtResource("26_rkegy")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="PipeTobj"]
+[node name="StaticBody3D" type="StaticBody3D" parent="PipeTobj" groups=["Obstacle", "Plastic"]]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PipeTobj/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_88nyo")

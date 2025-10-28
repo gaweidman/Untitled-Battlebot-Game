@@ -59,6 +59,8 @@ Sawblade=""
 Fan="Only for parts that are fans."
 Driveable=""
 Piece="This object is a Piece and will interfere with placement."
+Obstacle="Modular wall bits."
+Wood=""
 
 [importer_defaults]
 

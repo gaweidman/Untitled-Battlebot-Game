@@ -4,4 +4,5 @@
 
 [node name="ModularWallGridmap" type="GridMap"]
 mesh_library = ExtResource("1_jrv31")
-cell_size = Vector3(3.25, 3.2, 3.25)
+cell_size = Vector3(1.625, 3.2, 1.625)
+metadata/_editor_floor_ = Vector3(0, 0, 0)
