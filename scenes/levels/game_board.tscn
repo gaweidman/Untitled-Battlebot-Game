@@ -178,9 +178,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -38, 0)
 
 [node name="Arena" parent="." instance=ExtResource("4_u76c3")]
 
-[node name="HUDCanvas" type="CanvasLayer" parent="."]
+[node name="CameraCanvas" type="CanvasLayer" parent="."]
 
-[node name="CameraViewport" type="SubViewportContainer" parent="HUDCanvas"]
+[node name="CameraViewport" type="SubViewportContainer" parent="CameraCanvas"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -194,15 +194,18 @@ mouse_default_cursor_shape = 3
 stretch = true
 mouse_target = true
 
-[node name="SubViewport" type="SubViewport" parent="HUDCanvas/CameraViewport"]
+[node name="SubViewport" type="SubViewport" parent="CameraCanvas/CameraViewport"]
 handle_input_locally = false
 size = Vector2i(1312, 984)
 render_target_update_mode = 4
 
-[node name="FollowerCam" type="Camera3D" parent="HUDCanvas/CameraViewport/SubViewport" node_paths=PackedStringArray("camToFollow")]
+[node name="FollowerCam" type="Camera3D" parent="CameraCanvas/CameraViewport/SubViewport" node_paths=PackedStringArray("camToFollow")]
 fov = 90.0
 script = ExtResource("2_iqmcf")
 camToFollow = NodePath("../../../../CameraPointer/GameCamera")
+
+[node name="HUDCanvas" type="CanvasLayer" parent="."]
+layer = 3
 
 [node name="HUD Viewport" type="SubViewportContainer" parent="HUDCanvas"]
 texture_filter = 1

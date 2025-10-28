@@ -36,8 +36,13 @@ var scrapGained := 0;
 #@export var bi
 func _ready():
 	get_tree().current_scene.ready.connect(_on_scenetree_ready);
+	
 	#return_random_spawn_location()
 func _on_scenetree_ready():
+	Hooks.add(self, "OnScreenTransition", "StateChange", 
+			func(scr_state): screen_transition(scr_state);
+			)
+	
 	Hooks.add(self, "OnDeath", "LifetimeKillCounter", 
 		func(thisBot, killer):
 			if killer is Player:
@@ -50,7 +55,9 @@ func _on_scenetree_ready():
 				scrapGained += amt;
 				print_rich("[color=yellow][b]Scrap gained: ",scrapGained)
 			)
-	change_state(gameState.MAIN_MENU);
+	move_to_named_arena_in_named_biome("Workshop", "Old");
+	
+	change_state(gameState.SPLASH);
 
 func _process(delta):
 	process_state(delta, curState);
@@ -201,6 +208,7 @@ func return_random_enemy():
 ##Controls the state of the game.
 enum gameState {
 	START,
+	SPLASH,
 	MAIN_MENU,
 	INIT_PLAY,
 	PLAY,
@@ -208,7 +216,8 @@ enum gameState {
 	CREDITS,
 	OPTIONS,
 	SHOP,
-	INIT_ROUND,
+	INIT_ROUND, ## Round setup happens. Timers are reset, the enemy pool for the round is decided and then frontloaded, then after the game stops lagging we move on to INIT_ROUND.
+	BEGIN_ROUND, ## The round actually begins.
 	BUILD_MODE,
 }
 var curState := gameState.START
@@ -276,15 +285,18 @@ func exit_state(oldState:gameState):
 		HUD_credits.hide();
 		HUD_gameOver.hide();
 		HUD_options.open_sesame(false);
-		MUSIC.play();
 		update_lighting();
 		pass
 	else:
 		pass
 
 func enter_state(newState:gameState):
-	if newState == gameState.MAIN_MENU:
+	if newState == gameState.SPLASH:
 		HUD_options.load_settings();
+		GameState.init_screen_transition_vanity();
+	if newState == gameState.MAIN_MENU:
+		MUSIC.play();
+		GameState.make_screen_transition_leave();
 		MUSIC.change_state(MusicHandler.musState.MENU);
 		
 		destroy_all_enemies(true);
@@ -316,7 +328,7 @@ func enter_state(newState:gameState):
 		scrapGained = 0;
 		enemiesKilled = 0;
 		
-		spawn_player_new_game(return_random_unoccupied_spawn_location());
+		spawn_player_new_game(return_random_unoccupied_spawn_location().global_position);
 		player.start_new_game();
 		#player.inventory.show();
 		change_state(gameState.INIT_ROUND);
@@ -336,17 +348,24 @@ func enter_state(newState:gameState):
 		
 		roundNum += 1;
 		set_enemy_spawn_waves(roundNum);
-		#player.start_round();
 		waveTimer = 3;
 		wave = 0;
 		roundEnemiesInit += 2;
 		roundEnemies = roundEnemiesInit;
-		change_state(gameState.PLAY);
 		pass
+	elif newState == gameState.BEGIN_ROUND:
+		player.start_round();
+		change_state(gameState.PLAY);
 	else:
 		pass
 
+var splashTimer := 5.5;
 func process_state(delta : float, state : gameState):
+	if curState == gameState.SPLASH:
+		splashTimer -= delta;
+		if splashTimer < 0 or  GameState.is_fire_action_being_pressed():
+			change_state(gameState.MAIN_MENU);
+		pass
 	if curState == gameState.MAIN_MENU:
 		pass
 	elif curState == gameState.GAME_OVER:
@@ -391,6 +410,15 @@ func process_state(delta : float, state : gameState):
 	else:
 		pass
 	pass
+
+func screen_transition(scr_state : ScreenTransition.mode):
+	match scr_state:
+		ScreenTransition.mode.RIGHT:
+			if in_one_of_given_states([gameState.INIT_PLAY]):
+				
+				pass;
+		ScreenTransition.mode.CENTER: if in_one_of_given_states([gameState.INIT_PLAY]):
+			pass;
 
 func update_lighting():
 	LIGHT.shadow_enabled = GameState.get_setting("renderShadows");
@@ -446,19 +474,8 @@ func respawn_player():
 
 ##Returns a spawn location that isn't occupied by the player
 func return_random_unoccupied_spawn_location():
-	var locations = enemySpawnPositions.get_children();
-	locations.shuffle()
-	for location in locations:
-		var spawnChecker = location;
-		var goodToReturn = true
-		if spawnChecker.is_colliding():
-			for result in spawnChecker.collision_result:
-				if result.collider is RigidBody3D:
-					goodToReturn = false;
-		if goodToReturn:
-			return location.global_position;
-		
-		pass
+	if is_instance_valid(get_current_arena()):
+		return get_current_arena().return_random_unoccupied_spawn_location();
 	return null;
 
 func spawn_wave(numOfEnemies := 0):
@@ -469,34 +486,41 @@ func spawn_wave(numOfEnemies := 0):
 		waveSpawnList.append(enemyScene)
 		numOfEnemies -= 1;
 
-var enemySpawnerRef := preload("res://scenes/prefabs/objects/enemy_spawner.tscn");
 func spawn_enemy_from_wave():
 	if waveSpawnList.size() > 0:
-		var pos = return_random_unoccupied_spawn_location();
-		if pos != null:
+		var newEnemySpawner = return_random_unoccupied_spawn_location();
+		if newEnemySpawner != null:
 			var enemyScene = waveSpawnList.pop_front();
-			var newEnemySpawner : RobotSpawner = enemySpawnerRef.instantiate();
 			newEnemySpawner.assign_gameBoard(self);
 			add_child(newEnemySpawner);
 			newEnemySpawner.assign_enemy_type_from_resource(enemyScene);
-			var enemy = newEnemySpawner.start_spawn(pos);
+			var enemy = newEnemySpawner.start_spawn();
 			enemiesAlive.append(enemy);
 			roundEnemies -= 1;
 
 func check_alive_enemies():
 	for enemy in enemiesAlive:
 		var _continue = true
+		if !is_instance_valid(enemy):
+			enemiesAlive.erase(enemy);
+			_continue = false
 		if enemy == null && _continue:
 			enemiesAlive.erase(enemy);
 			_continue = false
-		if _continue:
-			var checkedEnemy = get_node_or_null(enemy.get_path())
-			if checkedEnemy.spawned == false:
+		var checkedEnemy = get_node_or_null(enemy.get_path());
+		if enemy.is_queued_for_deletion():
+			_continue = false;
+			enemiesAlive.erase(enemy);
+		else:
+			if ! enemy.is_inside_tree(): ## REALLY Hasn't been spawned yet.
 				_continue = false;
-		if _continue:
-			var checkedEnemy = get_node_or_null(enemy.get_path())
+		if _continue: ## If we've gotten to this point and it returns null, get rid of the thing.
 			if checkedEnemy == null:
 				enemiesAlive.erase(enemy);
+				_continue = false;
+		if _continue: ## Hasn't been spawned yet.
+			if checkedEnemy.spawned == false:
+				_continue = false;
 	return enemiesAlive.size();
 
 ##Should give us the amount of enemies left after all spawning is completed

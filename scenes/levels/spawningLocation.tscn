@@ -1,0 +1,33 @@
+[gd_scene load_steps=7 format=3 uid="uid://bba8vj0138gwa"]
+
+[ext_resource type="Script" uid="uid://d34cmk8b8haau" path="res://scripts/objects/robot_spawn_location.gd" id="1_6gb4x"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_jhciq"]
+radius = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_6gb4x"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hin37"]
+load_path = "res://.godot/imported/cooldownIconStriped.png-71ac35bc0d02227fb89de9439860e66e.s3tc.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_l6vea"]
+load_path = "res://.godot/imported/cooldownIconStriped.png-71ac35bc0d02227fb89de9439860e66e.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lbqok"]
+transparency = 1
+albedo_texture = SubResource("CompressedTexture2D_hin37")
+emission_enabled = true
+emission_texture = SubResource("CompressedTexture2D_l6vea")
+texture_filter = 0
+billboard_mode = 1
+
+[node name="RobotSpawningLocation" type="ShapeCast3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("SphereShape3D_jhciq")
+target_position = Vector3(0, 0, 0)
+script = ExtResource("1_6gb4x")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.625, 0)
+mesh = SubResource("QuadMesh_6gb4x")
+surface_material_override/0 = SubResource("StandardMaterial3D_lbqok")

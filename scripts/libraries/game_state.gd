@@ -16,6 +16,10 @@ func _ready() -> void:
 	#Input.set_custom_mouse_cursor(load("res://graphics/images/HUD/statIcons/scrapIconStriped.png"),Input.CURSOR_BUSY,Vector2(9.5,11.5));
 	
 	DisplayServer.window_set_current_screen.call_deferred(1);
+	#get_tree().current_scene.ready.connect(_on_scenetree_ready);
+	#pass;
+#func _on_scenetree_ready():
+	init_screen_transition();
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -455,7 +459,55 @@ func is_fire_action_being_pressed():
 	return Input.is_action_pressed("Fire0") or Input.is_action_pressed("Fire1") or Input.is_action_pressed("Fire2") or Input.is_action_pressed("Fire3") or Input.is_action_pressed("Fire4") or Input.is_action_pressed("Select");
 
 func editor_mode_start():
-	get_tree().change_scene_to_file("res://makers/maker_mode.tscn");
+	queue_change_scenes("res://makers/maker_mode.tscn");
 
 func reset_to_main_menu():
-	get_tree().change_scene_to_file("res://scenes/levels/game_board.tscn");
+	queue_change_scenes("res://scenes/levels/game_board.tscn");
+
+
+############# SCREEN TRANSITION STUFF
+var screenTransitionScene = preload("res://scenes/prefabs/objects/gui/transition_canvas.tscn");
+var screenTransition : ScreenTransition;
+var transitionCanvas : TransitionCanvas;
+func init_screen_transition():
+	var canvas = screenTransitionScene.instantiate();
+	canvas.layer = 5;
+	add_child(canvas);
+	
+	transitionCanvas = canvas;
+	
+	screenTransition = canvas.transition;
+	
+	init_screen_transition_vanity();
+
+func init_screen_transition_vanity():
+	transitionCanvas.initialize();
+	screenTransition.bring_to_center(true,true);
+	screenTransition.show();
+	if !screenTransition.is_connected("hitCenter", hit_center):
+		screenTransition.connect("hitCenter", hit_center);
+	if !screenTransition.is_connected("hitRight", hit_right):
+		screenTransition.connect("hitRight", hit_right);
+
+var targetScene = null;
+func queue_change_scenes(_targetScene):
+	targetScene = _targetScene;
+	make_screen_transition_arrive(5);
+
+func change_scenes():
+	if targetScene != null:
+		get_tree().change_scene_to_file(targetScene);
+		targetScene = null;
+		make_screen_transition_leave();
+
+func hit_center():
+	Hooks.OnScreenTransition(ScreenTransition.mode.CENTER);
+	change_scenes();
+func hit_right():
+	Hooks.OnScreenTransition(ScreenTransition.mode.RIGHT);
+
+func make_screen_transition_leave():
+	screenTransition.leave();
+func make_screen_transition_arrive(layer := 2):
+	transitionCanvas.layer = layer;
+	screenTransition.comeIn();

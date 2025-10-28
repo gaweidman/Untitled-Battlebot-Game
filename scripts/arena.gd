@@ -18,6 +18,9 @@ func load_variant(nameOfVariant := currentVariant):
 			var obstaclesPath = variants[nameOfVariant];
 			var obstaclesScene = load(obstaclesPath);
 			
+			## Reset spawning locations, since the new variant may have new ones.
+			clear_spawning_locations();
+			
 			if is_instance_valid(obstaclesNode):
 				obstaclesNode.queue_free();
 			
@@ -44,3 +47,33 @@ func get_random_variant(exclusions := []):
 	var keys = all.keys();
 	keys.shuffle(); ##TODO: Seeded outcomes?
 	return keys.pop_front();
+
+
+####### SPAWNING STUFF
+@export var spawningLocations : Array[RobotSpawnLocation] = [];
+
+func clear_spawning_locations():
+	spawningLocations = [];
+
+func reset_spawning_locations():
+	spawningLocations = [];
+	for child in Utils.get_all_children(self):
+		if child is RobotSpawnLocation:
+			spawningLocations.append(child);
+	return spawningLocations;
+
+func get_spawning_locations():
+	if spawningLocations.is_empty():
+		return reset_spawning_locations();
+	return spawningLocations;
+
+func return_random_unoccupied_spawn_location():
+	var locations : Array[RobotSpawnLocation] = get_spawning_locations().duplicate();
+	var unoccupiedLocation = null;
+	
+	while locations.size() > 0 and unoccupiedLocation == null:
+		locations.shuffle();
+		var location = locations.pop_front();
+		if location.check_is_unoccupied():
+			unoccupiedLocation = location;
+	return unoccupiedLocation;

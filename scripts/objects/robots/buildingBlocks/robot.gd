@@ -31,15 +31,17 @@ func _ready():
 
 func _process(delta):
 	process_pre(delta);
-	process_hud(delta);
+	if spawned and is_ready:
+		process_hud(delta);
 	pass
 
 func _physics_process(delta):
 	#motion_process()
 	super(delta);
-	phys_process_collision(delta);
-	phys_process_motion(delta);
-	phys_process_combat(delta);
+	if spawned and is_ready:
+		phys_process_collision(delta);
+		phys_process_motion(delta);
+		phys_process_combat(delta);
 	pass
 
 ##Process and Physics process that run before anything else.
