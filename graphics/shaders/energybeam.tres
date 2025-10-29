@@ -41,7 +41,6 @@ void vertex() {
 
 }
 "
-graph_offset = Vector2(-751.821, 120.665)
 nodes/vertex/0/position = Vector2(1720, 40)
 nodes/vertex/2/node = SubResource("VisualShaderNodeVectorOp_c78ph")
 nodes/vertex/2/position = Vector2(680, 180)

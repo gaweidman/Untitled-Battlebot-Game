@@ -18,7 +18,7 @@ var list = {
 	"OnMeleeWeaponHit": {}, #
 	"OnMeleeWeaponSwing": {}, #
 	"OnActiveUse": {}, #
-	"OnWallCollision": {}, #
+	"OnHitWall": {}, #
 	"OnEnemyCollision": {}, #
 	"OnPlayerCollision": {},  #
 	"OnCollision": {}, #
@@ -26,6 +26,8 @@ var list = {
 	"OnGainScrap": {}, #
 	"OnLand": {}, #
 	"OnChangeGameState": {}, #
+	
+	"OnScreenTransition": {}, #
 };
 
 var body;
@@ -96,6 +98,10 @@ func OnLand(thisBot: Robot, airtime: float):
 func OnChangeGameState(oldState: GameBoard.gameState, newState: GameBoard.gameState):
 	for hookFunc in getValidHooks("OnChangeGameState"):
 		hookFunc.call(oldState, newState);
+
+func OnScreenTransition(state : ScreenTransition.mode):
+	for hookFunc in getValidHooks("OnScreenTransition"):
+		hookFunc.call(state);
 
 ## Use to add a hook.[br]
 ## To use, we go to any file and call[br]

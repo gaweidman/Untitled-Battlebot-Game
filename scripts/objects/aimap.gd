@@ -11,7 +11,7 @@ func _ready() -> void:
 	var castContainer = get_node("Raycasts");
 	var raycasts = castContainer.get_children();
 			
-func _process(float) -> void:
+func _process(delta : float) -> void:
 	# doing this on _ready dosn't work
 	var castContainer = get_node("Raycasts");
 	var raycasts = castContainer.get_children();

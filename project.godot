@@ -35,7 +35,13 @@ gdscript/warnings/unused_variable=0
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/initial_position_type=0
+window/size/initial_position=Vector2i(1920, 1080)
+window/size/initial_screen=2
+window/size/extend_to_title=true
 window/stretch/mode="viewport"
+mouse_cursor/custom_image="uid://bmk70eg7k8pre"
+mouse_cursor/custom_image_hotspot=Vector2(8, 8)
 
 [global_group]
 
@@ -53,6 +59,8 @@ Sawblade=""
 Fan="Only for parts that are fans."
 Driveable=""
 Piece="This object is a Piece and will interfere with placement."
+Obstacle="Modular wall bits."
+Wood=""
 
 [importer_defaults]
 
@@ -115,14 +123,14 @@ Fire3={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":32,"key_label":0,"unicode":32,"location":0,"echo":false,"script":null)
 ]
 }
+Fire4={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194325,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
 Pause={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194305,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-fire4={
-"deadzone": 0.2,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194325,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
 DBG_KillAll={
@@ -217,6 +225,7 @@ StashSelected={
 3d_physics/layer_8="Preview Piece Hurtboxes"
 3d_physics/layer_9="Aiming Helper"
 3d_physics/layer_10="Bullet"
+3d_physics/layer_11="Arena floors"
 
 [physics]
 
@@ -224,6 +233,7 @@ StashSelected={
 3d/physics_engine="Jolt Physics"
 jolt_physics_3d/simulation/areas_detect_static_bodies=true
 jolt_physics_3d/simulation/generate_all_kinematic_contacts=true
+jolt_physics_3d/limits/temporary_memory_buffer_size=64
 3d/default_gravity_vector=Vector3(0, -3, 0)
 3d/solver/solver_iterations=64
 jolt_3d/collisions/areas_detect_static_bodies=true

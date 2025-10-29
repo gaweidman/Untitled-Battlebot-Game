@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="AbilityManager" load_steps=6 format=3 uid="uid://beks5dpxmrcok"]
+
+[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_53ldy"]
+[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_3dwsm"]
+
+[sub_resource type="Resource" id="Resource_d7xnu"]
+script = ExtResource("1_53ldy")
+string = "Refills your"
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_3twrs"]
+script = ExtResource("1_53ldy")
+string = "magazine"
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_rjpgo"]
+script = ExtResource("1_53ldy")
+string = "over time."
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[resource]
+script = ExtResource("2_3dwsm")
+abilityName = "Bullet Factory"
+abilityDescriptionConstructor = Array[ExtResource("1_53ldy")]([SubResource("Resource_d7xnu"), SubResource("Resource_3twrs"), SubResource("Resource_rjpgo")])
+abilityDescription = "No Description Found."
+energyCost = 0.12
+cooldownTimeBase = 0.0
+cooldownStatName = "MagazineRefreshRate"
+runType = 1
+functionNameWhenUsed = &"add_one_bullet"
+statsUsed = Array[String](["MagazineRefreshRate", "MagazineSize"])
+initialized = false
+disabled = false
+functionWhenUsed = Callable()
+metadata/_custom_type_script = "uid://crpa3dbgxwyeg"

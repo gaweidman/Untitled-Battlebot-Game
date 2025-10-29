@@ -1,8 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://djgwiuexucnqm"]
+[gd_scene load_steps=18 format=3 uid="uid://djgwiuexucnqm"]
 
 [ext_resource type="Script" uid="uid://lqnydwh6c74e" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="1_bn4l8"]
+[ext_resource type="Resource" uid="uid://bws20ksxfdagg" path="res://scenes/prefabs/abilities/passive/swivel_pointer_target.tres" id="3_noc8o"]
+[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_pqjj1"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_8xo3d"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="5_pqjj1"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="6_pqjj1"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="6_vph73"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="8_6fl3f"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="9_psn5c"]
@@ -29,21 +32,26 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("9_psn5c")
 
-[node name="Piece_Pointer Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "meshesHolder", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Pointer Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
 script = ExtResource("1_bn4l8")
 swivelNode = NodePath("SwivelTop")
-force_visibility = true
+movingSockets = [NodePath("SwivelTop/Socket")]
 pieceName = &"Pointer Swivel"
+weightBase = 1.25
+passiveAbilities = Array[ExtResource("3_pqjj1")]([ExtResource("3_noc8o")])
+force_visibility = true
 meshesHolder = NodePath("Meshes")
-placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
 Vector2i(2, 1): null,
 Vector2i(2, 2): null,
 Vector2i(2, 3): null
 }
+filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_swivel_pointer.tscn"
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"
@@ -61,6 +69,7 @@ script = ExtResource("5_8xo3d")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
+script = ExtResource("6_pqjj1")
 
 [node name="PieceCollisionBox" parent="." instance=ExtResource("6_vph73")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)

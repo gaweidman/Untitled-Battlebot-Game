@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/tread_arrow.png")
 extends RayCast3D
 
 class_name ContactPoint

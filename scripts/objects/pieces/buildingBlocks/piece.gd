@@ -1,13 +1,21 @@
+@icon ("res://graphics/images/class_icons/piece.png")
+
 extends StatHolder3D
 
 class_name Piece
+## A 3D chunk of scrap electronics you found or bought and decided was a good idea to slap onto your [Robot].
+## Can hold Stats (as per [StatHolder3D]) and [Part]s (TODO).
 
 ########## STANDARD GODOT PROCESSING FUNCTIONS
-
 func _ready():
+	#if pieceName == "BodyCube":
+		#print("BODYCUBE IS READYING!")
 	hide();
+	declare_names();
 	assign_references();
+	ability_validation();
 	ability_registry();
+	regen_namedActions(); ## Regenerates the actions list
 	super(); #Stat registry.
 	gather_colliders_and_meshes();
 
@@ -22,16 +30,17 @@ func _process(delta):
 	process_draw(delta);
 
 func stat_registry():
-	if energyDrawPassive > 0:
-		register_stat("PassiveEnergyDraw", energyDrawPassive, statIconEnergy);
-	if energyDrawPassive < 0:
-		register_stat("PassiveEnergyRegeneration", energyDrawPassive, statIconEnergy);
-	register_stat("PassiveCooldown", passiveCooldownTime, statIconCooldown);
+	if energyDrawPassiveMultiplier > 0:
+		register_stat("PassiveEnergyDraw", energyDrawPassiveMultiplier, statIconEnergy);
+	if energyDrawPassiveMultiplier < 0:
+		register_stat("PassiveEnergyRegeneration", energyDrawPassiveMultiplier, statIconEnergy);
+	register_stat("PassiveCooldown", passiveCooldownTimeMultiplier, statIconCooldown);
+	register_stat("ContactCooldown", contactCooldown, statIconCooldown);
 	
 	#Stats that only matter if the thing has abilities.
 	if activeAbilities.size() > 0:
-		register_stat("ActiveEnergyDraw", energyDrawActive, statIconEnergy);
-		register_stat("ActiveCooldown", activeCooldownTime, statIconCooldown);
+		register_stat("ActiveEnergyDraw", energyDrawActiveMultiplier, statIconEnergy);
+		register_stat("ActiveCooldown", activeCooldownTimeMultiplier, statIconCooldown);
 	
 	#Stats regardig Scrap Cost.
 	register_stat("ScrapCost", scrapCostBase, statIconMagazine, null, null, StatTracker.roundingModes.Ceili);
@@ -89,6 +98,11 @@ func assign_references():
 		#print("References for piece ", name, " were invalid. ")
 		queue_free();
 
+func destroy():
+	select(false);
+	clear_stats();
+	queue_free();
+
 ######### SAVING/LOADING
 
 ##Creates a dictionary with data pertinent to generating a new piece.
@@ -102,12 +116,15 @@ func assign_references():
 ##         socket_index[int] : { 
 ##         "rotation" : float, 
 ##         "occupant" : null or Piece.create_startup_data() } 
-##      } 
+##      },
+##      "abilityAssignments" : { abilityName : slot }, ## Any abilities on this Piece that were assigned to an active slot.
+##      "disabledAbilities" : [ abilityName, abilityName, ... ] ## Disabled abilities on this Piece.
 ##   } 
 ##} 
 ##[/codeblock]
 func create_startup_data():
 	var engineDict = {};
+	##TODO: Part data goes here
 	var socketDict = {};
 	for socket:Socket in get_all_female_sockets():
 		var index = get_index_of_socket(socket);
@@ -119,25 +136,562 @@ func create_startup_data():
 		else:
 			occupantVal = "null";
 		var socketData = { "rotation" : rotationVal, "occupant" : occupantVal};
-		socketDict[index] = socketData
-		
-	var dict = { filepathForThisEntity : {
+		socketDict[index] = socketData;
+	
+	## Abilities. If an ability has been assigned to a slot and is not passive, add its name and assigned slots to the data.
+	var abilityDict := {}
+	var disabled := []
+	for ability in get_all_abilities():
+		if ! ability.isPassive:
+			var slots = ability.get_assigned_slots();
+			if ! slots.is_empty():
+				abilityDict[ability.abilityName] = slots;
+		else:
+			if ability.is_disabled():
+				disabled.append(ability.abilityName);
+	
+	var data = {
 			#"engine" : engineDict,
 			"sockets" : socketDict,
+			"abilityAssignments" : abilityDict,
+			"disabledAbilities" : disabled,
 		}
-	}
-	#print("SAVE: Startup data dictionary: ", dict)
+	
+	var dict = { filepathForThisEntity : data }
+	
 	return dict;
 
-func load_startup_data(data):
-	#print(data)
+func load_startup_data(data, robot : Robot):
+	print_rich("[color=pink]REALLY INIT ACTIVES:", activeAbilities);
+	
 	for socketIndex in data["sockets"].keys():
 		var socketData = data["sockets"][socketIndex];
 		autoassign_child_sockets_to_self();
 		var socket = get_socket_at_index(socketIndex);
 		if is_instance_valid(socket):
-			socket.load_startup_data(socketData);
+			socket.load_startup_data(socketData, robot);
+	
+	
+	if data.keys().has("abilityAssignments"):
+		for abilityName in data["abilityAssignments"].keys():
+			var abilitySlots = data["abilityAssignments"][abilityName];
+			var ability = get_named_action(abilityName);
+			if is_instance_valid(ability):
+				for slotNum in abilitySlots:
+					robot.assign_ability_to_slot(slotNum, ability);
+	
+	## An array of names that are disabled abilities.
+	if data.keys().has("disabledAbilities"):
+		for abilityName in data["disabledAbilities"]:
+			var ability = get_named_action(abilityName);
+			if is_instance_valid(ability):
+				ability.disable(true);
 	pass;
+
+######################## TIMERS
+
+##Any and all timers go here.
+func phys_process_timers(delta):
+	super(delta);
+	##tick down hitbox timer.
+	hitboxRescaleTimer -= 1;
+	##Tick down ability cooldowns.
+	for ability in get_all_abilities():
+		ability.tick_cooldown(delta);
+	pass;
+
+func phys_process_pre(delta):
+	super(delta);
+	##Re-assign references, if any are borked.
+	assign_references();
+	## Reset current energy draw.
+	energyDrawCurrent = 0.0;
+	## Calculate weightLoad.
+	get_weight_load();
+	## Refresh incoming energy for the frame.
+	queue_refresh_incoming_energy();
+
+################ PIECE MANAGEMENT
+
+@export_category("Piece Data")
+@export var pieceName : StringName = "Piece";
+##If you don't want to manually type all the bbcode, you can use this to construct the description.
+@export var descriptionConstructor : Array[RichTextConstructor] = [];
+func declare_names():
+	if not descriptionConstructor.is_empty():
+		pieceDescription = TextFunc.parse_text_constructor_array(descriptionConstructor);
+	pass;
+@export_multiline var pieceDescription := "No Description Found.";
+## If this piece fulfills the requirements for being a bot's "body", this is true. You aren't allowed to exit the shop if you don't have a body piece equipped.
+@export var isBody := false;
+## Whether this piece is removable.
+@export var removable := true;
+
+@export var weightBase := 1.0;
+
+@export var scrapCostBase : int;
+@export var scrapSellModifierBase := (2.0/3.0);
+@export var scrapSalvageModifierBase := (1.0/6.0);
+
+## How much weight this Piece is carrying, including itself.
+var weightLoad := 0.0;
+## If [member regenerateWeightLoad] is true, then [method get_weight_load()] is forced to regenerate [member weightLoad] the next time it is called.
+var regenerateWeightLoad := true;
+
+## Sets [member regenerateWeightLoad] to true. 
+func queue_regenerate_weight_load():
+	regenerateWeightLoad = true;
+
+## Gets the base weight stat for this piece.
+func get_weight():
+	return get_stat("Weight");
+
+## Gets [member Socket.weightLoad] from the specified [Socket].
+func get_socket_weight_load(specifiedSocket : Socket, forceRegenerate := false):
+	if is_instance_valid(specifiedSocket):
+		return specifiedSocket.get_weight_load(forceRegenerate);
+	return 0.0;
+
+## Returns [member weightLoad]. Regenerates it first if [member regenerateWeightLoad] is true.
+func get_weight_load():
+	if regenerateWeightLoad:
+		var _weight = get_weight();
+		for socket in get_all_female_sockets():
+			_weight += get_socket_weight_load(socket, true);
+		weightLoad = _weight;
+	return weightLoad;
+
+func get_regenerated_weight_load():
+	queue_regenerate_weight_load();
+	return get_weight_load();
+
+##TODO: Scrap sell/buy/salvage functions for when this has Parts inside of it.
+func get_sell_price(discountMultiplier := 1.0):
+	## TODO: Write this up so it adds the combined sell price of this piece as well as all parts contained within its engine.
+	return get_sell_price_piece_only(discountMultiplier);
+
+##Gets the Scrap amount for when you sell this Piece. Does not take into account the price of any Parts inside its Engine.
+##discountMultiplier is multiplied by the price.
+func get_sell_price_piece_only(discountMultiplier := 1.0):
+	return max(0, ceili(get_stat("ScrapCost") * get_stat("ScrapSellModifier") * discountMultiplier));
+
+##Gets the Scrap amount for when the Robot this is attached to dies and you're awarded Scrap. Does not take into account the price of any Parts inside its Engine.
+##discountMultiplier is multiplied by the price.
+func get_salvage_price_piece_only(discountMultiplier := 1.0):
+	return max(0, ceili(get_stat("ScrapCost") * get_stat("ScrapSalvageModifier") * discountMultiplier));
+
+##Gets the Scrap amount for attempting to buy this Piece.
+##discountMultiplier is multiplied by the price.
+##fixedMarkup is added to the price.
+func get_buy_price_piece_only(discountMultiplier := 1.0, fixedMarkup := 0):
+	var currentPrice = maxi(0, ceili(get_stat("ScrapCost") * discountMultiplier))
+	return currentPrice + fixedMarkup;
+
+####################### ABILITY AND ENERGY MANAGEMENT
+
+@export_category("Ability")
+
+@export_subgroup("AbilityManagers")
+@export var activeAbilities : Array[AbilityManager] = [];
+@export var passiveAbilities : Array[AbilityManager] = [];
+
+@export_subgroup("Ability Details")
+@export var hurtboxAlwaysEnabled := false;
+
+@export var input : InputEvent;
+@export var energyDrawPassiveMultiplier := 1.0; ##power drawn each frame, multiplied by time delta. If this is negative, it is instead power being generated each frame.
+@export var energyDrawActiveMultiplier := 1.0; ##power drawn when you use any this piece's active abilities, given that it has any.
+@export var energyDrawActiveBaseOverride : float = 999;
+@export var energyDrawPassiveBaseOverride : float = 999;
+var energyDrawCurrent := 0.0; ##Recalculated and updated each frame.
+
+var incomingPower := 0.0;
+var hasIncomingPower := true;
+var transmittingPower := true; ##While false, no power is transmitted from this piece.
+
+##The amount of time needed between uses of this Piece's Passive Ability, after it successfully fires.
+@export var passiveCooldownTimeMultiplier := 1.0;
+##The amount of time needed between uses of this Piece's Active Abilities.
+@export var activeCooldownTimeMultiplier := 1.0;
+
+func set_cooldown_active(action:AbilityManager, immediate := false):
+	if immediate:
+		action.set_cooldown(get_cooldown_active(action));
+	else:
+		action.queue_cooldown(get_cooldown_active(action));
+
+func on_cooldown_active(action : AbilityManager) -> bool:
+	return action.on_cooldown();
+func on_cooldown_active_any() -> bool:
+	for ability in activeAbilities:
+		if ability.on_cooldown():
+			return true;
+	return false;
+func get_cooldown_active(action : AbilityManager) -> float:
+	if is_instance_valid(action):
+		return action.get_cooldown();
+	return false;
+func set_all_cooldowns():
+	for action in get_all_abilities():
+		set_cooldown_for_ability(action);
+func set_cooldown_for_ability(action : AbilityManager):
+	if is_instance_valid(action):
+		if action.isPassive:
+			action.queue_cooldown(get_stat("PassiveCooldown"));
+		else:
+			action.queue_cooldown(get_stat("ActiveCooldown"));
+
+##Never called in base, but to be used for stuff like Bumpers needing a cooldown before they can Bump again.
+func set_cooldown_passive(passiveAbility : AbilityManager, immediate := false):
+	if is_instance_valid(passiveAbility):
+		if immediate:
+			passiveAbility.set_cooldown(get_cooldown_passive(passiveAbility));
+		else:
+			passiveAbility.queue_cooldown(get_cooldown_passive(passiveAbility));
+func on_cooldown_passive(action : AbilityManager) -> bool:
+	return get_cooldown_passive(action) > 0;
+func on_cooldown_passive_any() -> bool:
+	for ability in passiveAbilities:
+		if ability.on_cooldown():
+			return true;
+	return false;
+func get_cooldown_passive(passiveAbility : AbilityManager) -> float:
+	if is_instance_valid(passiveAbility):
+		return passiveAbility.get_cooldown();
+	return false;
+func on_cooldown_action(action : AbilityManager) -> bool:
+	return action.on_cooldown();
+func on_cooldown_named_action(actionName : String) -> bool:
+	var action = get_named_action(actionName);
+	if action != null:
+		return on_cooldown_action(action);
+	return true;
+
+func on_cooldown():
+	return on_cooldown_active_any() or on_cooldown_passive_any();
+
+func on_contact_cooldown():
+	for ability in get_all_abilities():
+		if is_instance_valid(ability) and ability is AbilityManager:
+			if ability.runType == AbilityManager.runTypes.OnContactDamage:
+				if ability.on_cooldown():
+					return true;
+	return false;
+
+##Physics process step for abilities.
+func phys_process_abilities(delta):
+	##Un-disable hurtboxes.
+	if hurtboxAlwaysEnabled:
+		disable_hurtbox(false);
+	##Run cooldown behaviors.
+	cooldown_behavior();
+	##Use the passive ability of this guy.
+	use_looping_passives();
+
+##Fires every physics frame when the Piece's passive or active abilities are on cooldown, via [method on_cooldown].
+func cooldown_behavior(cooldown : bool = on_cooldown()):
+	if on_contact_cooldown():
+		if disableHitboxesWhileOnCooldown:
+			hitboxCollisionHolder.scale = Vector3(0.00001,0.00001,0.00001);
+	else:
+		if disableHitboxesWhileOnCooldown:
+			hitboxCollisionHolder.scale = Vector3.ONE;
+	
+	pass;
+
+func try_sap_energy(amt:float):
+	var bot = get_host_robot();
+	if bot != null:
+		bot.try_sap_energy(amt);
+		energyDrawCurrent += amt;
+		queue_refresh_incoming_energy();
+		return false;
+	queue_refresh_incoming_energy();
+	return true;
+
+func get_outgoing_energy():
+	get_incoming_energy();
+	if not is_transmitting(): return 0.0;
+	return max(0.0, get_incoming_energy() - energyDrawCurrent);
+
+func is_transmitting():
+	return hasIncomingPower and transmittingPower;
+
+## If this [Piece] is plugged into a [Socket], returns that [Socket]'s power.[br]
+func get_incoming_energy():
+	if refreshIncomingEnergy:
+		return calc_incoming_energy();
+	return incomingPower;
+
+## If this [Piece] is plugged into a [Socket], returns that [Socket]'s power.[br]
+var refreshIncomingEnergy := true;
+func queue_refresh_incoming_energy():
+	refreshIncomingEnergy = true;
+
+func calc_incoming_energy():
+	refreshIncomingEnergy = false;
+	if get_host_socket() != null:
+		#print(get_host_socket().get_energy_transmitted())
+		var powerTransmitted = get_host_socket().get_energy_transmitted();
+		#print_if_true(get_host_socket(), self is Piece_Sawblade)
+		if powerTransmitted <= 0.0: 
+			hasIncomingPower = false;
+		else: 
+			hasIncomingPower = true;
+		incomingPower = powerTransmitted;
+		return incomingPower;
+	else:
+		if is_instance_valid(hostRobot):
+			#print("No host socket, yes power: ", hostRobot.get_available_energy())
+			hasIncomingPower = true;
+			incomingPower = hostRobot.get_available_energy();
+			return incomingPower;
+	incomingPower = 0.0;
+	hasIncomingPower = false;
+	return incomingPower;
+
+func get_current_energy_draw():
+	return energyDrawCurrent;
+
+func get_active_energy_cost(ability : AbilityManager):
+	##TODO: Bonuses
+	var override = null;
+	if energyDrawActiveBaseOverride != 999:
+		override = energyDrawActiveBaseOverride;
+	return ( ability.get_energy_cost_base(override) * get_stat("ActiveEnergyDraw") );
+
+func get_passive_energy_cost(passiveAbility : AbilityManager):
+	var stat = get_stat("PassiveEnergyDraw");
+	if is_instance_valid(passiveAbility):
+		var override = null;
+		if energyDrawPassiveBaseOverride != 999:
+			override = energyDrawPassiveBaseOverride;
+		stat *= passiveAbility.get_energy_cost_base(override);
+	##TODO: Bonuses
+	return ( stat * get_physics_process_delta_time() );
+
+func get_energy_cost(action):
+	if action.isPassive:
+		return get_passive_energy_cost(action);
+	else:
+		return get_active_energy_cost(action);
+
+## Returns true if there would be enough energy in the system to support the input energy amount.
+func test_energy_available(energyAmount) -> bool:
+	return (get_current_energy_draw() + energyAmount) <= get_incoming_energy()
+
+## Standard checks shared by [method can_use_active] and [method can_use_passive] that must be passed.
+func standard_ability_checks(action : AbilityManager):
+	## Check that the thing is the correct type.
+	if action is not AbilityManager:
+		return false;
+	## Check if the Piece is paused.
+	if is_paused():
+		return false;
+	## Check that the ability is owned by this piece.
+	if get_local_ability(action) == null:
+		return false;
+	## Check if it's disabled.
+	if action.is_disabled():
+		return false;
+	## Check the bot, and also check aliveness.
+	var bot = get_host_robot();
+	if bot == null:
+		return false;
+	else:
+		if !bot.is_alive():
+			return false;
+	## Check that it's not on cooldown.
+	if on_cooldown_action(action):
+		return false;
+	## Passed. Moving on...
+	return true;
+
+## Checks if you can use a given passive ability.
+func can_use_active(action : AbilityManager): 
+	## Check that the thing is valid. If not, get the first ability in the relevant list.
+	if ! is_instance_valid(action):
+		if activeAbilities.size() > 0:
+			action = activeAbilities.front();
+		else:
+			return false
+	## Check all the checks passives and actives share.
+	if not standard_ability_checks(action):
+		return false;
+	## Check that there's enough energy to run this active.
+	if not test_energy_available(get_active_energy_cost(action)):
+		return false;
+	## You passed!
+	return true;
+
+## Checks if you can use a given passive ability.
+func can_use_passive(passiveAbility : AbilityManager):
+	## Check that the thing is valid. If not, get the first ability in the relevant list.
+	if ! is_instance_valid(passiveAbility):
+		if passiveAbilities.size() > 0:
+			passiveAbility = passiveAbilities.front();
+		else:
+			return false
+	## Check all the checks passives and actives share.
+	if not standard_ability_checks(passiveAbility):
+		return false;
+	## Check that there's enough energy to run this passive.
+	if (get_passive_energy_cost(passiveAbility) > 0.0):
+		if ! test_energy_available(get_passive_energy_cost(passiveAbility)):
+			return false;
+	## You passed!
+	return true;
+func can_use_passive_any() -> bool:
+	for passiveAbility in passiveAbilities:
+		if can_use_passive(passiveAbility) : return true;
+	return false;
+
+var namedActions : Dictionary[String,AbilityManager] = {};
+func regen_namedActions():
+	for action in activeAbilities:
+		if is_instance_valid(action) and action is AbilityManager:
+			namedActions["A_"+action.abilityName] = action;
+	for action in passiveAbilities:
+		if is_instance_valid(action) and action is AbilityManager:
+			namedActions["P_"+action.abilityName] = action;
+func get_named_action(actionName : String) -> AbilityManager:
+	if namedActions.is_empty(): regen_namedActions();
+	var activeTest = "A_"+actionName;
+	var passiveTest = "P_"+actionName;
+	if namedActions.keys().has(activeTest): return namedActions[activeTest];
+	if namedActions.keys().has(passiveTest): return namedActions[passiveTest];
+	return null;
+func get_named_passive(actionName : String) -> AbilityManager:
+	if namedActions.is_empty(): regen_namedActions();
+	var passiveTest = "P_"+actionName;
+	if namedActions.keys().has(passiveTest): return namedActions[passiveTest];
+	return null;
+func get_named_active(actionName : String) -> AbilityManager:
+	if namedActions.is_empty(): regen_namedActions();
+	var activeTest = "A_"+actionName;
+	if namedActions.keys().has(activeTest): return namedActions[activeTest];
+	return null;
+func can_use_named_ability(actionName : String) -> bool:
+	var act = get_named_action(actionName);
+	if act != null:
+		return can_use_ability(act);
+	return false;
+
+func can_use_ability(action):
+	if action.isPassive:
+		return can_use_passive(action);
+	else:
+		return can_use_active(action);
+
+func use_looping_passives():
+	for passiveAbility in passiveAbilities:
+		if passiveAbility.runType == AbilityManager.runTypes.Default or passiveAbility.runType == AbilityManager.runTypes.LoopingCooldown:
+			use_passive(passiveAbility);
+func use_contact_passives():
+	for passiveAbility in passiveAbilities:
+		if passiveAbility.runType == AbilityManager.runTypes.OnContactDamage:
+			use_passive(passiveAbility);
+func use_passive(passiveAbility:AbilityManager):
+	if can_use_passive(passiveAbility):
+		use_ability(passiveAbility);
+		return true;
+	return false;
+
+## Where any and all [method register_active_ability()] or related calls should go. Runs at _ready().
+## IDEALLY, this should be done thru the export instead of thru code, but it can be done here.
+func ability_registry():
+	pass;
+
+## This runs directly before [method ability_registry] and cleans up all the abilities set up in the editor, as well as the passive ability.[br]
+## Checks to see if they were initialized with [method register_active_ability]. If not, then it fills its references out, as it assumes it was made with the editor.
+func ability_validation():
+	## Duplicate the resources so the ability doesn't get joint custody with another piece of the same type.
+	## Construct the description FIRST, because the constructor array is not going to get copied over.
+	print_rich("[color=pink]INIT ACTIVES:", activeAbilities);
+	
+	var activesNew : Array[AbilityManager] = []
+	for ability in activeAbilities:
+		if ability is AbilityManager:
+			ability.construct_description();
+			var dupe = ability.duplicate(true);
+			activesNew.append(dupe);
+			if ! dupe.initialized:
+				dupe.assign_references(self);
+			dupe.initialized = true;
+	#activeAbilities.clear();
+	activeAbilities = activesNew;
+	
+	## Do the same with the passive.
+	var passivesNew : Array[AbilityManager] = []
+	for passiveAbility in passiveAbilities:
+		if passiveAbility != null and passiveAbility is AbilityManager:
+			passiveAbility.construct_description();
+			var dupe = passiveAbility.duplicate(true);
+			passivesNew.append(dupe);
+			if ! dupe.initialized:
+				dupe.assign_references(self);
+			dupe.isPassive = true;
+			dupe.initialized = true;
+			passiveAbility = dupe;
+	#passiveAbilities.clear();
+	passiveAbilities = passivesNew;
+	
+	pass;
+
+## returns an array of all abilities, active and passive.
+func get_all_abilities(passiveFirst := false) -> Array[AbilityManager]:
+	var abilitiesToCheck : Array[AbilityManager] = [];
+	if passiveFirst:
+		abilitiesToCheck.append_array(passiveAbilities);
+		abilitiesToCheck.append_array(activeAbilities);
+	else:
+		abilitiesToCheck.append_array(activeAbilities);
+		abilitiesToCheck.append_array(passiveAbilities);
+	return abilitiesToCheck;
+
+## This should be run in ability_registry() only.
+## abilityName = name of ability.
+## abilityDescription = name of ability.
+## functionWhenUsed = the function that gets called when this ability is called for.
+## statsUsed = an Array of strings. This should hold any and all stats you want to have displayed on this ability's card.
+## slotOverride is if you want to have this ability use a specific numbered slot.
+func register_active_ability(abilityName : String = "Active Ability", abilityDescription : String = "No Description Found.", functionWhenUsed : Callable = func(): pass, statsUsed : Array[String] = []):
+	var newAbility = AbilityManager.new();
+	newAbility.register(self, abilityName, abilityDescription, functionWhenUsed, statsUsed);
+	activeAbilities.append(newAbility);
+	newAbility.initialized = true;
+	pass;
+
+func get_local_ability(action : AbilityManager) -> AbilityManager:
+	if get_all_abilities().has(action):
+		return action;
+	return null;
+
+##Calls the ability in the given slot if it's able to do so.
+func use_ability(action : AbilityManager) -> bool:
+	if can_use_ability(action):
+		#print("ABILITY ",action.abilityName," CAN BE USED...");
+		try_sap_energy(get_energy_cost(action));
+		set_cooldown_for_ability(action);
+		var activeAbility = get_local_ability(action);
+		if activeAbility == null: 
+			return false;
+		var functionNameWhenUsed = activeAbility.functionNameWhenUsed;
+		if functionNameWhenUsed != null and functionNameWhenUsed != "":
+			if has_method(functionNameWhenUsed):
+				#print("ABILITY ",activeAbility.abilityName," CALLED BY STRING NAME: ", get(functionNameWhenUsed))
+				get(functionNameWhenUsed).call()
+			else:
+				#print_rich("[b][color=red]ABILITY REFERENCES INVALID FUNCTION NAME: ", functionNameWhenUsed)
+				return false;
+		else:
+			#print("ABILITY ",activeAbility.abilityName," CALLED ITS FUNCTION.")
+			var _call = activeAbility.functionWhenUsed;
+			if _call != null and _call is Callable and is_instance_valid(_call):
+				_call.call();
+		pass;
+		return true;
+	return false;
 
 #################### VISUALS AND TRANSFORM
 
@@ -157,10 +711,10 @@ func process_draw(delta):
 		if visible: hide()
 	else:
 		if not visible: show()
-		
 		##Hide/show the male socket based on plugged-in status.
 		if is_instance_valid(maleSocketMesh):
-			if has_host(true, false, false):
+			if has_host(true, false, false): ##If you're on a socket:
+				if not selected: set_selection_mode(selectionModes.NOT_SELECTED);
 				if maleSocketMesh.visible:
 					maleSocketMesh.hide();
 			else:
@@ -195,15 +749,16 @@ var selectionModeMaterials = {
 	selectionModes.NOT_PLACEABLE : preload("res://graphics/materials/cannot_be_placed.tres"),
 }
 var selectionMode := selectionModes.NOT_SELECTED;
-func set_selection_mode(mode : selectionModes = selectionModes.NOT_SELECTED):
-	if selectionMode == mode: return;
-	selectionMode = mode;
-	if mode == selectionModes.NOT_SELECTED:
+func set_selection_mode(newMode : selectionModes = selectionModes.NOT_SELECTED):
+	if selectionMode == newMode: return;
+	if !assignedToSocket and newMode == selectionModes.SELECTED: return;
+	selectionMode = newMode;
+	if newMode == selectionModes.NOT_SELECTED:
 		for mesh in get_all_meshes():
 			mesh.set_surface_override_material(0, meshMaterials[mesh]);
 	else:
 		for mesh in get_all_meshes():
-			mesh.set_surface_override_material(0, selectionModeMaterials[mode]);
+			mesh.set_surface_override_material(0, selectionModeMaterials[newMode]);
 	pass;
 var meshMaterials = {};
 #var meshMaterials = Dictionary[MeshInstance3D, StandardMaterial3D] = {};
@@ -214,59 +769,159 @@ func get_all_meshes() -> Array:
 	var meshes = Utils.get_all_children_of_type(self, MeshInstance3D, self);
 	return meshes;
 
-######################## TIMERS
 
-##Any and all timers go here.
-func phys_process_timers(delta):
-	super(delta);
-	##tick down hitbox timer.
-	hitboxRescaleTimer -= 1;
-	##Tick down ability cooldowns.
-	if activeCooldownTimer > 0: 
-		activeCooldownTimer -= delta;
-	else:
-		activeCooldownTimer == 0.0;
-	if passiveCooldownTimer > 0: 
-		passiveCooldownTimer -= delta;
-	else:
-		passiveCooldownTimer == 0.0;
+
+########################## MELEE & DAMAGE
+
+@export_subgroup("Attack Stuff")
+@export var damageBase := 0.0;
+@export var knockbackBase := 0.0; ## For context on how big this should be, the Bumper Piece has a value of 70 here.
+@export var kickbackBase := 0.0;
+@export var damageTypes : Array[DamageData.damageTypes] = [];
+@export var disableHitboxesWhileOnCooldown := true;
+@export var contactCooldown := 0.0;
+
+var damageModifier := 1.0; ##This variable can be used to modify damage on the fly without needing to go thru set/get stat.
+
+func get_damage() -> float:
+	return get_stat("Damage") * damageModifier;
+
+func get_knockback_force() -> float:
+	return get_stat("Knockback");
+
+func get_impact_direction(positionOfTarget : Vector3, factorBodyVelocity := true) -> Vector3:
+	var factor = (positionOfTarget - global_position).normalized();
+	if factorBodyVelocity:
+		var bodVel = get_host_robot().body.linear_velocity;
+		factor += bodVel;
+	return factor;
+
+## Returns a Vector3 taking into account this Piece's Knockback force stat, as well as this bot's velocity.
+func get_knockback(positionOfTarget : Vector3, factorBodyVelocity := true) -> Vector3:
+	var knockbackVal = get_knockback_force();
+	var knockbackFactor = get_impact_direction(positionOfTarget, factorBodyVelocity);
+	var knockbackVector = knockbackVal * knockbackFactor;
+	return knockbackVector;
+
+func get_kickback_force() -> float:
+	return get_stat("Kickback");
+
+func get_kickback_direction(positionOfTarget : Vector3, factorBodyVelocity := true) -> Vector3:
+	var factor = global_position - positionOfTarget;
+	print("FACTOR", factor)
+	factor = factor.normalized();
+	if factorBodyVelocity:
+		var bodVel = get_host_robot().body.linear_velocity;
+		factor += bodVel;
+	
+	#factor = factor.rotated(Vector3(0,1,0), deg_to_rad(180));
+	factor -= global_position;
+	return factor;
+
+func get_damage_types() -> Array[DamageData.damageTypes]:
+	##TODO: Part stuff that adds damage types.
+	return damageTypes;
+
+## Creates a brand new [DamageData] based on your current stats.
+func get_damage_data(targetPosition := global_position, _damageAmount := get_damage(), _knockbackForce := get_knockback_force(), _direction := Vector3(0,0,0), _damageTypes := get_damage_types()) -> DamageData:
+	var DD = DamageData.new();
+	DD.create(_damageAmount, _knockbackForce, _direction, _damageTypes);
+	DD.calc_damage_direction_based_on_targets(global_position, targetPosition, false);
+	return DD;
+
+## Creates a brand new [DamageData] based on your current stats.
+func get_kickback_damage_data(targetPosition := global_position, _damageAmount := 0.0, _knockbackForce := get_kickback_force(), _direction := Vector3(0,0,0), _damageTypes :Array[DamageData.damageTypes]= []):
+	var DD = DamageData.new();
+	DD.create(_damageAmount, _knockbackForce, _direction, _damageTypes);
+	prints(targetPosition, global_position)
+	print(DD.calc_damage_direction_based_on_targets(global_position, targetPosition, true));
+	DD.calc_damage_direction_based_on_targets(global_position, targetPosition, true);
+	print(DD.damageDirection)
+	return DD;
+
+##Fired AFTER a hitbox hits an enemy's hurtbox, via [method _on_hitbox_shape_entered]. Calculates the damage and knockback.
+func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, thisPieceCollider : PieceCollisionBox):
+	#print (self, otherPiece)
+	#print("COntactdamage function.")
+	if otherPiece != self:
+		#print("Target was not self.")
+		##Handle damaging the opposition.
+		var DD = get_damage_data();
+		#DD.damageDirection = KB;
+		otherPiece.hurtbox_collision_from_piece(self, DD);
+		
+		##Handle kickback.
+		initiate_kickback(otherPiece.global_position);
+		
+		use_contact_passives();
+		return true;
+	#print_rich("[color=orange]Target was self.")
+	return false;
+
+func initiate_kickback(awayPos : Vector3):
+	var kb = get_kickback_damage_data(awayPos);
+	prints(awayPos, global_position)
+	hurtbox_collision_from_piece(self, kb);
+
+func move_robot_with_force(direction):
+	var bot = get_host_robot();
+	if is_instance_valid(bot):
+		bot.apply_force(direction);
+
+## Fired when an enemy Piece hitbox hurts this.
+func hurtbox_collision_from_piece(otherPiece : Piece, damageData : DamageData):
+	take_damage_from_damageData(damageData);
 	pass;
 
-func phys_process_pre(delta):
-	super(delta);
-	##Reset current energy draw.
-	energyDrawCurrent = 0.0;
+## Fired when an enemy Projectile hitbox hurts this.
+func hurtbox_collision_from_projectile(projectile : Bullet, damageData : DamageData):
+	take_damage_from_damageData(damageData);
+	pass;
 
-################ PIECE MANAGEMENT
+## Gives DamageData to the player to chew through. Runs [method modify_incoming_damage_data] before actually sending it through.
+func take_damage_from_damageData(damageData : DamageData):
+	if get_host_robot() != null and is_instance_valid(damageData):
+		var resultingDamage = modify_incoming_damage_data(damageData);
+		get_host_robot().take_damage_from_damageData(resultingDamage);
 
-@export_category("Piece Data")
-@export var pieceName : StringName = "Piece";
-@export_multiline var pieceDescription := "No Description Found.";
-@export var weightBase := 1.0;
+## Extend this function with any modifications you want to do to the incoming DamageData when this Piece gets hit.[br]
+## This is potentially useful for things like a Shield, for example, which might nullify most of the damage from incoming Piercing-tagged attacks.
+func modify_incoming_damage_data(damageData : DamageData) -> DamageData:
+	return damageData;
 
-@export var scrapCostBase : int;
-@export var scrapSellModifierBase := (2.0/3.0);
-@export var scrapSalvageModifierBase := (1.0/6.0);
+## Fires when a Hitbox hits another robot. The prelude to [method contact_damage].
+func _on_hitbox_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
+	#print("please.")
+	if not on_contact_cooldown():
+		if body is RobotBody and body.get_parent() != get_host_robot():
+			#print("tis a robot. from ", pieceName)
+			var other_shape_owner = body.shape_find_owner(body_shape_index)
+			var other_shape_node = body.shape_owner_get_owner(other_shape_owner)
+			if other_shape_node is not PieceCollisionBox: return;
+			
+			var local_shape_owner = hitboxCollisionHolder.shape_find_owner(local_shape_index)
+			var local_shape_node =  hitboxCollisionHolder.shape_owner_get_owner(local_shape_owner)
+			if local_shape_node is not PieceCollisionBox: return;
+			
+			var otherPiece : Piece = other_shape_node.get_piece();
+			#print("Other Piece in hitbox collision: ", otherPiece)
+			if ! is_instance_valid(otherPiece): return;
+			if is_instance_valid(otherPiece) and is_instance_valid(other_shape_node) and is_instance_valid(local_shape_node):
+				#print("Contact damage commencing:")
+				contact_damage(otherPiece, other_shape_node, local_shape_node)
+	pass # Replace with function body.
 
-@export var removable := true;
+## Fires when an area hits this Piece's Hitboxes. Mostly used for reflecting Bullets.
+func _on_hitbox_shapes_area_entered(area_rid, area, area_shape_index, local_shape_index):
+	var parent = area.get_parent();
+	if parent is Bullet:
+		bullet_hit_hitbox(parent);
+	pass # Replace with function body.
 
-##TODO: Scrap sell/buy/salvage functions for when this has Parts inside of it.
-##Gets the Scrap amount for when you sell this Piece. Does not take into account the price of any Parts inside its Engine.
-##discountMultiplier is multiplied by the price.
-func get_sell_price_piece_only(discountMultiplier := 1.0):
-	return max(0, ceili(get_stat("ScrapCost") * get_stat("ScrapSellModifier") * discountMultiplier));
+## Fires when a bulelt hits this robot's HITBOX.
+func bullet_hit_hitbox(bullet : Bullet):
+	pass;
 
-##Gets the Scrap amount for when the Robot this is attached to dies and you're awarded Scrap. Does not take into account the price of any Parts inside its Engine.
-##discountMultiplier is multiplied by the price.
-func get_salvage_price_piece_only(discountMultiplier := 1.0):
-	return max(0, ceili(get_stat("ScrapCost") * get_stat("ScrapSalvageModifier") * discountMultiplier));
-
-##Gets the Scrap amount for attempting to buy this Piece.
-##discountMultiplier is multiplied by the price.
-##fixedMarkup is added to the price.
-func get_buy_price_piece_only(discountMultiplier := 1.0, fixedMarkup := 0):
-	var currentPrice = maxi(0, ceili(get_stat("ScrapCost") * discountMultiplier))
-	return currentPrice + fixedMarkup;
 
 ################### COLLISION
 @export_category("Node refs")
@@ -274,22 +929,17 @@ func get_buy_price_piece_only(discountMultiplier := 1.0, fixedMarkup := 0):
 @export var meshesHolder : Node3D;
 @export var maleSocketMesh : Node3D;
 @export_subgroup("Collision")
-@export var placementCollisionHolder : Node3D;
-@export var hurtboxCollisionHolder : HurtboxHolder;
 @export var hitboxCollisionHolder : HitboxHolder;
+@export var hurtboxCollisionHolder : HurtboxHolder;
+@export var placementCollisionHolder : PlacementShapecastHolder;
 #var bodyMeshes : Dictionary[StringName, MeshInstance3D] = {};
 
 ##Frame timer that updates scale of hitboxes every 3 frames.
-var hitboxRescaleTimer := 0;
+var hitboxRescaleTimer := 1;
 func phys_process_collision(delta):
 	if hitboxRescaleTimer <= 0:
 		if has_host(true, true, true):
 			hitboxRescaleTimer = 3;
-			##TODO: Figure out how to scale the hurtboxes vertically real tall...... this ain't it.
-			#hitboxCollisionHolder.scale = Vector3.ONE;
-			#hitboxCollisionHolder.call_deferred("global_scale", Vector3(1, 1000, 1));
-			#hitboxCollisionHolder.set_deferred("global_position", Vector3((get_host_robot().get_global_body_position() + position) * Vector3(1, 0, 1) + Vector3(0,-5,0)));
-			
 			hurtboxCollisionHolder.collision_layer = 8 + 64; #Hurtbox layer and placed layer.
 		else:
 			hurtboxCollisionHolder.collision_layer = 8; #Hurtbox layer and hover layer.
@@ -302,7 +952,7 @@ func autoassign_child_sockets_to_self():
 
 ##This function assigns socket data and generates all hitboxes. Should only ever be run once at [method _ready()].
 func gather_colliders_and_meshes():
-	autograb_sockets();
+	get_all_female_sockets();
 	get_all_mesh_init_materials();
 	autoassign_child_sockets_to_self();
 	refresh_and_gather_collision_helpers();
@@ -321,6 +971,8 @@ func refresh_and_gather_collision_helpers():
 	for child in hitboxCollisionHolder.get_children():
 		child.queue_free();
 	
+	#hurtboxCollisionHolder.scale = Vector3.ONE * 0.95;
+	#placementCollisionHolder.scale = Vector3.ONE * 0.95;
 	
 	var identifyingNum = 0;
 	for child in get_children():
@@ -376,6 +1028,7 @@ func reset_collision_helpers():
 
 ##Should ping all of the placement hitboxes and return TRUE if it collides with a Piece, of FALSE if it doesn't.
 func ping_placement_validation():
+	var exceptionsToAddThenRemove = [];
 	if is_node_ready() and is_visible_in_tree() and is_instance_valid(get_parent()):
 		var collided := false;
 		#print(get_children())
@@ -391,17 +1044,24 @@ func ping_placement_validation():
 					#shapecasts.append(child);
 					child.force_shapecast_update();
 					if child.is_colliding(): 
-						var collider = child.get_collider(0);
-						if collider is HurtboxHolder:
-							#print(self, collider.get_piece())
-							if self != collider.get_piece():
+						for colliderIDX in child.get_collision_count():
+							var collider = child.get_collider(colliderIDX);
+							#var colShape = child.get_collider_shape(colliderIDX);
+							if collider is HurtboxHolder:
+								if self != collider.get_piece():
+									collided = true;
+									print("collided with another HURTbox... ", collider.get_piece())
+							#if collider is RobotBody:
+								#if colShape is PieceCollisionBox:
+									#if self != collider.get_piece():
+										#collided = true;
+										#print("collided with another box... ", collider.get_piece())
+							elif collider is StaticBody3D:
 								collided = true;
-						if collider is RobotBody:
-							collided = true;
-						else:
-							#print("what")
-							#print(collider)
-							pass;
+							else:
+								#print("what")
+								#print(collider)
+								pass;
 	
 	##Put all the shapecasts back.
 	#for cast in shapecasts:
@@ -435,23 +1095,42 @@ func disable_hurtbox(foo:bool):
 			if child is PieceCollisionBox:
 				child.disabled = foo;
 
+func get_facing_direction(front := Vector3(0,0,1), addPosition := false):
+	front = front.rotated(Vector3(1,0,0), global_rotation.x);
+	front = front.rotated(Vector3(0,1,0), global_rotation.y);
+	front = front.rotated(Vector3(0,0,1), global_rotation.z);
+	
+	if addPosition:
+		front += global_position;
+	
+	return front;
+
 ##Fired whent he camera finds this piece.
 ##TODO: Fancy stuff. 
 var selected := false;
-
 func get_selected() -> bool:
 	if selected: set_selection_mode(selectionModes.SELECTED);
 	return selected;
 
+var isPreview := false;
+func is_preview():
+	if get_parent() == null: return false;
+	if assignedToSocket: return false;
+	return isPreview;
 func select(foo : bool = not get_selected()):
 	if foo == selected: return foo;
 	if foo: deselect_other_pieces(self);
 	else: deselect_other_pieces();
+	if is_preview() and ! assignedToSocket:
+		return;
 	selected = foo;
+	var bot = get_host_robot()
 	if selected: 
+		if bot: bot.selectedPiece = self;
 		if selectionMode == selectionModes.NOT_SELECTED:
 			set_selection_mode(selectionModes.SELECTED);
-	else: set_selection_mode(selectionModes.NOT_SELECTED);
+	else: 
+		set_selection_mode(selectionModes.NOT_SELECTED);
 	print(pieceName)
 	return selected;
 	pass;
@@ -494,16 +1173,17 @@ func get_socket_at_index(socketIndex : int) -> Socket:
 
 func autograb_sockets():
 	var sockets = Utils.get_all_children_of_type(self, Socket, self);
+	allSockets = [];
 	for socket : Socket in sockets:
 		Utils.append_unique(allSockets, socket);
 		socket.set_host_piece(self);
 		socket.set_host_robot(get_host_robot());
-	pass;
+	return allSockets;
 
 ##Returns a list of all sockets on this part.
 func get_all_female_sockets() -> Array[Socket]:
 	if allSockets.is_empty():
-		autograb_sockets();
+		return autograb_sockets();
 	return allSockets;
 
 func register_socket(socket : Socket):
@@ -511,18 +1191,21 @@ func register_socket(socket : Socket):
 
 ##Assigns this [Piece] to a given [Socket]. This essentially places the thing onto the [Robot] the [Socket] has as its host.
 func assign_socket(socket:Socket):
-	print("Children", get_children())
+	print("ASSIGNING TO SOCKET")
+	#print("Children", get_children())
 	socket.add_occupant(self);
 	assign_socket_post(socket);
 	start_placing_animation();
 	pass;
 
-##Assigns this [Piece] to a given [Socket]. This portion is separated so it can have an entry point for manual assignment.
+##Assigns this [Piece] to a given [Socket]. This portion is separated so it can act as an entry point for manual assignment.
 func assign_socket_post(socket:Socket):
-	hostRobot.on_add_piece(self);
+	isPreview = false;
 	assignedToSocket = true;
+	hostRobot.on_add_piece(self);
 	hurtboxCollisionHolder.set_collision_mask_value(8, false);
 	set_selection_mode(selectionModes.NOT_SELECTED);
+	print("ASSIGNED TO SOCKET?")
 
 func is_assigned() -> bool:
 	return assignedToSocket;
@@ -604,12 +1287,17 @@ func deselect_all_sockets():
 	for socket in get_all_female_sockets():
 		socket.select(false);
 
-var allPiecesLoops := 0;
-
+var allPieces : Array[Piece] = [];
 func get_all_pieces() -> Array[Piece]:
+	if allPieces.is_empty():
+		return get_all_pieces_regenerate();
+	return allPieces;
+
+var allPiecesLoops := 0;
+func get_all_pieces_regenerate() -> Array[Piece]:
 	var ret : Array[Piece] = []
-	#print("ALL FEMALE SOCKETS: ", get_all_female_sockets())
-	for socket in get_all_female_sockets():
+	prints("ALL FEMALE SOCKETS ON ",pieceName,": ", get_all_female_sockets())
+	for socket : Socket in get_all_female_sockets():
 		allPiecesLoops += 1;
 		#print("ALL PIECES LOOOPS: ", allPiecesLoops);
 		var occupant = socket.get_occupant();
@@ -617,208 +1305,8 @@ func get_all_pieces() -> Array[Piece]:
 			#print("ALL PIECES OCCUPANT :", occupant, " SELF : ", self)
 			if occupant != self:
 				ret.append(occupant);
-	print("ALL PIECES : ", ret)
+	#print("ALL PIECES REGENRATED: ", ret)
 	return ret;
-
-
-####################### ABILITY AND ENERGY MANAGEMENT
-
-@export_category("Ability")
-@export var hurtboxAlwaysEnabled := false;
-
-@export var input : InputEvent;
-@export var energyDrawPassive := 0.0; ##power drawn each frame, multiplied by time delta. If this is negative, it is instead power being generated each frame.
-@export var energyDrawActive := 0.0; ##power drawn when you use any this piece's active abilities, given that it has any.
-var energyDrawCurrent := 0.0; ##Recalculated and updated each frame.
-
-var incomingPower := 0.0;
-var hasIncomingPower := true;
-var transmittingPower := true; ##While false, no power is transmitted from this piece.
-
-##The amount of time needed between uses of this Piece's Passive Ability, after it successfully fires.
-@export var passiveCooldownTime := 0.0;
-##The amount of time needed between uses of this Piece's Active Abilities.
-@export var activeCooldownTime := 0.5;
-var activeCooldownTimer := 0.0;
-func set_cooldown_active():
-	set_deferred("activeCooldownTimer", get_stat("ActiveCooldown"));
-var passiveCooldownTimer := 0.0;
-func on_cooldown_active() -> bool:
-	return get_cooldown_active() > 0;
-func get_cooldown_active() -> float:
-	if activeCooldownTimer < 0:
-		activeCooldownTimer = 0;
-	return activeCooldownTimer;
-
-##Never called in base, but to be used for stuff like Bumpers needing a cooldown before they can Bump again.
-func set_cooldown_passive():
-	set_deferred("passiveCooldownTimer", get_stat("PassiveCooldown"));
-func on_cooldown_passive() -> bool:
-	return get_cooldown_passive() > 0;
-func get_cooldown_passive() -> float:
-	if passiveCooldownTimer < 0:
-		passiveCooldownTimer = 0.0;
-	return passiveCooldownTimer;
-
-func on_cooldown():
-	return on_cooldown_active() or on_cooldown_passive();
-
-##Physics process step for abilities.
-func phys_process_abilities(delta):
-	##Un-disable hurtboxes.
-	if hurtboxAlwaysEnabled:
-		disable_hurtbox(false);
-	##Run cooldown behaviors.
-	cooldown_behavior();
-	##Use the passive ability of this guy.
-	use_passive();
-
-##Fires every physics frame when the Piece's active ability is on cooldown, via [method on_cooldown_active].
-func cooldown_behavior_active(cooldown : bool = on_cooldown_active()):
-	if cooldown:
-		pass;
-	else:
-		pass;
-##Fires every physics frame when the Piece's passive ability is on cooldown, via [method on_cooldown_passive].
-func cooldown_behavior_passive(cooldown : bool = on_cooldown_passive()):
-	if cooldown:
-		pass;
-	else:
-		pass;
-##Fires every physics frame when the Piece's passive or active abilities are on cooldown, via [method on_cooldown].
-func cooldown_behavior(cooldown : bool = on_cooldown()):
-	if cooldown:
-		if disableHitboxesWhileOnCooldown:
-			hitboxCollisionHolder.scale = Vector3(0.00001,0.00001,0.00001);
-	else:
-		if disableHitboxesWhileOnCooldown:
-			hitboxCollisionHolder.scale = Vector3.ONE;
-	pass;
-
-func get_outgoing_energy():
-	get_incoming_energy();
-	if not is_transmitting(): return 0.0;
-	return max(0.0, get_incoming_energy() - energyDrawCurrent);
-
-func is_transmitting():
-	return hasIncomingPower and transmittingPower;
-
-##If this part is plugged into a socket, returns that socket's power.
-##If not, then it's probably a robot body or not plugged in, and returns 0.
-func get_incoming_energy():
-	if get_host_socket() != null:
-		#print(get_host_socket().get_energy_transmitted())
-		var powerTransmitted = get_host_socket().get_energy_transmitted();
-		#print_if_true(get_host_socket(), self is Piece_Sawblade)
-		if powerTransmitted <= 0.0: 
-			hasIncomingPower = false;
-		else: 
-			hasIncomingPower = true;
-		incomingPower = powerTransmitted;
-		return incomingPower;
-	else:
-		if is_instance_valid(hostRobot):
-			#print("No host socket, yes power: ", hostRobot.get_available_energy())
-			hasIncomingPower = true;
-			incomingPower = hostRobot.get_available_energy();
-			return incomingPower;
-	incomingPower = 0.0;
-	hasIncomingPower = false;
-	return incomingPower;
-
-
-func get_current_energy_draw():
-	return energyDrawCurrent;
-
-func get_active_energy_cost():
-	##TODO: Bonuses
-	return ( get_stat("ActiveEnergyDraw") );
-
-func get_passive_energy_cost():
-	##TODO: Bonuses
-	return ( get_stat("PassiveEnergyDraw") * get_physics_process_delta_time() );
-
-##Returns true if the actionSlot has an ability assigned and energy draw post-use would not exceed the incoming energy pool.
-func can_use_active(actionSlot : int): 
-	if is_paused():
-		#print_rich("[color=yellow]Active call was interrupted because the game is paused.")
-		return false;
-	if get_active_ability(actionSlot) == null:
-		return false;
-	if get_host_robot() == null:
-		return false;
-	return (not on_cooldown_active()) and (( get_current_energy_draw() + get_active_energy_cost() ) <= get_incoming_energy());
-
-##Returns true if energyDrawPassive is 0, or if the power draw would not exceed incoming power.
-func can_use_passive():
-	if is_paused():
-		#print_rich("[color=yellow]Passive call was interrupted because the game is paused.")
-		return false;
-	if get_host_robot() == null:
-		#print_rich("[color=yellow]Passive call was interrupted by lack of a host robot.")
-		return false;
-	if on_cooldown_passive():
-		#print_rich("[color=yellow]Passive call was interrupted by being on cooldown.")
-		return false;
-	if (get_passive_energy_cost() != 0.0):
-		if (( get_current_energy_draw() + get_passive_energy_cost() ) <= get_incoming_energy()):
-			##There's enough energy.
-			return true;
-		else:
-			#print_rich("[color=yellow]Passive call for ",pieceName," was interrupted by not having enough energy. ", get_current_energy_draw() + get_passive_energy_cost(), " ", get_incoming_energy())
-			return false;
-	return true;
-	#return (not on_cooldown_passive()) and ((energyDrawPassive != 0.0) and (( get_current_energy_draw() + get_passive_energy_cost() ) <= get_incoming_energy()) or energyDrawPassive == 0.0);
-
-func use_passive():
-	if can_use_passive():
-		energyDrawCurrent += get_passive_energy_cost();
-		return true;
-	return false;
-
-var activeAbilities : Dictionary[int, AbilityManager] = {};
-
-## Where any and all register_active_ability() or related calls should go. Runs at _ready().
-func ability_registry():
-	pass;
-
-func get_next_available_ability_slot():
-	var num := 0;
-	while activeAbilities.keys().has(num):
-		num += 1;
-	return num;
-
-## This should be run in ability_registry() only.
-## abilityName = name of ability.
-## abilityDescription = name of ability.
-## functionWhenUsed = the function that gets called when this ability is called for.
-## statsUsed = an Array of strings. This should hold any and all stats you want to have displayed on this ability's card.
-## slotOverride is if you want to have this ability use a specific numbered slot.
-func register_active_ability(abilityName : String = "Active Ability", abilityDescription : String = "No Description Found.", functionWhenUsed : Callable = func(): pass, statsUsed : Array[String] = [], slotOverride = null):
-	var newAbility = AbilityManager.new();
-	var slot = slotOverride;
-	if slot == null: slot = get_next_available_ability_slot();
-	newAbility.register(self, slot, abilityName, abilityDescription, functionWhenUsed, statsUsed);
-	activeAbilities[slot] = newAbility;
-	pass;
-
-func get_active_ability(actionSlot : int) -> AbilityManager:
-	if activeAbilities.keys().has(actionSlot):
-		return activeAbilities[actionSlot];
-	return null;
-
-##Calls the ability in the given slot if it's able to do so.
-func use_active(actionSlot : int):
-	if can_use_active(actionSlot):
-		energyDrawCurrent += get_active_energy_cost();
-		set_cooldown_active();
-		var activeAbility = get_active_ability(actionSlot);
-		var call = activeAbility.functionWhenUsed;
-		call.call();
-		return true;
-	return false;
-
-
 
 ####################### INVENTORY STUFF
 @export_category("Stash")
@@ -827,8 +1315,7 @@ func use_active(actionSlot : int):
 func remove_and_add_to_robot_stash(botOverride : Robot = get_host_robot(true)):
 	deselect();
 	##Stash everything below this.
-	for subPiece in get_all_pieces():
-		#print("PIECE IN ALL PIECES: ", subPiece.pieceName)
+	for subPiece in get_all_pieces_regenerate():
 		subPiece.remove_and_add_to_robot_stash(botOverride);
 	
 	remove_from_socket();
@@ -897,135 +1384,9 @@ func get_stash_button_name(showTree := false, prelude := "") -> String:
 			ret += "\n" + prelude + "-" + piece.get_stash_button_name(true, prelude + "-");
 	return ret;
 
-
-
-########################## MELEE & DAMAGE
-
-@export_subgroup("Attack Stuff")
-@export var damageBase := 0.0;
-@export var knockbackBase := 0.0;
-@export var kickbackBase := 0.0;
-@export var damageTypes : Array[DamageData.damageTypes] = [];
-@export var disableHitboxesWhileOnCooldown := true;
-
-var damageModifier := 1.0; ##This variable can be used to modify damage on the fly without needing to go thru set/get stat.
-
-func get_damage() -> float:
-	return get_stat("Damage") * damageModifier;
-
-func get_knockback_force() -> float:
-	return get_stat("Knockback");
-
-func get_impact_direction(positionOfTarget : Vector3, factorBodyVelocity := true) -> Vector3:
-	var factor = (positionOfTarget - global_position).normalized();
-	if factorBodyVelocity:
-		var bodVel = get_host_robot().body.linear_velocity;
-		factor += bodVel;
-	return factor;
-
-## Returns a Vector3 taking into account this Piece's Knockback force stat, as well as this bot's velocity.
-func get_knockback(positionOfTarget : Vector3, factorBodyVelocity := true) -> Vector3:
-	var knockbackVal = get_knockback_force();
-	var knockbackFactor = get_impact_direction(positionOfTarget, factorBodyVelocity);
-	var knockbackVector = knockbackVal * knockbackFactor;
-	return knockbackVector;
-
-func get_kickback_force() -> float:
-	return get_stat("Kickback");
-func get_kickback_direction(positionOfTarget : Vector3, factorBodyVelocity := true) -> Vector3:
-	var factor = (positionOfTarget - global_position).normalized();
-	if factorBodyVelocity:
-		var bodVel = get_host_robot().body.linear_velocity;
-		factor += bodVel;
-	return factor.rotated(Vector3(0,1,0), deg_to_rad(180));
-
-func get_damage_types() -> Array[DamageData.damageTypes]:
-	##TODO: Part stuff that adds damage types.
-	return damageTypes;
-
-## Creates a brand new [@DamageData] based on your current stats.
-func get_damage_data(_damageAmount := get_damage(), _knockbackForce := get_knockback_force(), _direction := Vector3(0,0,0), _damageTypes := get_damage_types()):
-	var DD = DamageData.new();
-	return DD.create(_damageAmount, _knockbackForce, _direction, _damageTypes);
-
-## Creates a brand new [@DamageData] based on your current stats.
-func get_kickback_damage_data(_damageAmount := 0.0, _knockbackForce := get_kickback_force(), _direction := Vector3(0,0,0), _damageTypes :Array[DamageData.damageTypes]= []):
-	var DD = DamageData.new();
-	return DD.create(_damageAmount, _knockbackForce, _direction, _damageTypes);
-
-##Fired AFTER a hitbox hits an enemy's hurtbox, via [method _on_hitbox_shape_entered]. Calculates the damage and knockback.
-func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, thisPieceCollider : PieceCollisionBox):
-	#print (self, otherPiece)
-	#print("COntactdamage function.")
-	if otherPiece != self:
-		#print("Target was not self.")
-		##Handle damaging the opposition.
-		var DD = get_damage_data();
-		var KB = get_impact_direction(otherPiece.global_position, true);
-		DD.damageDirection = KB;
-		otherPiece.hurtbox_collision_from_piece(self, DD);
-		
-		##Handle kickback.
-		initiate_kickback(otherPiece.global_position);
-		return true;
-	#print_rich("[color=orange]Target was self.")
-	return false;
-
-func initiate_kickback(awayPos : Vector3):
-	var kb = get_kickback_damage_data();
-	var kick = get_kickback_direction(awayPos, false);
-	kb.damageDirection = kick;
-	hurtbox_collision_from_piece(self, kb)
-
-## Fired when an enemy Piece hitbox hurts this.
-func hurtbox_collision_from_piece(otherPiece : Piece, damageData : DamageData):
-	take_damage_from_damageData(damageData);
-	pass;
-
-## Fired when an enemy Projectile hitbox hurts this.
-func hurtbox_collision_from_projectile(projectile : Bullet, damageData : DamageData):
-	take_damage_from_damageData(damageData);
-	pass;
-
-## Gives DamageData to the player to chew through. Runs [method modify_incoming_damage_data] before actually sending it through.
-func take_damage_from_damageData(damageData : DamageData):
-	if get_host_robot() != null and is_instance_valid(damageData):
-		var resultingDamage = modify_incoming_damage_data(damageData);
-		get_host_robot().take_damage_from_damageData(resultingDamage);
-
-## Extend this function with any modifications you want to do to the incoming DamageData when this Piece gets hit.[br]
-## This is potentially useful for things like a Shield, for example, which might nullify most of the damage from incoming Piercing-tagged attacks.
-func modify_incoming_damage_data(damageData : DamageData) -> DamageData:
-	return damageData;
-
-## Fires when a Hitbox hits another robot.
-func _on_hitbox_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
-	#print("please.")
-	if body is RobotBody and body.get_parent() != get_host_robot():
-		#print("tis a robot. from ", pieceName)
-		var other_shape_owner = body.shape_find_owner(body_shape_index)
-		var other_shape_node = body.shape_owner_get_owner(other_shape_owner)
-		if other_shape_node is not PieceCollisionBox: return;
-		
-		var local_shape_owner = hitboxCollisionHolder.shape_find_owner(local_shape_index)
-		var local_shape_node =  hitboxCollisionHolder.shape_owner_get_owner(local_shape_owner)
-		if local_shape_node is not PieceCollisionBox: return;
-		
-		var otherPiece : Piece = other_shape_node.get_piece();
-		#print("Other Piece in hitbox collision: ", otherPiece)
-		if ! is_instance_valid(otherPiece): return;
-		if is_instance_valid(otherPiece) and is_instance_valid(other_shape_node) and is_instance_valid(local_shape_node):
-			#print("Contact damage commencing:")
-			contact_damage(otherPiece, other_shape_node, local_shape_node)
-	pass # Replace with function body.
-
-## Fires when an area hits this Piece's Hitboxes. Mostly used for reflecting Bullets.
-func _on_hitbox_shapes_area_entered(area_rid, area, area_shape_index, local_shape_index):
-	var parent = area.get_parent();
-	if parent is Bullet:
-		bullet_hit_hitbox(parent);
-	pass # Replace with function body.
-
-## Fires when a bulelt hits this robot's HITBOX.
-func bullet_hit_hitbox(bullet : Bullet):
+func get_ability_slot_data(action : AbilityManager):
+	return {
+		"incomingPower" : get_incoming_energy(),
+		"usable" : can_use_ability(action),
+	};
 	pass;

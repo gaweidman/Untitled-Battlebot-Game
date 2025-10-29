@@ -1,35 +1,47 @@
 extends Piece_Swivel
 
 class_name Piece_SwivelPointer
+## On a [Robot_Player], points at your crosshair.[br]
+## On a [Robot], points at the player, or another target that's been manually plugged in.[br]
+## Will not function if it is not sitting roughly vertically relative to the ground.
 
 var cam : GameCamera;
 var pointerLocation := Vector3.ZERO;
 
-func can_use_passive():
-	if super():
+func can_use_passive(passiveAbility):
+	if passiveAbility.abilityName == "Target":
 		var rot = global_rotation_degrees;
 		##Can only use the passive if it's not rotated.
 		if rot.x < 5.0 and rot.x > -5.0 and rot.z < 5.0 and rot.z > -5.0:
-			return true;
-	return false;
+			return super(passiveAbility);
+		return false;
+	return super(passiveAbility);
 
-func phys_process_collision(delta):
+func phys_process_pre(delta):
 	super(delta);
 	if !is_instance_valid(cam):
 		cam = GameState.get_camera();
 
-func use_passive():
-	var prevRotation = targetRotation;
-	if host_is_player():
+func use_passive(passiveAbility : AbilityManager):
+	if passiveAbility.abilityName == "Target":
 		if is_instance_valid(cam):
-			if super():
-				var rot = cam.get_rotation_to_fake_aiming(get_host_robot().get_global_body_position());
-				#print(rot)
-				if rot != null:
-					targetRotation = rot - get_host_robot().get_global_body_rotation().y;
+			if test_energy_available(passiveAbility.get_energy_cost()):
+				if can_use_passive(passiveAbility):
+					return use_ability(passiveAbility);
 				else:
-					targetRotation = prevRotation;
+					targetRotation = 0.0;
 		return false;
 	else:
-		##TODO: Pointer Swivel: figure out non-player aiming methods for Robots, then plug that in here somehow. 
-		return false;
+		return super(passiveAbility);
+
+func target():
+	var prevRotation = targetRotation;
+	if host_is_player():
+		var rot = cam.get_rotation_to_fake_aiming(global_position);
+		
+		if rot != null:
+			targetRotation = rot - get_host_robot().get_global_body_rotation().y - get_host_socket().rotation.y;
+		else:
+			targetRotation = prevRotation;
+	else:
+		pass;

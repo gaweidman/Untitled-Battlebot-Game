@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="AbilityManager" load_steps=7 format=3 uid="uid://4easq571wef0"]
+
+[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_3lsp2"]
+[ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/Cannon.png" id="2_0nak7"]
+[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_wxo83"]
+
+[sub_resource type="Resource" id="Resource_d7xnu"]
+script = ExtResource("1_3lsp2")
+string = "Shoots a damaging"
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_3twrs"]
+script = ExtResource("1_3lsp2")
+string = "projectile"
+color = 5
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_rjpgo"]
+script = ExtResource("1_3lsp2")
+string = "."
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[resource]
+script = ExtResource("3_wxo83")
+abilityName = "Fire"
+abilityDescriptionConstructor = Array[ExtResource("1_3lsp2")]([SubResource("Resource_d7xnu"), SubResource("Resource_3twrs"), SubResource("Resource_rjpgo")])
+abilityDescription = ""
+energyCost = 1.0
+cooldownTimeBase = 0.6
+cooldownStatName = "ProjectileFireRate"
+runType = 0
+functionNameWhenUsed = &"fireBullet"
+statsUsed = Array[String](["ProjectileFireRate", "ProjectileSpeed", "Inaccuracy", "ProjectileGravity", "ProjectileLifetime"])
+icon = ExtResource("2_0nak7")
+initialized = false
+disabled = false
+functionWhenUsed = Callable()
+metadata/_custom_type_script = "uid://crpa3dbgxwyeg"

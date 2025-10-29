@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/robot.png")
 extends StatHolder3D;
 
 ##This entity can be frozen and paused, and can hold stats.[br]
@@ -16,43 +17,59 @@ var camera : Camera;
 
 
 ################################## GODOT PROCESSING FUNCTIONS
-
 func _ready():
 	hide();
 	load_from_startup_generator();
 	grab_references();
 	super();
-	reassign_body_collision();
+	grab_references();
+	regen_piece_tree_stats();
 	detach_pipette();
 	freeze(true, true);
+	start_all_cooldowns(true);
+	update_stash_hud();
 
 func _process(delta):
 	process_pre(delta);
-	process_hud(delta);
+	if spawned and is_ready:
+		process_hud(delta);
 	pass
 
 func _physics_process(delta):
 	#motion_process()
 	super(delta);
-	phys_process_collision(delta);
-	phys_process_motion(delta);
-	phys_process_combat(delta);
+	if spawned and is_ready:
+		phys_process_collision(delta);
+		phys_process_motion(delta);
+		phys_process_combat(delta);
 	pass
 
 ##Process and Physics process that run before anything else.
 func process_pre(delta):
+	## Update whether the bot was alive last frame.
+	aliveLastFrame = is_alive();
+	## Take the bot out of reverse.
+	in_reverse = false;
+	## Make the bot come alive if it is queued to do so.
+	if is_ready and queuedLife:
+		live();
+	## Update any invalid references or nodes.
 	grab_references();
 	pass;
 
 func phys_process_pre(delta):
 	super(delta);
 	grab_references();
+	for piece in get_all_pieces():
+		piece.freeze(is_frozen(), true);
+	body.set_deferred("mass", max(75, min(150, get_weight() * 2)));
 	pass;
 
 func phys_process_timers(delta):
 	super(delta);
 	##Freeze this bot before it can do physics stuff.
 	if not is_frozen():
+		#print("fuck")
 		##Sleep.
 		sleepTimer -= delta;
 		##Invincibility.
@@ -79,7 +96,8 @@ func grab_references():
 	if not is_instance_valid(bodySocket):
 		bodySocket = $Body/Meshes/Socket;
 	if not is_instance_valid(bodyPiece):
-		bodyPiece = $Body/Meshes/Socket/Piece_BodyCube;
+		if is_instance_valid(bodySocket):
+			set_deferred("bodyPiece",bodySocket.get_occupant());
 	if not is_instance_valid(treads):
 		treads = $Treads;
 
@@ -93,16 +111,15 @@ func stat_registry():
 		null, 
 		func(newValue): 
 			health_or_energy_changed.emit(); 
-			var newValFixed = clampf(newValue, 0.0, self.get_stat("HealthMax")); 
-			if newValFixed <= 0.0 or is_equal_approx(newValFixed, 0.0): self.die();
-			print("new health value", newValFixed); 
+			var newValFixed = clampf(newValue, 0.0, self.get_max_health()); 
+			if (is_alive() and not is_frozen()) and (newValFixed <= 0.0 or is_equal_approx(newValFixed, 0.0)): self.die();
+			#print("new health value", newValFixed); 
 			return newValFixed;
 			,
 		StatTracker.roundingModes.None
 		);
 	register_stat("EnergyMax", maxEnergy, statIconDamage);
 	register_stat("Energy", maxEnergy, statIconEnergy, null, (func(newValue): self.health_or_energy_changed.emit(); return clampf(newValue, 0.0, self.get_stat("EnergyMax"))));
-	register_stat("EnergyRefreshRate", energyRefreshRate, statIconEnergy);
 	register_stat("InvincibilityTime", maxInvincibleTimer, statIconCooldown);
 	register_stat("MovementSpeedAcceleration", acceleration, statIconCooldown);
 	register_stat("MovementSpeedMax", maxSpeed, statIconCooldown);
@@ -119,6 +136,9 @@ func prepare_to_save():
 	hide();
 	reset_collision_helpers();
 	create_startup_generator();
+	clear_stats();
+	is_ready = false;
+	bodyPiece.queue_free();
 
 ############################## SAVE/LOAD
 
@@ -139,19 +159,64 @@ func load_from_startup_generator():
 		#print(startupGenerator);
 		bodySocket.hostRobot = self;
 		print("SOCKET HOST BEFORE ADDING STARTUP DATA:", bodySocket, bodySocket.hostRobot)
-		bodySocket.load_startup_data(startupGenerator)
+		bodySocket.load_startup_data(startupGenerator, self)
 	pass;
 
 ########## HUD
 
+var forcedUpdateTimerHUD := 0;
+var queueCloseEngine := false;
+var engineViewer : PartsHolder_Engine;
+
+func queue_close_engine():
+	queueCloseEngine = true;
+
+var queueUpdateEngineWithSelectedOrPipette := false;
+func queue_update_engine_with_selected_or_pipette():
+	queueUpdateEngineWithSelectedOrPipette = true;
+
 func process_hud(delta):
-	if Input.is_action_just_pressed("StashSelected"):
+	if Input.is_action_just_pressed("StashSelected") and GameState.get_in_state_of_building():
 		print("Stash button pressed")
 		stash_selected_piece();
-		update_stash_hud();
+		update_hud();
 	if Input.is_action_just_pressed("Unselect"):
 		print("Unselect button pressed")
-		deselect_everything();
+		deselect_in_hierarchy();
+	if is_instance_valid(engineViewer):
+		if queueUpdateEngineWithSelectedOrPipette:
+			var selectionResult = get_selected_or_pipette();
+			#print("Selection result ", selectionResult)
+			if selectionResult != null:
+				if selectionResult is Piece:
+					engineViewer.open_with_new_piece(selectionResult);
+			else:
+				queue_close_engine();
+			
+			queueUpdateEngineWithSelectedOrPipette = false;
+		
+		if queueCloseEngine:
+			engineViewer.close_and_clear();
+			queueCloseEngine = false;
+func queue_update_hud():
+	call_deferred("update_hud");
+func update_hud(forced := false):
+	if is_ready or forced:
+		update_inspector_hud(get_selected_or_pipette());
+		queue_update_engine_hud();
+		update_stash_hud();
+		return true;
+
+func update_stash_hud():
+	if is_instance_valid(inspectorHUD):
+		inspectorHUD.regenerate_stash(self);
+func queue_update_engine_hud():
+	if is_instance_valid(engineViewer):
+		queue_update_engine_with_selected_or_pipette();
+
+func update_inspector_hud(input = null):
+	if is_instance_valid(inspectorHUD):
+		inspectorHUD.update_selection(input);
 
 ######################### STATE CONTROL
 
@@ -164,7 +229,7 @@ func is_asleep() -> bool:
 
 ##This function returns true only if the game is not paused, and the bot is spawned in, alive, awake, and not frozen.
 func is_conscious():
-	return (not paused) and spawned and (not is_asleep()) and (not is_frozen()) and is_alive();
+	return (not paused) and spawned and (not is_asleep()) and (not is_frozen()) and is_alive() and is_ready;
 
 ##This function returns true only if the game is not paused, the bot is not frozen, alive, and we're in a game state of play.
 func is_playing():
@@ -185,35 +250,54 @@ func enter_shop():
 
 ##Function run when the bot first spawns in.
 func live():
+	queuedLife = false;
 	unfreeze(true);
 	show();
 	body.show();
 	spawned = true;
 	alive = true;
-	start_all_cooldowns();
-	set_stat("Health", get_max_health());
+	start_all_cooldowns(true);
+	var healthMax = get_max_health();
+	#print_rich("[color=pink]Max health is ", healthMax, ". Does stat exist: ", stat_exists("HealthMax"), ". Checking from: ", robotName);
+	set_stat("Health", healthMax);
+	var energyMax = get_maximum_energy();
+	set_stat("Energy", energyMax);
 	
-	update_stash_hud();
+	update_hud();
+
+var queuedLife := false;
+func queue_live():
+	queuedLife = true;
+	pass;
 
 func die():
 	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
+	if ! aliveLastFrame: return false;
 	alive = false;
-	queue_free();
 	##Play the death sound
 	if GameState.get_in_state_of_play():
 		SND.play_sound_nondirectional(deathSound);
 	##Play the death particle effects.
 	ParticleFX.play("NutsBolts", GameState.get_game_board(), get_global_body_position());
 	ParticleFX.play("BigBoom", GameState.get_game_board(), get_global_body_position());
+	
+	
+	destroy();
+
+func destroy():
+	for thing in get_stash_all(PieceStash.equippedStatus.ALL):
+		thing.destroy();
+	queue_free();
+	update_hud(true);
 
 ################################# STASH
 
-var stashHUD : PieceStash;
+var inspectorHUD : Inspector;
 ##The effective "inventory" of this robot. Inaccessible outside of Maker Mode for [@Robot]s that are not a [@Robot_Player].
 var stashPieces : Array[Piece] = []
 var stashParts : Array[Part] = []
 
-func get_stash_pieces(equippedStatus : PieceStash.equippedStatus):
+func get_stash_pieces(equippedStatus : PieceStash.equippedStatus = PieceStash.equippedStatus.ALL):
 	var ret = [];
 	match equippedStatus:
 		PieceStash.equippedStatus.ALL:
@@ -224,7 +308,7 @@ func get_stash_pieces(equippedStatus : PieceStash.equippedStatus):
 		PieceStash.equippedStatus.NOT_EQUIPPED:
 			ret.append_array(stashPieces);
 	return ret;
-func get_stash_parts(equippedStatus : PieceStash.equippedStatus):
+func get_stash_parts(equippedStatus : PieceStash.equippedStatus = PieceStash.equippedStatus.ALL):
 	var ret = [];
 	match equippedStatus:
 		PieceStash.equippedStatus.ALL:
@@ -235,10 +319,11 @@ func get_stash_parts(equippedStatus : PieceStash.equippedStatus):
 		PieceStash.equippedStatus.NOT_EQUIPPED:
 			ret.append_array(stashParts);
 	return ret;
-func get_stash_all(equippedStatus : PieceStash.equippedStatus):
+## Gets everything currently in either [member stashParts] or [member stashPieces].
+func get_stash_all(equippedStatus : PieceStash.equippedStatus = PieceStash.equippedStatus.ALL):
 	var ret = [];
-	ret.append_array(stashPieces);
-	ret.append_array(stashParts);
+	ret.append_array(get_stash_pieces());
+	ret.append_array(get_stash_parts());
 	return ret;
 
 func remove_something_from_stash(inThing):
@@ -270,7 +355,7 @@ func add_something_to_stash(inThing):
 		add_packed_piece_or_part_to_stash(inThing);
 		update_stash_hud();
 		return true;
-	print(inThing, " failed to add to stash.")
+	#print(inThing, " failed to add to stash.")
 	update_stash_hud();
 	return false;
 
@@ -282,7 +367,7 @@ func add_packed_piece_or_part_to_stash(inPieceScene : PackedScene):
 	if newPiece is Part:
 		add_instantiated_part_to_stash(newPiece);
 		return true;
-	print(inPieceScene, " failed to add to stash at packedScene step.")
+	#print(inPieceScene, " failed to add to stash at packedScene step.")
 	return false;
 
 func add_instantiated_piece_to_stash(inPiece : Piece):
@@ -292,10 +377,6 @@ func add_instantiated_piece_to_stash(inPiece : Piece):
 func add_instantiated_part_to_stash(inPiece : Part):
 	Utils.append_unique(stashParts, inPiece);
 	update_stash_hud();
-
-func update_stash_hud():
-	if is_instance_valid(stashHUD):
-		stashHUD.regenerate_list(self);
 
 ##The path to the scene the Piece placement pipette is using.
 var pipettePiecePath := "";
@@ -342,13 +423,15 @@ func prepare_pipette(override : Variant = get_current_pipette()):
 		prepare_pipette_from_piece(override);
 	if override is Part: 
 		prepare_pipette_from_part(override);
+	
+	queue_update_hud();
 
 func unreference_pipette():
 	pipettePiecePath = "";
 	pipettePieceScene = null;
 	pipettePieceInstance = null;
 	pipettePartInstance = null;
-	update_stash_hud();
+	queue_update_hud();
 
 func detach_pipette():
 	if is_instance_valid(pipettePieceInstance):
@@ -364,14 +447,15 @@ func detach_pipette():
 signal health_or_energy_changed();
 
 func _on_health_or_energy_changed():
+	if not is_frozen() and is_zero_approx(get_health()):
+		die();
 	pass # Replace with function body.
 
 @export var deathSound := "Combatant.Die";
 
-func start_all_cooldowns():
+func start_all_cooldowns(immediate := false):
 	for piece in get_all_pieces():
-		piece.set_cooldown_active();
-		piece.set_cooldown_passive();
+		piece.set_all_cooldowns();
 
 @export_category("Health Management")
 ##Game statistics.
@@ -407,52 +491,74 @@ func modify_damage_based_on_immunities(damageData : DamageData):
 
 func take_damage_from_damageData(damageData : DamageData):
 	take_damage(modify_damage_based_on_immunities(damageData));
-	take_knockback(damageData.get_knockback());
+	take_knockback(damageData.get_knockback(), damageData.get_damage_position_local(true))
 	##TODO: Readd Hooks functionality.
 
 func take_damage(damage:float):
-	print("Damage being taken: ", damage)
+	#print("Damage being taken: ", damage)
 	if is_playing() && damage != 0.0:
-		print(damage," damage being taken.")
+		#print(damage," damage being taken.")
 		var health = get_health();
 		var isInvincible = is_invincible();
-		TextFunc.flyaway(damage, get_global_body_position() + Vector3(0,20,0), "unaffordable")
+		TextFunc.flyaway(damage, get_global_body_position() + Vector3(0,-20,0), "unaffordable")
 		if damage > 0:
 			if !isInvincible:
+				#print("Health b4 taking", damage, "damage:", health)
 				health -= damage;
 			else:
-				print("Health was not subtracted. Bot was invincible!")
+				#print("Health was not subtracted. Bot was invincible!")
 				return;
 		set_invincibility();
+		#print("Health after taking", damage, "damage:", health)
 		set_stat("Health", health);
-		print("Health was subtracted. Nothing prevented it.", get_health())
+		#print("Health was subtracted. Nothing prevented it. ", get_health())
 
 func heal(health:float):
 	take_damage(-health);
 
+## WHether this bot was alive [i]last[/i] frame.[br]Updatied in [method process_pre].
+var aliveLastFrame := false;
+## Returns true if [member alive] and [member is_ready] are both true.
 func is_alive():
-	return alive;
+	return is_ready and alive;
 
 var invincible := false;
 var invincibleTimer := 0.0;
 @export var maxInvincibleTimer := 0.25; #TODO: Add in bonuses for this.
+## Whether the bot is currently considered "alive".[br][b]Note:[/b] In order for [method is_alive] to return [code]true[/code], [member is_ready] must ALSO be true.
 var alive := false;
 
 ##Replaces the invincible timer with the value given (Or maxInvincibleTimer by default) if that value is greater than the current invincibility timer.
 func set_invincibility(amountOverride : float = maxInvincibleTimer):
-	print("old invincibility time: ",invincibleTimer)
+	#print("old invincibility time: ",invincibleTimer)
 	invincibleTimer = max(invincibleTimer, amountOverride);
-	print("new invincibility time: ",invincibleTimer)
+	#print("new invincibility time: ",invincibleTimer)
 	health_or_energy_changed.emit();
 
 func is_invincible() -> bool:
 	invincible = invincibleTimer > 0 or (GameState.get_setting("godMode") == true && self is Robot_Player)
 	return invincible or invincibleTimer > 0 or (GameState.get_setting("godMode") == true && self is Robot_Player);
 
-func take_knockback(inDir:Vector3):
+func take_knockback(inDir:Vector3, posDir:=Vector3.ZERO):
 	##TODO: Weight calculation.
-	body.call_deferred("apply_impulse", inDir);
+	#inDir *= 100;
+	inDir.y = 0;
+	if treads.is_on_driveable():
+		inDir.y = 200;
+	body.call_deferred("apply_impulse", inDir, posDir);
 	pass
+
+func apply_force(inDir:Vector3):
+	body.apply_force(inDir);
+	#print(inDir)
+
+var weightLoad = -1.0;
+func get_weight_regenerate():
+	weightLoad = bodySocket.get_weight_load(true);
+func get_weight(forceRegen := false):
+	if weightLoad < 0 or forceRegen:
+		return get_weight_regenerate();
+	return weightLoad;
 
 ##Physics process for combat. 
 func phys_process_combat(delta):
@@ -463,7 +569,6 @@ func phys_process_combat(delta):
 
 @export_category("Energy Management")
 @export var maxEnergy := 3.0;
-@export var energyRefreshRate := 1.65;
 
 ##Returns available power. Whenever something is used in a frame, it should detract from the energy variable.
 func get_available_energy() -> float:
@@ -478,13 +583,15 @@ func get_maximum_energy() -> float:
 
 ##Returns true or false depending on whether the sap would work or not.
 func try_sap_energy(amount):
-	var energy = get_available_energy();
-	if amount <= energy:
-		energy -= amount;
-		set_stat("Energy", energy);
-		return true;
-	else:
-		return false;
+	if is_conscious():
+		var energy = get_available_energy();
+		if amount <= energy:
+			energy -= amount;
+			set_stat("Energy", energy);
+			return true;
+		else:
+			return false;
+	return false;
 
 ##Adds to the energy total. 
 ##If told to "cap at max" it will not add energy if it is above or at the current maximum, and will clamp it at the max. 
@@ -514,6 +621,14 @@ func get_global_body_rotation():
 ##Should fire whenever a Piece connected to this robot gets hit by something.
 func on_hitbox_collision(body : PhysicsBody3D, pieceHit : Piece):
 	pass;
+
+## Regenerates all the things that need to be regenerated when changing piece data around.
+func regen_piece_tree_stats():
+	reassign_body_collision();
+	get_all_pieces_regenerate();
+	get_weight(true);
+	has_body_piece(true);
+	
 
 ##Gives the Body new collision based on its Parts.
 func reassign_body_collision():
@@ -554,6 +669,7 @@ var bodyRotationSpeed := bodyRotationSpeedBase;
 var lastLinearVelocity : Vector3 = Vector3(0,0,0);
 @export var treadsRotationSpeed : float = 6.0;
 @export var treadsRotationSpeedClamp : float = 1.0;
+@export var weightSpeedPenaltyMultiplier := 0.01;
 
 ##Physics process step to adjust collision box positions according to the parts they're attached to.
 func phys_process_collision(delta):
@@ -571,6 +687,17 @@ func phys_process_collision(delta):
 		else:
 			var boxID = allHurtboxes.find(box)
 			allHurtboxes.remove_at(boxID);
+
+var wasOnFloorLastFrame := true;
+var coyoteTimer := 0;
+## Steps the "coyote timer" ([member coyoteTimer])- if you're off the ground for less than five frames, the game lets you drive.
+func step_coyote_timer():
+	if ! treads.is_on_driveable(): 
+		coyoteTimer = max(coyoteTimer - 1, 0);
+	else:
+		coyoteTimer = 5;
+	
+	return coyoteTimer > 0;
 
 ##Physics process step for motion.
 # custom physics handling for player movement. regular movement feels flat and boring.
@@ -602,12 +729,15 @@ func move_and_rotate_towards_movement_vector(delta : float):
 	var rotatedMV = movementVector.rotated(deg_to_rad(90.0));
 	#print("MV3",movementVector);
 
-	if is_inputting_movement():
+	if is_inputting_movement() and step_coyote_timer():
 		lastInputtedMV = movementVector;
 		var movementVectorRotated = movementVector.rotated(deg_to_rad(90.0 + randf()))
 		var vectorToRotTo = Vector2(movementVectorRotated.x, -movementVectorRotated.y)
-		bodyRotationAngle = vectorToRotTo
+		bodyRotationAngle = vectorToRotTo;
 		
+		if is_in_reverse():
+			bodyRotationAngle = bodyRotationAngle.rotated(deg_to_rad(180));
+	
 	
 	var rotateVector = Vector3(bodyRotationAngle.x, 0.0, bodyRotationAngle.y) + body.global_position
 	
@@ -616,9 +746,10 @@ func move_and_rotate_towards_movement_vector(delta : float):
 	body.update_target_rotation(bodyRotationAngle, delta * bodyRotationSpeed);
 	#Utils.look_at_safe(meshes, rotateVector);
 	
-	##Get 
+	##Get movement input.
 	if is_inputting_movement():
-		var accel = get_stat("MovementSpeedAcceleration")
+		## Move the body.
+		var accel = get_movement_speed_acceleration();
 		#print("HI")
 		var forceVector = Vector3.ZERO;
 		var bodBasis := body.global_basis;
@@ -660,36 +791,30 @@ func update_treads_rotation(delta : float):
 	if ! is_inputting_movement():
 		inputMV = prevMV;
 	inputMV.y *= -1;
+	
 	var inputMVA = inputMV.angle() - PI/2;
 	
 	var treadsMVA = treads.rotation.y;
 	var treadsMV = Vector2.from_angle(treadsMVA);
 	
-	if treadsMVA < -PI / 2:
-		if inputMVA > 0:
-			inputMVA -= PI * 2;
-	if treadsMVA > PI / 2:
-		if inputMVA < 0:
-			inputMVA += PI * 2;
-	
-	var angleDif = angle_difference(treadsMVA, inputMVA);
+	var angleDif = Utils.angle_difference_relative(treadsMVA, inputMVA);
 	
 	if angleDif > PI/2:
 		angleDif -= PI;
 	if angleDif < PI/-2:
 		angleDif += PI;
 	
-	var treadsMVAlerped = lerp_angle(treadsMVA, treadsMVA + angleDif, delta * (treadsRotationSpeed + (get_movement_speed_length() / 5)));
+	var treadsMVAlerped = lerp_angle(treadsMVA, treadsMVA + angleDif, delta * (treadsRotationSpeed + (get_current_movement_speed_length() / 5)));
 	treadsMVAlerped = clamp(treadsMVAlerped, treadsMVA - treadsRotationSpeedClamp, treadsMVA + treadsRotationSpeedClamp)
 	
 	var angleDifFromLerp = treadsMVA - treadsMVAlerped;
 	
-	if !is_zero_approx(get_movement_speed_length()):
+	if !is_zero_approx(get_current_movement_speed_length()):
 		treads.rotation.y = treadsMVAlerped;
 	
 	var angleDif3 = 0;
 	
-	treads.update_visuals_to_match_rotation( - angleDifFromLerp, get_movement_speed_length());
+	treads.update_visuals_to_match_rotation( - angleDifFromLerp, get_current_movement_speed_length());
 
 func update_treads_position():
 	treads.global_position = get_global_body_position();
@@ -702,18 +827,41 @@ func get_movement_vector(rotatedByCamera : bool = false) -> Vector2:
 	return movementVector.normalized();
 
 var inputtingMovementThisFrame := false; ##This should be set by AI bots before phys_process_motion is called to notify whether to update their position or not this frame.
-func is_inputting_movement():
+func is_inputting_movement() -> bool: ## Returns [member inputtingMovementThisFrame].
 	return inputtingMovementThisFrame;
-func get_movement_speed_length():
+var in_reverse := false; ##@experimental: Whether the bot is 'reversing' or not. When true, [method move_and_rotate_towards_movement_vector] will rotate the target rotation 180* so the bot can move "backwards".[br][i]Note: Gets reset to false during [method phys_process_pre].[/i]
+func is_in_reverse() -> bool: ##@experimental: Returns [member in_reverse].
+	return in_reverse;
+func put_in_reverse(): ##@experimental: Sets [member in_reverse] to true for the frame.
+	in_reverse = true;
+func get_current_movement_speed_length() -> float:
 	return body.linear_velocity.length();
 
-func get_rotation_speed():
-	var spd = get_movement_speed_length();
-	return min(bodyRotationSpeedBase * spd, bodyRotationSpeedMaxBase);
+func get_movement_speed_acceleration() -> float:
+	var base = get_stat("MovementSpeedAcceleration");
+	var mod = get_weight_speed_modifier(1.5);
+	#print(max(0, base * mod))
+	#print("HI")
+	return max(0, base * mod);
+
+func get_rotation_speed() -> float:
+	var spd = get_current_movement_speed_length();
+	var mod = get_weight_speed_modifier(1.5);
+	return min(bodyRotationSpeedBase * spd * mod, bodyRotationSpeedMaxBase);
+
+func get_weight_speed_modifier(baseValue := 1.5) -> float:
+	var mod = 0.0;
+	mod += baseValue;
+	mod -= get_weight() * weightSpeedPenaltyMultiplier;
+	#print(mod);
+	return max(0, mod);
 
 func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = body):
 	SND.play_collision_sound(thisComponent, collider, Vector3.ZERO, 0.45)
 	Hooks.OnCollision(thisComponent, collider);
+	if collider.is_in_group("WorldWall"):
+		print("HIT WALL")
+		Hooks.OnHitWall(thisComponent);
 
 ## Makes sure the bot's speed doesn't go over its max speed.
 func clamp_speed():
@@ -728,6 +876,7 @@ func reset_collision_helpers():
 ##################################################### 3D INVENTORY STUFF
 
 @export_category("Piece Management")
+## Holds [AbilityManager] resources to be fired at the press of a button input is this is a [Robot_Player], or by code elsewise.[br]There's presently only 5 slots.
 var active_abilities : Dictionary[int, AbilityManager] = {
 	0 : null,
 	1 : null,
@@ -742,20 +891,24 @@ var active_abilities : Dictionary[int, AbilityManager] = {
 ##Fired by a Piece when it is added to the Robot permanently.
 func on_add_piece(piece:Piece):
 	remove_something_from_stash(piece);
-	reassign_body_collision();
 	piece.owner = self;
-	for abilityKey in piece.activeAbilities.keys():
-		var ability = piece.activeAbilities[abilityKey];
-		if ability is AbilityManager:
-			print("Adding ability ", ability.abilityName)
-			assign_ability_to_next_active_slot(ability);
+	if is_ready: ## Prevent the Piece from automatically adding abilities if we aren't fully initialized yet.
+		for ability in piece.activeAbilities:
+			if ability is AbilityManager:
+				print("Adding ability ", ability.abilityName)
+				assign_ability_to_next_active_slot(ability);
+	regen_piece_tree_stats()
+	get_all_pieces_regenerate();
+	update_hud();
 	pass;
 
 ## Fired by a Piece when it is removed from the Robot.
 func on_remove_piece(piece:Piece):
 	piece.owner = null;
+	piece.hostRobot = null;
 	remove_abilities_of_piece(piece);
-	reassign_body_collision();
+	regen_piece_tree_stats()
+	#deselect_everything();
 	pass;
 
 ## Removes all abilities that were supplied by the given Piece.
@@ -771,18 +924,35 @@ var allPieces : Array[Piece]= [];
 ## Returns [member allPieces]. Calls [method get_all_pieces_regenerate()] before returning if [member allPieces] is empty.
 func get_all_pieces() -> Array[Piece]:
 	if allPieces.is_empty():
-		get_all_pieces_regenerate();
+		return get_all_pieces_regenerate();
+	for piece in allPieces:
+		if !is_instance_valid(piece) or piece.is_queued_for_deletion():
+			return get_all_pieces_regenerate();
 	return allPieces;
 
 ##Returns a freshly gathered array of all Pieces attached to this Robot and which have it set as their host.[br]
 ## Saves it to [member allPieces].
 func get_all_pieces_regenerate() -> Array[Piece]:
 	var piecesGathered : Array[Piece] = [];
-	for child in Utils.get_all_children_of_type(body, Piece):
-		if child.hostRobot == self:
+	for child:Piece in Utils.get_all_children_of_type(body, Piece):
+		#print("CHILD OF BOT BODY: ",child)
+		if child.hostRobot == self and child.assignedToSocket:
 			piecesGathered.append(child);
 	allPieces = piecesGathered;
 	return piecesGathered;
+
+## UNRELATED TO [member bodyPiece]. This is whether the bot has a piece that isBody.
+var hasBodyPiece := false;
+func has_body_piece(forceRecalculate := false) -> bool:
+	if forceRecalculate:
+		for piece in get_all_pieces():
+			if piece.isBody:
+				hasBodyPiece = true;
+				return true;
+		hasBodyPiece = false;
+		return false;
+	else:
+		return hasBodyPiece;
 
 ## A list of all Parts attached to this Robot within the engines all of its Parts.
 var allParts : Array[Part]=[];
@@ -817,10 +987,13 @@ func get_all_gathered_hurtboxes():
 
 ##Adds an AbilityManager to the given slot index in active_abilities.
 func assign_ability_to_slot(slotNum : int, abilityManager : AbilityManager):
+	unassign_ability_slot(slotNum); ## Unassign whatever was in the slot.
+	
 	if slotNum in active_abilities.keys():
 		if is_instance_valid(abilityManager):
-			abilityManager.assign_robot(self);
+			abilityManager.assign_robot(self, slotNum);
 			active_abilities[slotNum] = abilityManager;
+			clear_ability_pipette();
 
 ##Turns the given slot null and unassigns this robot from that ability on the resource.
 func unassign_ability_slot(slotNum : int):
@@ -828,24 +1001,34 @@ func unassign_ability_slot(slotNum : int):
 		if active_abilities[slotNum] is AbilityManager: 
 			var abilityManager = active_abilities[slotNum];
 			if is_instance_valid(abilityManager):
-				abilityManager.unassign_robot();
+				abilityManager.unassign_slot(slotNum);
 	active_abilities[slotNum] = null;
+	print_rich("[color=red][b]ABILITY IN SLOT ",slotNum," INVALID.");
 
 ##Runs thru active_abilities and deletes AbilityManager resources that no longer have a valid Piece or Part reference.
 func check_abilities_are_valid():
-	for slot in active_abilities.keys():
-		var ability = active_abilities[slot];
-		if ability is AbilityManager:
-			if !is_instance_valid(ability.assignedPieceOrPart):
-				unassign_ability_slot(slot);
+	if is_ready:
+		for slot in active_abilities.keys():
+			var ability = active_abilities[slot];
+			if ability is AbilityManager:
+				var assignedPieceOrPart = ability.assignedPieceOrPart
+				if !is_instance_valid(assignedPieceOrPart):
+					unassign_ability_slot(slot);
+				else:
+					if assignedPieceOrPart is Piece:
+						if !assignedPieceOrPart.is_equipped():
+							unassign_ability_slot(slot);
+				##TODO: Part support
 
 ##Attempts to fire the active ability in the given slot, if that slot has one.
-func fire_active(slotNum):
+func fire_active(slotNum) -> bool:
 	check_abilities_are_valid();
 	if slotNum in active_abilities.keys():
 		var ability = active_abilities[slotNum];
 		if ability is AbilityManager:
-			ability.call_ability();
+			#print("ROBOT FIRING ABILITY ", ability.abilityName)
+			return ability.call_ability();
+	return false;
 
 ##Grabs the next ability slot that is currently null.
 func get_next_available_active_slot():
@@ -864,6 +1047,31 @@ func assign_ability_to_next_active_slot(abilityManager : AbilityManager):
 	if slot == null: return;
 	assign_ability_to_slot(slot, abilityManager);
 
+var abilityPipette : AbilityManager;
+## Gets the currently selected ability.
+func get_ability_pipette() -> AbilityManager:
+	if abilityPipette != null and abilityPipette is AbilityManager:
+		return abilityPipette;
+	return null;
+
+func clear_ability_pipette():
+	var pip = get_ability_pipette()
+	if pip != null and is_instance_valid(pip):
+		abilityPipette.deselect();
+	abilityPipette = null;
+
+func set_ability_pipette(new : AbilityManager):
+	var assignedThing = new.assignedPieceOrPart;
+	if assignedThing is Piece:
+		if ! assignedThing.assignedToSocket:
+			clear_ability_pipette();
+			return;
+		pass;
+	var cur = get_ability_pipette();
+	if cur != null:
+		clear_ability_pipette();
+	abilityPipette = new;
+	abilityPipette.select();
 
 ########################## SELECTION
 
@@ -891,32 +1099,63 @@ func get_selected():
 	if is_instance_valid(selectedPart):
 		return selectedPart;
 	if is_instance_valid(selectedPiece):
-		return selectedPiece;
+		if selectedPiece.selected:
+			return selectedPiece;
+		else:
+			selectedPiece.select(true);
+			return selectedPiece;
 	return null;
 
+## Deselects based on a predetermined hierarchy.[br]
+## Pipette > Part > Piece;
+func deselect_in_hierarchy():
+	if abilityPipette != null:
+		clear_ability_pipette();
+		return;
+	if get_current_pipette() != null:
+		unreference_pipette();
+		return;
+	var selectionResult = get_selected();
+	if selectionResult != null:
+		if selectionResult is Part:
+			deselect_all_parts();
+			return;
+		if selectionResult is Piece:
+			deselect_all_pieces();
+			return;
+	deselect_everything();
+
 func deselect_everything():
-	detach_pipette();
-	deselect_all_parts();
+	unreference_pipette();
 	deselect_all_pieces();
 
 func deselect_all_pieces(ignoredPiece : Piece = null):
+	unreference_pipette();
 	for piece in get_all_pieces():
 		if ignoredPiece == null or piece != ignoredPiece:
 			if piece.get_selected():
 				piece.deselect();
 	if ignoredPiece == null or selectedPiece != ignoredPiece:
 		selectedPiece = null;
-	#detach_pipette()
-	update_stash_hud();
+	
+	queue_update_hud();
 	pass;
 
+## Force-deselects one specific piece.
+func deselect_piece(piece:Piece):
+	piece.deselect();
+
+## Runs [member Piece.select] and then acts on the result.
 func select_piece(piece : Piece):
-	if is_instance_valid(piece):
+	if (is_instance_valid(piece) 
+	#)and (piece in allPieces
+	):
 		var result = piece.select();
 		if result:
 			selectedPiece = piece;
 			print("Selected Piece: ", selectedPiece)
 			deselect_all_pieces(piece);
+			update_hud();
 			return piece;
 		else:
 			deselect_all_pieces();
@@ -945,6 +1184,7 @@ func stash_selected_piece():
 		print("Attempting to stash ", selectedPiece)
 		if selectedPiece.removable:
 			selectedPiece.remove_and_add_to_robot_stash(self);
+	get_all_pieces_regenerate();
 
 ##TODO: Parts and Engine bs.
 func stash_selected_part():
@@ -952,3 +1192,4 @@ func stash_selected_part():
 		print("Attempting to stash ", selectedPart)
 		#if selectedPiece.removable:
 			#selectedPiece.remove_and_add_to_robot_stash(self);
+	get_all_parts_regenerate();

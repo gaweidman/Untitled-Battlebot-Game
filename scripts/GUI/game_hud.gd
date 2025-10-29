@@ -1,6 +1,7 @@
 extends Control
 
 class_name GameHUD
+## Has some functions relating to the main hud for gameplay stuff.
 
 @export var panelLeft : TextureRect;
 @export var panelRight : TextureRect;

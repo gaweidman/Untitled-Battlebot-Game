@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=3 uid="uid://bvv3y50mckawn"]
+
+[ext_resource type="Script" uid="uid://ej2sqvrvv4be" path="res://scripts/GUI/ability_slot_manager.gd" id="1_duwk0"]
+[ext_resource type="PackedScene" uid="uid://y4jreplx5if1" path="res://scenes/prefabs/objects/gui/ability_slot.tscn" id="2_dcn4x"]
+
+[node name="AbilitySlotManager" type="Control" node_paths=PackedStringArray("slot0", "slot1", "slot2", "slot3", "slot4")]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 661.0
+offset_top = 188.0
+offset_right = 925.0
+offset_bottom = 848.0
+script = ExtResource("1_duwk0")
+slot0 = NodePath("AbilitySlot0")
+slot1 = NodePath("AbilitySlot1")
+slot2 = NodePath("AbilitySlot2")
+slot3 = NodePath("AbilitySlot3")
+slot4 = NodePath("AbilitySlot4")
+
+[node name="AbilitySlot0" parent="." node_paths=PackedStringArray("prevSlot", "nextSlot", "manager") instance=ExtResource("2_dcn4x")]
+prevSlot = NodePath("../AbilitySlot4")
+nextSlot = NodePath("../AbilitySlot1")
+manager = NodePath("..")
+
+[node name="AbilitySlot1" parent="." node_paths=PackedStringArray("prevSlot", "nextSlot", "manager") instance=ExtResource("2_dcn4x")]
+offset_top = 132.0
+offset_bottom = 264.0
+prevSlot = NodePath("../AbilitySlot0")
+nextSlot = NodePath("../AbilitySlot2")
+manager = NodePath("..")
+
+[node name="AbilitySlot2" parent="." node_paths=PackedStringArray("prevSlot", "nextSlot", "manager") instance=ExtResource("2_dcn4x")]
+offset_top = 264.0
+offset_bottom = 396.0
+prevSlot = NodePath("../AbilitySlot1")
+nextSlot = NodePath("../AbilitySlot3")
+manager = NodePath("..")
+
+[node name="AbilitySlot3" parent="." node_paths=PackedStringArray("prevSlot", "nextSlot", "manager") instance=ExtResource("2_dcn4x")]
+offset_top = 396.0
+offset_bottom = 528.0
+prevSlot = NodePath("../AbilitySlot2")
+nextSlot = NodePath("../AbilitySlot4")
+manager = NodePath("..")
+
+[node name="AbilitySlot4" parent="." node_paths=PackedStringArray("prevSlot", "nextSlot", "manager") instance=ExtResource("2_dcn4x")]
+offset_top = 528.0
+offset_bottom = 660.0
+prevSlot = NodePath("../AbilitySlot3")
+nextSlot = NodePath("../AbilitySlot0")
+manager = NodePath("..")
+
+[connection signal="button_pressed" from="." to="." method="_on_button_pressed"]

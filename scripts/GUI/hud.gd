@@ -20,6 +20,8 @@ func _ready() -> void:
 		$MainMenu/Btn_Editor.show();
 		pass;
 	else:
+		$MainMenu/Btn_Editor.hide();
+		$MainMenu/Btn_Editor.disabled = true;
 		$MainMenu/Btn_Editor.queue_free();
 		pass;
 	pass; # Replace with function body.

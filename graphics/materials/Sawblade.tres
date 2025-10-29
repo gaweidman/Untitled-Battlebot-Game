@@ -1,4 +1,7 @@
 [gd_resource type="StandardMaterial3D" format=3 uid="uid://byypqaapcf25c"]
 
 [resource]
-albedo_color = Color(0.374139, 0.374139, 0.374139, 1)
+metallic = 0.63
+emission_enabled = true
+normal_enabled = true
+heightmap_scale = 1.0

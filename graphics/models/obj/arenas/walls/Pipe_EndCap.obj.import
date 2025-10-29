@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ffo4m15vihva"
+path="res://.godot/imported/Pipe_EndCap.obj-e0922d5ce8ad3c90dfe879df960623a3.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Pipe_EndCap.obj-e0922d5ce8ad3c90dfe879df960623a3.mesh"]
+
+source_file="res://graphics/models/obj/arenas/walls/Pipe_EndCap.obj"
+dest_files=["res://.godot/imported/Pipe_EndCap.obj-e0922d5ce8ad3c90dfe879df960623a3.mesh", "res://.godot/imported/Pipe_EndCap.obj-e0922d5ce8ad3c90dfe879df960623a3.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtu0si2ictkg"]
+
+[ext_resource type="Script" uid="uid://c40tlsrrur58w" path="res://makers/statAdjusterNumber.gd" id="1_54651"]
+
+[node name="statName" type="SpinBox"]
+offset_left = 2.0
+offset_top = 29.0
+offset_right = 259.0
+offset_bottom = 60.0
+size_flags_horizontal = 3
+min_value = 0.25
+step = 0.25
+value = 3.0
+allow_greater = true
+alignment = 3
+update_on_text_changed = true
+suffix = "_maxHealth"
+script = ExtResource("1_54651")
+
+[connection signal="value_changed" from="." to="." method="_on_value_changed"]

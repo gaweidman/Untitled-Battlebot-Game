@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctjpou0f3m7go"]
+
+[ext_resource type="MeshLibrary" uid="uid://dfcf27yiqyoqb" path="res://scenes/prefabs/arenas/wall-pieces/ModularWallsMap.tres" id="1_jrv31"]
+
+[node name="ModularWallGridmap" type="GridMap"]
+mesh_library = ExtResource("1_jrv31")
+cell_size = Vector3(1.625, 3.2, 1.625)
+metadata/_editor_floor_ = Vector3(0, 0, 0)

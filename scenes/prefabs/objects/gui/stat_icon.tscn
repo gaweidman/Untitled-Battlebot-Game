@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqajmobt7ehra"]
+
+[ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="1_mv2jr"]
+[ext_resource type="Script" uid="uid://jsudh63sh3gu" path="res://scripts/GUI/stat_icon.gd" id="2_rhoqc"]
+[ext_resource type="Theme" uid="uid://8f0fg65uxivb" path="res://graphics/images/HUD/digital_button.tres" id="3_x4c7b"]
+
+[node name="StatIcon" type="Control" node_paths=PackedStringArray("textureIcon", "lbl_amt")]
+custom_minimum_size = Vector2(22, 37)
+layout_mode = 3
+anchor_right = 0.0114583
+anchor_bottom = 0.0342593
+script = ExtResource("2_rhoqc")
+textureIcon = NodePath("Icon")
+lbl_amt = NodePath("Icon/Amt")
+metadata/_edit_use_anchors_ = true
+
+[node name="Icon" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = -22.834
+offset_right = 21.0
+offset_bottom = 0.166019
+grow_vertical = 0
+texture = ExtResource("1_mv2jr")
+
+[node name="Amt" type="Label" parent="Icon"]
+texture_filter = 1
+layout_mode = 0
+offset_top = -8.0
+offset_right = 20.0
+offset_bottom = -1.0
+theme = ExtResource("3_x4c7b")
+theme_override_colors/font_color = Color(0.470588, 0.607843, 0.913725, 1)
+theme_override_colors/font_outline_color = Color(0.141176, 0.054902, 0.054902, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 5
+text = "0"
+horizontal_alignment = 1

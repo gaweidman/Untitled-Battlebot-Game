@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://cs2mrdrvsoacs"]
+
+[ext_resource type="Script" uid="uid://dkm2p67th4w4g" path="res://scripts/GUI/screen_transition.gd" id="1_r71a5"]
+
+[sub_resource type="Gradient" id="Gradient_808fl"]
+colors = PackedColorArray(0, 0, 0, 0, 0.137255, 0.0352941, 0.0470588, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ywbr4"]
+gradient = SubResource("Gradient_808fl")
+
+[sub_resource type="Gradient" id="Gradient_jej70"]
+colors = PackedColorArray(0.137255, 0.0352941, 0.0470588, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_28hvw"]
+gradient = SubResource("Gradient_jej70")
+
+[node name="ScreenTransition" type="ColorRect"]
+z_index = 99
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.137255, 0.0352941, 0.0470588, 1)
+script = ExtResource("1_r71a5")
+
+[node name="edgeL" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = -224.0
+offset_bottom = 1080.0
+texture = SubResource("GradientTexture1D_ywbr4")
+
+[node name="edgeR" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 1920.0
+offset_right = 2176.0
+offset_bottom = 1080.0
+texture = SubResource("GradientTexture1D_28hvw")

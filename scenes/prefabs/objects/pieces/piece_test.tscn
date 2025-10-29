@@ -1,7 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://dpsg34ncf6c1y"]
+[gd_scene load_steps=16 format=3 uid="uid://dpsg34ncf6c1y"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_jca88"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="5_0ojr0"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="5_soava"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_uuld8"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="6_r26v0"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="6_uuld8"]
@@ -31,16 +32,16 @@ size = Vector3(1, 0.5, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_shgbd"]
 size = Vector3(0.5, 0.5, 1.5)
 
-[node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("meshesHolder", "maleSocketMesh", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("meshesHolder", "maleSocketMesh", "hitboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
 script = ExtResource("1_jca88")
-force_visibility = true
 pieceName = &"Cannon"
 pieceDescription = "Shooty blam blam."
+force_visibility = true
 meshesHolder = NodePath("Meshes")
 maleSocketMesh = NodePath("Meshes/MaleSocket")
-placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
 Vector2i(1, 2): null,
@@ -71,6 +72,7 @@ script = ExtResource("5_uuld8")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
+script = ExtResource("5_soava")
 
 [node name="Meshes" type="Node3D" parent="."]
 editor_description = "Put any and all mesh instances in here."

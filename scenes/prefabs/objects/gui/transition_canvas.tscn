@@ -1,0 +1,48 @@
+[gd_scene load_steps=4 format=3 uid="uid://bxgdeod5i34vi"]
+
+[ext_resource type="Script" uid="uid://bjouvmo7dd7j3" path="res://scripts/GUI/transition_canvas.gd" id="1_e8jfm"]
+[ext_resource type="PackedScene" uid="uid://cs2mrdrvsoacs" path="res://scenes/prefabs/objects/gui/screen_transition.tscn" id="2_mgg5e"]
+[ext_resource type="FontFile" uid="uid://doo4kfsytv2c1" path="res://graphics/font/ScrapFives.ttf" id="3_nploq"]
+
+[node name="TransitionCanvas" type="CanvasLayer" node_paths=PackedStringArray("transition", "loadingGear", "logo", "lbl_companyName")]
+layer = 5
+script = ExtResource("1_e8jfm")
+transition = NodePath("ScreenTransition")
+loadingGear = NodePath("LoadingGear")
+logo = NodePath("LoadingGear")
+lbl_companyName = NodePath("Label")
+
+[node name="ScreenTransition" parent="." instance=ExtResource("2_mgg5e")]
+z_index = 0
+color = Color(0.141176, 0.054902, 0.054902, 1)
+
+[node name="LoadingGear" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Logo" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="."]
+texture_filter = 1
+custom_minimum_size = Vector2(440, 95)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -189.5
+offset_top = -40.5
+offset_right = 215.5
+offset_bottom = 40.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(1, 0.431373, 0.286275, 1)
+theme_override_constants/line_spacing = 10
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_nploq")
+theme_override_font_sizes/font_size = 25
+text = "> METAL CHIMERA_
+> 
+> PRESENTING"

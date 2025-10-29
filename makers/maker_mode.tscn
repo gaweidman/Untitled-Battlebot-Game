@@ -1,18 +1,28 @@
-[gd_scene load_steps=17 format=3 uid="uid://bhhd443ej7smu"]
+[gd_scene load_steps=25 format=3 uid="uid://bhhd443ej7smu"]
 
 [ext_resource type="Script" uid="uid://bvhx6f0lb1vk2" path="res://makers/maker_mode_manager.gd" id="1_vhu6f"]
 [ext_resource type="Theme" uid="uid://bq0jig2pdkgtn" path="res://graphics/images/HUD/UI_theme.tres" id="2_8384o"]
 [ext_resource type="Script" uid="uid://bgwgllmh3y6c1" path="res://makers/robot_maker.gd" id="3_1k5u0"]
 [ext_resource type="Script" uid="uid://4xlbt5q5d03h" path="res://makers/piece_deets_helper.gd" id="4_ti6iq"]
 [ext_resource type="Texture2D" uid="uid://b27r3rshm0ite" path="res://graphics/images/HUD/textBoxBG_partPassive.png" id="5_8f46y"]
+[ext_resource type="Script" uid="uid://dqbsivvcbx6ku" path="res://makers/robot_data_panel.gd" id="6_8f46y"]
 [ext_resource type="PackedScene" uid="uid://dpal3hy2d8lig" path="res://scenes/prefabs/objects/piece_inspector.tscn" id="6_8384o"]
 [ext_resource type="PackedScene" uid="uid://de0rs2455fdg4" path="res://scenes/prefabs/objects/parts_holder_engine.tscn" id="6_s3ktb"]
+[ext_resource type="PackedScene" uid="uid://bvv3y50mckawn" path="res://scenes/prefabs/objects/gui/ability_slot_manager.tscn" id="7_1k5u0"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="7_ccj5e"]
+[ext_resource type="Script" uid="uid://c40tlsrrur58w" path="res://makers/statAdjusterNumber.gd" id="7_s3ktb"]
+[ext_resource type="Script" uid="uid://da4rlujxecm4w" path="res://makers/statAdjusterText.gd" id="7_yvtic"]
+[ext_resource type="PackedScene" uid="uid://dtu0si2ictkg" path="res://makers/statAdjusterNumber.tscn" id="8_ccj5e"]
 [ext_resource type="Script" uid="uid://ceadpmi0boxfx" path="res://scripts/objects/camera_follower.gd" id="8_yvtic"]
 [ext_resource type="Script" uid="uid://t4858sodg0x3" path="res://makers/makerCam.gd" id="9_uy74y"]
 [ext_resource type="Texture2D" uid="uid://dmmyrbfw14p04" path="res://graphics/images/HUD/camera_control_enabled.png" id="10_pwi61"]
+[ext_resource type="Theme" uid="uid://8f0fg65uxivb" path="res://graphics/images/HUD/digital_button.tres" id="10_yvtic"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_8384o"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1k5u0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s3ktb"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_00eor"]
 sky_top_color = Color(0.0910561, 0.0229013, 0, 1)
@@ -84,7 +94,7 @@ theme = ExtResource("2_8384o")
 text = "Back To Game"
 metadata/_edit_use_anchors_ = true
 
-[node name="RobotMaker" type="Control" parent="." node_paths=PackedStringArray("manager", "txt_botName", "txt_botNameInternal", "lbl_filepathName", "tree_robot", "tree_pieces", "tree_parts", "engine", "stash", "botSpawnPoint", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs", "tree_abilities")]
+[node name="RobotMaker" type="Control" parent="." node_paths=PackedStringArray("manager", "txt_botName", "txt_botNameInternal", "lbl_filepathName", "tree_robot", "tree_pieces", "tree_parts", "engine", "inspector", "abilitiesManager", "dataPanel", "botSpawnPoint", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs", "tree_abilities")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -94,14 +104,16 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("3_1k5u0")
 manager = NodePath("..")
-txt_botName = NodePath("RobotData/RobotName")
-txt_botNameInternal = NodePath("RobotData/RobotNameInternal")
+txt_botName = NodePath("RobotData/RobotDataPanel/Naming/robotName")
+txt_botNameInternal = NodePath("RobotData/RobotDataPanel/Naming/robotNameInternal")
 lbl_filepathName = NodePath("_FilepathName_")
 tree_robot = NodePath("RobotTree")
 tree_pieces = NodePath("PiecesTree")
 tree_parts = NodePath("PartsTree")
 engine = NodePath("PartsHolder_Engine")
-stash = NodePath("PieceInspector/StashViewer/PieceStash")
+inspector = NodePath("PieceInspector")
+abilitiesManager = NodePath("AbilitySlotManager")
+dataPanel = NodePath("RobotData/RobotDataPanel")
 botSpawnPoint = NodePath("RobotSpawnPoint")
 save_txt_newPath = NodePath("ConfirmSavePopup/NewPath")
 save_txt_oldPath = NodePath("ConfirmSavePopup/OldPath")
@@ -112,7 +124,6 @@ btn_cancelSave = NodePath("ConfirmSavePopup/CancelSave")
 btn_saveAs = NodePath("ConfirmSavePopup/SaveChangesAs")
 tree_abilities = NodePath("AbilitiesTree")
 metadata/_custom_type_script = "uid://cseoyso26tb6f"
-metadata/_edit_use_anchors_ = true
 
 [node name="PiecesTree" type="Tree" parent="RobotMaker"]
 layout_mode = 0
@@ -138,18 +149,22 @@ allow_reselect = true
 [node name="RobotSpawnPoint" type="Node3D" parent="RobotMaker"]
 
 [node name="Floor" type="StaticBody3D" parent="RobotMaker"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+collision_layer = 1025
+collision_mask = 1025
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RobotMaker/Floor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.25, 0)
 shape = SubResource("WorldBoundaryShape3D_8384o")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RobotMaker/Floor"]
+mesh = SubResource("PlaneMesh_1k5u0")
 
 [node name="PartsHolder_Engine" parent="RobotMaker" instance=ExtResource("6_s3ktb")]
 layout_mode = 1
-offset_left = 667.0
-offset_top = -458.0
-offset_right = 955.0
-offset_bottom = -170.0
+offset_left = 407.0
+offset_top = -460.0
+offset_right = 695.0
+offset_bottom = -172.0
 
 [node name="ConfirmSavePopup" type="Control" parent="RobotMaker"]
 visible = false
@@ -282,64 +297,39 @@ offset_bottom = 83.0
 text = "SAVE CHANGES (OVERWRITE)"
 alignment = 2
 
-[node name="PieceInspector" parent="RobotMaker" instance=ExtResource("6_8384o")]
-layout_mode = 0
-offset_left = 1627.0
-offset_top = 94.0
-offset_right = 1915.0
-offset_bottom = 622.0
-
 [node name="AbilitiesTree" type="Tree" parent="RobotMaker"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.108333
-anchor_top = 0.55463
-anchor_right = 0.243229
-anchor_bottom = 0.735185
-metadata/_edit_use_anchors_ = true
+anchor_left = 0.864583
+anchor_top = 0.699074
+anchor_right = 0.999479
+anchor_bottom = 0.879629
 
 [node name="RobotData" type="Control" parent="RobotMaker"]
-layout_mode = 1
-anchor_left = 0.141146
-anchor_top = 0.737963
-anchor_right = 0.277083
-anchor_bottom = 0.999073
-metadata/_edit_use_anchors_ = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="_Robot Data_" type="Label" parent="RobotMaker/RobotData"]
-layout_mode = 0
-offset_left = 82.0
-offset_top = -3.0
-offset_right = 320.0
-offset_bottom = 20.0
-text = "Robot Data"
-vertical_alignment = 2
-
-[node name="RobotName" type="TextEdit" parent="RobotMaker/RobotData"]
-layout_mode = 0
-offset_left = 8.0
-offset_top = 25.0
-offset_right = 253.0
-offset_bottom = 63.0
-placeholder_text = "Robot Name"
-metadata/_edit_use_anchors_ = true
-
-[node name="RobotNameInternal" type="TextEdit" parent="RobotMaker/RobotData"]
-layout_mode = 0
-offset_left = 8.0
-offset_top = 73.0
-offset_right = 253.0
-offset_bottom = 111.0
-placeholder_text = "Internal Robot Name"
-
-[node name="PanelBG" type="NinePatchRect" parent="RobotMaker/RobotData"]
-z_index = -1
+[node name="RobotDataPanel" type="TabContainer" parent="RobotMaker/RobotData" node_paths=PackedStringArray("allStats")]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 0.858159
-grow_horizontal = 2
-grow_vertical = 2
+anchor_left = 0.141138
+anchor_top = 0.0629608
+anchor_right = 9.22706
+anchor_bottom = 6.72409
+offset_left = 265.354
+offset_top = 727.482
+offset_right = 283.917
+offset_bottom = 808.037
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s3ktb")
+current_tab = 2
+script = ExtResource("6_8f46y")
+allStats = [NodePath("Naming/robotName"), NodePath("Naming/robotNameInternal"), NodePath("Health&Energy/maxHealth"), NodePath("Health&Energy/maxInvincibleTimer"), NodePath("Health&Energy/maxEnergy"), NodePath("Movement/ScrollContainer/Control/acceleration"), NodePath("Movement/ScrollContainer/Control/maxSpeed"), NodePath("Movement/ScrollContainer/Control/bodyRotationSpeedBase"), NodePath("Movement/ScrollContainer/Control/bodyRotationSpeedMaxBase"), NodePath("Movement/ScrollContainer/Control/speedReductionWhileNoInput"), NodePath("Movement/ScrollContainer/Control/treadsRotationSpeed"), NodePath("Movement/ScrollContainer/Control/treadsRotationSpeedClamp"), NodePath("Movement/ScrollContainer/Control/weightSpeedPenaltyMultiplier")]
+
+[node name="Naming" type="NinePatchRect" parent="RobotMaker/RobotData/RobotDataPanel"]
+visible = false
+z_index = -1
+layout_mode = 2
 texture = ExtResource("5_8f46y")
 region_rect = Rect2(1, 1, 46, 47)
 patch_margin_left = 12
@@ -347,6 +337,187 @@ patch_margin_top = 12
 patch_margin_right = 12
 patch_margin_bottom = 12
 metadata/_edit_use_anchors_ = true
+metadata/_tab_index = 0
+
+[node name="robotName" type="TextEdit" parent="RobotMaker/RobotData/RobotDataPanel/Naming"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 25.0
+offset_right = 253.0
+offset_bottom = 63.0
+placeholder_text = "robotName"
+script = ExtResource("7_yvtic")
+
+[node name="robotNameInternal" type="TextEdit" parent="RobotMaker/RobotData/RobotDataPanel/Naming"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 73.0
+offset_right = 253.0
+offset_bottom = 111.0
+placeholder_text = "robotNameInternal"
+script = ExtResource("7_yvtic")
+
+[node name="Health&Energy" type="NinePatchRect" parent="RobotMaker/RobotData/RobotDataPanel"]
+visible = false
+z_index = -1
+layout_mode = 2
+texture = ExtResource("5_8f46y")
+region_rect = Rect2(1, 1, 46, 47)
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12
+metadata/_edit_use_anchors_ = true
+metadata/_tab_index = 1
+
+[node name="maxHealth" parent="RobotMaker/RobotData/RobotDataPanel/Health&Energy" instance=ExtResource("8_ccj5e")]
+layout_mode = 0
+offset_left = 2.00049
+offset_top = 24.0
+offset_right = 257.0
+offset_bottom = 55.0
+min_value = 0.1
+step = 0.05
+value = 3.1
+suffix = "maxHealth"
+
+[node name="maxInvincibleTimer" type="SpinBox" parent="RobotMaker/RobotData/RobotDataPanel/Health&Energy"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 56.9996
+offset_right = 259.0
+offset_bottom = 87.9996
+step = 0.05
+value = 0.25
+allow_greater = true
+alignment = 3
+update_on_text_changed = true
+suffix = "maxInvincibleTimer"
+script = ExtResource("7_s3ktb")
+
+[node name="maxEnergy" type="SpinBox" parent="RobotMaker/RobotData/RobotDataPanel/Health&Energy"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 109.0
+offset_right = 259.0
+offset_bottom = 140.0
+min_value = 0.1
+step = 0.05
+value = 3.0
+allow_greater = true
+alignment = 3
+update_on_text_changed = true
+suffix = "maxEnergy"
+script = ExtResource("7_s3ktb")
+
+[node name="Movement" type="NinePatchRect" parent="RobotMaker/RobotData/RobotDataPanel"]
+z_index = -1
+layout_mode = 2
+texture = ExtResource("5_8f46y")
+region_rect = Rect2(1, 1, 46, 47)
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12
+metadata/_edit_use_anchors_ = true
+metadata/_tab_index = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="RobotMaker/RobotData/RobotDataPanel/Movement"]
+layout_mode = 0
+offset_top = 32.0
+offset_right = 382.0
+offset_bottom = 314.0
+
+[node name="Control" type="VBoxContainer" parent="RobotMaker/RobotData/RobotDataPanel/Movement/ScrollContainer"]
+layout_mode = 2
+
+[node name="acceleration" parent="RobotMaker/RobotData/RobotDataPanel/Movement/ScrollContainer/Control" instance=ExtResource("8_ccj5e")]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+min_value = 100.0
+max_value = 30000.0
+step = 100.0
+value = 6000.0
+suffix = "acceleration"
+
+[node name="maxSpeed" parent="RobotMaker/RobotData/RobotDataPanel/Movement/ScrollContainer/Control" instance=ExtResource("8_ccj5e")]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+step = 0.05
+value = 20.25
+suffix = "maxSpeed"
+
+[node name="bodyRotationSpeedBase" parent="RobotMaker/RobotData/RobotDataPanel/Movement/ScrollContainer/Control" instance=ExtResource("8_ccj5e")]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 0.8
+allow_greater = false
+suffix = "bodyRotationSpeedBase"
+
+[node name="bodyRotationSpeedMaxBase" parent="RobotMaker/RobotData/RobotDataPanel/Movement/ScrollContainer/Control" instance=ExtResource("8_ccj5e")]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+min_value = 1.0
+max_value = 90.0
+step = 1.0
+value = 40.0
+suffix = "bodyRotationSpeedMaxBase"
+
+[node name="speedReductionWhileNoInput" parent="RobotMaker/RobotData/RobotDataPanel/Movement/ScrollContainer/Control" instance=ExtResource("8_ccj5e")]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 0.9
+suffix = "speedReductionWhileNoInput"
+
+[node name="treadsRotationSpeed" parent="RobotMaker/RobotData/RobotDataPanel/Movement/ScrollContainer/Control" instance=ExtResource("8_ccj5e")]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+value = 6.0
+suffix = "treadsRotationSpeed"
+
+[node name="treadsRotationSpeedClamp" parent="RobotMaker/RobotData/RobotDataPanel/Movement/ScrollContainer/Control" instance=ExtResource("8_ccj5e")]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+value = 1.0
+suffix = "treadsRotationSpeedClamp"
+
+[node name="weightSpeedPenaltyMultiplier" parent="RobotMaker/RobotData/RobotDataPanel/Movement/ScrollContainer/Control" instance=ExtResource("8_ccj5e")]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+min_value = 0.0
+max_value = 1.0
+step = 0.001
+value = 0.01
+suffix = "weightSpeedPenaltyMultiplier"
+
+[node name="_Robot Data_" type="Label" parent="RobotMaker/RobotData"]
+layout_mode = 0
+offset_left = 404.0
+offset_top = 759.0
+offset_right = 642.0
+offset_bottom = 782.0
+theme = ExtResource("10_yvtic")
+text = "Robot Data"
+vertical_alignment = 2
+
+[node name="AbilitySlotManager" parent="RobotMaker" instance=ExtResource("7_1k5u0")]
+offset_left = 1655.0
+offset_top = 92.0
+offset_right = 1919.0
+offset_bottom = 752.0
+
+[node name="PieceInspector" parent="RobotMaker" instance=ExtResource("6_8384o")]
+layout_mode = 0
+offset_left = 1367.0
+offset_top = 92.0
+offset_right = 1655.0
+offset_bottom = 620.0
 
 [node name="PieceHelper" type="Control" parent="." node_paths=PackedStringArray("manager", "engine", "A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "C5", "D1", "D2", "D3", "D4", "D5", "E1", "E2", "E3", "E4", "E5", "pieceHolder", "lbl_filepathName", "txt_pieceName", "txt_pieceDescription", "tree", "camHolder", "makerCamera", "followerCamera", "save_txt_newPath", "save_txt_oldPath", "save_lbl_success", "newPathPrefix", "ConfirmSavePopup", "btn_cancelSave", "btn_saveAs")]
 visible = false
@@ -939,8 +1110,10 @@ text = "BACK TO MODE SELECTION"
 [connection signal="pressed" from="RobotMaker/ConfirmSavePopup/SaveChangesAs" to="RobotMaker" method="_on_save_changes_as_pressed"]
 [connection signal="pressed" from="RobotMaker/ConfirmSavePopup/CancelSave" to="RobotMaker" method="_on_cancel_save_pressed"]
 [connection signal="pressed" from="RobotMaker/SaveChanges" to="RobotMaker" method="_on_save_changes_pressed"]
-[connection signal="text_changed" from="RobotMaker/RobotData/RobotName" to="RobotMaker" method="_on_robot_name_text_changed"]
-[connection signal="text_changed" from="RobotMaker/RobotData/RobotNameInternal" to="RobotMaker" method="_on_robot_name_text_changed"]
+[connection signal="text_changed" from="RobotMaker/RobotData/RobotDataPanel/Naming/robotName" to="RobotMaker" method="_on_robot_name_text_changed"]
+[connection signal="text_changed" from="RobotMaker/RobotData/RobotDataPanel/Naming/robotNameInternal" to="RobotMaker" method="_on_robot_name_text_changed"]
+[connection signal="value_changed" from="RobotMaker/RobotData/RobotDataPanel/Health&Energy/maxInvincibleTimer" to="RobotMaker/RobotData/RobotDataPanel/Health&Energy/maxInvincibleTimer" method="_on_value_changed"]
+[connection signal="value_changed" from="RobotMaker/RobotData/RobotDataPanel/Health&Energy/maxEnergy" to="RobotMaker/RobotData/RobotDataPanel/Health&Energy/maxEnergy" method="_on_value_changed"]
 [connection signal="mouse_entered" from="PieceHelper" to="PieceHelper" method="_on_piece_name_mouse_exited"]
 [connection signal="mouse_exited" from="PieceHelper" to="PieceHelper" method="_on_piece_name_mouse_entered"]
 [connection signal="button_clicked" from="PieceHelper/Tree" to="PieceHelper" method="_on_tree_button_clicked"]
@@ -963,5 +1136,3 @@ text = "BACK TO MODE SELECTION"
 [connection signal="pressed" from="PieceHelper/NewPiece" to="PieceHelper" method="_on_new_piece_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="BackToModeSelection" to="." method="change_mode" binds= [0]]
-
-[editable path="RobotMaker/PieceInspector"]

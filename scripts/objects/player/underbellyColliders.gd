@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/tread_2.png")
 extends Node3D
 
 class_name UnderbellyContactPoints

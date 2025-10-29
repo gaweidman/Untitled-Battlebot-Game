@@ -10,6 +10,16 @@ var MAX_ENEMY_SPEED = 13
 func _ready() -> void:
 	load_settings();
 	load_data();
+	
+	## Cursor stuff!
+	#Input.set_default_cursor_shape(Input.CURSOR_BUSY)
+	#Input.set_custom_mouse_cursor(load("res://graphics/images/HUD/statIcons/scrapIconStriped.png"),Input.CURSOR_BUSY,Vector2(9.5,11.5));
+	
+	DisplayServer.window_set_current_screen.call_deferred(1);
+	#get_tree().current_scene.ready.connect(_on_scenetree_ready);
+	#pass;
+#func _on_scenetree_ready():
+	init_screen_transition();
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -39,7 +49,10 @@ func get_game_board_state():
 func get_round_number():
 	var board = get_game_board();
 	
-	return board.round;
+	if board == null:
+		return -1;
+	
+	return board.roundNum;
 
 func get_round_completion():
 	var board = get_game_board();
@@ -66,7 +79,7 @@ func get_in_state_of_building() ->bool:
 	if is_instance_valid(board):
 		return board.in_state_of_building();
 	else:
-		return false;
+		return true;
 
 func set_game_board_state(state : GameBoard.gameState):
 	var board = get_game_board();
@@ -101,6 +114,13 @@ func get_player_position():
 	if is_instance_valid(bdy):
 		return bdy.global_position;
 	return Vector3(0,0,0);
+
+func get_camera_pointer() -> Node3D:
+	var board = get_game_board();
+	
+	if board != null:
+		return board.get_camera_pointer();
+	return null;
 
 func get_player_pos_offset(inGlobalPosition: Vector3):
 	var pos = get_player_position();
@@ -160,14 +180,14 @@ func get_game_hud() -> GameHUD:
 		return hud.get_node_or_null("GameHud");
 	return null;
 
-func get_bar_hp() -> healthBar:
+func get_bar_hp() -> HealthBar:
 	var ghud = get_game_hud();
 	
 	if ghud != null:
 		return ghud.get_node_or_null("LeftSide/HealthBar");
 	return null;
 
-func get_bar_energy() -> healthBar:
+func get_bar_energy() -> HealthBar:
 	var ghud = get_game_hud();
 	
 	if ghud != null:
@@ -409,7 +429,7 @@ func load_data():
 ############ STATE CONTROL
 var paused := false;
 
-func pause(foo : bool = not paused):
+func pause(foo : bool = not is_paused()):
 	#print("GameState.pause() attempt. New: ", str(foo), " Old: ", str(paused))
 	if paused == foo: return;
 	#print("GameState.pause() attempt was successful.")
@@ -421,8 +441,73 @@ func pause(foo : bool = not paused):
 func is_paused():
 	return paused;
 
+var windowFocus := true;
+#func _notification(what):
+	#match what:
+		#MainLoop.NOTIFICATION_APPLICATION_FOCUS_OUT:
+			#if windowFocus:
+				#windowFocus = false;
+				#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE;
+		#MainLoop.NOTIFICATION_APPLICATION_FOCUS_IN:
+			#if !windowFocus:
+				#windowFocus = true;
+				#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN;
+
+func was_fire_action_just_pressed():
+	return Input.is_action_just_pressed("Fire0") or Input.is_action_just_pressed("Fire1") or Input.is_action_just_pressed("Fire2") or Input.is_action_just_pressed("Fire3") or Input.is_action_just_pressed("Fire4") or Input.is_action_just_pressed("Select");
+func is_fire_action_being_pressed():
+	return Input.is_action_pressed("Fire0") or Input.is_action_pressed("Fire1") or Input.is_action_pressed("Fire2") or Input.is_action_pressed("Fire3") or Input.is_action_pressed("Fire4") or Input.is_action_pressed("Select");
+
 func editor_mode_start():
-	get_tree().change_scene_to_file("res://makers/maker_mode.tscn");
+	queue_change_scenes("res://makers/maker_mode.tscn");
 
 func reset_to_main_menu():
-	get_tree().change_scene_to_file("res://scenes/levels/game_board.tscn");
+	queue_change_scenes("res://scenes/levels/game_board.tscn");
+
+
+############# SCREEN TRANSITION STUFF
+var screenTransitionScene = preload("res://scenes/prefabs/objects/gui/transition_canvas.tscn");
+var screenTransition : ScreenTransition;
+var transitionCanvas : TransitionCanvas;
+func init_screen_transition():
+	var canvas = screenTransitionScene.instantiate();
+	canvas.layer = 5;
+	add_child(canvas);
+	
+	transitionCanvas = canvas;
+	
+	screenTransition = canvas.transition;
+	
+	init_screen_transition_vanity();
+
+func init_screen_transition_vanity():
+	transitionCanvas.initialize();
+	screenTransition.bring_to_center(true,true);
+	screenTransition.show();
+	if !screenTransition.is_connected("hitCenter", hit_center):
+		screenTransition.connect("hitCenter", hit_center);
+	if !screenTransition.is_connected("hitRight", hit_right):
+		screenTransition.connect("hitRight", hit_right);
+
+var targetScene = null;
+func queue_change_scenes(_targetScene):
+	targetScene = _targetScene;
+	make_screen_transition_arrive(5);
+
+func change_scenes():
+	if targetScene != null:
+		get_tree().change_scene_to_file(targetScene);
+		targetScene = null;
+		make_screen_transition_leave();
+
+func hit_center():
+	Hooks.OnScreenTransition(ScreenTransition.mode.CENTER);
+	change_scenes();
+func hit_right():
+	Hooks.OnScreenTransition(ScreenTransition.mode.RIGHT);
+
+func make_screen_transition_leave():
+	screenTransition.leave();
+func make_screen_transition_arrive(layer := 2):
+	transitionCanvas.layer = layer;
+	screenTransition.comeIn();

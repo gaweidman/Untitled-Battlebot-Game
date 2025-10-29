@@ -2,8 +2,6 @@ extends Camera
 
 class_name GameCamera
 
-
-
 @export_category("Adjustables and Stats")
 @export var XRotInPlay = 20.0;
 @export var rotXspeed := 0.0;
@@ -35,11 +33,13 @@ var viewport : Viewport;
 @export var floor : StaticBody3D;
 @export var positionParent : Node;
 
+@export var targetNode : Node3D;
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	cameraOffset = global_position; # the player always starts at 0, 0, 0 so we don't do any subtraction here
 	position = Vector3(0,0,0)
-	playerBody = GameState.get_player_body();
+	#playerBody = GameState.get_player_body();
 	
 	Hooks.add(self, "OnChangeGameState", "CameraChangePos", 
 		func(oldState : GameBoard.gameState, newState : GameBoard.gameState) :
@@ -68,10 +68,13 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta):
 	if is_node_ready():
-		if is_instance_valid(playerBody) && is_instance_valid(viewport):
+		targetNode = GameState.get_camera_pointer();
+		
+		if is_instance_valid(targetNode) && is_instance_valid(viewport): 
 			var inp = GameState.get_player();
-			var inpVec = inp.get_movement_vector(false);
-			modInpVec = - Vector3(inpVec.x, 0, inpVec.y);
+			if is_instance_valid(inp):
+				var inpVec = inp.get_movement_vector(false);
+				modInpVec = - Vector3(inpVec.x, 0, inpVec.y);
 			var viewRect = viewport.get_visible_rect();
 			var mousePos = Vector2(clamp(viewport.get_mouse_position().x, 0, viewRect.size.x), clamp(viewport.get_mouse_position().y, 0, viewRect.size.y));
 			var mousePosMoved = (mousePos - (viewRect.size / 2)) / (viewRect.size / 2)
@@ -84,11 +87,10 @@ func _physics_process(delta):
 			
 			targetInputOffset = modMouseVec + modInpVec;
 			inputOffset = lerp (inputOffset, targetInputOffset, delta * 5)
-			playerPosition = playerBody.get_global_position()
+			playerPosition = targetNode.get_global_position()
 			targetPosition = get_camera_offset() + inputOffset + get_v_offset_vector();
 		else:
 			viewport = get_viewport();
-			playerBody = GameState.get_player_body();
 		
 		position = lerp(position, targetPosition, delta * 10);
 		positionParent.position = lerp(positionParent.position, playerPosition, delta * 10);
@@ -201,6 +203,7 @@ func _input(event):
 
 
 func in_camera_tilt_state():
+	return true;
 	return GameState.get_in_state_of_building();
 
 func get_camera_offset():

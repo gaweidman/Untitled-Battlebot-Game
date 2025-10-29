@@ -1,12 +1,11 @@
 extends Robot
 
 class_name Robot_Player
+##It's you![br]Still untitled.
 
 var gameHUD : GameHUD;
-var barHP : healthBar;
-var barEnergy : healthBar;
-
-var engineViewer : PartsHolder_Engine;
+var barHP : HealthBar;
+var barEnergy : HealthBar;
 
 func _ready():
 	super();
@@ -29,21 +28,31 @@ func grab_references():
 
 ######################## INPUT MANAGEMENT
 
+func _physics_process(delta):
+	super(delta)
+	update_bars(); ##Bars should be updated at the very end.
+
+func phys_process_timers(delta):
+	super(delta);
+	forcedUpdateTimerHUD -= 1;
+	if forcedUpdateTimerHUD <= 0:
+		forcedUpdateTimerHUD = 20;
+		update_hud();
+
 func phys_process_combat(delta):
 	super(delta);
-	if Input.is_action_just_pressed("Fire0"):
-		fire_active(0);
-		print("Ability? ",active_abilities[0].abilityName)
-	if Input.is_action_just_pressed("Fire1"):
-		fire_active(1);
-		
-		print("Ability? ",active_abilities[1].abilityName)
-	if Input.is_action_just_pressed("Fire2"):
-		fire_active(2);
-		#print("Ability? ",active_abilities[2].abilityName)
-	if Input.is_action_just_pressed("Fire3"):
-		fire_active(3);
-		#print("Ability? ",active_abilities[3].abilityName)
+	if Input.is_action_pressed("Fire0"):
+		if fire_active(0):
+			print("Ability? ",active_abilities[0].abilityName)
+	if Input.is_action_pressed("Fire1"):
+		if fire_active(1):
+			print("Ability? ",active_abilities[1].abilityName)
+	if Input.is_action_pressed("Fire2"):
+		if fire_active(2):
+			print("Ability? ",active_abilities[2].abilityName)
+	if Input.is_action_pressed("Fire3"):
+		if fire_active(3):
+			print("Ability? ",active_abilities[3].abilityName)
 	#if Input.is_action_just_pressed("Fire4"):
 		#fire_active(4);
 
@@ -62,13 +71,14 @@ func get_movement_vector(rotatedByCamera : bool = true) -> Vector2:
 	if Input.is_action_pressed("MoveDown"):
 		movementVector += Vector2.DOWN;
 	
-	if rotatedByCamera:
-		if not is_instance_valid(camera):
-			camera = GameState.get_camera();
+	if is_instance_valid(camera):
+		if rotatedByCamera:
 		
-		var camRotY = - camera.targetRotationY;
-		
-		movementVector = movementVector.rotated(camRotY);
+			var camRotY = - camera.targetRotationY;
+			
+			movementVector = movementVector.rotated(camRotY);
+	else:
+		camera = GameState.get_camera();
 	
 	if is_inputting_movement():
 		movementVectorRotation = movementVector.angle();
@@ -97,20 +107,24 @@ func is_inputting_movement() -> bool:
 	return inputtingMovementThisFrame;
 
 func die():
-	#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
-	alive = false;
-	hide();
-	freeze(true, true);
-	gameBoard.game_over();
-	
-	##Play the death sound
-	if GameState.get_in_state_of_play():
-		#SND.play_sound_nondirectional(deathSound);
-		SND.play_sound_nondirectional("Combatant.Die");
-	##Play the death particle effects.
-	ParticleFX.play("NutsBolts", GameState.get_game_board(), get_global_body_position());
-	ParticleFX.play("BigBoom", GameState.get_game_board(), get_global_body_position());
-	
+	#gameBoard.game_over();
+	#super();
+	#return;
+	if is_alive() and aliveLastFrame:
+		#Hooks.OnDeath(self, GameState.get_player()); ##TODO: Fix hooks to use new systems before uncommenting this.
+		alive = false;
+		hide();
+		freeze(true, true);
+		gameBoard.game_over();
+		
+		##Play the death sound
+		if GameState.get_in_state_of_play():
+			#SND.play_sound_nondirectional(deathSound);
+			SND.play_sound_nondirectional("Combatant.Die");
+		##Play the death particle effects.
+		ParticleFX.play("NutsBolts", GameState.get_game_board(), get_global_body_position());
+		ParticleFX.play("BigBoom", GameState.get_game_board(), get_global_body_position());
+		
 	#print("Searching for Sockets ", Utils.get_all_children(self).size())
 	#print("Searching for Sockets, checking ownership ", Utils.get_all_children(self, self).size())
 	#print(Utils.get_all_children(self, self))
@@ -132,64 +146,6 @@ func update_bars():
 func _on_health_or_energy_changed():
 	super();
 	update_bars();
-	pass # Replace with function body.
-
-func select_piece(piece):
-	var result = super(piece);
-	#if super(piece) != null and is_instance_valid(engineViewer):
-		#engineViewer.open_with_new_piece(piece);
-	if is_instance_valid(engineViewer):
-		queue_update_engine_with_selected_or_pipette();
-	return result;
-
-func deselect_all_pieces(ignoredPiece : Piece = null):
-	super(ignoredPiece);
-	#if ignoredPiece == null or selectedPiece != ignoredPiece:
-		#engineViewer.close_and_clear();
-	if is_instance_valid(engineViewer):
-		queue_update_engine_with_selected_or_pipette();
-
-
+	pass # Replace with function body
 
 ############# HUD
-
-var forcedUpdateTimerHUD := 0;
-var queueCloseEngine := false;
-## Updates the HUD for player stuff.
-func process_hud(delta):
-	super(delta);
-	forcedUpdateTimerHUD -= 1;
-	if forcedUpdateTimerHUD <= 0:
-		forcedUpdateTimerHUD = 5;
-		update_bars();
-	
-	
-	if is_instance_valid(engineViewer):
-		if queueUpdateEngineWithSelectedOrPipette:
-			var selectionResult = get_selected_or_pipette();
-			#print("Selection result ", selectionResult)
-			if selectionResult != null:
-				if selectionResult is Piece:
-					engineViewer.open_with_new_piece(selectionResult);
-			else:
-				queue_close_engine();
-			
-			queueUpdateEngineWithSelectedOrPipette = false;
-		
-		if queueCloseEngine:
-			engineViewer.close_and_clear();
-			queueCloseEngine = false;
-	pass;
-
-
-func queue_close_engine():
-	queueCloseEngine = true;
-
-func deselect_everything():
-	super();
-	queue_update_engine_with_selected_or_pipette();
-
-
-var queueUpdateEngineWithSelectedOrPipette := false;
-func queue_update_engine_with_selected_or_pipette():
-	queueUpdateEngineWithSelectedOrPipette = true;

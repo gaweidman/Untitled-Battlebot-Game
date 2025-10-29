@@ -1,9 +1,13 @@
-[gd_scene load_steps=17 format=3 uid="uid://88se3nfd8vrt"]
+[gd_scene load_steps=21 format=3 uid="uid://88se3nfd8vrt"]
 
 [ext_resource type="Script" uid="uid://lqnydwh6c74e" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="1_gm1wa"]
+[ext_resource type="Resource" uid="uid://bws20ksxfdagg" path="res://scenes/prefabs/abilities/passive/swivel_pointer_target.tres" id="2_h4kss"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_kcjt4"]
+[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_xcdtu"]
+[ext_resource type="Resource" uid="uid://bfv01rslcmwqh" path="res://scenes/prefabs/abilities/passive/ability_generator.tres" id="4_dbydh"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="6_xcdtu"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_fvnuu"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="8_dbydh"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="8_x8ege"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="10_ese3e"]
 [ext_resource type="ArrayMesh" uid="uid://bnajrltu8pmd4" path="res://graphics/models/obj/botparts/BotBody.obj" id="10_h4kss"]
@@ -35,14 +39,18 @@ size = Vector3(0.5, 0.5, 0.5)
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gm1wa"]
 radius = 0.75
 
-[node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("swivelNode", "meshesHolder", "placementCollisionHolder", "hitboxCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "hitboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_gm1wa")
 swivelNode = NodePath("Meshes/SwivelTop")
-force_visibility = true
+movingSockets = [NodePath("Meshes/SwivelTop/Socket")]
 pieceName = &"BodyCube"
+pieceDescription = ""
+weightBase = 23.0
+passiveAbilities = Array[ExtResource("2_xcdtu")]([ExtResource("4_dbydh"), ExtResource("2_h4kss")])
+force_visibility = true
 meshesHolder = NodePath("Meshes")
-placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
 Vector2i(0, 1): null,
@@ -72,19 +80,19 @@ filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"
 
-[node name="Socket2" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
+[node name="SocketFront" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.25, 0.75)
 hostPiece = NodePath("../..")
 
-[node name="Socket3" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
+[node name="SocketBack" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
 transform = Transform3D(-1, 2.98023e-08, 1.77636e-15, 0, -4.37114e-08, -1, -2.98023e-08, -1, 4.37114e-08, 0, 0.25, -0.75)
 hostPiece = NodePath("../..")
 
-[node name="Socket4" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
+[node name="SocketRight" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
 transform = Transform3D(0.000329311, -1, -0.00082928, -0.000672038, 0.000829069, -0.999999, 1, 0.000329843, -0.000671777, -0.75, 0.750622, 0.000247382)
 hostPiece = NodePath("../..")
 
-[node name="Socket5" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
+[node name="SocketLeft" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("2_kcjt4")]
 transform = Transform3D(-0.000329281, 1, -0.000829368, 0.000672038, -0.000829156, -0.999999, -1, -0.000329814, -0.000671777, 0.75, 0.749378, -0.000247382)
 hostPiece = NodePath("../..")
 
@@ -101,6 +109,7 @@ script = ExtResource("7_fvnuu")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
+script = ExtResource("8_dbydh")
 
 [node name="PieceCollisionBox_Body" parent="." instance=ExtResource("8_x8ege")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.625, 0)

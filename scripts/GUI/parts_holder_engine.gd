@@ -1,3 +1,5 @@
+@icon ("res://graphics/images/class_icons/engine.png")
+
 extends Control
 
 class_name PartsHolder_Engine
@@ -44,14 +46,14 @@ func enter_state(newState : doorStates):
 			if currentPattern == []:
 				change_state(doorStates.CLOSING);
 			else:
-				SND.play_sound_nondirectional("Shop.Door.Open", 0.85);
+				SND.play_sound_nondirectional("Shop.Door.Open", 0.85, 5.5);
 			pass;
 		doorStates.CLOSING:
 			pass;
 		doorStates.CLOSED:
 			door.position.x = 0.0;
 			door.position.y = 0.0;
-			SND.play_sound_nondirectional("Shop.Door.Thump", 0.85);
+			SND.play_sound_nondirectional("Shop.Door.Thump", 0.85, 2);
 			pass;
 
 func leave_state(oldState : doorStates):

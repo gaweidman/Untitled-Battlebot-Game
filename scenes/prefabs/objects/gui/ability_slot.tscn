@@ -1,0 +1,338 @@
+[gd_scene load_steps=23 format=4 uid="uid://y4jreplx5if1"]
+
+[ext_resource type="TileSet" uid="uid://dicxuohkdpmlx" path="res://graphics/images/HUD/engine/engineTileMap.tres" id="1_3xq6w"]
+[ext_resource type="Script" uid="uid://midvysmd0e3e" path="res://scripts/GUI/ability_slot.gd" id="1_w0yrw"]
+[ext_resource type="Texture2D" uid="uid://ecyuqi8je44t" path="res://graphics/images/HUD/engine/partPlateau.png" id="3_k6pxm"]
+[ext_resource type="Texture2D" uid="uid://cwtctcw4rma8i" path="res://graphics/images/HUD/blinkies/ability_blinky_off.png" id="4_jdlo6"]
+[ext_resource type="Texture2D" uid="uid://b4uhdjhddsngj" path="res://graphics/images/HUD/blinkies/ability_blinky_on.png" id="5_mm2y6"]
+[ext_resource type="Texture2D" uid="uid://o01v65x3ienk" path="res://graphics/images/HUD/screenGFX/insetScreen.png" id="6_ifvkn"]
+[ext_resource type="Theme" uid="uid://8f0fg65uxivb" path="res://graphics/images/HUD/digital_button.tres" id="7_4isuo"]
+[ext_resource type="PackedScene" uid="uid://rwrbd0hg75ad" path="res://scenes/prefabs/utilities/health_bar.tscn" id="8_0tj24"]
+[ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="9_0tj24"]
+[ext_resource type="Texture2D" uid="uid://52acr4axd20j" path="res://graphics/images/HUD/activeTab/energyTank_case.png" id="9_x17s8"]
+[ext_resource type="Texture2D" uid="uid://cpsb6spmlq300" path="res://graphics/images/HUD/activeTab/energyTank_overlayMask.png" id="11_g6gak"]
+[ext_resource type="Theme" uid="uid://bq0jig2pdkgtn" path="res://graphics/images/HUD/UI_theme.tres" id="11_pb2ip"]
+[ext_resource type="Texture2D" uid="uid://blati351et8sw" path="res://graphics/images/HUD/activeTab/energyTank_full.png" id="12_rf4fe"]
+[ext_resource type="Texture2D" uid="uid://cloe8kuvyhab5" path="res://graphics/images/HUD/activeTab/energyTank_empty.png" id="13_x17s8"]
+[ext_resource type="PackedScene" uid="uid://caehguv0cdrcg" path="res://scenes/prefabs/objects/gui/magazine_slicer.tscn" id="16_cclr1"]
+[ext_resource type="Texture2D" uid="uid://dpulrjp6s5ovo" path="res://graphics/images/HUD/blinkies/energy_blinky_on.png" id="16_kcg4f"]
+[ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="16_x17s8"]
+[ext_resource type="Texture2D" uid="uid://cr16um277it7e" path="res://graphics/images/HUD/blinkies/timer_blinky_off.png" id="18_ylxhx"]
+[ext_resource type="Texture2D" uid="uid://bw5pl1p6bmq61" path="res://graphics/images/HUD/blinkies/timer_blinky_on.png" id="19_he02q"]
+[ext_resource type="Texture2D" uid="uid://dggphix4dl3qu" path="res://graphics/images/HUD/screenGFX/screenBG.png" id="20_fefil"]
+[ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/Cannon.png" id="20_he02q"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jtnig"]
+resource_local_to_scene = true
+shader = ExtResource("9_0tj24")
+shader_parameter/mask = ExtResource("11_g6gak")
+
+[node name="AbilitySlot0" type="Control" node_paths=PackedStringArray("btn_assign", "lbl_name", "lbl_energy", "bar_energy", "blinky_energy", "blinky_usable", "misc_energy", "energyCase", "misc_ammo", "misc_magazine", "misc_text", "lbl_cooldownCurrent", "blinky_cooldown", "tr_icon", "spr_icon", "btn_selectReference", "bg_icon")]
+texture_filter = 1
+clip_contents = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 264.0
+offset_bottom = 132.0
+script = ExtResource("1_w0yrw")
+btn_assign = NodePath("Assign")
+lbl_name = NodePath("NameBG/Name")
+lbl_energy = NodePath("MiscBG/Energy/EnergyIconStriped/lbl_energy")
+bar_energy = NodePath("EnergyBar_Case/EnergyBar")
+blinky_energy = NodePath("EnergyBar_Case/Blinky")
+blinky_usable = NodePath("AbilityBlinky/AbilityBlinkyOn")
+misc_energy = NodePath("MiscBG/Energy")
+energyCase = NodePath("EnergyBar_Case")
+misc_ammo = NodePath("MiscBG/Ammo")
+misc_magazine = NodePath("MiscBG/Ammo/Magazine")
+misc_text = NodePath("MiscBG/MiscText")
+lbl_cooldownCurrent = NodePath("TimeBG/CooldownCurrentTime")
+blinky_cooldown = NodePath("CooldownBlinkyOff/CooldownBlinkyOn")
+tr_icon = NodePath("InputBG/AbilityIconBG/TextureRect")
+spr_icon = NodePath("InputBG/AbilityIconBG/Icon")
+btn_selectReference = NodePath("InputBG/AbilityIconBG/SelectReferenceButton")
+bg_icon = NodePath("InputBG")
+
+[node name="BG" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="bg" type="TileMapLayer" parent="BG"]
+position = Vector2(0, -4)
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAIAAAAAAAEAAAAAAAIAAAAAAAIAAAAAAAIAAAAAAAMAAAAAAAIAAAAAAAQAAAAAAAIAAAAAAAUAAAAAAAIAAAABAAAAAAAAAAIAAAABAAEAAAAAAAIAAAABAAIAAAAAAAIAAAABAAMAAAAAAAIAAAABAAQAAAAAAAIAAAABAAUAAAAAAAIAAAACAAAAAAAAAAIAAAACAAEAAAAAAAIAAAACAAIAAAAAAAIAAAACAAMAAAAAAAIAAAACAAQAAAAAAAIAAAACAAUAAAAAAAIAAAADAAAAAAAAAAIAAAADAAEAAAAAAAIAAAADAAIAAAAAAAIAAAADAAMAAAAAAAIAAAADAAQAAAAAAAIAAAADAAUAAAAAAAIAAAAEAAAAAAAAAAIAAAAEAAEAAAAAAAIAAAAEAAIAAAAAAAIAAAAEAAMAAAAAAAIAAAAEAAQAAAAAAAIAAAAEAAUAAAAAAAIAAAAFAAAAAAAAAAIAAAAFAAEAAAAAAAIAAAAFAAIAAAAAAAIAAAAFAAMAAAAAAAIAAAAFAAQAAAAAAAIAAAAFAAUAAAAAAAIAAAAGAAAAAAAAAAIAAAAGAAEAAAAAAAIAAAAGAAIAAAAAAAIAAAAGAAMAAAAAAAIAAAAGAAQAAAAAAAIAAAAGAAUAAAAAAAIAAAAHAAAAAAAAAAIAAAAHAAEAAAAAAAIAAAAHAAIAAAAAAAIAAAAHAAMAAAAAAAIAAAAHAAQAAAAAAAIAAAAHAAUAAAAAAAIAAAAIAAAAAAAAAAIAAAAIAAEAAAAAAAIAAAAIAAIAAAAAAAIAAAAIAAMAAAAAAAIAAAAIAAQAAAAAAAIAAAAIAAUAAAAAAAIAAAAJAAAAAAAAAAIAAAAJAAEAAAAAAAIAAAAJAAIAAAAAAAIAAAAJAAMAAAAAAAIAAAAJAAQAAAAAAAIAAAAJAAUAAAAAAAIAAAAKAAAAAAAAAAIAAAAKAAEAAAAAAAIAAAAKAAIAAAAAAAIAAAAKAAMAAAAAAAIAAAAKAAQAAAAAAAIAAAAKAAUAAAAAAAIAAAA=")
+tile_set = ExtResource("1_3xq6w")
+
+[node name="Rim" type="TileMapLayer" parent="BG"]
+position = Vector2(0, -4)
+tile_map_data = PackedByteArray("AAAAAAAAAAAEAAAAAAAAAAEAAAAEAAEAAAAAAAMAAAAEAAEAAAAAAAIAAAAEAAEAAAAAAAQAAAAEAAEAAAAAAAUAAAAEAAMAAAABAAUAAAAGAAMAAAACAAUAAAAGAAMAAAADAAUAAAAGAAMAAAAEAAUAAAAGAAMAAAAFAAUAAAAGAAMAAAAGAAUAAAAGAAMAAAAHAAUAAAAGAAMAAAAIAAUAAAAGAAMAAAABAAAAAAAFAAAAAAACAAAAAAAFAAAAAAADAAAAAAAFAAAAAAAEAAAAAAAFAAAAAAAFAAAAAAAFAAAAAAAGAAAAAAAFAAAAAAAHAAAAAAAFAAAAAAAIAAAAAAAFAAAAAAAKAAAAAAAHAAAAAAAKAAEAAAAHAAIAAAAKAAIAAAAHAAIAAAAKAAMAAAAHAAIAAAAKAAQAAAAHAAIAAAAKAAUAAAAHAAMAAAAJAAUAAAAGAAMAAAAJAAAAAAAFAAAAAAA=")
+tile_set = ExtResource("1_3xq6w")
+
+[node name="Main" type="TileMapLayer" parent="BG"]
+position = Vector2(0, -4)
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAABAAAAAAACAAAAAAABAAAAAAADAAAAAAABAAAAAAAEAAAAAAABAAAAAAAFAAAAAAABAAAAAAAGAAAAAAABAAAAAAAHAAAAAAABAAAAAAAIAAAAAAABAAAAAAACAAUAAAAAAAMAAAADAAUAAAACAAMAAAAEAAUAAAACAAMAAAAFAAUAAAACAAMAAAAGAAUAAAACAAMAAAAHAAUAAAACAAMAAAAIAAUAAAACAAMAAAAJAAUAAAACAAMAAAABAAMAAAACAAMAAAACAAMAAAADAAEAAAACAAQAAAAAAAEAAAAAAAIAAAAAAAEAAAAAAAEAAAAAAAEAAAAJAAQAAAAFAAMAAAAJAAMAAAAFAAMAAAAJAAIAAAAFAAMAAAAJAAEAAAAFAAMAAAAJAAAAAAABAAAAAAABAAEAAAAFAAMAAAABAAIAAAAFAAMAAAACAAIAAAAFAAMAAAADAAIAAAAFAAMAAAAEAAIAAAAFAAMAAAAFAAIAAAAFAAMAAAAGAAIAAAAFAAMAAAAHAAIAAAAFAAMAAAAIAAIAAAAFAAMAAAAIAAEAAAAFAAMAAAAHAAEAAAAFAAMAAAAGAAEAAAAFAAMAAAAFAAEAAAAFAAMAAAAEAAEAAAAFAAMAAAADAAEAAAAFAAMAAAACAAEAAAAFAAMAAAADAAMAAAAFAAMAAAADAAQAAAAFAAMAAAAEAAQAAAAFAAMAAAAFAAQAAAAFAAMAAAAGAAQAAAAFAAMAAAAHAAQAAAAFAAMAAAAIAAQAAAAFAAMAAAAIAAMAAAAFAAMAAAAHAAMAAAAFAAMAAAAGAAMAAAAFAAMAAAAFAAMAAAAFAAMAAAAEAAMAAAAFAAMAAAAKAAAAAAADAAAAAAAKAAEAAAADAAIAAAAKAAIAAAADAAIAAAAKAAMAAAADAAIAAAAKAAQAAAADAAIAAAAKAAUAAAADAAMAAAAAAAMAAAAAAAMAAAA=")
+tile_set = ExtResource("1_3xq6w")
+
+[node name="AbilityBlinky" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 49.0
+offset_right = 41.0
+offset_bottom = 67.0
+texture = ExtResource("4_jdlo6")
+
+[node name="AbilityBlinkyOn" type="TextureRect" parent="AbilityBlinky"]
+layout_mode = 0
+offset_right = 14.0
+offset_bottom = 18.0
+texture = ExtResource("5_mm2y6")
+
+[node name="NameBG" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 21.0
+offset_right = 239.0
+offset_bottom = 45.0
+texture = ExtResource("6_ifvkn")
+patch_margin_left = 1
+patch_margin_top = 3
+patch_margin_right = 1
+patch_margin_bottom = 1
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Name" type="Label" parent="NameBG"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 5.0
+offset_right = 213.0
+offset_bottom = 21.0
+theme = ExtResource("7_4isuo")
+theme_type_variation = &"HeaderLarge"
+text = "Ability Name Goes Here..."
+
+[node name="EnergyBar_Case" type="TextureRect" parent="."]
+z_index = 1
+layout_mode = 0
+offset_left = 192.0
+offset_top = 48.0
+offset_right = 238.0
+offset_bottom = 113.0
+texture = ExtResource("9_x17s8")
+
+[node name="EnergyBar" parent="EnergyBar_Case" node_paths=PackedStringArray("label") instance=ExtResource("8_0tj24")]
+z_index = -1
+material = SubResource("ShaderMaterial_jtnig")
+layout_mode = 1
+offset_left = -23.0
+offset_top = -65.0
+offset_right = 23.0
+offset_bottom = 0.0
+resourceName = "Incoming Energy"
+width = 65.0
+offset = 6.0
+label = NodePath("../../MiscBG/Energy/EnergyIconStriped/lbl_energy")
+colorAlt = "lightblue"
+maskTexture = ExtResource("11_g6gak")
+fullTexture = ExtResource("12_rf4fe")
+emptytexture = ExtResource("13_x17s8")
+direction = 2
+addSpaces = false
+addZeroes = true
+decimalPlaces = 1
+
+[node name="SubViewport" parent="EnergyBar_Case/EnergyBar" index="0"]
+size = Vector2i(46, 65)
+
+[node name="FullHealth" parent="EnergyBar_Case/EnergyBar/SubViewport/BarHolder" index="0"]
+texture = ExtResource("12_rf4fe")
+
+[node name="Blinky" type="TextureRect" parent="EnergyBar_Case"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 3.0
+offset_right = 28.0
+offset_bottom = 14.0
+texture = ExtResource("16_kcg4f")
+
+[node name="MiscBG" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 73.0
+offset_top = 70.0
+offset_right = 190.0
+offset_bottom = 115.0
+texture = ExtResource("6_ifvkn")
+patch_margin_left = 1
+patch_margin_top = 3
+patch_margin_right = 1
+patch_margin_bottom = 1
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Ammo" type="Control" parent="MiscBG"]
+anchors_preset = 0
+offset_right = 115.0
+offset_bottom = 44.0
+
+[node name="Magazine" parent="MiscBG/Ammo" instance=ExtResource("16_cclr1")]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 5.0
+offset_right = 89.0
+offset_bottom = 21.0
+
+[node name="Energy" type="Control" parent="MiscBG"]
+anchors_preset = 0
+offset_left = 92.0
+offset_top = 3.0
+offset_right = 116.0
+offset_bottom = 43.0
+
+[node name="EnergyIconStriped" type="TextureRect" parent="MiscBG/Energy"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 16.0
+offset_right = 22.0
+offset_bottom = 39.0
+texture = ExtResource("16_x17s8")
+
+[node name="lbl_energy" type="Label" parent="MiscBG/Energy/EnergyIconStriped"]
+layout_mode = 0
+offset_left = -1.0
+offset_top = -15.0
+offset_right = 21.0
+offset_bottom = -8.0
+theme = ExtResource("7_4isuo")
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 0
+theme_override_font_sizes/font_size = 5
+text = "A"
+autowrap_mode = 1
+
+[node name="MiscText" type="Label" parent="MiscBG"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 89.0
+offset_bottom = 41.0
+theme = ExtResource("7_4isuo")
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 0
+theme_override_font_sizes/font_size = 5
+vertical_alignment = 2
+autowrap_mode = 3
+
+[node name="Assign" type="Button" parent="."]
+visible = false
+z_index = 2
+layout_mode = 0
+offset_left = 10.0
+offset_top = 5.0
+offset_right = 254.0
+offset_bottom = 129.0
+theme = ExtResource("11_pb2ip")
+theme_type_variation = &"AssignmentButton"
+text = "ASSIGN ABILITY
+TO SLOT"
+
+[node name="CooldownBlinkyOff" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 123.0
+offset_top = 51.0
+offset_right = 133.0
+offset_bottom = 62.0
+texture = ExtResource("18_ylxhx")
+
+[node name="CooldownBlinkyOn" type="TextureRect" parent="CooldownBlinkyOff"]
+layout_mode = 0
+offset_right = 10.0
+offset_bottom = 11.0
+texture = ExtResource("19_he02q")
+
+[node name="TimeBG" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 136.0
+offset_top = 46.0
+offset_right = 190.0
+offset_bottom = 69.0
+texture = ExtResource("6_ifvkn")
+patch_margin_left = 1
+patch_margin_top = 3
+patch_margin_right = 1
+patch_margin_bottom = 1
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="CooldownCurrentTime" type="Label" parent="TimeBG"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 4.0
+offset_right = 49.0
+offset_bottom = 20.0
+theme = ExtResource("11_pb2ip")
+theme_type_variation = &"Clock"
+theme_override_font_sizes/font_size = 15
+text = "00.00"
+horizontal_alignment = 2
+
+[node name="InputBG" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 77.0
+offset_right = 64.0
+offset_bottom = 123.0
+texture = ExtResource("3_k6pxm")
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 7
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="AbilityIconBG" type="NinePatchRect" parent="InputBG"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 5.0
+offset_right = 40.0
+offset_bottom = 39.0
+texture = ExtResource("6_ifvkn")
+patch_margin_left = 1
+patch_margin_top = 3
+patch_margin_right = 1
+patch_margin_bottom = 1
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="TextureRect" type="TextureRect" parent="InputBG/AbilityIconBG"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 3.0
+offset_right = 33.0
+offset_bottom = 33.0
+texture = ExtResource("20_fefil")
+stretch_mode = 1
+
+[node name="SelectReferenceButton" type="Button" parent="InputBG/AbilityIconBG"]
+self_modulate = Color(1, 1, 1, 0)
+z_index = 1
+layout_mode = 0
+offset_left = -6.0
+offset_top = -5.0
+offset_right = 40.0
+offset_bottom = 41.0
+
+[node name="Icon" type="Sprite2D" parent="InputBG/AbilityIconBG"]
+position = Vector2(17, 18)
+texture = ExtResource("20_he02q")
+
+[connection signal="pressed" from="Assign" to="." method="_on_assign_pressed"]
+[connection signal="focus_entered" from="InputBG/AbilityIconBG/SelectReferenceButton" to="." method="_on_select_reference_button_focus_entered"]
+[connection signal="focus_exited" from="InputBG/AbilityIconBG/SelectReferenceButton" to="." method="_on_select_reference_button_focus_exited"]
+[connection signal="mouse_entered" from="InputBG/AbilityIconBG/SelectReferenceButton" to="." method="_on_select_reference_button_mouse_entered"]
+[connection signal="mouse_exited" from="InputBG/AbilityIconBG/SelectReferenceButton" to="." method="_on_select_reference_button_mouse_exited"]
+[connection signal="pressed" from="InputBG/AbilityIconBG/SelectReferenceButton" to="." method="_on_select_reference_button_pressed"]
+
+[editable path="EnergyBar_Case/EnergyBar"]

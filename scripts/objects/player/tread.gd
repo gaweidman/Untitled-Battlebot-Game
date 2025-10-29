@@ -1,3 +1,4 @@
+@icon ("res://graphics/images/class_icons/tread.png")
 extends Node3D
 
 class_name TreadContactPoints

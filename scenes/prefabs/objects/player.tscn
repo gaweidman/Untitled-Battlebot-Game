@@ -1,4 +1,4 @@
-[gd_scene load_steps=93 format=3 uid="uid://chfjdkxumme1r"]
+[gd_scene load_steps=94 format=3 uid="uid://chfjdkxumme1r"]
 
 [ext_resource type="Script" uid="uid://p5a4cptl56ad" path="res://scripts/objects/player/player.gd" id="1_u8q0c"]
 [ext_resource type="Script" uid="uid://caotgm5hf1ikf" path="res://scripts/objects/player/tread.gd" id="2_s6ktd"]
@@ -49,7 +49,7 @@
 [ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="32_6g8ao"]
 [ext_resource type="Script" uid="uid://f2utlpnj4kg4" path="res://scripts/GUI/shop_stall.gd" id="33_1l826"]
 [ext_resource type="Script" uid="uid://tpms6gmabjc8" path="res://scripts/GUI/shop.gd" id="33_o11jw"]
-[ext_resource type="Texture2D" uid="uid://blmdrpsajj6f7" path="res://graphics/images/HUD/shop/freezerblinky_off.png" id="34_7p70o"]
+[ext_resource type="Texture2D" uid="uid://blmdrpsajj6f7" path="res://graphics/images/HUD/blinkies/freezerblinky_off.png" id="34_7p70o"]
 [ext_resource type="Texture2D" uid="uid://ppmc64phinum" path="res://graphics/images/HUD/shop/stall_door_left.png" id="34_ddll7"]
 [ext_resource type="Texture2D" uid="uid://dx4xvvlp28d07" path="res://graphics/images/HUD/shop/stall_door_right.png" id="35_7p70o"]
 [ext_resource type="Texture2D" uid="uid://da5mwa6pcphjl" path="res://graphics/images/HUD/engine/inv_selectedPlugIn.png" id="36_a23h3"]
@@ -66,7 +66,7 @@
 [ext_resource type="Texture2D" uid="uid://6qqfwg274ig8" path="res://graphics/images/HUD/shop/reroll_unselected.png" id="47_mh0ri"]
 [ext_resource type="Script" uid="uid://b6qoved8v8p2v" path="res://scripts/GUI/round_timer.gd" id="48_2ma37"]
 [ext_resource type="Texture2D" uid="uid://cmagragsm54en" path="res://graphics/images/HUD/shop/reroll_selected.png" id="48_jgoqw"]
-[ext_resource type="Texture2D" uid="uid://bw5pl1p6bmq61" path="res://graphics/images/HUD/timer_blinky.png" id="49_mh0ri"]
+[ext_resource type="Texture2D" uid="uid://bw5pl1p6bmq61" path="res://graphics/images/HUD/blinkies/timer_blinky_on.png" id="49_mh0ri"]
 [ext_resource type="Script" uid="uid://lq2evtwp8bvg" path="res://scripts/GUI/enemy_progress_bar.gd" id="56_n1h3t"]
 [ext_resource type="Texture2D" uid="uid://csqo5aaepfs34" path="res://graphics/images/HUD/nextRound/progressBar.png" id="57_ltg8k"]
 [ext_resource type="Texture2D" uid="uid://ch72j8sw4gtp" path="res://graphics/images/HUD/shop/freeze_disabled.png" id="58_s6ktd"]
@@ -80,6 +80,7 @@
 [ext_resource type="Shader" uid="uid://b3jc31ntkxnwh" path="res://graphics/shaders/wavyButton.gdshader" id="68_kpcco"]
 [ext_resource type="Texture2D" uid="uid://ckkqo4l53j7nc" path="res://graphics/images/HUD/HudEdge.png" id="69_dbqh0"]
 [ext_resource type="Script" uid="uid://c2wmqa0s4f06n" path="res://scripts/GUI/lbl_hp_refresh.gd" id="73_xxsjn"]
+[ext_resource type="Texture2D" uid="uid://cr16um277it7e" path="res://graphics/images/HUD/blinkies/timer_blinky_off.png" id="76_vgsgu"]
 [ext_resource type="Texture2D" uid="uid://p4kd71ihg6eg" path="res://graphics/images/HUD/inventoryTab/open_unselected.png" id="78_gfej7"]
 [ext_resource type="AudioStream" uid="uid://b7fnytfbwjn5a" path="res://sounds/Movement_Start.ogg" id="78_gyjhe"]
 [ext_resource type="AudioStream" uid="uid://cwlqqaxddwtx7" path="res://sounds/Movement_Drone.ogg" id="79_gfej7"]
@@ -1839,6 +1840,14 @@ text = "00:00"
 horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("48_2ma37")
+
+[node name="TimerBlinkyOff" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Lbl_Timer"]
+layout_mode = 0
+offset_left = -18.0
+offset_top = 7.0
+offset_right = -8.0
+offset_bottom = 18.0
+texture = ExtResource("76_vgsgu")
 
 [node name="TimerBlinky" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Lbl_Timer"]
 layout_mode = 0

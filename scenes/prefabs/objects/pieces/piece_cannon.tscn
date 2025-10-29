@@ -1,13 +1,45 @@
-[gd_scene load_steps=15 format=3 uid="uid://cj7wtreacnxtm"]
+[gd_scene load_steps=23 format=3 uid="uid://cj7wtreacnxtm"]
 
 [ext_resource type="Script" uid="uid://blmbkcjl8udq2" path="res://scripts/objects/pieces/piece_projectile.gd" id="1_f406y"]
+[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_52v1y"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_mjslu"]
+[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_f406y"]
+[ext_resource type="Resource" uid="uid://4easq571wef0" path="res://scenes/prefabs/abilities/ability_cannon_fire.tres" id="4_f406y"]
+[ext_resource type="Resource" uid="uid://beks5dpxmrcok" path="res://scenes/prefabs/abilities/passive/ability_piece_cannon_refreshBullets.tres" id="5_shgbd"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="6_f406y"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_rjpgo"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="8_o54vu"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="9_2dtav"]
 [ext_resource type="ArrayMesh" uid="uid://bxol2x25bhxpg" path="res://graphics/models/obj/botparts/cannon.res" id="9_861xr"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="9_d7xnu"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="10_861xr"]
+
+[sub_resource type="Resource" id="Resource_861xr"]
+script = ExtResource("2_52v1y")
+string = "Shoots"
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_f406y"]
+script = ExtResource("2_52v1y")
+string = "projectiles"
+color = 4
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_shgbd"]
+script = ExtResource("2_52v1y")
+string = "."
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ubwoj"]
 size = Vector2(0.25, 0.25)
@@ -31,10 +63,22 @@ size = Vector3(1, 0.5, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_shgbd"]
 size = Vector3(0.5, 0.5, 1.5)
 
-[node name="Piece_Cannon" type="Node3D" groups=["Piece"]]
+[node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("firingOffsetNode", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder") groups=["Piece"]]
 script = ExtResource("1_f406y")
-force_visibility = true
+firingOffsetNode = NodePath("Meshes/MeshInstance3D/FiringOffset")
 pieceName = &"Cannon"
+descriptionConstructor = Array[ExtResource("2_52v1y")]([SubResource("Resource_861xr"), SubResource("Resource_f406y"), SubResource("Resource_shgbd")])
+weightBase = 10.0
+activeAbilities = Array[ExtResource("3_f406y")]([ExtResource("4_f406y")])
+passiveAbilities = Array[ExtResource("3_f406y")]([ExtResource("5_shgbd")])
+force_visibility = true
+damageBase = 1.0
+knockbackBase = 250.0
+kickbackBase = 250.0
+damageTypes = Array[int]([1])
+hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 engineSlots = {
 Vector2i(1, 2): null,
 Vector2i(1, 3): null,
@@ -44,8 +88,7 @@ Vector2i(2, 3): null,
 Vector2i(3, 2): null,
 Vector2i(3, 3): null
 }
-damageBase = 1.0
-damageTypes = Array[int]([1])
+filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_cannon.tscn"
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"
@@ -67,6 +110,7 @@ script = ExtResource("7_rjpgo")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
 editor_description = "Leave this node empty. "
+script = ExtResource("9_d7xnu")
 
 [node name="Meshes" type="Node3D" parent="."]
 editor_description = "Put any and all mesh instances in here."
@@ -117,6 +161,9 @@ surface_material_override/0 = SubResource("StandardMaterial3D_ts5ym")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0.25, 0)
 mesh = ExtResource("9_861xr")
+
+[node name="FiringOffset" type="Node3D" parent="Meshes/MeshInstance3D"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0.25)
 
 [node name="PieceCollisionBox" parent="." instance=ExtResource("10_861xr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)

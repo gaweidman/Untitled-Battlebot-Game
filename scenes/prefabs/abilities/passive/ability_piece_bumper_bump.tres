@@ -1,0 +1,65 @@
+[gd_resource type="Resource" script_class="AbilityManager" load_steps=8 format=3 uid="uid://lvlt1lrsidrr"]
+
+[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_pgf2u"]
+[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_sd1et"]
+
+[sub_resource type="Resource" id="Resource_qe5pu"]
+script = ExtResource("1_pgf2u")
+string = "Bumps enemies within range, dealing a small amount of"
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_pky5t"]
+script = ExtResource("1_pgf2u")
+string = "knockback"
+color = 6
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_g4t8k"]
+script = ExtResource("1_pgf2u")
+string = "to them."
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_kskf6"]
+script = ExtResource("1_pgf2u")
+string = "Has a small amount of "
+color = 1
+newline = true
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_2hj47"]
+script = ExtResource("1_pgf2u")
+string = "kickback."
+color = 6
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[resource]
+script = ExtResource("2_sd1et")
+abilityName = "Bump"
+abilityDescriptionConstructor = Array[ExtResource("1_pgf2u")]([SubResource("Resource_qe5pu"), SubResource("Resource_pky5t"), SubResource("Resource_g4t8k"), SubResource("Resource_kskf6"), SubResource("Resource_2hj47")])
+abilityDescription = "Bum"
+energyCost = 0.0
+cooldownTimeBase = 0.15
+cooldownStatName = "ContactCooldown"
+runType = 2
+functionNameWhenUsed = &""
+statsUsed = Array[String]([])
+initialized = false
+disabled = false
+functionWhenUsed = Callable()
+metadata/_custom_type_script = "uid://crpa3dbgxwyeg"

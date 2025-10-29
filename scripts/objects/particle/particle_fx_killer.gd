@@ -1,6 +1,8 @@
+@icon ("res://graphics/images/class_icons/particleEffect.png")
 extends Node3D
 
 class_name ParticleEffect
+## A node which holds a series of [GPUParticles3D]. When they're all done firing, this node deletes itself.
 
 var checkTimer := 1.0;
 var nodeToFollow : Node3D;
