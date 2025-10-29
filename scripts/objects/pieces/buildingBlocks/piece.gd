@@ -1,3 +1,4 @@
+
 @icon ("res://graphics/images/class_icons/piece.png")
 
 extends StatHolder3D
@@ -8,23 +9,25 @@ class_name Piece
 
 ########## STANDARD GODOT PROCESSING FUNCTIONS
 func _ready():
-	#if pieceName == "BodyCube":
-		#print("BODYCUBE IS READYING!")
-	hide();
-	declare_names();
-	assign_references();
-	ability_validation();
-	ability_registry();
-	regen_namedActions(); ## Regenerates the actions list
-	super(); #Stat registry.
-	gather_colliders_and_meshes();
+	if ! Engine.is_editor_hint():
+		#if pieceName == "BodyCube":
+			#print("BODYCUBE IS READYING!")
+		hide();
+		declare_names();
+		assign_references();
+		ability_validation();
+		ability_registry();
+		regen_namedActions(); ## Regenerates the actions list
+		super(); #Stat registry.
+		gather_colliders_and_meshes();
 
 func _physics_process(delta):
-	super(delta);
-	if not is_paused():
-		phys_process_timers(delta);
-		phys_process_collision(delta);
-		phys_process_abilities(delta);
+	if ! Engine.is_editor_hint():
+		super(delta);
+		if not is_paused():
+			phys_process_timers(delta);
+			phys_process_collision(delta);
+			phys_process_abilities(delta);
 
 func _process(delta):
 	process_draw(delta);
@@ -196,8 +199,11 @@ func phys_process_timers(delta):
 	##tick down hitbox timer.
 	hitboxRescaleTimer -= 1;
 	##Tick down ability cooldowns.
-	for ability in get_all_abilities():
-		ability.tick_cooldown(delta);
+	if is_equipped():
+		var bot = get_host_robot();
+		if bot.is_conscious():
+			for ability in get_all_abilities():
+				ability.tick_cooldown(delta);
 	pass;
 
 func phys_process_pre(delta):

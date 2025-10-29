@@ -1,3 +1,4 @@
+
 @icon ("res://graphics/images/class_icons/socket.png")
 extends Node3D
 
@@ -21,15 +22,16 @@ var previewPlaceable := false;
 ##If occupant is null, it is assumed to be empty and able to be plugged in.
 
 func _ready():
-	if invisibleInGame:
-		$FemaleConnector.hide();
-	if is_instance_valid(hostPiece):
-		hostPiece.register_socket(self);
-	else:
-		#queue_free();
-		pass;
-	collisionSphere.shape = collisionSphere.shape.duplicate();
-	collisionSphere.shape.radius = collisionScale;
+	if ! Engine.is_editor_hint():
+		if invisibleInGame:
+			$FemaleConnector.hide();
+		if is_instance_valid(hostPiece):
+			hostPiece.register_socket(self);
+		else:
+			#queue_free();
+			pass;
+		collisionSphere.shape = collisionSphere.shape.duplicate();
+		collisionSphere.shape.radius = collisionScale;
 
 ####################### SETUP LOAD
 
@@ -172,6 +174,7 @@ var selected = false;
 var selectionCheckLoop = 3;
 
 func _process(delta):
+	if Engine.is_editor_hint(): return;
 	selectionCheckLoop -= 1;
 	if selectionCheckLoop <= 0:
 		valid = is_valid();
@@ -230,7 +233,8 @@ func _process(delta):
 	
 
 func _physics_process(delta):
-	calc_preview_placeable();
+	if ! Engine.is_editor_hint():
+		calc_preview_placeable();
 
 var hoverResetFrameCounter := 0;
 

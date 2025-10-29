@@ -24,9 +24,12 @@ func emit():
 
 func _process(delta):
 	if is_instance_valid(nodeToFollow):
-		if nodeToFollow.is_visible_in_tree():
-			global_position = nodeToFollow.global_position + posOffset;
-			rotation = nodeToFollow.rotation;
+		if nodeToFollow.is_inside_tree():
+			if nodeToFollow.is_visible_in_tree():
+				global_position = nodeToFollow.global_position + posOffset;
+				rotation = nodeToFollow.rotation;
+		else:
+			start_free();
 	
 	if checkTimer > 0:
 		checkTimer -= delta;

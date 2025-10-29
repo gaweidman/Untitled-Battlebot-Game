@@ -16,7 +16,7 @@
 [ext_resource type="Script" uid="uid://ceadpmi0boxfx" path="res://scripts/objects/camera_follower.gd" id="8_yvtic"]
 [ext_resource type="Script" uid="uid://t4858sodg0x3" path="res://makers/makerCam.gd" id="9_uy74y"]
 [ext_resource type="Texture2D" uid="uid://dmmyrbfw14p04" path="res://graphics/images/HUD/camera_control_enabled.png" id="10_pwi61"]
-[ext_resource type="Theme" uid="uid://8f0fg65uxivb" path="res://graphics/images/HUD/digital_button.tres" id="10_yvtic"]
+[ext_resource type="Theme" uid="uid://tcelcj32ux4o" path="res://graphics/images/HUD/digital_button.tres" id="10_yvtic"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_8384o"]
 

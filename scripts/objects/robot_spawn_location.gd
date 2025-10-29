@@ -1,14 +1,37 @@
 @icon("res://graphics/images/class_icons/spawnLocation.png")
-extends ShapeCast3D
+extends Node3D
 
 class_name RobotSpawnLocation
 
-func check_is_unoccupied():
-	if newEnemy != null:
-		return false;
-	force_shapecast_update();
-	if is_colliding():
-		for result in collision_result:
+var cast : ShapeCast3D;
+var decal : Decal;
+var is_ready = false;
+@export var casterShape = preload("res://scenes/prefabs/arenas/spawningLocationRayShape.tres");
+@export var decalTexture = preload("res://graphics/images/HUD/enemyPing.png");
+
+func _ready():
+	var newCast = ShapeCast3D.new();
+	newCast.shape = casterShape;
+	add_child(newCast);
+	cast = newCast;
+	
+	var newDecal = Decal.new();
+	newDecal.size = Vector3(3,0.75,3);
+	newDecal.texture_albedo = decalTexture;
+	add_child(newDecal);
+	decal = newDecal;
+	decal.position.y = -0.5;
+	
+	is_ready = true;
+
+func check_is_unoccupied() -> bool:
+	if !is_ready: return false;
+	if newEnemy != null: return false;
+	if !is_instance_valid(cast): return false;
+	
+	#cast.force_shapecast_update();
+	if cast.is_colliding():
+		for result in cast.collision_result:
 			if result.collider is RobotBody:
 				return false;
 	return true;

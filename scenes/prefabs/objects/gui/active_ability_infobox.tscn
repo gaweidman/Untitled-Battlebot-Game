@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dy07swne0b8h0"]
 
-[ext_resource type="Theme" uid="uid://8f0fg65uxivb" path="res://graphics/images/HUD/digital_button.tres" id="1_km24x"]
+[ext_resource type="Theme" uid="uid://tcelcj32ux4o" path="res://graphics/images/HUD/digital_button.tres" id="1_km24x"]
 [ext_resource type="Script" uid="uid://cs7564wakx0ln" path="res://scripts/GUI/active_ability_infobox.gd" id="1_mmcvq"]
 [ext_resource type="Texture2D" uid="uid://bwiv2trs8p6vk" path="res://graphics/images/HUD/buttonGFX/digitalOutline_normal.png" id="3_fgv2p"]
 [ext_resource type="PackedScene" uid="uid://c3xdylsv62lyp" path="res://scenes/prefabs/objects/gui/separator.tscn" id="5_mxt8i"]

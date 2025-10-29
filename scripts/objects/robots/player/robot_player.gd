@@ -25,6 +25,9 @@ func grab_references():
 		if !is_instance_valid(engineViewer):
 			engineViewer = GameState.get_engine_viewer();
 
+func is_conscious():
+	return super() and hasPlayerControl;
+
 
 ######################## INPUT MANAGEMENT
 
@@ -84,10 +87,11 @@ func get_movement_vector(rotatedByCamera : bool = true) -> Vector2:
 		movementVectorRotation = movementVector.angle();
 	return movementVector.normalized();
 
+var hasPlayerControl := false;
 func is_inputting_movement() -> bool:
 	inputtingMovementThisFrame = false;
 	#print("ASDASDASD")
-	if GameState.get_in_state_of_play() and is_conscious():
+	if GameState.get_in_state_of_play() and is_conscious() and hasPlayerControl:
 		if Input.is_action_pressed("MoveLeft"):
 			inputtingMovementThisFrame = true;
 			return inputtingMovementThisFrame;
@@ -128,6 +132,28 @@ func die():
 	#print("Searching for Sockets ", Utils.get_all_children(self).size())
 	#print("Searching for Sockets, checking ownership ", Utils.get_all_children(self, self).size())
 	#print(Utils.get_all_children(self, self))
+
+##Fired by the gameboard when the round starts.
+func start_round():
+	super();
+	enable_player_control(true);
+##Fired by the gameboard when the round ends.
+func end_round():
+	super();
+	enable_player_control(false);
+
+##Fired by the gameboard when the shop gets opened.
+func enter_shop():
+	super();
+	pass;
+##Fired by the gameboard when the shop gets closed.
+func exit_shop():
+	super();
+	enable_player_control(false);
+	pass;
+
+func enable_player_control(foo:bool):
+	hasPlayerControl = foo;
 
 #################### COMBAT HANDLING
 

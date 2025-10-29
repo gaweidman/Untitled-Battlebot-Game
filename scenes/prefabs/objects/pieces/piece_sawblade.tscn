@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="6_r0nuw"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="7_3l8sh"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="8_8yny5"]
-[ext_resource type="Script" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="8_j66hk"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="8_j66hk"]
 [ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="11_erqxd"]
 [ext_resource type="Material" path="res://graphics/images/models/arena_wall/newsawblade.tres" id="11_j66hk"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="12_k1jne"]

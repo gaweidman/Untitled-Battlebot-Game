@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctjpou0f3m7go"]
+
+[ext_resource type="MeshLibrary" uid="uid://dfcf27yiqyoqb" path="res://scenes/prefabs/arenas/wall-pieces/ModularWallsMap.tres" id="1_ed337"]
+[ext_resource type="Script" uid="uid://cl56lvmx2jfa7" path="res://scripts/objects/arenas/wallgridmap.gd" id="2_edefw"]
+
+[node name="ModularWallGridmap" type="GridMap"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.812, -0.375, -0.812)
+mesh_library = ExtResource("1_ed337")
+cell_size = Vector3(1.625, 3.25, 1.625)
+data = {
+"cells": PackedInt32Array(0, 0, 655387)
+}
+script = ExtResource("2_edefw")
+metadata/_editor_floor_ = Vector3(0, 0, 0)

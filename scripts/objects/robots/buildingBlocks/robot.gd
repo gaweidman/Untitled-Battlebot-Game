@@ -1,3 +1,4 @@
+
 @icon ("res://graphics/images/class_icons/robot.png")
 extends StatHolder3D;
 
@@ -18,30 +19,33 @@ var camera : Camera;
 
 ################################## GODOT PROCESSING FUNCTIONS
 func _ready():
-	hide();
-	load_from_startup_generator();
-	grab_references();
-	super();
-	grab_references();
-	regen_piece_tree_stats();
-	detach_pipette();
-	freeze(true, true);
-	start_all_cooldowns(true);
-	update_stash_hud();
+	if ! Engine.is_editor_hint():
+		hide();
+		load_from_startup_generator();
+		grab_references();
+		super();
+		grab_references();
+		regen_piece_tree_stats();
+		detach_pipette();
+		freeze(true, true);
+		start_all_cooldowns(true);
+		update_stash_hud();
 
 func _process(delta):
-	process_pre(delta);
-	if spawned and is_ready:
-		process_hud(delta);
+	if ! Engine.is_editor_hint():
+		process_pre(delta);
+		if spawned and is_ready:
+			process_hud(delta);
 	pass
 
 func _physics_process(delta):
-	#motion_process()
-	super(delta);
-	if spawned and is_ready:
-		phys_process_collision(delta);
-		phys_process_motion(delta);
-		phys_process_combat(delta);
+	if ! Engine.is_editor_hint():
+		#motion_process()
+		super(delta);
+		if spawned and is_ready:
+			phys_process_collision(delta);
+			phys_process_motion(delta);
+			phys_process_combat(delta);
 	pass
 
 ##Process and Physics process that run before anything else.
@@ -243,9 +247,16 @@ func start_new_game():
 ##Fired by the gameboard when the round ends.
 func end_round():
 	pass;
+##Fired by the gameboard when the round starts.
+func start_round():
+	pass;
 ##Fired by the gameboard when the shop gets opened.
 ##In here and not in the player subset... just in case.
 func enter_shop():
+	pass;
+##Fired by the gameboard when the shop gets closed.
+##In here and not in the player subset... just in case.
+func exit_shop():
 	pass;
 
 ##Function run when the bot first spawns in.

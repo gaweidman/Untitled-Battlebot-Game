@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://bgtkchcutayjv" path="res://scripts/GUI/piece_inspector.gd" id="2_e2kem"]
 [ext_resource type="TileSet" uid="uid://dicxuohkdpmlx" path="res://graphics/images/HUD/engine/engineTileMap.tres" id="3_5nxix"]
 [ext_resource type="PackedScene" uid="uid://c3xdylsv62lyp" path="res://scenes/prefabs/objects/gui/separator.tscn" id="3_gqx4l"]
-[ext_resource type="Theme" uid="uid://8f0fg65uxivb" path="res://graphics/images/HUD/digital_button.tres" id="5_rirx1"]
+[ext_resource type="Theme" uid="uid://tcelcj32ux4o" path="res://graphics/images/HUD/digital_button.tres" id="5_rirx1"]
 [ext_resource type="Texture2D" uid="uid://b80sl2txym55l" path="res://graphics/images/HUD/statIcons/piecePartIconStriped.png" id="6_gqx4l"]
 [ext_resource type="Script" uid="uid://cdymr1vwdiwxo" path="res://scripts/GUI/info_box.gd" id="8_o1n0x"]
 [ext_resource type="Texture2D" uid="uid://drjmrl4v24oq6" path="res://graphics/images/HUD/infobox/typeIcons/info_melee.png" id="9_wpo43"]

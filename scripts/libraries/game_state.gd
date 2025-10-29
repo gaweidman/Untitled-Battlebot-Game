@@ -479,6 +479,8 @@ func init_screen_transition():
 	screenTransition = canvas.transition;
 	
 	init_screen_transition_vanity();
+	
+	
 
 func init_screen_transition_vanity():
 	transitionCanvas.initialize();
@@ -502,9 +504,18 @@ func change_scenes():
 
 func hit_center():
 	Hooks.OnScreenTransition(ScreenTransition.mode.CENTER);
+	
+	var brd = get_game_board();
+	if brd != null:
+		brd.screen_transition(ScreenTransition.mode.CENTER);
+	
 	change_scenes();
 func hit_right():
 	Hooks.OnScreenTransition(ScreenTransition.mode.RIGHT);
+	
+	var brd = get_game_board();
+	if brd != null:
+		brd.screen_transition(ScreenTransition.mode.RIGHT);
 
 func make_screen_transition_leave():
 	screenTransition.leave();

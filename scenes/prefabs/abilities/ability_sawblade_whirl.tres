@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="AbilityManager" load_steps=9 format=3 uid="uid://cmw2cjlyx2jfh"]
 
-[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="1_0ldao"]
+[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_0ldao"]
 [ext_resource type="Texture2D" uid="uid://d0ha035m170v" path="res://graphics/images/HUD/parts/Icons/Sawblade.png" id="2_pbcqu"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_7rl4w"]
 
