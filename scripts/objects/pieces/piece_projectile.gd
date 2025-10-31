@@ -51,7 +51,10 @@ func phys_process_timers(delta):
 	
 	super(delta);
 	
-	leakTimer -= delta;
+	if ! is_frozen():
+		leakTimer -= delta;
+		if leakTimer > -999 and leakTimer < 0:
+			leak_timer_timeout();
 
 func assign_references():
 	super();

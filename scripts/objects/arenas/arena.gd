@@ -8,7 +8,7 @@ class_name Arena
 @export var variantsFromScene : Dictionary[String, ArenaObstacleGrid] = {};
 var variants : Dictionary[String, ArenaObstacleGrid] = {};
 var obstaclesNode : ArenaObstacleGrid;
-var currentVariant := "Empty";
+var currentVariant := "None";
 var usedVariants := [];
 
 func _ready():
@@ -32,6 +32,10 @@ func prep_dict():
 	variantsFromFile.clear();
 	variantsFromScene.clear();
 
+func destroy_current_obstacles():
+	if is_instance_valid(obstaclesNode):
+		obstaclesNode.queue_free();
+
 func get_current_variant():
 	return currentVariant;
 
@@ -44,26 +48,33 @@ func load_variant(nameOfVariant := currentVariant) -> int:
 			
 			if is_instance_valid(obstaclesVariant):
 				if obstaclesVariant is ArenaObstacleGrid:
-					## Reset spawning locations, since the new variant may have new ones.
-					
+					## Reset spawning locations, since the new variant is likely to have new ones.
 					clear_spawning_locations();
 					
-					## Delete the old.
-					if is_instance_valid(obstaclesNode):
-						obstaclesNode.get_parent().remove_child(obstaclesNode);
+					var new = obstaclesVariant.duplicate();
 					
-					add_child(obstaclesVariant, true);
-					
-					obstaclesNode = obstaclesVariant;
-					
-					currentVariant = nameOfVariant;
-					
-					if obstaclesNode is ArenaObstacleGrid:
+					if new is ArenaObstacleGrid:
+						
+						## Delete the old obstacles.
+						destroy_current_obstacles();
+						
+						add_child(new, true);
+						
+						## Set these obstacles as current.
+						obstaclesNode = new;
+						
+						## Set this variant's name as current.
+						currentVariant = nameOfVariant;
+						
+						## Return the amount of obstacles.
 						print("STATE: STARTING BUILDING NOW")
 						pauseAmt = obstaclesNode.start_building_sequence();
+						
 	else:
 		pass;
 	print("STATE: Arena variant went from ",currentVariant, " to ",nameOfVariant)
+	
+	reset_spawning_locations();
 	return pauseAmt;
 
 func load_new_random_variant() -> int:
@@ -71,6 +82,10 @@ func load_new_random_variant() -> int:
 	var newVar = get_random_variant(usedVariants);
 	print("STATE: Loading new RANDOM variant.")
 	return load_variant(newVar);
+
+func clear_used_variants():
+	usedVariants = [];
+	currentVariant = "Empty";
 
 ## Gets a random variant key from [member variants], excluding* "empty".[br][br]
 ## * "empty" will be returned if it's the only key in there, or if the table is emptied, for debug purposes.
@@ -87,6 +102,7 @@ func get_random_variant(exclusions := []):
 	return keys.pop_front();
 
 
+
 ####### SPAWNING STUFF
 @export var spawningLocations : Array[RobotSpawnLocation] = [];
 
@@ -94,10 +110,11 @@ func clear_spawning_locations():
 	spawningLocations = [];
 
 func reset_spawning_locations():
-	spawningLocations = [];
+	clear_spawning_locations();
 	for child in Utils.get_all_children(self):
 		if child is RobotSpawnLocation:
 			spawningLocations.append(child);
+	print("STATE: RESETTING ARENA SPAWNERS: ",spawningLocations.size())
 	return spawningLocations;
 
 func get_spawning_locations():

@@ -42,16 +42,42 @@ radius = 0.75
 [node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "hitboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_gm1wa")
 swivelNode = NodePath("Meshes/SwivelTop")
+rotationSpeed = null
 movingSockets = [NodePath("Meshes/SwivelTop/Socket")]
+axisOfRotation = null
+deltaMultiplier = null
+weightPenalty = null
+weightPenaltyBaseMult = null
 pieceName = &"BodyCube"
+descriptionConstructor = null
 pieceDescription = ""
+isBody = null
+removable = null
 weightBase = 23.0
+scrapCostBase = null
+scrapSellModifierBase = null
+scrapSalvageModifierBase = null
+activeAbilities = null
 passiveAbilities = Array[ExtResource("2_xcdtu")]([ExtResource("4_dbydh"), ExtResource("2_h4kss")])
+hurtboxAlwaysEnabled = null
+energyDrawPassiveMultiplier = null
+energyDrawActiveMultiplier = null
+energyDrawActiveBaseOverride = null
+energyDrawPassiveBaseOverride = null
+passiveCooldownTimeMultiplier = null
+activeCooldownTimeMultiplier = null
 force_visibility = true
+damageBase = null
+knockbackBase = null
+kickbackBase = null
+damageTypes = null
+disableHitboxesWhileOnCooldown = null
+contactCooldown = null
 meshesHolder = NodePath("Meshes")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
+assignedToSocket = null
 engineSlots = {
 Vector2i(0, 1): null,
 Vector2i(0, 2): null,
@@ -75,7 +101,9 @@ Vector2i(4, 1): null,
 Vector2i(4, 2): null,
 Vector2i(4, 3): null
 }
+statCollection = null
 filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn"
+AudioSourceType = null
 
 [node name="FemaleSockets" type="Node3D" parent="."]
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"

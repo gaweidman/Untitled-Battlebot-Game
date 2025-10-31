@@ -20,6 +20,7 @@ var vOffset := 0.0;
 @export var zoomLevelBase := 1.0;
 var targetZoomLevel := zoomLevelBase;
 var currentZoomLevel := zoomLevelBase;
+var zoomLevelMultiplier := 1.0;
 
 var inputOffset : Vector3;
 var targetInputOffset : Vector3;
@@ -103,7 +104,7 @@ func _physics_process(delta):
 			if GameState.get_in_state_of_play():
 				var pitching := false;
 				var zooming := false;
-				if (Input.is_action_pressed("CameraTiltModeKey") and in_camera_tilt_state()):
+				if (Input.is_action_pressed("CameraTiltModeKey") and (in_camera_tilt_state(camTiltStates.PLAY) or in_camera_tilt_state(camTiltStates.MAKER))):
 					if Input.is_action_pressed("CameraPitchUp") or Input.is_action_pressed("CameraPitchDown"):
 						if rotXspeed < 4: 
 							rotXspeed += 0.1
@@ -118,14 +119,14 @@ func _physics_process(delta):
 					zooming = true;
 					targetZoomLevel += zoomSpeed * delta
 				
-				if in_camera_tilt_state():
+				if in_camera_tilt_state(camTiltStates.PLAY) or in_camera_tilt_state(camTiltStates.MAKER):
 					if Input.is_action_pressed("CameraPitchUp"):
 						pitching = true;
 						targetRotationX += rotXspeed * delta
 					if Input.is_action_pressed("CameraPitchDown"):
 						pitching = true;
 						targetRotationX += -rotXspeed * delta
-				else:
+				elif in_camera_tilt_state(camTiltStates.NONE):
 					targetRotationX = lerp_angle(targetRotationX, XRotInPlay, 15.0 * delta);
 				
 				if not (pitching or zooming):
@@ -146,7 +147,10 @@ func _physics_process(delta):
 				targetRotationY += 0.1 * delta;
 				targetRotationX = lerp_angle(targetRotationX, 0.0, 5.0 * delta);
 		
-		targetRotationX = clamp(targetRotationX, deg_to_rad(-30), deg_to_rad(30))
+		if in_camera_tilt_state(camTiltStates.MAKER):
+			targetRotationX = clamp(targetRotationX, deg_to_rad(-30 -30 -30 -30 -30), deg_to_rad(30));
+		else:
+			targetRotationX = clamp(targetRotationX, deg_to_rad(-30), deg_to_rad(30));
 		
 		positionParent.rotation.y = lerp_angle(positionParent.rotation.y, targetRotationY, delta * 30)
 		
@@ -156,9 +160,14 @@ func _physics_process(delta):
 		currentRotationX = positionParent.rotation.x;
 		currentRotationY = positionParent.rotation.y;
 		
-		
-		targetZoomLevel = clamp(targetZoomLevel, 0.5, 1.15);
-		currentZoomLevel = lerp(currentZoomLevel, targetZoomLevel, delta * 30);
+		zoomLevelMultiplier = 1.0;
+		if in_camera_tilt_state(camTiltStates.MAKER):
+			targetZoomLevel = clamp(targetZoomLevel, 0.25, 0.5);
+			if targetNode is Piece:
+				zoomLevelMultiplier = 0.75;
+		else:
+			targetZoomLevel = clamp(targetZoomLevel, 0.5, 1.15);
+		currentZoomLevel = lerp(currentZoomLevel, targetZoomLevel * zoomLevelMultiplier, delta * 30);
 	
 	
 	
@@ -183,7 +192,7 @@ func _input(event):
 					if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 						targetZoomLevel += 0.1
 						# call the zoom function
-				elif Input.is_action_pressed("CameraTiltModeKey") and in_camera_tilt_state():
+				elif Input.is_action_pressed("CameraTiltModeKey"):
 					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 						targetRotationX += 0.1
 						# call the zoom function
@@ -201,13 +210,28 @@ func _input(event):
 						targetRotationY -= 0.1
 						# call the zoom function
 
+enum camTiltStates {
+	PLAY,
+	MAKER,
+	NONE,
+}
+var tiltState := camTiltStates.NONE;
+func in_camera_tilt_state(state := camTiltStates.NONE) -> bool:
+	calc_camera_tilt_state();
+	return state == tiltState;
 
-func in_camera_tilt_state():
-	return true;
-	return GameState.get_in_state_of_building();
+func calc_camera_tilt_state():
+	if GameState.get_in_state_of_building():
+		tiltState = camTiltStates.MAKER;
+		return;
+	if GameState.get_in_state_of_play():
+		tiltState = camTiltStates.PLAY;
+		return;
+	tiltState = camTiltStates.NONE;
+	return;
 
 func get_camera_offset():
-	return cameraOffset * currentZoomLevel;
+	return cameraOffset * currentZoomLevel * zoomLevelMultiplier;
 
 func get_v_offset_vector():
 	return Vector3(vOffset, 0.0, 0.0).rotated(Vector3(0,1,0), currentRotationY);

@@ -6,12 +6,14 @@ class_name Robot_Player
 var gameHUD : GameHUD;
 var barHP : HealthBar;
 var barEnergy : HealthBar;
+@export var roundTimeRegen := 30.0;
 
 func _ready():
 	super();
 
 func stat_registry():
 	super();
+	register_stat("RoundTimeRegen", roundTimeRegen, statIconCooldown);
 
 func grab_references():
 	super();
@@ -24,6 +26,7 @@ func grab_references():
 			barEnergy = GameState.get_bar_energy();
 		if !is_instance_valid(engineViewer):
 			engineViewer = GameState.get_engine_viewer();
+
 
 func is_conscious():
 	return super() and hasPlayerControl;
@@ -141,9 +144,11 @@ func start_round():
 func end_round():
 	super();
 	enable_player_control(false);
+	GameState.add_death_time(get_stat("RoundTimeRegen"));
 
 ##Fired by the gameboard when the shop gets opened.
 func enter_shop():
+	drain_all_energy();
 	super();
 	pass;
 ##Fired by the gameboard when the shop gets closed.

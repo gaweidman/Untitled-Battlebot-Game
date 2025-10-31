@@ -91,4 +91,4 @@ func is_on_center():
 func is_greater_than_center():
 	return position.x > centerPos;
 func is_on_right():
-	return is_equal_approx(position.x, rightPos);
+	return position.x >= rightPos or is_equal_approx(position.x, rightPos);

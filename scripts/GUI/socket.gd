@@ -181,8 +181,8 @@ func _process(delta):
 		selectionCheckLoop = 3;
 		if hoverResetFrameCounter <= 0:
 			#print_rich("MAN")
-			if hovering:
-				print_rich("MAN")	
+			#if hovering:
+				#print_rich("MAN")
 			hover(false);
 		#
 		#var vp = get_viewport()

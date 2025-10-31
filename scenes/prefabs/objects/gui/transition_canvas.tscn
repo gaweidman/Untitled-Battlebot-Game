@@ -4,13 +4,14 @@
 [ext_resource type="PackedScene" uid="uid://cs2mrdrvsoacs" path="res://scenes/prefabs/objects/gui/screen_transition.tscn" id="2_mgg5e"]
 [ext_resource type="FontFile" uid="uid://doo4kfsytv2c1" path="res://graphics/font/ScrapFives.ttf" id="3_nploq"]
 
-[node name="TransitionCanvas" type="CanvasLayer" node_paths=PackedStringArray("transition", "loadingGear", "logo", "lbl_companyName")]
+[node name="TransitionCanvas" type="CanvasLayer" node_paths=PackedStringArray("transition", "loadingGear", "logo", "lbl_companyName", "modulator")]
 layer = 5
 script = ExtResource("1_e8jfm")
 transition = NodePath("ScreenTransition")
 loadingGear = NodePath("LoadingGear")
 logo = NodePath("LoadingGear")
 lbl_companyName = NodePath("Label")
+modulator = NodePath("CanvasModulate")
 
 [node name="ScreenTransition" parent="." instance=ExtResource("2_mgg5e")]
 z_index = 0
@@ -46,3 +47,5 @@ theme_override_font_sizes/font_size = 25
 text = "> METAL CHIMERA_
 > 
 > PRESENTING"
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]

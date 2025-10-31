@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cacpmbuy5ck50"]
+[gd_scene load_steps=7 format=3 uid="uid://cacpmbuy5ck50"]
 
 [ext_resource type="Script" uid="uid://rmvurwv62myf" path="res://scripts/objects/arenas/arena.gd" id="1_fqfej"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="1_vul8q"]
+[ext_resource type="Material" uid="uid://hjfve5f811g3" path="res://graphics/materials/models/bots/tread.tres" id="2_17ken"]
 [ext_resource type="PackedScene" uid="uid://ctjpou0f3m7go" path="res://scenes/prefabs/arenas/wallgridmap_empty.tscn" id="3_luad7"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_g7l54"]
@@ -11,20 +12,23 @@ size = Vector2(6, 6)
 
 [node name="Workshop" type="Node3D" node_paths=PackedStringArray("variantsFromScene")]
 script = ExtResource("1_fqfej")
+fallbackCameraPosition = Vector3(0, 15, 0)
 variantsFromFile = Dictionary[String, String]({})
 variantsFromScene = {
-"Base": NodePath("Ob_Base"),
+"Base": NodePath("Ob_Base2"),
 "Empty": NodePath("Ob_Empty")
 }
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
-collision_layer = 1289
-collision_mask = 1025
+collision_layer = 1288
+collision_mask = 1024
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("WorldBoundaryShape3D_g7l54")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(4.3482, 0, 0, 0, 1, 0, 0, 0, 4.3482, 0, 0, 0)
+material_override = ExtResource("2_17ken")
 mesh = SubResource("PlaneMesh_vul8q")
 
 [node name="Area3D" type="Area3D" parent="."]
@@ -35,9 +39,12 @@ metadata/_custom_type_script = "uid://bkwxna02gqgqu"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 shape = SubResource("WorldBoundaryShape3D_g7l54")
 
-[node name="Ob_Base" parent="." instance=ExtResource("3_luad7")]
+[node name="Ob_Empty" parent="." instance=ExtResource("3_luad7")]
 data = {
-"cells": PackedInt32Array(65528, 65528, 655365, 65528, 65530, 1048583, 65528, 65532, 1048583, 65528, 65534, 1048583, 65528, 0, 1048583, 65528, 2, 1048583, 65528, 4, 1048583, 65528, 6, 1441799, 65528, 8, 1441797, 8, 65528, 1048581, 8, 65530, 1441799, 8, 65532, 1441799, 8, 65534, 1441799, 8, 0, 1441799, 8, 2, 1441799, 8, 4, 1441799, 8, 6, 1441799, 8, 8, 5, 65530, 65528, 7, 65530, 8, 655367, 65532, 65528, 7, 65532, 8, 655367, 65534, 65528, 7, 65534, 8, 655367, 0, 65528, 7, 0, 8, 655367, 2, 65528, 7, 2, 8, 655367, 4, 65528, 7, 4, 8, 655367, 6, 8, 655367, 6, 65528, 655367, 0, 0, 655387)
+"cells": PackedInt32Array(0, 0, 655387)
 }
 
-[node name="Ob_Empty" parent="." instance=ExtResource("3_luad7")]
+[node name="Ob_Base2" parent="." instance=ExtResource("3_luad7")]
+data = {
+"cells": PackedInt32Array(65528, 65528, 655365, 65528, 65530, 1048583, 65528, 65534, 1048583, 65528, 0, 1048583, 65528, 2, 1048583, 65528, 4, 1048583, 65528, 6, 1441799, 65528, 8, 1441797, 8, 65528, 1048581, 8, 65530, 1441799, 8, 65532, 1441799, 8, 65534, 1441799, 8, 0, 1441799, 8, 2, 1441799, 8, 4, 1441799, 8, 6, 1441799, 8, 8, 5, 65530, 65528, 7, 65530, 8, 655367, 65532, 65528, 7, 65532, 8, 655367, 65534, 65528, 7, 65534, 8, 655367, 0, 65528, 7, 0, 8, 655367, 2, 65528, 7, 2, 8, 655367, 4, 65528, 7, 4, 8, 655367, 6, 8, 655367, 6, 65528, 655367, 0, 0, 655387, 65528, 65532, 1048583, 6, 65530, 655378, 4, 65530, 655379, 65529, 7, 655377)
+}

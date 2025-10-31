@@ -15,6 +15,8 @@ var frontDirection := Vector2(0,1).normalized();## The front of the robot, deter
 var frontRayDistanceToPoint = 0.0; ## Calculated in [method update_front_ray_result]. how far away from colliding the bot is directly in front of it.
 @export var chasesPlayerInReverse := false; ##@experimental: When set to true, this bot will go into reverse when the player is behind them.
 @export var playerChaseDistance := 30.;
+## Used by pointer swivels. They will try to point to this global position when on an enemy.
+var pointerTarget := Vector3(0,0,0);
 
 func _ready():
 	super();
@@ -98,7 +100,7 @@ func update_if_ray_colliding_with_player(rotationalOffset := 0.0) -> bool:
 	wallInWayOfPlayer = false;
 	playerInRaySight = false;
 	enemyInWayOfPlayer = false;
-	if is_instance_valid(playerRay) and player_in_chase_range():
+	if is_instance_valid(playerRay) and player_in_range():
 		playerRay.global_position = body.global_position;
 		playerRay.target_position = GameState.get_player_pos_offset(body.global_position);
 		if rotationalOffset != 0.0:
@@ -123,6 +125,10 @@ func update_if_ray_colliding_with_player(rotationalOffset := 0.0) -> bool:
 				pass;
 			rayColTypes.OBSTACLE:
 				playerRay.set_debug_shape_custom_color(Color(1,1,0));
+				wallInWayOfPlayer = true;
+				pass;
+			rayColTypes.WALL:
+				playerRay.set_debug_shape_custom_color(Color(0.5,0.5,0));
 				wallInWayOfPlayer = true;
 				pass;
 			rayColTypes.FLOOR:
@@ -175,12 +181,28 @@ func get_angle_to_player_from_front(inDegrees := false) -> float:
 func player_is_behind():
 	return get_angle_to_player_from_front(false) > PI/2;
 
-func get_basic_player_chase_vector():
+func get_basic_player_chase_vector(reverse := false):
 	var plyOffset = GameState.get_player_pos_offset(body.global_position);
 	var length = GameState.get_len_to_player(body.global_position);
 	var vectorOut = Vector2(-plyOffset.x, -plyOffset.z);
+	if reverse:
+		vectorOut = vectorOut.rotated(PI);
 	return vectorOut;
 
+func set_pointer_to_look_at_player(angleOffset := 0.0):
+	var plyOffset = GameState.get_player_pos_offset(body.global_position);
+	pointerTarget = plyOffset;
+	pointerTarget.z *= -1;
+	pointerTarget = pointerTarget.rotated(Vector3.UP, -PI/2)
+	pointerTarget = pointerTarget.rotated(Vector3.UP, angleOffset)
+	#print(pointerTarget);
+
+func set_pointer_to_look_at_movement_vector(vectorIn := movementVector):
+	var vector = vectorIn;
+	pointerTarget = get_front_direction_vector3(vector);
+	pointerTarget.z *= -1;
+	pointerTarget = pointerTarget.rotated(Vector3.UP, -PI/2)
+	#print(pointerTarget);
 ## Rotates the [param invector] in steps of [param degreeStep] until its absolute value reaches [param maxRotation] in either direction, or [method update_if_ray_colliding_with_player] returns a result that has the player not obscured by a wall ( [code]playerInRaySight == true[/code] ).[br][br]
 ## [color=pink][i]This is probably pretty pricey since it deals with raycasts.
 func rotate_movement_vector_to_dodge_walls_and_move_towards_player(invector : Vector2 = get_basic_player_chase_vector(), maxRotation := PI * 2/3, degreeStep := 20.) -> Vector2:
@@ -248,8 +270,8 @@ func rotate_movement_vector_to_dodge_walls_and_move_towards_player(invector : Ve
 		return invector;
 	return invector;
 
-func player_in_chase_range(distanceOverride := playerChaseDistance):
-	return GameState.get_len_to_player(body.global_position) <= playerChaseDistance;
+func player_in_range(distanceOverride := playerChaseDistance):
+	return GameState.get_len_to_player(body.global_position) <= distanceOverride;
 
 enum rayColTypes {
 	FLOOR,

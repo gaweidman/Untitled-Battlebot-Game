@@ -24,6 +24,20 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	ping_screen_transition();
+	
+	
+	if Input.is_action_just_pressed("dbg_RestartGame"):
+		print_debug("RESTARTING GAME (hit f4)")
+		push_warning("RESTARTING GAME (hit f4)")
+		GameState.change_scenes("res://scenes/levels/game_board.tscn");
+	elif Input.is_action_just_pressed("dbg_ToggleScreenTransitions"):
+		var dbg_hidden = get_setting("HiddenScreenTransitions");
+		set_setting("HiddenScreenTransitions", !dbg_hidden)
+		if !dbg_hidden:
+			push_warning("Transition canvas being DISABLED (Hit f3)")
+		else:
+			push_warning("Transition canvas being ENABLED (Hit f3)")
 	pass
 
 func quit_game():
@@ -80,6 +94,18 @@ func get_in_state_of_building() ->bool:
 		return board.in_state_of_building();
 	else:
 		return true;
+func get_in_state_of_shopping(includeLoading := false) ->bool:
+	var board = get_game_board();
+	if is_instance_valid(board):
+		return board.in_state_of_shopping(includeLoading);
+	else:
+		return false;
+func get_in_state_of_combat(includeLoading := false) ->bool:
+	var board = get_game_board();
+	if is_instance_valid(board):
+		return board.in_state_of_combat(includeLoading);
+	else:
+		return false;
 
 func set_game_board_state(state : GameBoard.gameState):
 	var board = get_game_board();
@@ -315,6 +341,8 @@ static var settings := {
 	StringName("godMode") : false,
 	StringName("killAllKey") : false,
 	
+	StringName("HiddenScreenTransitions") : false,
+	
 	StringName("renderShadows") : true,
 }
 
@@ -496,7 +524,11 @@ func queue_change_scenes(_targetScene):
 	targetScene = _targetScene;
 	make_screen_transition_arrive(5);
 
-func change_scenes():
+func change_scenes(_targetSceneOverride = null):
+	if _targetSceneOverride != null:
+		if _targetSceneOverride is String:
+			if FileAccess.file_exists(_targetSceneOverride):
+				targetScene = _targetSceneOverride;
 	if targetScene != null:
 		get_tree().change_scene_to_file(targetScene);
 		targetScene = null;
@@ -518,7 +550,18 @@ func hit_right():
 		brd.screen_transition(ScreenTransition.mode.RIGHT);
 
 func make_screen_transition_leave():
+	if !screenTransition.is_connected("hitRight", hit_right):
+		screenTransition.connect("hitRight", hit_right);
+	screenTransition.primeASignal;
 	screenTransition.leave();
 func make_screen_transition_arrive(layer := 2):
 	transitionCanvas.layer = layer;
+	if !screenTransition.is_connected("hitCenter", hit_center):
+		screenTransition.connect("hitCenter", hit_center);
+	screenTransition.primeASignal;
 	screenTransition.comeIn();
+func ping_screen_transition():
+	if screenTransition.is_on_center():
+		hit_center();
+	if screenTransition.is_on_right():
+		hit_right();

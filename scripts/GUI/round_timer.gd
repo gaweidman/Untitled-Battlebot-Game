@@ -13,22 +13,23 @@ var paused := true;
 func _process(delta):
 	var isPaused = GameState.is_paused() or paused or !(GameState.get_game_board_state() == GameBoard.gameState.PLAY);
 	
-	text = TextFunc.format_time(time);
 	
 	if GameState.get_in_state_of_play():
+		text = TextFunc.format_time(time);
 		if not visible:
 			show();
 		if not isPaused:
-			if time > 0:
-				time -= delta;
-			else:
-				time = 0.0;
+			if GameState.get_in_state_of_combat(false):
+				if time > 0:
+					time -= delta;
+				else:
+					time = 0.0;
 			
 			if blinkTimer > 0:
 				blinkTimer -= delta;
-				TimerBlinky.show();
+				TimerBlinky.visible = true;
 			else:
-				TimerBlinky.hide();
+				TimerBlinky.visible = false;
 			
 			blinkCycle -= delta;
 			if blinkCycle < 0:
@@ -49,8 +50,8 @@ func _process(delta):
 						GameState.get_player().die();
 						pause();
 	else:
-		if visible:
-			hide();
+		text = "";
+		TimerBlinky.visible = false;
 
 func blink():
 	if GameState.get_in_state_of_play():

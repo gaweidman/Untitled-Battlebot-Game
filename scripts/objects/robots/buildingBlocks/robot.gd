@@ -93,6 +93,9 @@ func grab_references():
 	if not is_instance_valid(body):
 		if is_instance_valid($Body):
 			body = $Body;
+	if is_instance_valid(body):
+		body.set_collision_mask_value(1, false);
+		body.set_collision_mask_value(11, true);
 	if not is_instance_valid(gameBoard):
 		gameBoard = GameState.get_game_board();
 	if not is_instance_valid(camera):
@@ -233,6 +236,11 @@ func is_asleep() -> bool:
 
 ##This function returns true only if the game is not paused, and the bot is spawned in, alive, awake, and not frozen.
 func is_conscious():
+	return (not paused) and spawned and (not is_asleep()) and (not is_frozen()) and is_alive() and is_ready;
+
+## Returns true if the bot is in a state where its pieces' cooldowns are able to be used.[br]
+## Functionally identical to [method is_conscious], except in [Robot_Player], where [method is_conscious] is modified to also check for [member Robot_Player.hasPlayerControl].
+func is_running_cooldowns():
 	return (not paused) and spawned and (not is_asleep()) and (not is_frozen()) and is_alive() and is_ready;
 
 ##This function returns true only if the game is not paused, the bot is not frozen, alive, and we're in a game state of play.
@@ -603,6 +611,10 @@ func try_sap_energy(amount):
 		else:
 			return false;
 	return false;
+
+## Sets energy to 0.
+func drain_all_energy():
+	set_stat("Energy", 0.0);
 
 ##Adds to the energy total. 
 ##If told to "cap at max" it will not add energy if it is above or at the current maximum, and will clamp it at the max. 
@@ -1109,12 +1121,26 @@ func get_selected_or_pipette():
 func get_selected():
 	if is_instance_valid(selectedPart):
 		return selectedPart;
+	var selPiece = get_selected_piece();
+	if is_instance_valid(selPiece):
+		return selPiece;
+	return null;
+
+func get_selected_piece(mustBeInTree := false)->Piece:
 	if is_instance_valid(selectedPiece):
 		if selectedPiece.selected:
-			return selectedPiece;
+			if mustBeInTree:
+				if selectedPiece.is_inside_tree():
+					return selectedPiece;
+			else:
+				return selectedPiece;
 		else:
 			selectedPiece.select(true);
-			return selectedPiece;
+			if mustBeInTree:
+				if selectedPiece.is_inside_tree():
+					return selectedPiece;
+			else:
+				return selectedPiece;
 	return null;
 
 ## Deselects based on a predetermined hierarchy.[br]

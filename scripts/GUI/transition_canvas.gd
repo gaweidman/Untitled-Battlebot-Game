@@ -7,7 +7,9 @@ class_name TransitionCanvas
 @export var loadingGear : TextureRect;
 @export var logo : TextureRect;
 @export var lbl_companyName : Label;
+@export var modulator : CanvasModulate;
 
+var dbg_hidden := false;
 
 func initialize():
 	initialize_logo();
@@ -33,6 +35,12 @@ var textSequenceFlip := false;
 var textSequenceStep = 0 ##STEP THRU TEXT
 
 func _process(delta):
+	dbg_hidden = GameState.get_setting("HiddenScreenTransitions");
+	if dbg_hidden:
+		modulator.color.a = 0.15;
+	else:
+		modulator.color.a = 1;
+	
 	if logoTime:
 		lbl_companyName.visible = true;
 		time -= delta;

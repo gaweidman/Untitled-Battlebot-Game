@@ -42,7 +42,7 @@ material_override = ExtResource("1_obp0w")
 mesh = ExtResource("2_qlfvh")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="ArenaFloor" groups=["Concrete", "Driveable", "World", "WorldFloor"]]
-collision_layer = 1283
+collision_layer = 1282
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaFloor/StaticBody3D" groups=["Concrete", "World", "WorldFloor"]]
 shape = SubResource("ConcavePolygonShape3D_er3fg")
@@ -168,7 +168,7 @@ material_override = ExtResource("4_rhf1p")
 mesh = ExtResource("5_yjwsq")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="ArenaWall" groups=["Concrete", "Driveable", "World", "WorldWall"]]
-collision_layer = 1025
+collision_layer = 1024
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaWall/StaticBody3D" groups=["Concrete", "World", "WorldWall"]]
 shape = SubResource("ConcavePolygonShape3D_usc4f")
@@ -369,7 +369,7 @@ size = Vector3(2.10107, 3.07037, 6.22781)
 
 [node name="Ob_Base" parent="." instance=ExtResource("7_qwvj8")]
 data = {
-"cells": PackedInt32Array(0, 0, 655387, 19, 19, 655387, 65518, 19, 655387, 65533, 23, 655387, 65531, 17, 655387, 65535, 13, 655387, 4, 14, 655387, 6, 19, 655387, 3, 24, 655387, 6, 32, 655387, 13, 25, 655387, 13, 13, 655387, 6, 6, 655387, 65530, 6, 655387, 65523, 14, 655387, 65523, 25, 655387, 65530, 32, 655387, 15, 19, 655387, 0, 4, 655387, 65522, 19, 655387, 0, 34, 655387, 0, 38, 655387)
+"cells": PackedInt32Array(0, 0, 655387, 19, 19, 655387, 65518, 19, 655387, 65533, 23, 655387, 65531, 17, 655387, 65535, 13, 655387, 4, 14, 655387, 6, 19, 655387, 3, 24, 655387, 6, 32, 655387, 13, 25, 655387, 13, 13, 655387, 6, 6, 655387, 65530, 6, 655387, 65523, 14, 655387, 65523, 25, 655387, 65530, 32, 655387, 15, 19, 655387, 0, 4, 655387, 0, 34, 655387, 0, 38, 655387)
 }
 
 [node name="Ob_Empty" parent="." instance=ExtResource("7_qwvj8")]

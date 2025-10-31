@@ -31,7 +31,6 @@ cull_mode = 2
 albedo_texture = ExtResource("9_bk6my")
 
 [node name="Piece_Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
-visible = false
 script = ExtResource("1_3tbmm")
 swivelNode = NodePath("SwivelTop")
 movingSockets = [NodePath("SwivelTop/Socket")]

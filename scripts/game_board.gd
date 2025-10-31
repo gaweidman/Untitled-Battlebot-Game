@@ -31,7 +31,30 @@ var scrapGained := 0;
 @export var HUD_player : Control;
 @export var MUSIC : MusicHandler;
 @export var LIGHT : DirectionalLight3D;
+@export var CANVAS_HUD : CanvasLayer;
+@export var CANVAS_GAMECAMERA : CanvasLayer;
 
+##Camera stuff
+## Main game camera.
+@export_subgroup("Cameras")
+@export var gameCamera : GameCamera;
+func get_main_camera():
+	return gameCamera;
+@export var followerCamera : FollowerCamera;
+@export var backupCamPointer : Node3D;
+func get_camera_pointer() -> Node3D:
+	if player != null and is_instance_valid(player):
+		if in_state_of_building():
+			var selected = player.get_selected_piece();
+			if is_instance_valid(selected):
+				return selected;
+		return player.body;
+	else:
+		return backupCamPointer;
+func change_backup_cam_pos_to_current_arena():
+	if is_instance_valid(currentArena):
+		var pos = currentArena.fallbackCameraPosition;
+		backupCamPointer.global_position = currentArena.fallbackCameraPosition;
 
 #@export var bi
 func _ready():
@@ -52,26 +75,481 @@ func _on_scenetree_ready():
 				scrapGained += amt;
 				print_rich("[color=yellow][b]Scrap gained: ",scrapGained)
 			)
-	move_to_named_arena_in_named_biome("Workshop", "Base");
-	cache_current_arena();
-	cache_current_biome();
+	
+	arena_move_master("Workshop", "Base", "Base", cacheOpt.OVERWRITE_OLD_AND_SET_INPUT_CURRENT);
 	
 	change_state(gameState.SPLASH);
 
 func _process(delta):
 	process_state(delta, curState);
 
+################### STATE CONTROL
+
+##Controls the state of the game.
+enum gameState {
+	START, ## Initial value.
+	SPLASH, ## The splash screen when the software first opens.
+	MAIN_MENU, ## Main menu.
+	INIT_NEW_GAME, ## The start of a new game.
+	INIT_ROUND, ## Round setup happens. Timers are reset, the enemy pool for the round is decided and then frontloaded, then after the game stops lagging we move on to LOAD_ROUND.
+	LOAD_ROUND, ## Screen transition from INIT_ROUND. Goes to PLAY.
+	PLAY, ## Main game loop. 
+	GAME_OVER, ## YOU HAVE DIED
+	CREDITS, ## Credits screen.
+	OPTIONS, ## Options screen.
+	GOTO_SHOP, ## Screen transition to INIT_SHOP.
+	INIT_SHOP, ## Start up shop data. Load up the screen transition.
+	LOAD_SHOP, ## Screen transition from INIT_SHOP. Goes to 
+	SHOP, ## The UI for the shop 
+	SHOP_TEST, 
+	LEAVE_SHOP,
+	SHOP_BUILD,
+}
+var curState := gameState.START
+
+##@deprecated
+const play_states = [
+	GameBoard.gameState.INIT_ROUND,
+	GameBoard.gameState.LOAD_ROUND,
+	GameBoard.gameState.PLAY,
+	GameBoard.gameState.GOTO_SHOP,
+	GameBoard.gameState.INIT_SHOP,
+	GameBoard.gameState.LOAD_SHOP,
+	GameBoard.gameState.SHOP_TEST,
+	GameBoard.gameState.SHOP,
+	GameBoard.gameState.SHOP_BUILD,
+	GameBoard.gameState.LEAVE_SHOP,
+]
+
+##returns true if we're in a state that might be considered a part of the game loop.
+func in_state_of_play(includeLoading := true)->bool:
+	return in_state_of_combat(includeLoading) or in_state_of_shopping(includeLoading);
+
+const combat_states = [
+	GameBoard.gameState.PLAY,
+]
+const combat_load_states = [
+	GameBoard.gameState.INIT_ROUND,
+	GameBoard.gameState.LOAD_ROUND,
+]
+##returns true if we're in a state that might be considered a part of the game loop.
+func in_state_of_combat(includeLoading := false)->bool:
+	if includeLoading:
+		return in_one_of_given_states(combat_states) or in_one_of_given_states(combat_load_states);
+	return in_one_of_given_states(combat_states);
+
+const shop_states = [
+	GameBoard.gameState.SHOP_TEST,
+	GameBoard.gameState.SHOP,
+	GameBoard.gameState.SHOP_BUILD,
+]
+const building_states = [
+	GameBoard.gameState.SHOP,
+	GameBoard.gameState.SHOP_BUILD,
+]
+const shop_load_states = [
+	GameBoard.gameState.GOTO_SHOP,
+	GameBoard.gameState.INIT_SHOP,
+	GameBoard.gameState.LOAD_SHOP,
+	GameBoard.gameState.LEAVE_SHOP,
+]
+##returns true if we're in the shop.
+func in_state_of_shopping(includeLoading := false)->bool:
+	if includeLoading:
+		return in_one_of_given_states(shop_states) or in_one_of_given_states(shop_load_states);
+	return in_one_of_given_states(shop_states);
+##Returns true if we're in a state where build-a-bot mode is activated.
+func in_state_of_building()->bool:
+	return in_one_of_given_states(building_states);
+
+const camera_tilt_states = [
+	GameBoard.gameState.PLAY,
+	GameBoard.gameState.SHOP_TEST,
+	GameBoard.gameState.SHOP,
+	GameBoard.gameState.SHOP_BUILD,
+]
+const game_over_states = [
+	GameBoard.gameState.PLAY,
+	GameBoard.gameState.SHOP,
+]
+func in_game_over_state()->bool:
+	return in_one_of_given_states(game_over_states) and player.aliveLastFrame;
+
+func in_one_of_given_states(states:Array)->bool:
+	var currentState = GameState.get_game_board_state();
+	return currentState in states;
+
+
+
+func change_state(newState : gameState):
+	var changeToDefer = func change(newState):
+		if curState != newState:
+			exit_state(curState);
+			var oldState = curState;
+			Hooks.OnChangeGameState(curState, newState);
+			curState = newState;
+			enter_state(newState, oldState);
+	changeToDefer.call_deferred(newState);
+
+func exit_state(oldState:gameState):
+	match oldState:
+		gameState.SPLASH:
+			MUSIC.play();
+			GameState.make_screen_transition_leave();
+		gameState.MAIN_MENU:
+			HUD_mainMenu.hide();
+			pass
+		gameState.GAME_OVER:
+			#HUD_playerStats.hide();
+			HUD_gameOver.hide();
+			pass
+		gameState.CREDITS:
+			HUD_credits.hide();
+			pass
+		gameState.OPTIONS:
+			HUD_options.open_sesame(false);
+			pass
+		gameState.PLAY:
+			pass
+		gameState.SHOP:
+			pass
+		gameState.LEAVE_SHOP:
+			move_out_of_workshop();
+			pass
+		gameState.INIT_ROUND:
+			pass
+		gameState.START:
+			HUD_mainMenu.hide();
+			HUD_credits.hide();
+			HUD_gameOver.hide();
+			HUD_options.open_sesame(false);
+			update_lighting();
+			HUD_options.load_settings();
+			pass
+
+func enter_state(newState:gameState, oldState:gameState):
+	print("ENTERING STATE ",var_to_str(gameState.keys()[newState]));
+	match newState:
+		gameState.SPLASH:
+			GameState.init_screen_transition_vanity();
+		gameState.MAIN_MENU:
+			MUSIC.change_state(MusicHandler.musState.MENU);
+			
+			destroy_all_enemies(true);
+			player = null;
+			HUD_mainMenu.show();
+			roundNum = 0;
+			pass
+		gameState.GAME_OVER:
+			MUSIC.change_state(MusicHandler.musState.GAME_OVER);
+			
+			HUD_gameOver.show();
+			pass
+		gameState.CREDITS:
+			MUSIC.change_state(MusicHandler.musState.CREDITS);
+			
+			HUD_credits.show();
+			pass
+		gameState.OPTIONS:
+			MUSIC.change_state(MusicHandler.musState.OPTIONS);
+			
+			HUD_options.open_sesame(true);
+			pass
+		gameState.INIT_NEW_GAME:
+			MUSIC.change_state(MusicHandler.musState.PREGAME);
+			
+			GameState.start_death_timer(120.0,true)
+			roundNum = 0;
+			roundEnemiesInit = 1;
+			clear_enemy_spawn_list();
+			scrapGained = 0;
+			enemiesKilled = 0;
+			player = null;
+			
+			GameState.call_deferred("make_screen_transition_arrive", 5);
+			
+			pass
+		gameState.INIT_ROUND:
+			MUSIC.change_state(MusicHandler.musState.PREGAME);
+			destroy_all_enemies(false);
+			
+			roundNum += 1;
+			set_enemy_spawn_waves(roundNum);
+			waveTimer = 3;
+			wave = 0;
+			roundEnemiesInit += 2;
+			roundEnemies = roundEnemiesInit;
+			
+			new_round_arena_sequence();
+			
+			pass
+		gameState.LOAD_ROUND:
+			GameState.call_deferred("make_screen_transition_leave");
+		gameState.PLAY:
+			player.start_round();
+			pass
+		gameState.GOTO_SHOP:
+			MUSIC.change_state(MusicHandler.musState.PREGAME);
+			
+			player.end_round();
+			GameState.call_deferred("make_screen_transition_arrive", 2);
+		gameState.INIT_SHOP:
+			##TODO: Reimplementation of shop logic.
+			
+			move_player_to_workshop();
+		gameState.LOAD_SHOP:
+			MUSIC.change_state(MusicHandler.musState.SHOP);
+			GameState.call_deferred("make_screen_transition_leave");
+			pass;
+		gameState.SHOP:
+			player.enter_shop();
+			##TODO: SHOP UI LOGIC
+			##TODO: BUILD MODE / TEST MODE SWITCHING LOGIC
+			pass
+		gameState.LEAVE_SHOP:
+			player.exit_shop();
+			GameState.call_deferred("make_screen_transition_arrive", 2);
+
+func new_round_arena_sequence():
+	if roundNum == 1:
+		move_to_random_biome_and_arena();
+		arena_move_master("RANDOM", "RANDOM", "RANDOM", cacheOpt.CACHE_OLD_AND_SET_INPUT_CURRENT);
+	else:
+		arena_move_master("CURRENT", "NEW", "NEW", cacheOpt.CACHE_OLD_AND_SET_INPUT_CURRENT);
+	##TODO: Move enemies down here and have the frames to wait be max between that and obstacles.
+
+var splashTimer := 5.5;
+var initArenaFrameWait := 0;
+func process_state(delta : float, state : gameState):
+	match curState:
+		gameState.SPLASH:
+			splashTimer -= delta;
+			if splashTimer < 0 or  GameState.is_fire_action_being_pressed():
+				change_state(gameState.MAIN_MENU);
+			pass
+		gameState.MAIN_MENU:
+			pass
+		gameState.GAME_OVER:
+			pass
+		gameState.CREDITS:
+			pass
+		gameState.PLAY:
+			if GameState.get_setting("killAllKey") and Input.is_action_just_pressed("DBG_KillAll"):
+				destroy_all_enemies()
+			
+			if not GameState.is_paused():
+				waveTimer -= delta;
+				spawnTimer -= delta;
+			
+			if roundEnemies > 0:
+				if waveTimer <= 0:
+					waveTimer = 10;
+					wave += 1;
+					var amtAlive = check_alive_enemies()
+					#print("alive: ", amtAlive)
+					var amtToSpawn = max(0, min(3+roundNum,10,roundEnemies))
+					#var amtToSpawn = max(0, min(1, 1 - amtAlive))
+					#print(amtToSpawn, amtAlive)
+					spawn_wave(amtToSpawn)
+					MUSIC.change_state(MusicHandler.musState.BATTLING);
+			
+			if spawnTimer <= 0:
+				spawn_enemy_from_wave();
+				
+				if get_enemies_left_for_wave() <= 0:
+					change_state(gameState.GOTO_SHOP);
+				else:
+					spawnTimer=0.15;
+			
+			pass
+		gameState.INIT_SHOP:
+			if wait_for_arena_to_build_and_respawn_to_happen():
+				change_state(gameState.LOAD_SHOP);
+			pass
+		gameState.SHOP:
+			pass
+		gameState.INIT_ROUND:
+			ping_screen_transition_result();
+			
+			if wait_for_arena_to_build_and_respawn_to_happen():
+				change_state(gameState.LOAD_ROUND);
+			pass
+		gameState.LEAVE_SHOP:
+			ping_screen_transition_result();
+	pass
+
+func ping_screen_transition_result():
+	GameState.ping_screen_transition();
+
+func screen_transition(scr_state : ScreenTransition.mode):
+	match scr_state:
+		ScreenTransition.mode.RIGHT:
+			match curState:
+				gameState.LOAD_ROUND:
+					if is_instance_valid(player):
+						change_state(gameState.PLAY);
+				gameState.LOAD_SHOP:
+					change_state(gameState.SHOP);
+		ScreenTransition.mode.CENTER:
+			match curState:
+				gameState.INIT_NEW_GAME:
+					change_state(gameState.INIT_ROUND);
+				gameState.GOTO_SHOP:
+					change_state(gameState.INIT_SHOP);
+				gameState.LEAVE_SHOP:
+					change_state(gameState.INIT_ROUND);
+			pass;
+
+func wait_for_arena_to_build_and_respawn_to_happen() -> bool:
+	var respawnResult = false;
+	if !is_instance_valid(currentArena):
+		initArenaFrameWait += 1;
+	else:
+		if is_instance_valid(currentArena.obstaclesNode):
+			if currentArena.obstaclesNode.cells.size() > 0:
+				initArenaFrameWait = max(initArenaFrameWait, currentArena.obstaclesNode.cells.size());
+	
+	if initArenaFrameWait >= 0:
+		print_rich("[color=grey]STATE: WAITING FOR ", initArenaFrameWait, " MORE FRAMES FOR ARENA TO LOAD");
+		initArenaFrameWait -= 1;
+	else:
+		print_rich("[color=grey]STATE: WAITING ON PLAYER TO SPAWN.");
+		respawnResult = spawn_or_respawn_player();
+	
+	return respawnResult;
+
+func update_lighting():
+	LIGHT.shadow_enabled = GameState.get_setting("renderShadows");
+
 ################################# ARENAS
 @export_subgroup("Arena stuff")
 @export var biomes : Dictionary[String,BiomeData] = {}
-@export var currentArena : Arena;
+var currentArena : Arena;
 @export var currentBiome : BiomeData;
 var currentBiomeName : String = "None";
 
+enum cacheOpt {
+	OVERWRITE_OLD_AND_SET_INPUT_CURRENT,
+	CACHE_OLD_AND_SET_INPUT_CURRENT,
+	CLEAR_CACHE_AND_SET_INPUT_CURRENT,
+	CACHE_INPUT,
+	CACHE_INPUT_AND_SET_OLD_CACHE_CURRENT,
+}
+## Moves you to the given biome, arena, and variant. Very flexible. Returns the amount of frames to wait for building.
+func arena_move_master(inBiome : Variant = "Random", inArena : Variant = "Random", inVariant : Variant = "Random", cacheMode : cacheOpt = cacheOpt.OVERWRITE_OLD_AND_SET_INPUT_CURRENT):
+	## If we're meant to cache the old stuff, do that here.
+	if cacheMode == cacheOpt.CACHE_OLD_AND_SET_INPUT_CURRENT:
+		clear_cache();
+		cache_current_arena();
+		cache_current_biome();
+	elif cacheMode == cacheOpt.CLEAR_CACHE_AND_SET_INPUT_CURRENT:
+		clear_cache();
+	
+	var BIOME : BiomeData;
+	var ARENA : Arena;
+	
+	## 
+	if inBiome.to_upper() == "RANDOM" and inArena.to_upper() == "RANDOM":
+		move_to_random_biome_and_arena(false);
+	elif inBiome.to_upper() == "NEW" and inArena.to_upper() == "NEW":
+		move_to_random_biome_and_arena(true);
+	else:
+		if inBiome == null:
+			BIOME = get_current_biome();
+			pass;
+		elif inBiome is String:
+			if inBiome.to_upper() == "CURRENT": ## The current biome.
+				BIOME = get_current_biome();
+				move_to_biome(BIOME);
+				pass;
+			elif inBiome.to_upper() == "RANDOM": ## A completely random new biome.
+				BIOME = get_random_biome(false);
+				move_to_biome(BIOME);
+				pass;
+			elif inBiome.to_upper() == "NEW": ## A random new biome, excluding the current one.
+				BIOME = get_random_biome(true);
+				move_to_biome(BIOME);
+				pass;
+			else:
+				BIOME = move_to_biome_name(inBiome);
+				pass;
+		elif inBiome is BiomeData:
+			BIOME = inBiome;
+			move_to_biome(BIOME);
+		
+		BIOME = get_current_biome();
+		
+		if inArena == null:
+			ARENA = get_current_arena();
+		elif inArena is PackedScene or inArena is Arena:
+			move_to_arena_and_biome(BIOME, inArena);
+		elif inArena is String:
+			if inArena.to_upper() == "CURRENT": ## The current arena.
+				ARENA = get_current_arena();
+				pass;
+			elif inArena.to_upper() == "RANDOM": ## A completely random new biome.
+				move_to_random_arena_in_current_biome(false);
+				pass;
+			elif inArena.to_upper() == "NEW": ## A random new biome, excluding the current one.
+				move_to_random_arena_in_current_biome(true);
+				pass;
+			else:
+				move_to_named_arena_in_current_biome(inArena);
+	
+	BIOME = get_current_biome();
+	ARENA = get_current_arena();
+	var TIME : int = 0; ## Returned.
+	var doObstacles := true; ## Whether to spawn in obstacles on ARENA.
+	
+	if cacheMode == cacheOpt.CACHE_INPUT:
+		## Cache the thing we just made and end here.
+		cache_arena(ARENA);
+		cache_biome(BIOME);
+		doObstacles = false;
+	elif cacheMode == cacheOpt.CACHE_INPUT_AND_SET_OLD_CACHE_CURRENT:
+		## Swap out the thing we just made into the cache, and perform obstaclage to the unstashed thing.
+		swap_current_arena_with_cache();
+		swap_current_biome_with_cache();
+		
+		BIOME = get_current_biome();
+		ARENA = get_current_arena();
+	
+	if doObstacles:
+		TIME = 1;
+		
+		if inVariant == null:
+			TIME = load_random_arena_variant(ARENA);
+		elif inVariant is String:
+			if inVariant == "CURRENT":
+				## Nothing happens.
+				pass;
+			elif inVariant == "RANDOM":
+				TIME = load_random_arena_variant(ARENA);
+				pass;
+			elif inVariant == "NEW":
+				ARENA.clear_used_variants();
+				TIME = load_random_arena_variant(ARENA);
+				pass;
+			else:
+				TIME = load_arena_named_variant(ARENA, inVariant);
+	
+	ARENA.reset_spawning_locations();
+	
+	return TIME;
+
+## Returns [member currentBiome].
+func get_current_biome():
+	return currentBiome;
+## Gets a named biome from [member biomes] if it exists.
+func get_named_biome(biomeKey : String):
+	if biomeKey in biomes:
+		return biomes[biomeKey];
+	return biomes["Old"]; ## Old is the fallback.
 ## Gets a random biome from [member biomes].
 func get_random_biome(excludeCurrent := true) -> BiomeData:
 	var all = biomes.duplicate(true);
 	var keys = all.keys();
+	keys.erase("Workshop");
 	if excludeCurrent:
 		keys.erase(currentBiomeName);
 		if keys.is_empty():
@@ -80,75 +558,92 @@ func get_random_biome(excludeCurrent := true) -> BiomeData:
 	var key = keys.pop_front();
 	return biomes[key];
 ## Gets a random biome from [member biomes], gets a random [Arena] from it, then moves to both.
-func move_to_random_biome_and_arena(excludeCurrent := true, putOldInStash := false):
+func move_to_random_biome_and_arena(excludeCurrent := true, putOldInCache := false):
 	var newBiome = get_random_biome(excludeCurrent);
 	var newArenaScene = newBiome.get_random_arena(excludeCurrent);
-	move_to_arena_and_biome(newBiome, newArenaScene, putOldInStash);
+	move_to_arena_and_biome(newBiome, newArenaScene, putOldInCache);
 ## Gets the current biome, gets a random [Arena] from it, then moves to both.
-func move_to_random_arena_in_current_biome(excludeCurrent := true, putOldInStash := false):
+func move_to_random_arena_in_current_biome(excludeCurrent := true, putOldInCache := false):
 	var newArenaScene = currentBiome.get_random_arena(excludeCurrent);
-	move_to_arena_and_biome(currentBiome, newArenaScene, putOldInStash);
+	move_to_arena_and_biome(currentBiome, newArenaScene, putOldInCache);
 ## Moves to the given biome data.
 func move_to_biome(newBiome : BiomeData) -> BiomeData:
 	if is_instance_valid(newBiome):
 		if newBiome != currentBiome:
 			currentBiome = newBiome;
+			currentBiomeName = biome_name_from_biome(newBiome);
 	return currentBiome;
 ## Moves to the bime in [member Biomes] with the given biome name, or just stays in the biome you're currently in.[br]
 ## Note: Does not actually affect anything regarding the current arena.
 func move_to_biome_name(newBiomeName) -> BiomeData:
 	if biomes.has(newBiomeName):
+		prints("STATE: CHANGING BIOME NAMES TO ", newBiomeName, "FROM", currentBiomeName);
 		if newBiomeName != currentBiomeName:
-			currentBiomeName = newBiomeName;
 			move_to_biome(biomes[newBiomeName]);
+			currentBiomeName = newBiomeName;
 	return currentBiome;
 ## Move to a new named arena in the biome you specify by name. Moves us to the new biome if it is indeed new, but keeps us there if it's the same.
-func move_to_named_arena_in_named_biome(newBiomeName : String, arenaName : String, putOldInStash := false):
+func move_to_named_arena_in_named_biome(newBiomeName : String, arenaName : String, putOldInCache := false):
 	## If the biome name is new, move there.
 	if biomes.has(newBiomeName):
 		move_to_biome_name(newBiomeName);
-	move_to_named_arena_in_current_biome(arenaName, putOldInStash);
+	move_to_named_arena_in_current_biome(arenaName, putOldInCache);
 ## Move to a new arena in the current biome. (Calls [method move_to_named_arena_in_biome] using [member currentBiome])
-func move_to_named_arena_in_current_biome(arenaName : String, putOldInStash := false):
-	move_to_named_arena_in_biome(currentBiome, arenaName, putOldInStash);
+func move_to_named_arena_in_current_biome(arenaName : String, putOldInCache := false):
+	move_to_named_arena_in_biome(currentBiome, arenaName, putOldInCache);
 ## Move to a new named arena in the given biome. (Calls [method move_to_arena_and_biome] using the given name.[br]If the specified arena does not have the specified arena name, this function will fallback to the workshop arena.
-func move_to_named_arena_in_biome(inBiome : BiomeData, arenaName : String, putOldInStash := false):
+func move_to_named_arena_in_biome(inBiome : BiomeData, arenaName : String, putOldInCache := false):
 	var scene = inBiome.get_named_arena(arenaName);
-	move_to_arena_and_biome(inBiome, scene, putOldInStash);
-## Move to a new arena scene in the given biome.
-func move_to_arena_and_biome(inBiome : BiomeData, newArenaScene : PackedScene, putOldInStash := false):
+	move_to_arena_and_biome(inBiome, scene, putOldInCache);
+## Move to a new arena or arena packedscene in the given biome.
+func move_to_arena_and_biome(inBiome : BiomeData, newArenaOrScene, putOldInCache := false):
 	## Move to the new biome if it's new.
 	move_to_biome(inBiome);
 	## Setup. Use the current arena as a fallback.
 	var arena = currentArena;
 	## Check if the biome has an arena by the name given.
-	if putOldInStash:
+	if putOldInCache:
 		cache_current_arena();
+		cache_current_biome();
 	else:
 		destroy_current_arena();
-	var new = create_new_arena(newArenaScene);
-	if new != null:
-		arena = new;
-	set_new_arena_as_current(arena);
-
+	
+	set_new_arena_as_current(newArenaOrScene);
+## Instantiates the given arena scene, adds it as a child, and then returns it, if the operation was successful.
 func create_new_arena(arenaScene : PackedScene) -> Arena:
 	var new = arenaScene.instantiate();
 	if new is Arena:
 		add_child(new);
 		return new;
 	return null;
+## Returns [member currentArena].
 func get_current_arena():
+	if is_instance_valid(currentArena):
+		print("CURRENT ARENA: ", currentArena.name);
+	else:
+		print("CURRENT ARENA IS INVALID.");
 	return currentArena;
-func set_new_arena_as_current(newArena):
-	if is_instance_valid(newArena):
-		print("STATE: ENTERING NEW ARENA ",newArena.name)
-		#if not currentArena.is_connected("arenaIsBuilt", new_arena_is_built):
-			#currentArena.connect("arenaIsBuilt", new_arena_is_built);
-		if newArena is PackedScene:
-			newArena = create_new_arena(newArena);
-		currentArena = newArena;
+## if [param newArenaOrScene] is an [Arena], then it sets it directly as the current arena.[br]
+## If [param newArenaOrScene] is instead a [PackedScene], then it unpacks and instantiates it first using create_new_arena().[br]
+## If, for whatever reason, after unpacking or loading, the arena is not inside the tree, then we add it as a child.[br]
+## If all of this went south, nothing happens in the end.
+func set_new_arena_as_current(newArenaOrScene):
+	if !is_instance_valid(newArenaOrScene): return; ## Check for if the input is bad.
+	if newArenaOrScene is PackedScene:
+		newArenaOrScene = create_new_arena(newArenaOrScene);
+	if !is_instance_valid(newArenaOrScene): return; ## Check for if the unpack went bad.
+	if newArenaOrScene is Arena:
+		print("STATE: ENTERING NEW ARENA ",newArenaOrScene.name);
+		currentArena = newArenaOrScene;
+		if !newArenaOrScene.is_inside_tree():
+			add_child(newArenaOrScene);
+		change_backup_cam_pos_to_current_arena();
+
+func biome_name_from_biome(inBiome : BiomeData):
+	return biomes.find_key(inBiome);
 var cachedArena : Arena;
 var cachedBiome : BiomeData;
+var cachedBiomeName : String;
 func clear_cache():
 	cachedArena = null;
 	cachedBiome = null;
@@ -160,10 +655,12 @@ func cache_current_biome():
 func cache_arena(inArena : Arena):
 	if is_instance_valid(inArena):
 		cachedArena = inArena;
-		cachedArena.get_parent().remove_child(cachedArena);
+		if cachedArena.is_inside_tree():
+			inArena.get_parent().remove_child(cachedArena);
 func cache_biome(inBiome : BiomeData):
 	if is_instance_valid(inBiome):
 		cachedBiome = inBiome;
+		cachedBiomeName = biome_name_from_biome(inBiome);
 ## Gets the arena out of the cache if there is one.
 func get_arena_from_cache() -> Arena:
 	if is_instance_valid(cachedArena):
@@ -175,6 +672,7 @@ func get_biome_from_cache() -> BiomeData:
 	return null;
 ## Takes the arena out of the cache and returns it.
 func pop_arena_from_cache() -> Arena:
+	print("STATE: CACHED ARENA RESULT: ", is_instance_valid(cachedArena))
 	if is_instance_valid(cachedArena):
 		var c = cachedArena;
 		cachedArena = null;
@@ -214,15 +712,28 @@ func destroy_arena(inArena : Arena) -> bool:
 		currentArena.queue_free();
 		return true;
 	return false
-## Builds a new random variant of the current arena. Returns an amount of frames to hold for.
-func load_new_current_arena_variant():
-	return load_new_arena_variant(currentArena);
-## Builds a new random variant of the given arena. Returns an amount of frames to hold for.
-func load_new_arena_variant(inArena : Arena) -> int:
+## Runs [method load_random_arena_variant] using [member currentArena] as [param load_random_arena_variant.inArena].
+func load_random_current_arena_variant() -> int:
+	return load_random_arena_variant(currentArena);
+## Builds a new random variant of the given arena. Returns an amount of frames to hold for, as well as setting [member initArenaFrameWait] to that value.
+func load_random_arena_variant(inArena : Arena) -> int:
 	if is_instance_valid(inArena):
 		print("STATE: LOADING ARENA VARIANT")
-		return inArena.load_new_random_variant();
-	return 1;
+		initArenaFrameWait = inArena.load_new_random_variant();
+		return initArenaFrameWait;
+	initArenaFrameWait = max(1, initArenaFrameWait);
+	return initArenaFrameWait;
+## Builds a new random variant of the current arena. Returns an amount of frames to hold for.
+func load_current_arena_named_variant(namedVariant := "Base"):
+	return load_arena_named_variant(currentArena, namedVariant);
+## Builds a new random variant of the given arena. Returns an amount of frames to hold for.
+func load_arena_named_variant(inArena : Arena, namedVariant := "Base") -> int:
+	if is_instance_valid(inArena):
+		print("STATE: LOADING ARENA VARIANT");
+		initArenaFrameWait = inArena.load_variant(namedVariant);
+		return initArenaFrameWait;
+	initArenaFrameWait = max(1, initArenaFrameWait);
+	return initArenaFrameWait;
 
 ############################ WAVES SETUP     TODO: Move a lot of the waves setup code to the individual game maps, when those exist.
 
@@ -280,362 +791,62 @@ func return_random_enemy():
 	var sceneReturn = pool.pick_random();
 	return sceneReturn;
 
-################### STATE CONTROL
-
-##Controls the state of the game.
-enum gameState {
-	START, ## Initial value.
-	SPLASH, ## The splash screen when the software first opens.
-	MAIN_MENU, ## Main menu.
-	INIT_NEW_GAME, ## The start of a new game.
-	INIT_ROUND, ## Round setup happens. Timers are reset, the enemy pool for the round is decided and then frontloaded, then after the game stops lagging we move on to BEGIN_ROUND.
-	BEGIN_ROUND, ## The screen transition goes away.
-	PLAY, ## Main game loop. 
-	GAME_OVER, ## YOU HAVE DIED
-	CREDITS, ## Credits screen.
-	OPTIONS, ## Options screen.
-	GOTO_SHOP, ## Start up shop data. Load up the screen transition.
-	INIT_SHOP, ## Start up shop data. Load up the screen transition.
-	SHOP, ## The UI for the shop 
-	SHOP_TEST, 
-	LEAVE_SHOP,
-	SHOP_BUILD,
-}
-var curState := gameState.START
-
-const play_states = [
-	GameBoard.gameState.INIT_ROUND,
-	GameBoard.gameState.PLAY,
-	GameBoard.gameState.SHOP,
-]
-const build_states = [
-	#GameBoard.gameState.SHOP_TEST,
-	GameBoard.gameState.SHOP,
-	GameBoard.gameState.SHOP_BUILD,
-]
-const camera_tilt_states = [
-	GameBoard.gameState.PLAY,
-	GameBoard.gameState.SHOP_TEST,
-	GameBoard.gameState.SHOP,
-	GameBoard.gameState.SHOP_BUILD,
-]
-const game_over_states = [
-	GameBoard.gameState.PLAY,
-	GameBoard.gameState.SHOP,
-]
-@export var gameCamera : GameCamera;
-func get_main_camera():
-	return gameCamera;
-@export var backupCamPointer : Node3D;
-func get_camera_pointer() -> Node3D:
-	if player != null:
-		return player.body;
-	else:
-		return backupCamPointer;
-
-func change_state(newState : gameState):
-	var changeToDefer = func change(newState):
-		if curState != newState:
-			exit_state(curState);
-			var oldState = curState;
-			Hooks.OnChangeGameState(curState, newState);
-			curState = newState;
-			enter_state(newState, oldState);
-	changeToDefer.call_deferred(newState);
-
-func exit_state(oldState:gameState):
-	match oldState:
-		gameState.SPLASH:
-			MUSIC.play();
-			GameState.make_screen_transition_leave();
-		gameState.MAIN_MENU:
-			HUD_mainMenu.hide();
-			pass
-		gameState.GAME_OVER:
-			#HUD_playerStats.hide();
-			HUD_gameOver.hide();
-			pass
-		gameState.CREDITS:
-			HUD_credits.hide();
-			pass
-		gameState.OPTIONS:
-			HUD_options.open_sesame(false);
-			pass
-		gameState.PLAY:
-			pass
-		gameState.SHOP:
-			pass
-		gameState.LEAVE_SHOP:
-			swap_current_arena_with_cache();
-			swap_current_biome_with_cache();
-			clear_cache();
-			pass
-		gameState.INIT_ROUND:
-			pass
-		gameState.START:
-			HUD_mainMenu.hide();
-			HUD_credits.hide();
-			HUD_gameOver.hide();
-			HUD_options.open_sesame(false);
-			update_lighting();
-			HUD_options.load_settings();
-			pass
-
-func enter_state(newState:gameState, oldState:gameState):
-	print("ENTERING STATE ",var_to_str(gameState.keys()[newState]));
-	match newState:
-		gameState.SPLASH:
-			GameState.init_screen_transition_vanity();
-		gameState.MAIN_MENU:
-			MUSIC.change_state(MusicHandler.musState.MENU);
-			
-			destroy_all_enemies(true);
-			HUD_mainMenu.show();
-			pass
-		gameState.GAME_OVER:
-			MUSIC.change_state(MusicHandler.musState.GAME_OVER);
-			
-			HUD_gameOver.show();
-			pass
-		gameState.CREDITS:
-			MUSIC.change_state(MusicHandler.musState.CREDITS);
-			
-			HUD_credits.show();
-			pass
-		gameState.OPTIONS:
-			MUSIC.change_state(MusicHandler.musState.OPTIONS);
-			
-			HUD_options.open_sesame(true);
-			pass
-		gameState.INIT_NEW_GAME:
-			
-			MUSIC.change_state(MusicHandler.musState.SHOP);
-			
-			GameState.start_death_timer(120.0,true)
-			roundNum = 0;
-			roundEnemiesInit = 1;
-			clear_enemy_spawn_list();
-			scrapGained = 0;
-			enemiesKilled = 0;
-			
-			GameState.call_deferred("make_screen_transition_arrive", 5);
-			
-			pass
-		gameState.PLAY:
-			player.start_round();
-			pass
-		gameState.GOTO_SHOP:
-			player.end_round();
-			GameState.call_deferred("make_screen_transition_arrive", 2);
-		gameState.INIT_SHOP:
-			MUSIC.change_state(MusicHandler.musState.SHOP);
-			
-			##TODO: THIS IS TEMPORARY.
-			change_state(gameState.SHOP);
-			move_player_to_workshop();
-		gameState.SHOP:
-			GameState.call_deferred("make_screen_transition_leave");
-			player.enter_shop();
-			
-			###TODO: THIS IS TEMPORARY.
-			#change_state(gameState.LEAVE_SHOP);
-			pass
-		gameState.LEAVE_SHOP:
-			MUSIC.change_state(MusicHandler.musState.SHOP);
-			
-			player.exit_shop();
-			GameState.call_deferred("make_screen_transition_arrive", 2);
-		gameState.INIT_ROUND:
-			MUSIC.change_state(MusicHandler.musState.PREGAME);
-			
-			roundNum += 1;
-			set_enemy_spawn_waves(roundNum);
-			waveTimer = 3;
-			wave = 0;
-			roundEnemiesInit += 2;
-			roundEnemies = roundEnemiesInit;
-			
-			new_round_arena_sequence();
-			pass
-		gameState.BEGIN_ROUND:
-			GameState.call_deferred("make_screen_transition_leave");
-			player.start_round();
-			pass
-
-func new_round_arena_sequence():
-	if roundNum == 1:
-		move_to_random_biome_and_arena();
-	else:
-		move_to_random_arena_in_current_biome();
-	var obstaclesToPlace = load_new_current_arena_variant();
-	
-	##TODO: Move enemies down here and have the frames to wait be max between that and obstacles.
-	#initRoundFrameWait = max(obstaclesToPlace, obstaclesToPlace)
-	initRoundFrameWait = obstaclesToPlace;
-
-var splashTimer := 5.5;
-var initRoundFrameWait := 0.0;
-func process_state(delta : float, state : gameState):
-	match curState:
-		gameState.SPLASH:
-			splashTimer -= delta;
-			if splashTimer < 0 or  GameState.is_fire_action_being_pressed():
-				change_state(gameState.MAIN_MENU);
-			pass
-		gameState.MAIN_MENU:
-			pass
-		gameState.GAME_OVER:
-			pass
-		gameState.CREDITS:
-			pass
-		gameState.PLAY:
-			if GameState.get_setting("killAllKey") and Input.is_action_just_pressed("DBG_KillAll"):
-				destroy_all_enemies()
-			
-			if not GameState.is_paused():
-				waveTimer -= delta;
-				spawnTimer -= delta;
-			
-			if roundEnemies > 0:
-				if waveTimer <= 0:
-					waveTimer = 10;
-					wave += 1;
-					var amtAlive = check_alive_enemies()
-					#print("alive: ", amtAlive)
-					var amtToSpawn = max(0, min(3+roundNum,10,roundEnemies))
-					#var amtToSpawn = max(0, min(1, 1 - amtAlive))
-					#print(amtToSpawn, amtAlive)
-					spawn_wave(amtToSpawn)
-					MUSIC.change_state(MusicHandler.musState.BATTLING);
-			
-			if spawnTimer <= 0:
-				spawn_enemy_from_wave();
-				
-				if get_enemies_left_for_wave() <= 0:
-					change_state(gameState.GOTO_SHOP);
-				else:
-					spawnTimer=0.15;
-			
-			pass
-		gameState.SHOP:
-			pass
-		gameState.INIT_ROUND:
-			#print(currentArena)
-			#prints("STATE: INIT_ROUND, initRoundFrameWait:",initRoundFrameWait,"roundNum:",roundNum)
-			if initRoundFrameWait < 0 and respawnResult == true:
-				new_arena_is_built();
-			if is_instance_valid(currentArena):
-				if is_instance_valid(currentArena.obstaclesNode):
-					if currentArena.obstaclesNode.cells.size() == 0:
-						if respawnResult == false:
-							if ! spawn_or_respawn_player(): ## If the player did not successfully spawn or respawn, try again next frame...
-								#print("STATE CHANGE PAUSED; PLAYER NOT RESPAWNED")
-								initRoundFrameWait += 1;
-				else:
-					#print("STATE CHANGE PAUSED; OBSTACLES NODE IS INVALID")
-					currentArena.load_new_random_variant();
-					initRoundFrameWait += 1;
-			else:
-				#print("STATE CHANGE PAUSED; ARENA IS INVALID")
-				initRoundFrameWait += 1;
-			initRoundFrameWait -= 1;
-			pass
-	pass
-
-func screen_transition(scr_state : ScreenTransition.mode):
-	match scr_state:
-		ScreenTransition.mode.RIGHT:
-			match curState:
-				gameState.BEGIN_ROUND:
-					change_state(gameState.PLAY);
-		ScreenTransition.mode.CENTER:
-			match curState:
-				gameState.INIT_NEW_GAME:
-					change_state(gameState.INIT_ROUND);
-				gameState.GOTO_SHOP:
-					change_state(gameState.INIT_SHOP);
-				gameState.LEAVE_SHOP:
-					change_state(gameState.INIT_ROUND);
-			pass;
-
-## Fired by the current arena when it's done building.
-func new_arena_is_built():
-	if in_one_of_given_states([gameState.INIT_ROUND]):
-		change_state(gameState.BEGIN_ROUND);
-
-func update_lighting():
-	LIGHT.shadow_enabled = GameState.get_setting("renderShadows");
-
-##returns true if we're in a state that might be considered a part of the game loop.
-func in_state_of_play()->bool:
-	return in_one_of_given_states(play_states);
-
-##returns true if we're in a state where build-a-bot mode is activated.
-func in_state_of_building()->bool:
-	return in_one_of_given_states(build_states);
-
-func in_game_over_state()->bool:
-	return in_one_of_given_states(game_over_states) and player.aliveLastFrame;
-
-func in_one_of_given_states(states:Array)->bool:
-	var currentState = GameState.get_game_board_state();
-	return currentState in states;
-
-
-#################### ENTITY SPAWNING 
+#################### PLAYER SPAWNING 
 
 @export var inspectorHUD : Inspector;
 @export var stashHUD : PieceStash;
 @export var abilityHUD : AbilitySlotManager;
 
-func spawn_player_new_game(_in_position = return_random_unoccupied_spawn_location_position()) -> Robot_Player:
-	respawnResult = false;
-	if _in_position == null:
-		return null;
-	
-	if player != null:
-		#player.body.position = _in_position;
-		player.body.set_deferred("position", _in_position)
+func spawn_player_new_game() -> Robot_Player:
+	if player != null and is_instance_valid(player):
+		return player;
 	else:
+		if is_instance_valid(player):
+			if player.is_inside_tree():
+				player.queue_free();
+		
 		var newPlayer = playerScene.instantiate();
 		add_child(newPlayer);
-		newPlayer.global_position = Vector3.ZERO;
-		newPlayer.body.set_deferred("position", _in_position)
 		player = newPlayer;
 	
+	player.start_new_game();
 	player.queue_live();
 	stashHUD.currentRobot = player;
 	player.inspectorHUD = inspectorHUD;
 	abilityHUD.currentRobot = player;
 	stashHUD.regenerate_list();
-	
-	respawnResult = true;
 	return player;
 
 func teleport_player(_in_position := playerSpawnPosition):
-	if player != null:
-		#player.body.position = _in_position;
+	var teleportResult = false;
+	if player != null and is_instance_valid(player):
 		player.body.set_deferred("position", _in_position);
+		teleportResult = true;
+	return teleportResult;
 
-var respawnResult := false;
 func respawn_player():
-	respawnResult = false;
-	var location = return_random_unoccupied_spawn_location_position();
-	if location != null:
-		teleport_player(location);
-		respawnResult = true;
-	return respawnResult;
+	var respawnResult := false;
+	
+	if is_instance_valid(player):
+		if is_instance_valid(currentArena):
+			if is_instance_valid(currentArena.obstaclesNode):
+				currentArena.reset_spawning_locations();
+				print("STATE: RESPAWNING PLAYER ATTEMPT NOW; ", currentArena.obstaclesNode, currentArena.spawningLocations.size())
+				if currentArena.spawningLocations.size() > 0:
+					var location = return_random_unoccupied_spawn_location_position();
+					if location != null:
+						respawnResult = teleport_player(location);
+					print("STATE: PLAYER RESPAWN RESULT: ",respawnResult)
+					return respawnResult;
 
 func spawn_or_respawn_player():
-	## Spawn or respawn the player.
-	if roundNum == 1:
-		spawn_player_new_game();
-		
-		if respawnResult == true:
-			player.start_new_game();
-	else:
-		respawn_player();
+	var respawnResult = false;
 	
+	## Spawn the player if they're null.
+	if (player == null or !is_instance_valid(player)):
+		spawn_player_new_game();
+	respawnResult = respawn_player();
+	#print("STATE:WHY, ",respawnResult)
 	return respawnResult;
 
 ##Returns a spawn location that isn't occupied by the player
@@ -647,7 +858,7 @@ func return_random_unoccupied_spawn_location_position():
 ##Returns a spawn location that isn't occupied by the player
 func return_random_unoccupied_spawn_location() -> RobotSpawnLocation:
 	if is_instance_valid(get_current_arena()):
-		return get_current_arena().return_random_unoccupied_spawn_location();
+		return currentArena.return_random_unoccupied_spawn_location();
 	return null;
 
 func spawn_wave(numOfEnemies := 0):
@@ -782,14 +993,15 @@ func game_over():
 	change_state(gameState.GAME_OVER);
 
 @export var workshopArea : Node3D; ##@deprecated
-##@deprecated
+## Caches the current arena, moves us to the workshop, then 
 func move_player_to_workshop():
-	## Swap in the workshop from the cache.
+	arena_move_master("Workshop", "Base", "Base", cacheOpt.CACHE_OLD_AND_SET_INPUT_CURRENT);
+
+func move_out_of_workshop():
+	swap_current_arena_with_cache();
+	swap_current_biome_with_cache();
 	clear_cache();
-	cache_current_arena();
-	cache_current_biome();
-	move_to_named_arena_in_named_biome("Workshop", "Base");
-	respawn_player();
+	#arena_move_master("Workshop", "Base", "Base", cacheOpt.CACHE_INPUT_AND_SET_OLD_CACHE_CURRENT);
 
 ############## BUTTON CALLS
 func _on_btn_play_pressed():

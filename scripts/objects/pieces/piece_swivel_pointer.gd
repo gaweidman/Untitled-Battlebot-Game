@@ -36,12 +36,17 @@ func use_passive(passiveAbility : AbilityManager):
 
 func target():
 	var prevRotation = targetRotation;
-	if host_is_player():
-		var rot = cam.get_rotation_to_fake_aiming(global_position);
-		
-		if rot != null:
-			targetRotation = rot - get_host_robot().get_global_body_rotation().y - get_host_socket().rotation.y;
-		else:
-			targetRotation = prevRotation;
+	var bot = get_host_robot();
+	if is_instance_valid(bot):
+		if bot is Robot_Player:
+			var rot = cam.get_rotation_to_fake_aiming(global_position);
+			
+			if rot != null:
+				targetRotation = rot - get_host_robot().get_global_body_rotation().y - get_host_socket().rotation.y;
+			else:
+				targetRotation = prevRotation;
+		elif bot is Robot_Enemy:
+			pointerLocation = bot.pointerTarget;
+			targetRotation = Vector2(pointerLocation.x, pointerLocation.z).angle() - get_host_socket().rotation.y - global_rotation.y;
 	else:
 		pass;

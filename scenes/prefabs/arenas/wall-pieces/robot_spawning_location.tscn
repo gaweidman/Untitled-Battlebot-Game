@@ -1,29 +1,16 @@
-[gd_scene load_steps=8 format=3 uid="uid://bba8vj0138gwa"]
+[gd_scene load_steps=6 format=3 uid="uid://bba8vj0138gwa"]
 
 [ext_resource type="Script" uid="uid://d34cmk8b8haau" path="res://scripts/objects/robot_spawn_location.gd" id="1_ky7ff"]
+[ext_resource type="Material" uid="uid://gjhbvv8a7he3" path="res://graphics/materials/robot_spawning_location.tres" id="1_pk0bt"]
 [ext_resource type="Shape3D" uid="uid://bj40u25goj7co" path="res://scenes/prefabs/arenas/spawningLocationRayShape.tres" id="2_pk0bt"]
 [ext_resource type="Texture2D" uid="uid://oxhe4uwmstjd" path="res://graphics/images/HUD/enemyPing.png" id="3_n4i0p"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_6gb4x"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hin37"]
-load_path = "res://.godot/imported/cooldownIconStriped.png-71ac35bc0d02227fb89de9439860e66e.s3tc.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_l6vea"]
-load_path = "res://.godot/imported/cooldownIconStriped.png-71ac35bc0d02227fb89de9439860e66e.s3tc.ctex"
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lbqok"]
-transparency = 1
-albedo_texture = SubResource("CompressedTexture2D_hin37")
-emission_enabled = true
-emission_texture = SubResource("CompressedTexture2D_l6vea")
-texture_filter = 0
-billboard_mode = 1
+material = ExtResource("1_pk0bt")
 
 [node name="RobotSpawningLocation" type="MeshInstance3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)
 mesh = SubResource("QuadMesh_6gb4x")
-surface_material_override/0 = SubResource("StandardMaterial3D_lbqok")
 script = ExtResource("1_ky7ff")
 
 [node name="RobotSpawningLocation" type="ShapeCast3D" parent="."]

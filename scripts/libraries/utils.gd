@@ -102,3 +102,69 @@ func look_at_safe(node : Node3D, target : Vector3, up := Vector3(0,1,0)):
 ## Prints the input only when the boolean value is true.
 func print_if_true(printable, boolean : bool):
 	if boolean: print(printable);
+
+const gridMapRotationSequences = {
+	0:"",
+	1:"Z-",
+	2:"Z-Z-",
+	3:"Z+",
+	4:"X+",
+	5:"X+Z-",
+	6:"Y-Y-X+",
+	7:"X+Z+",
+	8:"Z-Z-Y-Y-",
+	9:"Z+X-X-",
+	10:"Y+Y+",
+	11:"Y+Y+Z-",
+	12:"X-",
+	13:"X-Z-",
+	14:"X-Z+Z+",
+	15:"Z+Y-",
+	16:"Y+",
+	17:"Y+Y+Z-X+",
+	18:"Y+X-X-",
+	19:"X+Y-",
+	20:"Z-Z-Y-",
+	21:"Y-Y-X+Y-",
+	22:"Y-",
+	23:"Y+Z-",
+}
+
+var gridMapRotations : Dictionary[int,Vector3] = {};
+
+func rotate_using_gridmap_orientation(object : Node3D, orientation : int):
+	if orientation == 0: return;
+	if orientation in gridMapRotations:
+		object.rotation = gridMapRotations[orientation];
+		return;
+	else:
+		var stringToParse = gridMapRotationSequences[orientation];
+		var axisStorage = ""
+		for char in stringToParse:
+			match char:
+				"X":
+					axisStorage = "X";
+				"Y":
+					axisStorage = "Y";
+				"Z":
+					axisStorage = "Z";
+				"+":
+					match axisStorage:
+						"X":
+							object.rotate_x(PI/2)
+						"Y":
+							object.rotate_y(PI/2)
+						"Z":
+							object.rotate_z(PI/2)
+					axisStorage = "";
+				"-":
+					match axisStorage:
+						"X":
+							object.rotate_x(-PI/2)
+						"Y":
+							object.rotate_y(-PI/2)
+						"Z":
+							object.rotate_z(-PI/2)
+					axisStorage = "";
+		
+		gridMapRotations[orientation] = object.rotation;

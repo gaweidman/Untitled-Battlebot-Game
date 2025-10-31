@@ -201,7 +201,7 @@ func phys_process_timers(delta):
 	##Tick down ability cooldowns.
 	if is_equipped():
 		var bot = get_host_robot();
-		if bot.is_conscious():
+		if bot.is_running_cooldowns():
 			for ability in get_all_abilities():
 				ability.tick_cooldown(delta);
 	pass;
@@ -265,6 +265,7 @@ func get_weight_load():
 		for socket in get_all_female_sockets():
 			_weight += get_socket_weight_load(socket, true);
 		weightLoad = _weight;
+		regenerateWeightLoad = false;
 	return weightLoad;
 
 func get_regenerated_weight_load():
@@ -505,7 +506,7 @@ func standard_ability_checks(action : AbilityManager):
 	if bot == null:
 		return false;
 	else:
-		if !bot.is_alive():
+		if !bot.is_conscious():
 			return false;
 	## Check that it's not on cooldown.
 	if on_cooldown_action(action):
@@ -1267,6 +1268,8 @@ func has_robot_host():
 	return is_instance_valid(get_host_robot());
 func host_is_player() -> bool:
 	return has_robot_host() and (get_host_robot() is Robot_Player);
+func host_is_enemy() -> bool:
+	return has_robot_host() and (get_host_robot() is Robot_Enemy);
 func is_equipped():
 	return is_assigned_to_socket() and has_robot_host();
 func is_equipped_by_player():

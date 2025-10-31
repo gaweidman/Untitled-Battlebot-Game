@@ -20,15 +20,17 @@ func _process(delta):
 		var tileCoord = cells.pop_front();
 		var tileIDX = get_cell_item(tileCoord);
 		var tileName = mesh_library.get_item_name(tileIDX);
-		print(tileName);
+		var tileOrientation = get_cell_item_orientation(tileCoord);
 		var fileNameToCheck = str(wallPiecesSceneFolder, tileName.to_snake_case(), ".tscn");
 		if FileAccess.file_exists(fileNameToCheck):
-			print("file found");
+			print("STATE: ADDING ", tileName, " WITH ORIENTATION ", tileOrientation);
 			var newThing = load(fileNameToCheck).instantiate();
 			set_cell_item(tileCoord, INVALID_CELL_ITEM);
 			add_child(newThing);
+			#newThing.rotation = tileOrientation;
 			var pos = to_global(map_to_local(tileCoord));
 			newThing.global_position = pos;
+			Utils.rotate_using_gridmap_orientation(newThing, tileOrientation);
 	else:
 		if started:
 			built = true;
