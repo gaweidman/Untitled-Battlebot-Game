@@ -19,6 +19,7 @@ class_name AbilityManager
 @export var disabled := false;
 @export var functionWhenUsed : Callable;
 var assignedSlots : Array[int] = [];
+var abilityID;
 
 var cooldownTimer := 0.0;
 enum runTypes {

@@ -328,7 +328,6 @@ func get_unique_collider_id() -> int:
 	colliderID += 1;
 	return ret;
 
-
 var statHolderID := 0;
 
 func get_unique_stat_holder_id() -> int:
@@ -336,6 +335,12 @@ func get_unique_stat_holder_id() -> int:
 	statHolderID += 1;
 	return ret;
 
+var abilityID := 0;
+
+func get_unique_ability_id() -> int:
+	var ret = abilityID;
+	abilityID += 1;
+	return ret;
 
 ############ SETTINGS AND SAVE DATA
 
