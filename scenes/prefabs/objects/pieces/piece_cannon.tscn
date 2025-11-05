@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_52v1y"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_mjslu"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_f406y"]
-[ext_resource type="Resource" uid="uid://4easq571wef0" path="res://scenes/prefabs/abilities/ability_cannon_fire.tres" id="4_f406y"]
+[ext_resource type="Resource" uid="uid://4easq571wef0" path="res://scenes/prefabs/abilities/active/ability_cannon_fire.tres" id="4_f406y"]
 [ext_resource type="Resource" uid="uid://beks5dpxmrcok" path="res://scenes/prefabs/abilities/passive/ability_piece_cannon_refreshBullets.tres" id="5_shgbd"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="6_f406y"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_rjpgo"]

@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cgcnhigjynv0q" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece.tscn" id="1_5x2u0"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_hcxml"]
 [ext_resource type="Script" uid="uid://bo2fp3wcxcmo0" path="res://scripts/objects/pieces/piece_rocket.gd" id="2_tvl21"]
-[ext_resource type="Resource" uid="uid://bewjw8jqgrdek" path="res://scenes/prefabs/abilities/ability_piece_rocket_blastoff.tres" id="3_tvl21"]
+[ext_resource type="Resource" uid="uid://bewjw8jqgrdek" path="res://scenes/prefabs/abilities/active/ability_piece_rocket_blastoff.tres" id="3_tvl21"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="4_xavqm"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tvl21"]

@@ -615,35 +615,8 @@ func ability_registry():
 func ability_validation():
 	## Duplicate the resources so the ability doesn't get joint custody with another piece of the same type.
 	## Construct the description FIRST, because the constructor array is not going to get copied over.
+	AbilityDistributor.distribute_all_abilities_to_piece(self);
 	print_rich("[color=pink]INIT ACTIVES:", activeAbilities);
-	
-	var activesNew : Array[AbilityManager] = []
-	for ability in activeAbilities:
-		if ability is AbilityManager:
-			ability.construct_description();
-			var dupe = ability.duplicate(true);
-			if ! dupe.initialized or !is_instance_valid(dupe.assignedPieceOrPart):
-				dupe.assign_references(self);
-			dupe.initialized = true;
-			activesNew.append(dupe);
-	#activeAbilities.clear();
-	activeAbilities = activesNew;
-	
-	## Do the same with the passive.
-	var passivesNew : Array[AbilityManager] = []
-	for passiveAbility in passiveAbilities:
-		if passiveAbility != null and passiveAbility is AbilityManager:
-			passiveAbility.construct_description();
-			var dupe = passiveAbility.duplicate(true);
-			if ! dupe.initialized or !is_instance_valid(dupe.assignedPieceOrPart):
-				dupe.assign_references(self);
-			dupe.isPassive = true;
-			dupe.initialized = true;
-			passivesNew.append(dupe);
-	
-	#passiveAbilities.clear();
-	passiveAbilities = passivesNew;
-	
 	pass;
 
 ## returns an array of all abilities, active and passive.
