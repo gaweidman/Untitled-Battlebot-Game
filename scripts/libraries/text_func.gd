@@ -66,9 +66,9 @@ func set_text_color(node, _color):
 func get_color(_color) -> Color:
 	if _color is textColorsEnum: ##Get the string from the enum name.
 		_color = textColorsEnum.keys()[_color];
-	if _color is Color:
+	elif _color is Color:
 		return _color;
-	if _color is String:
+	elif _color is String:
 		var newCol := Color(textColors["white"]);
 		if _color in textColors:
 			newCol = Color(textColors[_color]);

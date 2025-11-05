@@ -141,6 +141,7 @@ func create_startup_data():
 		socketDict[index] = socketData;
 	
 	## Abilities. If an ability has been assigned to a slot and is not passive, add its name and assigned slots to the data.
+	ability_validation();
 	var abilityDict := {}
 	var disabled := []
 	for ability in get_all_abilities():
@@ -621,10 +622,10 @@ func ability_validation():
 		if ability is AbilityManager:
 			ability.construct_description();
 			var dupe = ability.duplicate(true);
-			activesNew.append(dupe);
-			if ! dupe.initialized:
+			if ! dupe.initialized or !is_instance_valid(dupe.assignedPieceOrPart):
 				dupe.assign_references(self);
 			dupe.initialized = true;
+			activesNew.append(dupe);
 	#activeAbilities.clear();
 	activeAbilities = activesNew;
 	
@@ -634,12 +635,12 @@ func ability_validation():
 		if passiveAbility != null and passiveAbility is AbilityManager:
 			passiveAbility.construct_description();
 			var dupe = passiveAbility.duplicate(true);
-			passivesNew.append(dupe);
-			if ! dupe.initialized:
+			if ! dupe.initialized or !is_instance_valid(dupe.assignedPieceOrPart):
 				dupe.assign_references(self);
 			dupe.isPassive = true;
 			dupe.initialized = true;
-			passiveAbility = dupe;
+			passivesNew.append(dupe);
+	
 	#passiveAbilities.clear();
 	passiveAbilities = passivesNew;
 	
@@ -1176,10 +1177,12 @@ var allSockets : Array[Socket] = []
 func get_index_of_socket(inSocket : Socket) -> int:
 	return get_all_female_sockets().find(inSocket);
 func get_socket_at_index(socketIndex : int) -> Socket:
-	return get_all_female_sockets()[socketIndex];
+	var all = get_all_female_sockets();
+	return all[socketIndex];
 
 func autograb_sockets():
 	var sockets = Utils.get_all_children_of_type(self, Socket, self);
+	print(sockets);
 	allSockets = [];
 	for socket : Socket in sockets:
 		Utils.append_unique(allSockets, socket);
@@ -1190,7 +1193,7 @@ func autograb_sockets():
 ##Returns a list of all sockets on this part.
 func get_all_female_sockets() -> Array[Socket]:
 	if allSockets.is_empty():
-		return autograb_sockets();
+		allSockets = autograb_sockets();
 	return allSockets;
 
 func register_socket(socket : Socket):

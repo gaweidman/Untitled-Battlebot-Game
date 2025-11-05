@@ -37,7 +37,7 @@ func get_all_children(node, ownerToCheck : Node = null, init := true) -> Array:
 func get_all_children_of_type(node, type : Object = Node, ownerToCheck : Node = null) -> Array:
 	var nodes : Array = [];
 	var all = get_all_children(node, ownerToCheck);
-	#print(all)
+	
 	for child in all:
 		if is_instance_of(child, type):
 			nodes.append(child);

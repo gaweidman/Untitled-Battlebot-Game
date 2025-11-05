@@ -31,6 +31,7 @@ func _process(delta):
 		for index in currentRobot.active_abilities.keys():
 			var ability = currentRobot.active_abilities[index];
 			var slotAtIndex = allSlots[index];
+			
 			slotAtIndex.assign_ability(ability);
 		
 		## If there's something in the pipette, activate assignment mode.

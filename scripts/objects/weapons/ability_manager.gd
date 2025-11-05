@@ -68,6 +68,7 @@ func register(partOrPiece : Node, _abilityName : String = "Active Ability", _abi
 func assign_references(partOrPiece : Node):
 	if partOrPiece is Piece:
 		assignedPieceOrPart = partOrPiece;
+		print("Why not?")
 
 func construct_description():
 	if ! abilityDescriptionConstructor.is_empty():

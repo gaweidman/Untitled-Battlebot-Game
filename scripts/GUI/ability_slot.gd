@@ -69,11 +69,14 @@ func _on_assign_pressed():
 
 
 func assign_ability(ability : AbilityManager):
-	if ! (ability != referencedAbility):
+	if (ability == referencedAbility):
 		return;
-	if is_instance_valid(ability):
+	if ! ability.initialized:
+		return;
+	if is_instance_valid(ability) and ability is AbilityManager:
 		print("Ability assigned!")
 		referencedAbility = ability;
+		set_deferred("referencedAbility", ability);
 		
 		## Change the icon data.
 		spr_icon.texture = ability.icon;
@@ -85,6 +88,7 @@ func assign_ability(ability : AbilityManager):
 		
 		update_ability(ability);
 	else:
+		print("Ability cleared.")
 		clear_assignment();
 	pass;
 
