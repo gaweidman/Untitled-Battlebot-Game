@@ -132,14 +132,18 @@ offset_top = -65.0
 offset_right = 23.0
 offset_bottom = 0.0
 resourceName = "Incoming Energy"
-width = 65.0
-offset = 6.0
-label = NodePath("../../MiscBG/Energy/EnergyIconStriped/lbl_energy")
-colorAlt = "lightblue"
+width = 46.0
+height = 65.0
+paddingStart = 13.0
+paddingEnd = -2.0
+currentMax = 3.0
+EDITOR_fillAmt = -1
 maskTexture = ExtResource("11_g6gak")
 fullTexture = ExtResource("12_rf4fe")
-emptytexture = ExtResource("13_x17s8")
+emptyTexture = ExtResource("13_x17s8")
 direction = 2
+label = NodePath("../../MiscBG/Energy/EnergyIconStriped/lbl_energy")
+colorAlt = "lightblue"
 addSpaces = false
 addZeroes = true
 decimalPlaces = 1
@@ -149,6 +153,16 @@ size = Vector2i(46, 65)
 
 [node name="FullHealth" parent="EnergyBar_Case/EnergyBar/SubViewport/BarHolder" index="0"]
 texture = ExtResource("12_rf4fe")
+
+[node name="EmptyHealth" parent="EnergyBar_Case/EnergyBar/SubViewport/BarHolder" index="1"]
+offset_left = 0.0
+offset_top = -37.1986
+offset_right = 0.0
+offset_bottom = -37.1986
+texture = ExtResource("13_x17s8")
+
+[node name="Lbl_Health" parent="EnergyBar_Case/EnergyBar/SubViewport/BarHolder" index="2"]
+visible = false
 
 [node name="Blinky" type="TextureRect" parent="EnergyBar_Case"]
 layout_mode = 0
@@ -206,6 +220,7 @@ offset_top = -15.0
 offset_right = 21.0
 offset_bottom = -8.0
 theme = ExtResource("7_4isuo")
+theme_override_colors/font_color = Color(1, 0.431373, 0.286275, 1)
 theme_override_constants/outline_size = 4
 theme_override_constants/shadow_outline_size = 0
 theme_override_font_sizes/font_size = 5

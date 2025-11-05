@@ -23,7 +23,7 @@ script = ExtResource("1_r71a5")
 
 [node name="edgeL" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = -224.0
+offset_left = -256.0
 offset_bottom = 1080.0
 texture = SubResource("GradientTexture1D_ywbr4")
 

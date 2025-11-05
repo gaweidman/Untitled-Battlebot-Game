@@ -10,6 +10,10 @@ class_name TransitionCanvas
 @export var modulator : CanvasModulate;
 
 var dbg_hidden := false;
+var dbg_prof := false;
+@export var debug_canvas : CanvasLayer;
+@export var debug_label : Label;
+
 
 func initialize():
 	initialize_logo();
@@ -40,6 +44,15 @@ func _process(delta):
 		modulator.color.a = 0.15;
 	else:
 		modulator.color.a = 1;
+	
+	dbg_prof = GameState.get_setting("ProfilerLabelsVisible");
+	if dbg_prof:
+		debug_canvas.visible = true;
+		if is_instance_valid(debug_label):
+			debug_label.text = GameState.get_profiler_label();
+	else:
+		debug_canvas.hide();
+	
 	
 	if logoTime:
 		lbl_companyName.visible = true;

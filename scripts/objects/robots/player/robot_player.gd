@@ -36,9 +36,11 @@ func is_conscious():
 
 func _physics_process(delta):
 	super(delta)
+func _process(delta):
+	super(delta)
 	update_bars(); ##Bars should be updated at the very end.
 
-func phys_process_timers(delta):
+func process_timers(delta):
 	super(delta);
 	forcedUpdateTimerHUD -= 1;
 	if forcedUpdateTimerHUD <= 0:

@@ -57,7 +57,7 @@ func check_is_unoccupied() -> bool:
 	return true;
 
 
-var enemyTypeToSpawn := preload("res://scenes/prefabs/objects/robots/robot_test.tscn");
+var enemyTypeToSpawn = preload("res://scenes/prefabs/objects/robots/robot_test.tscn");
 var gameBoard : GameBoard;
 var newEnemy : Node3D;
 var timer := 0.0;
@@ -74,6 +74,11 @@ func spawn_enemy():
 			newEnemy.queue_live();
 	newEnemy = null;
 
+func assign_enemy_type(inPath):
+	if inPath is String:
+		assign_enemy_type_from_string_path(inPath);
+	if inPath is PackedScene or inPath is Resource:
+		assign_enemy_type_from_resource(inPath);
 func assign_enemy_type_from_string_path(inPath : String):
 	enemyTypeToSpawn = load(inPath);
 func assign_enemy_type_from_resource(inPath : Resource):

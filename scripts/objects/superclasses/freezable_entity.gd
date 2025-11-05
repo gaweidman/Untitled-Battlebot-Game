@@ -10,6 +10,15 @@ class_name FreezableEntity
 var is_ready := false;
 func _ready():
 	set_deferred("is_ready", true);
+
+func _process(delta):
+	if not is_paused():
+		process_timers(delta);
+
+##Any and all timers go here.
+func process_timers(delta):
+	pass;
+
 func _physics_process(delta):
 	phys_process_pre(delta);
 	if not is_paused():
@@ -19,7 +28,7 @@ func _physics_process(delta):
 func phys_process_pre(delta):
 	if freezeQueued: freeze(true);
 
-##Any and all timers go here.
+##Any and all timers [u]related to physics[/u] go here.
 func phys_process_timers(delta):
 	pass;
 

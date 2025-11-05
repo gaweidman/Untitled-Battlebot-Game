@@ -24,6 +24,10 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	var dbg_prof = GameState.get_setting("ProfilerLabelsVisible");
+	if dbg_prof:
+		profiler(delta);
+	
 	ping_screen_transition();
 	
 	
@@ -38,7 +42,15 @@ func _process(delta: float) -> void:
 			push_warning("Transition canvas being DISABLED (Hit f3)")
 		else:
 			push_warning("Transition canvas being ENABLED (Hit f3)")
+	elif Input.is_action_just_pressed("dbg_ToggleProfiler"):
+		var dbg_hidden = get_setting("ProfilerLabelsVisible");
+		set_setting("ProfilerLabelsVisible", !dbg_hidden)
+		if !dbg_hidden:
+			push_warning("Profiler labels being DISABLED (Hit f5)")
+		else:
+			push_warning("Profiler labels being ENABLED (Hit f5)")
 	pass
+
 
 func quit_game():
 	save_settings();
@@ -210,14 +222,14 @@ func get_bar_hp() -> HealthBar:
 	var ghud = get_game_hud();
 	
 	if ghud != null:
-		return ghud.get_node_or_null("LeftSide/HealthBar");
+		return ghud.get_node_or_null("LeftSide/HealthBarHolder/HealthBar");
 	return null;
 
 func get_bar_energy() -> HealthBar:
 	var ghud = get_game_hud();
 	
 	if ghud != null:
-		return ghud.get_node_or_null("RightSide/EnergyBar");
+		return ghud.get_node_or_null("RightSide/EnergyBarHolder/EnergyBar");
 	return null;
 
 func get_engine_viewer() -> PartsHolder_Engine:
@@ -342,6 +354,7 @@ static var settings := {
 	StringName("killAllKey") : false,
 	
 	StringName("HiddenScreenTransitions") : false,
+	StringName("ProfilerLabelsVisible") : false,
 	
 	StringName("renderShadows") : true,
 }
@@ -507,8 +520,6 @@ func init_screen_transition():
 	screenTransition = canvas.transition;
 	
 	init_screen_transition_vanity();
-	
-	
 
 func init_screen_transition_vanity():
 	transitionCanvas.initialize();
@@ -565,3 +576,49 @@ func ping_screen_transition():
 		hit_center();
 	if screenTransition.is_on_right():
 		hit_right();
+
+var timeCounter = 0.;
+var profilerFPS := 0;
+var profilerFrames := 0;
+var profilerCallsA := 0;
+var profilerBankA := 0;
+var profilerCallsB := 0;
+var profilerBankB := 0;
+var profilerCallsC := 0;
+var profilerBankC := 0;
+enum profilerBanks {
+	A,
+	B,
+	C
+}
+func profiler_ping(bank:profilerBanks=profilerBanks.A):
+	match bank:
+		profilerBanks.A:
+			profilerCallsA += 1
+		profilerBanks.B:
+			profilerCallsB += 1;
+		profilerBanks.C:
+			profilerCallsC += 1;
+func profiler_ping_A():
+	profiler_ping(profilerBanks.A);
+func profiler_ping_B():
+	profiler_ping(profilerBanks.B);
+func profiler_ping_C():
+	profiler_ping(profilerBanks.C);
+func get_profiler_label():
+	return str("TIME: ",timeCounter,"\nFPS: ",profilerFPS,"\nBANK A: ",profilerBankA,"\nBANK B: ",profilerBankB,"\nBANK C: ",profilerBankC);
+	
+
+func profiler(delta):
+	timeCounter += delta;
+	profilerFrames += 1;
+	if timeCounter > 1:
+		timeCounter -= 1;
+		profilerFPS = profilerFrames;
+		profilerFrames = 0;
+		profilerBankA = profilerCallsA;
+		profilerBankB = profilerCallsB;
+		profilerBankC = profilerCallsC;
+		profilerCallsA = 0;
+		profilerCallsB = 0;
+		profilerCallsC = 0;

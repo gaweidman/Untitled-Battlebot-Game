@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bv0ekk7r3u7a7"]
+[gd_scene load_steps=15 format=3 uid="uid://bv0ekk7r3u7a7"]
 
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena/arena_floor.tres" id="1_obp0w"]
 [ext_resource type="Script" uid="uid://rmvurwv62myf" path="res://scripts/objects/arenas/arena.gd" id="1_qlfvh"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://dwjkokqe7vwbb" path="res://scripts/objects/death_plane.gd" id="3_ml12s"]
 [ext_resource type="Material" uid="uid://b5uawxeiq0ye3" path="res://graphics/materials/models/arena/arena_wall.tres" id="4_rhf1p"]
 [ext_resource type="ArrayMesh" uid="uid://b4ai185oa1w42" path="res://graphics/models/extracted/arena_wall.res" id="5_yjwsq"]
+[ext_resource type="PhysicsMaterial" uid="uid://c53o0weu3y7mg" path="res://scenes/levels/physmat_arena_wall.tres" id="7_1x0n1"]
 [ext_resource type="PackedScene" uid="uid://ctjpou0f3m7go" path="res://scenes/prefabs/arenas/wallgridmap_empty.tscn" id="7_qwvj8"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_er3fg"]
@@ -169,6 +170,7 @@ mesh = ExtResource("5_yjwsq")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="ArenaWall" groups=["Concrete", "Driveable", "World", "WorldWall"]]
 collision_layer = 1024
+physics_material_override = ExtResource("7_1x0n1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaWall/StaticBody3D" groups=["Concrete", "World", "WorldWall"]]
 shape = SubResource("ConcavePolygonShape3D_usc4f")

@@ -241,6 +241,7 @@ roundingMode = 0
 visible = false
 script = ExtResource("1_gpm28")
 frontRayDistance = 1.5
+rayCheckFrequency = 0.25
 meshes = NodePath("Body/Meshes")
 bodyPiece = NodePath("Body/Meshes/Socket/Piece_BodyCube")
 bodySocket = NodePath("Body/Meshes/Socket")
@@ -391,32 +392,7 @@ selectorRayExceptions = [NodePath("../..")]
 dontUsePieceForRobotHost = true
 
 [node name="Piece_BodyCube" parent="Body/Meshes/Socket" node_paths=PackedStringArray("hurtboxCollisionHolder", "hostRobot", "hostSocket") instance=ExtResource("5_0ux8a")]
-rotationSpeed = 0.9
-axisOfRotation = 1
-deltaMultiplier = 30.0
-weightPenalty = 0.015
-weightPenaltyBaseMult = 1.0
-descriptionConstructor = Array[ExtResource("8_iga4a")]([])
-isBody = false
-removable = true
-scrapCostBase = 0
-scrapSellModifierBase = 0.666667
-scrapSalvageModifierBase = 0.166667
-activeAbilities = Array[ExtResource("8_iga4a")]([])
 passiveAbilities = Array[ExtResource("7_dugk5")]([SubResource("Resource_iga4a"), SubResource("Resource_fhxs2")])
-hurtboxAlwaysEnabled = false
-energyDrawPassiveMultiplier = 1.0
-energyDrawActiveMultiplier = 1.0
-energyDrawActiveBaseOverride = 999.0
-energyDrawPassiveBaseOverride = 999.0
-passiveCooldownTimeMultiplier = 1.0
-activeCooldownTimeMultiplier = 1.0
-damageBase = 0.0
-knockbackBase = 0.0
-kickbackBase = 0.0
-damageTypes = Array[ExtResource("8_iga4a")]([])
-disableHitboxesWhileOnCooldown = true
-contactCooldown = 0.0
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 hostRobot = NodePath("../../../..")
 hostSocket = NodePath("..")
@@ -434,7 +410,6 @@ statCollection = Dictionary[String, ExtResource("9_fhxs2")]({
 "ScrapSellModifier8": SubResource("Resource_1g3wq"),
 "Weight8": SubResource("Resource_o22qa")
 })
-AudioSourceType = 0
 
 [node name="BaseCollision" type="CollisionShape3D" parent="Body"]
 shape = SubResource("SphereShape3D_wy0j3")

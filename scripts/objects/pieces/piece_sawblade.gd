@@ -101,7 +101,7 @@ func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, 
 	#hitboxCollisionHolder.scale.lerp(Vector3.ONE * bladeScaleOffset, get_physics_process_delta_time() * 12)
 	#pass;
 
-func cooldown_behavior(onCooldown : bool = on_cooldown()):
+func cooldown_behavior(_onCooldown : bool = on_cooldown()):
 	#if onCooldown:
 		#
 		#return;

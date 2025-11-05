@@ -25,7 +25,6 @@ func _physics_process(delta):
 	if ! Engine.is_editor_hint():
 		super(delta);
 		if not is_paused():
-			phys_process_timers(delta);
 			phys_process_collision(delta);
 			phys_process_abilities(delta);
 
@@ -533,6 +532,7 @@ func can_use_active(action : AbilityManager):
 
 ## Checks if you can use a given passive ability.
 func can_use_passive(passiveAbility : AbilityManager):
+	GameState.profiler_ping_B();
 	## Check that the thing is valid. If not, get the first ability in the relevant list.
 	if ! is_instance_valid(passiveAbility):
 		if passiveAbilities.size() > 0:

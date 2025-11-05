@@ -10,17 +10,24 @@ var pointerLocation := Vector3.ZERO;
 
 func can_use_passive(passiveAbility):
 	if passiveAbility.abilityName == "Target":
-		var rot = global_rotation_degrees;
-		##Can only use the passive if it's not rotated.
-		if rot.x < 5.0 and rot.x > -5.0 and rot.z < 5.0 and rot.z > -5.0:
-			return super(passiveAbility);
-		return false;
+		return super(passiveAbility) and isVertical;
 	return super(passiveAbility);
+
+var verticalCheckTimer := 15;
+var isVertical := false;
+
+func _ready():
+	super();
 
 func phys_process_pre(delta):
 	super(delta);
 	if !is_instance_valid(cam):
 		cam = GameState.get_camera();
+	verticalCheckTimer -=1;
+	if verticalCheckTimer == 1:
+		var rot = global_rotation_degrees;
+		isVertical = (rot.x < 5.0 and rot.x > -5.0 and rot.z < 5.0 and rot.z > -5.0);
+		verticalCheckTimer = 15;
 
 func use_passive(passiveAbility : AbilityManager):
 	if passiveAbility.abilityName == "Target":

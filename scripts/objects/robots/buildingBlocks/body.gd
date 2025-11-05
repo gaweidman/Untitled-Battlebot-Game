@@ -31,8 +31,8 @@ func _integrate_forces(state):
 
 			if current_speed > max_speed:
 				var y = linear_velocity.y;
-				linear_velocity = current_velocity.normalized() * max_speed;
-				linear_velocity.y = y;
+				var cvFIxd = current_velocity.normalized() * max_speed;
+				linear_velocity = Vector3(cvFIxd.x, y, cvFIxd.z);
 		_:
 			pass;
 	#print("Applying current rotation:",currentRotation)

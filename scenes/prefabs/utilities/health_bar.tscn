@@ -1,21 +1,16 @@
 [gd_scene load_steps=8 format=3 uid="uid://rwrbd0hg75ad"]
 
 [ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="1_hvjgs"]
-[ext_resource type="Texture2D" uid="uid://dbyql2y130gc3" path="res://graphics/images/HUD/buttonGFX/digitalTooltipBG.png" id="3_qdmp1"]
+[ext_resource type="Texture2D" uid="uid://c5asvsgahkx0d" path="res://graphics/images/HUD/Health_EmptyOverlayMask.png" id="2_egq82"]
 [ext_resource type="Script" uid="uid://bfml2ah2jiuo4" path="res://scripts/GUI/health_bar.gd" id="3_tusgm"]
+[ext_resource type="Texture2D" uid="uid://2lfl5febi3py" path="res://graphics/images/HUD/Health_FullOverlay.png" id="4_tusgm"]
+[ext_resource type="Texture2D" uid="uid://dw41lyw5ke54n" path="res://graphics/images/HUD/Health_EmptyOverlay.png" id="5_64kj3"]
 [ext_resource type="FontFile" uid="uid://qklyfj282mg3" path="res://graphics/font/Scrap8x14.ttf" id="6_egq82"]
-
-[sub_resource type="Gradient" id="Gradient_hvjgs"]
-offsets = PackedFloat32Array(1)
-colors = PackedColorArray(0.513233, 0.513233, 0.513233, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_egq82"]
-gradient = SubResource("Gradient_hvjgs")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rvrkp"]
 resource_local_to_scene = true
 shader = ExtResource("1_hvjgs")
-shader_parameter/mask = SubResource("GradientTexture1D_egq82")
+shader_parameter/mask = ExtResource("2_egq82")
 
 [node name="HealthBar" type="SubViewportContainer" node_paths=PackedStringArray("emptyBar", "label")]
 texture_filter = 1
@@ -34,6 +29,11 @@ grow_vertical = 0
 stretch = true
 script = ExtResource("3_tusgm")
 emptyBar = NodePath("SubViewport/BarHolder/EmptyHealth")
+height = 163.0
+paddingStart = -6.0
+paddingEnd = -3.0
+currentMax = 3.0
+EDITOR_fillAmt = -1
 label = NodePath("SubViewport/BarHolder/Lbl_Health")
 
 [node name="SubViewport" type="SubViewport" parent="."]
@@ -64,7 +64,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_qdmp1")
+texture = ExtResource("4_tusgm")
 
 [node name="EmptyHealth" type="TextureRect" parent="SubViewport/BarHolder"]
 unique_name_in_owner = true
@@ -73,9 +73,11 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 25.5617
+offset_right = 25.5618
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_qdmp1")
+texture = ExtResource("5_64kj3")
 
 [node name="Lbl_Health" type="Label" parent="SubViewport/BarHolder"]
 unique_name_in_owner = true
@@ -83,6 +85,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 204.0
+offset_bottom = 72.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0.431373, 0.286275, 1)

@@ -69,13 +69,16 @@ func phys_process_pre(delta):
 	body.set_deferred("mass", max(75, min(150, get_weight() * 2)));
 	pass;
 
+func process_timers(delta):
+	super(delta);
+
 func phys_process_timers(delta):
 	super(delta);
 	##Freeze this bot before it can do physics stuff.
 	if not is_frozen():
-		#print("fuck")
 		##Sleep.
-		sleepTimer -= delta;
+		sleepTimer = max(sleepTimer-delta, 0);
+		
 		##Invincibility.
 		if invincibleTimer > 0:
 			invincibleTimer -= delta;
@@ -228,8 +231,8 @@ func update_inspector_hud(input = null):
 ######################### STATE CONTROL
 
 var spawned := false;
-@export var sleepTimerLength := 0.0;
-var sleepTimer := sleepTimerLength; ## An amount of time in which this robot isn't allowed to do anything after spawning.
+@export var sleepTimerLength := 0.0; ## An amount of time in which this robot isn't allowed to do anything after spawning.
+var sleepTimer := sleepTimerLength; ## An amount of time the robot must wait.
 ##Returns true if there's an active sleep timer going. Sleep should be used to prevent actions for a bit on enemies, and maybe "stun" status effects in the future.
 func is_asleep() -> bool:
 	return sleepTimer > 0;
@@ -519,7 +522,7 @@ func take_damage(damage:float):
 		#print(damage," damage being taken.")
 		var health = get_health();
 		var isInvincible = is_invincible();
-		TextFunc.flyaway(damage, get_global_body_position() + Vector3(0,-20,0), "unaffordable")
+		TextFunc.flyaway(damage, get_global_body_position() + Vector3(0,1,0), "unaffordable")
 		if damage > 0:
 			if !isInvincible:
 				#print("Health b4 taking", damage, "damage:", health)
@@ -956,6 +959,7 @@ func get_all_pieces() -> Array[Piece]:
 ##Returns a freshly gathered array of all Pieces attached to this Robot and which have it set as their host.[br]
 ## Saves it to [member allPieces].
 func get_all_pieces_regenerate() -> Array[Piece]:
+	print("regenerating piece list")
 	var piecesGathered : Array[Piece] = [];
 	for child:Piece in Utils.get_all_children_of_type(body, Piece):
 		#print("CHILD OF BOT BODY: ",child)

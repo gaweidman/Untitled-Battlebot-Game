@@ -9,7 +9,7 @@ var blastTimer := 0.0;
 func _ready():
 	super();
 	Hooks.add(self, "OnHitWall", "Rocket", (
-		func(other): 
+		func(_other): 
 			blastTimer = 0.0;
 			print("BONK!")
 			)

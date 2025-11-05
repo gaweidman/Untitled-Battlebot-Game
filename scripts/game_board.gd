@@ -877,6 +877,7 @@ func spawn_enemy_from_wave():
 			newEnemySpawner.assign_gameBoard(self);
 			#add_child(newEnemySpawner);
 			newEnemySpawner.assign_enemy_type_from_resource(enemyScene);
+			newEnemySpawner.assign_enemy_type(enemyScene);
 			var enemy = newEnemySpawner.start_spawn();
 			enemiesAlive.append(enemy);
 			roundEnemies -= 1;

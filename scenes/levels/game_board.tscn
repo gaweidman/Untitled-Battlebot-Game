@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=4 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=84 format=4 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena/arena_floor.tres" id="2_4jixe"]
@@ -43,14 +43,11 @@
 [ext_resource type="TileSet" uid="uid://dicxuohkdpmlx" path="res://graphics/images/HUD/engine/engineTileMap.tres" id="20_u76c3"]
 [ext_resource type="Script" uid="uid://cdymr1vwdiwxo" path="res://scripts/GUI/info_box.gd" id="21_n0uq6"]
 [ext_resource type="Shader" uid="uid://egarbougi4ef" path="res://graphics/shaders/healthbar.gdshader" id="21_sb58i"]
-[ext_resource type="Texture2D" uid="uid://24e2n07ox528" path="res://graphics/images/HUD/Energy_EmptyOverlayMask.png" id="22_dcin4"]
 [ext_resource type="Texture2D" uid="uid://drjmrl4v24oq6" path="res://graphics/images/HUD/infobox/typeIcons/info_melee.png" id="22_t18ps"]
 [ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="23_sb58i"]
-[ext_resource type="Texture2D" uid="uid://db7xxix2ub0ai" path="res://graphics/images/HUD/Energy_FullOverlay.png" id="24_4upc1"]
 [ext_resource type="Texture2D" uid="uid://cnfat2kqvmdcd" path="res://graphics/images/HUD/statIcons/damageIconStriped.png" id="24_dcin4"]
 [ext_resource type="PackedScene" uid="uid://rwrbd0hg75ad" path="res://scenes/prefabs/utilities/health_bar.tscn" id="25_4upc1"]
 [ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="25_hi0i4"]
-[ext_resource type="Texture2D" uid="uid://b30wj1uakji4q" path="res://graphics/images/HUD/Energy_EmptyOverlay.png" id="25_iqmcf"]
 [ext_resource type="FontFile" uid="uid://qklyfj282mg3" path="res://graphics/font/Scrap8x14.ttf" id="25_k23rv"]
 [ext_resource type="Texture2D" uid="uid://djth0eo8kvkcm" path="res://graphics/images/HUD/sell_unselected.png" id="26_4upc1"]
 [ext_resource type="Texture2D" uid="uid://btfetdy0ahup8" path="res://graphics/images/HUD/sell_selected.png" id="27_iqmcf"]
@@ -59,13 +56,22 @@
 [ext_resource type="Texture2D" uid="uid://cxeur7wg8nvq7" path="res://graphics/images/HUD/move_selected.png" id="30_lb2e7"]
 [ext_resource type="PackedScene" uid="uid://bvv3y50mckawn" path="res://scenes/prefabs/objects/gui/ability_slot_manager.tscn" id="31_o0v2b"]
 [ext_resource type="Texture2D" uid="uid://dnu6ivnxlduxo" path="res://graphics/images/HUD/move_hover.png" id="31_vehjn"]
+[ext_resource type="Texture2D" uid="uid://ctnkq5igq82au" path="res://graphics/images/HUD/healthbar/energy_overlay.png" id="32_lk4jc"]
 [ext_resource type="Texture2D" uid="uid://dyotls8fcbklx" path="res://graphics/images/HUD/move_disabled.png" id="32_u76c3"]
+[ext_resource type="Texture2D" uid="uid://bq452mx8iaye5" path="res://graphics/images/HUD/healthbar/NRG.png" id="33_ed2oa"]
 [ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="33_k23rv"]
-[ext_resource type="Texture2D" uid="uid://c5asvsgahkx0d" path="res://graphics/images/HUD/Health_EmptyOverlayMask.png" id="39_2kc6q"]
+[ext_resource type="Texture2D" uid="uid://t82a6tmnn51i" path="res://graphics/images/HUD/healthbar/energy_mask.png" id="34_ndayd"]
+[ext_resource type="Texture2D" uid="uid://c3tc66mps41fj" path="res://graphics/images/HUD/healthbar/energy_full.png" id="35_ngcqk"]
+[ext_resource type="Texture2D" uid="uid://2mr86d446ipq" path="res://graphics/images/HUD/healthbar/energy_empty.png" id="36_f85oj"]
+[ext_resource type="Texture2D" uid="uid://caiexbehaegsy" path="res://graphics/images/HUD/healthbar/HP.png" id="37_25s40"]
 [ext_resource type="PackedScene" uid="uid://de0rs2455fdg4" path="res://scenes/prefabs/objects/parts_holder_engine.tscn" id="43_4upc1"]
 [ext_resource type="PackedScene" uid="uid://dpal3hy2d8lig" path="res://scenes/prefabs/objects/piece_inspector.tscn" id="45_2kc6q"]
 [ext_resource type="Texture2D" uid="uid://dsvo7y55d6y8p" path="res://graphics/images/HUD/pauseBG.png" id="45_hi0i4"]
+[ext_resource type="Texture2D" uid="uid://c6qyv1xd1lhfl" path="res://graphics/images/HUD/healthbar/health_overlay.png" id="45_txgh4"]
 [ext_resource type="Texture2D" uid="uid://cp8nheutmloep" path="res://graphics/images/HUD/chain.png" id="46_4upc1"]
+[ext_resource type="Texture2D" uid="uid://bxb00bn77tr3m" path="res://graphics/images/HUD/healthbar/health_mask.png" id="47_fmmmj"]
+[ext_resource type="Texture2D" uid="uid://c2dixr5vexjjn" path="res://graphics/images/HUD/healthbar/health_full.png" id="48_ed2oa"]
+[ext_resource type="Texture2D" uid="uid://bicgpcm8exttg" path="res://graphics/images/HUD/healthbar/health_empty.png" id="49_4hhnj"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4eh01"]
 sky_top_color = Color(0.0910561, 0.0229013, 0, 1)
@@ -92,19 +98,19 @@ shader = ExtResource("16_1s3sj")
 
 [sub_resource type="Theme" id="Theme_k23rv"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lb2e7"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vehjn"]
 resource_local_to_scene = true
 shader = ExtResource("21_sb58i")
-shader_parameter/mask = ExtResource("22_dcin4")
+shader_parameter/mask = ExtResource("34_ndayd")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kjpyk"]
 atlas = ExtResource("14_m488k")
 region = Rect2(0, 0, 960, 1080)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_vehjn"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fmmmj"]
 resource_local_to_scene = true
 shader = ExtResource("21_sb58i")
-shader_parameter/mask = ExtResource("39_2kc6q")
+shader_parameter/mask = ExtResource("47_fmmmj")
 
 [sub_resource type="AudioStreamSynchronized" id="AudioStreamSynchronized_6fdki"]
 stream_count = 8
@@ -360,18 +366,18 @@ text = "ROUND TIME"
 [node name="TimerBlinkyOff" type="TextureRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/Lbl_Timer"]
 layout_mode = 0
 offset_left = -28.0
-offset_top = -2.0
-offset_right = -4.0
-offset_bottom = 22.0
+offset_top = -4.0
+offset_right = -2.0
+offset_bottom = 24.0
 texture = ExtResource("18_u76c3")
 flip_h = true
 
 [node name="TimerBlinky" type="TextureRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/Lbl_Timer/TimerBlinkyOff"]
 layout_mode = 0
 offset_left = 12.0
-offset_top = 4.0
+offset_top = 6.0
 offset_right = 22.0
-offset_bottom = 15.0
+offset_bottom = 17.0
 texture = ExtResource("15_s0uw0")
 
 [node name="ProgressBarBG" type="NinePatchRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide"]
@@ -477,28 +483,54 @@ offset_bottom = 38.0
 theme = SubResource("Theme_k23rv")
 theme_type_variation = &"FlatButton"
 
-[node name="EnergyBar" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide" instance=ExtResource("25_4upc1")]
-unique_name_in_owner = true
-material = SubResource("ShaderMaterial_lb2e7")
+[node name="AbilitySlotManager" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide" instance=ExtResource("31_o0v2b")]
+
+[node name="EnergyBarHolder" type="TextureRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide"]
+z_index = 1
 layout_mode = 0
+offset_left = 608.0
+offset_top = 929.0
+offset_right = 937.0
+offset_bottom = 1046.0
+texture = ExtResource("32_lk4jc")
+
+[node name="EnergyBar" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/EnergyBarHolder" instance=ExtResource("25_4upc1")]
+unique_name_in_owner = true
+z_index = -1
+material = SubResource("ShaderMaterial_vehjn")
+layout_mode = 1
 anchors_preset = 0
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 601.0
-offset_top = 928.0
-offset_right = 805.0
-offset_bottom = 1000.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 329.0
+offset_bottom = 117.0
 grow_horizontal = 1
 grow_vertical = 1
-colorBase = "lightblue"
-maskTexture = ExtResource("22_dcin4")
-fullTexture = ExtResource("24_4upc1")
-emptytexture = ExtResource("25_iqmcf")
+resourceName = "Energy"
+width = 329.0
+height = 117.0
+paddingStart = 36.0
+paddingEnd = 0.0
+currentAmt = 3.0
+EDITOR_fillAmt = 3.0
+maskTexture = ExtResource("34_ndayd")
+fullTexture = ExtResource("35_ngcqk")
+emptyTexture = ExtResource("36_f85oj")
 direction = 1
+colorBase = "lightblue"
+colorAlt = "lightgreen"
 
-[node name="AbilitySlotManager" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide" instance=ExtResource("31_o0v2b")]
+[node name="HP" type="TextureRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/RightSide/EnergyBarHolder"]
+layout_mode = 0
+offset_left = -14.0
+offset_top = 47.0
+offset_right = 31.0
+offset_bottom = 108.0
+texture = ExtResource("33_ed2oa")
 
 [node name="LeftSide" type="TextureRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud"]
 z_index = 3
@@ -705,14 +737,48 @@ theme_override_font_sizes/font_size = 14
 text = "0"
 horizontal_alignment = 1
 
-[node name="HealthBar" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/LeftSide" instance=ExtResource("25_4upc1")]
+[node name="HealthBarHolder" type="TextureRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/LeftSide"]
+z_index = 1
+layout_mode = 0
+offset_left = 23.0001
+offset_top = 929.0
+offset_right = 352.0
+offset_bottom = 1046.0
+texture = ExtResource("45_txgh4")
+
+[node name="HealthBar" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/LeftSide/HealthBarHolder" instance=ExtResource("25_4upc1")]
 unique_name_in_owner = true
-material = SubResource("ShaderMaterial_vehjn")
+z_index = -1
+material = SubResource("ShaderMaterial_fmmmj")
 layout_mode = 1
-offset_left = -325.0
-offset_top = -152.0
-offset_right = -121.0
-offset_bottom = -80.0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 329.0
+offset_bottom = 117.0
+grow_horizontal = 1
+grow_vertical = 1
+width = 329.0
+height = 117.0
+paddingStart = 0.0
+paddingEnd = 36.0
+currentAmt = 1.7
+currentMax = 100.0
+maskTexture = ExtResource("47_fmmmj")
+fullTexture = ExtResource("48_ed2oa")
+emptyTexture = ExtResource("49_4hhnj")
+
+[node name="HP" type="TextureRect" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/LeftSide/HealthBarHolder"]
+layout_mode = 0
+offset_left = 301.0
+offset_top = 47.0
+offset_right = 337.0
+offset_bottom = 108.0
+texture = ExtResource("37_25s40")
 
 [node name="PartsHolder_Engine" parent="HUDCanvas/HUD Viewport/SubViewport/HUD/GameHud/LeftSide" instance=ExtResource("43_4upc1")]
 layout_mode = 1
