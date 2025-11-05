@@ -69,7 +69,7 @@ func phys_process_combat(delta):
 		if player_in_range(10) and rocketAttemptTimer <= 0 and !wallInWayOfPlayer:
 			if fire_active(2):
 			#rocketAttemptTimer += 6;
-				print("BLASTOFF")
+				#print("BLASTOFF")
 				rocketAttemptTimer = randf_range(3, 7);
 				rocketPostAttemptTimer = 1.0;
 			pass;

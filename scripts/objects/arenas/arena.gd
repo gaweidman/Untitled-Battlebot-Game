@@ -59,6 +59,7 @@ func load_variant(nameOfVariant := currentVariant) -> int:
 						destroy_current_obstacles();
 						
 						add_child(new, true);
+						new.show();
 						
 						## Set these obstacles as current.
 						obstaclesNode = new;
