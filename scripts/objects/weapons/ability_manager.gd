@@ -209,8 +209,7 @@ func get_ability_slot_data():
 	return data;
 
 func is_equipped() -> bool:
-	return true;
-	pass;
+	return get_assigned_slots().is_empty() == false;
 
 func is_on_piece() -> bool:
 	return is_instance_valid(get_assigned_piece_or_part()) and get_assigned_piece_or_part() is Piece;

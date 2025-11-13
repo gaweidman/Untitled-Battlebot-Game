@@ -15,3 +15,11 @@ collision_layer = 1024
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_iukr3")
+
+[node name="ParticleBouncer2" type="GPUParticlesCollisionBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00118357, 0.00300002, 0)
+size = Vector3(3.22637, 2.5, 1.7)
+
+[node name="ParticleBouncer3" type="GPUParticlesCollisionBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00118357, 0.00300002, 0)
+size = Vector3(1.7, 2.5, 3.23)

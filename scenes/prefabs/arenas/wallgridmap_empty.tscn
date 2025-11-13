@@ -4,11 +4,12 @@
 [ext_resource type="Script" uid="uid://cl56lvmx2jfa7" path="res://scripts/objects/arenas/wallgridmap.gd" id="2_edefw"]
 
 [node name="ModularWallGridmap" type="GridMap"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.812, -0.375, -0.812)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.812, 0, -0.812)
 mesh_library = ExtResource("1_ed337")
 cell_size = Vector3(1.625, 3.25, 1.625)
+cell_center_y = false
 data = {
-"cells": PackedInt32Array(0, 0, 655387, 65535, 2, 1048596, 65535, 4, 1048596, 65534, 65535, 393237, 131070, 65535, 262165, 0, 65535, 21)
+"cells": PackedInt32Array(0, 0, 655387)
 }
 script = ExtResource("2_edefw")
 metadata/_editor_floor_ = Vector3(0, 0, 0)

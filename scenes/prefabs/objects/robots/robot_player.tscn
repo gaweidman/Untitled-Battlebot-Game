@@ -11,11 +11,10 @@ bounce = 0.3
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_wy0j3"]
 
-[node name="Robot_Player" type="Node3D" node_paths=PackedStringArray("meshes", "bodyPiece", "bodySocket", "treads", "body")]
+[node name="Robot_Player" type="Node3D" node_paths=PackedStringArray("meshes", "bodySocket", "treads", "body")]
 visible = false
 script = ExtResource("2_gvkxh")
 meshes = NodePath("Body/Meshes")
-bodyPiece = NodePath("")
 bodySocket = NodePath("Body/Meshes/Socket")
 robotNameInternal = "Player"
 robotName = "Untitled Scrapbot #15"
@@ -131,9 +130,8 @@ script = ExtResource("6_py1sw")
 [node name="Meshes" type="Node3D" parent="Body"]
 transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
 
-[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("occupant", "hostRobot", "selectorRayExceptions") instance=ExtResource("7_fj0lc")]
+[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("hostRobot", "selectorRayExceptions") instance=ExtResource("7_fj0lc")]
 transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
-occupant = NodePath("")
 hostRobot = NodePath("../../..")
 collisionScale = 0.55
 selectorRayExceptions = [NodePath("../..")]

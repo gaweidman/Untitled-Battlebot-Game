@@ -31,13 +31,11 @@
 [node name="ModularWalls" type="Node3D"]
 
 [node name="RobotSpawningLocation" parent="." instance=ExtResource("27_ldqpr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.25, -12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 
 [node name="WallEndCap" parent="." instance=ExtResource("2_ldqpr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.25, -4)
 
 [node name="WallPlusSection" parent="." instance=ExtResource("3_qxfs3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.25, -4)
 
 [node name="WallStraightSection" parent="." instance=ExtResource("4_h0jkf")]
 
@@ -48,10 +46,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.25, -4)
 [node name="TallWallCornerSection" parent="." instance=ExtResource("7_kp1d4")]
 
 [node name="TallWallPlusSection" parent="." instance=ExtResource("8_hkkxw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 
 [node name="TallWallStraightSection" parent="." instance=ExtResource("9_vnndi")]
 
 [node name="TallWallTSection" parent="." instance=ExtResource("10_88nyo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 
 [node name="ShortWallCornerSection" parent="." instance=ExtResource("11_qy57q")]
 
@@ -72,6 +72,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.25, -4)
 [node name="Cone" parent="." instance=ExtResource("19_l607m")]
 
 [node name="CrateBig" parent="." instance=ExtResource("20_3arvc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 
 [node name="CrateSmall" parent="." instance=ExtResource("21_u7mw1")]
 

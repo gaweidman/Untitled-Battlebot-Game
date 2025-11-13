@@ -19,7 +19,7 @@ variantsFromScene = {
 "Empty": NodePath("Ob_Empty")
 }
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="." groups=["World", "WorldWall"]]
 collision_layer = 1288
 collision_mask = 1024
 
@@ -40,9 +40,6 @@ metadata/_custom_type_script = "uid://bkwxna02gqgqu"
 shape = SubResource("WorldBoundaryShape3D_g7l54")
 
 [node name="Ob_Empty" parent="." instance=ExtResource("3_luad7")]
-data = {
-"cells": PackedInt32Array(0, 0, 655387)
-}
 
 [node name="Ob_Base2" parent="." instance=ExtResource("3_luad7")]
 data = {

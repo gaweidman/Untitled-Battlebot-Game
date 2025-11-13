@@ -71,6 +71,8 @@ func _on_assign_pressed():
 func assign_ability(ability : AbilityManager):
 	if (ability == referencedAbility):
 		return;
+	if ! is_instance_valid(ability):
+		return;
 	if ! ability.initialized:
 		return;
 	if is_instance_valid(ability) and ability is AbilityManager:

@@ -42,7 +42,6 @@ pieceDescription = "Seems like someone tore this off some hunting trophy and stu
 weightBase = 1.75
 force_visibility = true
 damageBase = 1.75
-knockbackBase = 20.0
 damageTypes = Array[int]([1])
 meshesHolder = NodePath("Meshes")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")

@@ -65,7 +65,7 @@ size = Vector3(0.5, 0.5, 1.5)
 
 [node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("firingOffsetNode", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder") groups=["Piece"]]
 script = ExtResource("1_f406y")
-magazineRefreshRate = 0.75
+magazineRefreshRate = 0.45
 fireRate = 0.25
 firingOffsetNode = NodePath("Meshes/MeshInstance3D/FiringOffset")
 pieceName = &"Cannon"

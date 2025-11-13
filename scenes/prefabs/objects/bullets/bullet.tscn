@@ -4,6 +4,7 @@
 [ext_resource type="ArrayMesh" uid="uid://bxrjs85uq3lv1" path="res://graphics/models/extracted/bullet1.res" id="2_lvy2m"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_8grda"]
+radius = 0.8
 
 [node name="Bullet" type="Node3D" node_paths=PackedStringArray("lifeTimer", "raycast", "collision", "hitbox") groups=["Metal", "Projectile"]]
 script = ExtResource("1_lph27")
