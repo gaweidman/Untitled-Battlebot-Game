@@ -670,7 +670,7 @@ func use_ability(action : AbilityManager) -> bool:
 				get(functionNameWhenUsed).call()
 			else:
 				#print_rich("[b][color=red]ABILITY REFERENCES INVALID FUNCTION NAME: ", functionNameWhenUsed)
-				TextFunc.flyaway(action.abilityName, global_position, "lightred");
+				#TextFunc.flyaway(action.abilityName, global_position, "lightred");
 				return false;
 		else:
 			#print("ABILITY ",activeAbility.abilityName," CALLED ITS FUNCTION.")
@@ -678,9 +678,9 @@ func use_ability(action : AbilityManager) -> bool:
 			if _call != null and _call is Callable and is_instance_valid(_call):
 				_call.call();
 		pass;
-		TextFunc.flyaway(action.abilityName, global_position, "lightgreen");
+		#TextFunc.flyaway(action.abilityName, global_position, "lightgreen");
 		return true;
-	TextFunc.flyaway(action.abilityName, global_position, "lightblue");
+	#TextFunc.flyaway(action.abilityName, global_position, "lightblue");
 	return false;
 
 #################### VISUALS AND TRANSFORM

@@ -11,6 +11,7 @@ mesh = ExtResource("1_sscne")
 metadata/_edit_group_ = true
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." groups=["Concrete", "Obstacle"]]
+collision_layer = 1024
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_13341")

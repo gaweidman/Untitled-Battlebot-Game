@@ -242,6 +242,7 @@ dbg_ToggleProfiler={
 3d_physics/layer_9="Aiming Helper"
 3d_physics/layer_10="Bullet"
 3d_physics/layer_11="Arena floors"
+3d_physics/layer_12="Layer 12"
 
 [physics]
 
