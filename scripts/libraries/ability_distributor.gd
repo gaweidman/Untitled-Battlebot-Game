@@ -1,3 +1,4 @@
+@icon("res://graphics/images/class_icons/energy_white.png")
 ## This serves to store all abilities and distribut copies of them.[br]
 ## Super annoying, I know.
 extends Node
@@ -7,11 +8,12 @@ var passiveAbilities : Dictionary[StringName,AbilityManager] = {};
 
 func distribute_active_ability_to_piece(piece:Piece, abilityName:StringName):
 	if activeAbilities.has(abilityName):
-		var dupe = activeAbilities[abilityName].duplicate(true);
+		var dupe = activeAbilities[abilityName].create_copy();
 		print(dupe.resource_scene_unique_id)
 		dupe.assign_references(piece);
 		dupe.initialized = true;
 		piece.activeAbilities.append(dupe);
+		print("ABILITY REGISTRAR: Active with name ",dupe.abilityName," and ID ",dupe.abilityID," being copied to piece ", piece);
 
 func distribute_all_actives_to_piece(piece:Piece, abilityNames : Array):
 	for abilityName in abilityNames:
@@ -19,11 +21,12 @@ func distribute_all_actives_to_piece(piece:Piece, abilityNames : Array):
 
 func distribute_passive_ability_to_piece(piece:Piece, abilityName:StringName):
 	if passiveAbilities.has(abilityName):
-		var dupe = passiveAbilities[abilityName].duplicate(true);
+		var dupe = passiveAbilities[abilityName].create_copy();
 		dupe.assign_references(piece);
 		dupe.initialized = true;
 		dupe.isPassive = true;
 		piece.passiveAbilities.append(dupe);
+		print("ABILITY REGISTRAR: Passive with name ",dupe.abilityName," and ID ",dupe.abilityID," being copied to piece ", piece);
 
 func distribute_all_passives_to_piece(piece:Piece, abilityNames : Array):
 	for abilityName in abilityNames:
@@ -46,6 +49,8 @@ func distribute_all_abilities_to_piece(piece:Piece):
 			passiveNames.append(ability.abilityName);
 	piece.passiveAbilities.clear();
 	distribute_all_passives_to_piece(piece, passiveNames);
+	
+	#piece.ability
 	pass;
 
 const passivesFilePrefix = "res://scenes/prefabs/abilities/passive/"

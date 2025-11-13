@@ -1,246 +1,20 @@
-[gd_scene load_steps=39 format=3 uid="uid://bbsfkqad6ok8r"]
+[gd_scene load_steps=7 format=3 uid="uid://bbsfkqad6ok8r"]
 
 [ext_resource type="Script" uid="uid://bds06vyivfdpe" path="res://scripts/objects/robots/robot_test_volley.gd" id="1_fhm5l"]
-[ext_resource type="PackedScene" uid="uid://88se3nfd8vrt" path="res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn" id="5_0drid"]
 [ext_resource type="Script" uid="uid://cd3dvyejdjvlg" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="6_yalvc"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="7_0drid"]
-[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="7_r24ui"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="8_qh4bp"]
-[ext_resource type="Script" uid="uid://clcmggkeaqnyx" path="res://scripts/objects/weapons/stat_tracker.gd" id="9_f703s"]
-[ext_resource type="Texture2D" uid="uid://bdgkd60c8qtud" path="res://graphics/images/HUD/statIcons/energyIconStriped.png" id="10_pv5pf"]
 [ext_resource type="PackedScene" uid="uid://b4adm8wxo7ym0" path="res://scenes/prefabs/objects/robots/buildingBlocks/treads.tscn" id="11_f703s"]
-[ext_resource type="Texture2D" uid="uid://uflissj08i1o" path="res://graphics/images/HUD/statIcons/cooldownIconStriped.png" id="11_m1bml"]
-[ext_resource type="Texture2D" uid="uid://s6s6ugfdhqhy" path="res://graphics/images/HUD/statIcons/magazineIconStriped.png" id="12_5mid7"]
-[ext_resource type="Texture2D" uid="uid://b775d1fn78gcv" path="res://graphics/images/HUD/statIcons/weightIconStriped.png" id="13_4n7kk"]
-[ext_resource type="Texture2D" uid="uid://cnfat2kqvmdcd" path="res://graphics/images/HUD/statIcons/damageIconStriped.png" id="14_1vv7c"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
 friction = 200.0
 bounce = 0.3
-
-[sub_resource type="Resource" id="Resource_ek7pi"]
-script = ExtResource("8_qh4bp")
-string = "Regenerates a meagre amount of "
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_7q44l"]
-script = ExtResource("8_qh4bp")
-string = "Energy"
-color = 5
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_86dur"]
-script = ExtResource("8_qh4bp")
-string = "each second."
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ajape"]
-load_path = "res://.godot/imported/Repair.png-0b7427a26568a2e2403cc6433717f8a2.ctex"
-
-[sub_resource type="Resource" id="Resource_gon2w"]
-script = ExtResource("7_r24ui")
-abilityName = "Generator"
-abilityDescriptionConstructor = Array[ExtResource("8_qh4bp")]([SubResource("Resource_ek7pi"), SubResource("Resource_7q44l"), SubResource("Resource_86dur")])
-abilityDescription = "[color=e0dedeff]Regenerates a meagre amount of [color=789be9ff]Energy [color=e0dedeff]each second."
-energyCost = -1.65
-cooldownTimeBase = 0.0
-cooldownStatName = ""
-runType = 0
-functionNameWhenUsed = &""
-statsUsed = Array[String]([""])
-icon = SubResource("CompressedTexture2D_ajape")
-initialized = true
-disabled = false
-functionWhenUsed = Callable()
-metadata/_custom_type_script = "uid://crpa3dbgxwyeg"
-
-[sub_resource type="Resource" id="Resource_3gd3v"]
-script = ExtResource("8_qh4bp")
-string = "Rotates the top segment of this "
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_noc8o"]
-script = ExtResource("8_qh4bp")
-string = "Piece"
-color = 0
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_pqjj1"]
-script = ExtResource("8_qh4bp")
-string = "towards your "
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_uygn2"]
-script = ExtResource("8_qh4bp")
-string = "crosshair"
-color = 0
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_b30ru"]
-script = ExtResource("8_qh4bp")
-string = "."
-color = 1
-newline = false
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_0rndb"]
-script = ExtResource("8_qh4bp")
-string = "Only works when upright."
-color = 8
-newline = true
-endingSpace = false
-startingSpace = true
-metadata/_custom_type_script = "uid://cybmjhuctmfaw"
-
-[sub_resource type="Resource" id="Resource_cr3q1"]
-script = ExtResource("7_r24ui")
-abilityName = "Target"
-abilityDescriptionConstructor = Array[ExtResource("8_qh4bp")]([SubResource("Resource_3gd3v"), SubResource("Resource_noc8o"), SubResource("Resource_pqjj1"), SubResource("Resource_uygn2"), SubResource("Resource_b30ru"), SubResource("Resource_0rndb")])
-abilityDescription = "[color=e0dedeff]Rotates the top segment of this [color=ffffffff]Piece [color=e0dedeff]towards your [color=ffffffff]crosshair[color=e0dedeff].
-[color=f2ec6bff]Only works when upright."
-energyCost = 0.1
-cooldownTimeBase = 0.0
-cooldownStatName = ""
-runType = 0
-functionNameWhenUsed = &"target"
-statsUsed = Array[String](["RotationSpeed"])
-initialized = true
-disabled = false
-functionWhenUsed = Callable()
-metadata/_custom_type_script = "uid://crpa3dbgxwyeg"
-
-[sub_resource type="Resource" id="Resource_1msyv"]
-resource_name = "ContactCooldown57"
-script = ExtResource("9_f703s")
-statFriendlyName = "Contact Cooldown"
-statName = "ContactCooldown57"
-statIcon = ExtResource("11_m1bml")
-baseStat = 0.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_ldurw"]
-resource_name = "Damage57"
-script = ExtResource("9_f703s")
-statFriendlyName = "Damage"
-statName = "Damage57"
-statIcon = ExtResource("14_1vv7c")
-baseStat = 0.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_q4y4h"]
-resource_name = "Kickback57"
-script = ExtResource("9_f703s")
-statFriendlyName = "Kickback"
-statName = "Kickback57"
-statIcon = ExtResource("13_4n7kk")
-baseStat = 0.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_g8eiy"]
-resource_name = "Knockback57"
-script = ExtResource("9_f703s")
-statFriendlyName = "Knockback"
-statName = "Knockback57"
-statIcon = ExtResource("13_4n7kk")
-baseStat = 0.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_jjjef"]
-resource_name = "PassiveCooldown57"
-script = ExtResource("9_f703s")
-statFriendlyName = "Passive Cooldown"
-statName = "PassiveCooldown57"
-statIcon = ExtResource("11_m1bml")
-baseStat = 1.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_7deh5"]
-resource_name = "PassiveEnergyDraw57"
-script = ExtResource("9_f703s")
-statFriendlyName = "Passive Energy Draw"
-statName = "PassiveEnergyDraw57"
-statIcon = ExtResource("10_pv5pf")
-baseStat = 1.0
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_rk4m2"]
-resource_name = "RotationSpeed57"
-script = ExtResource("9_f703s")
-statFriendlyName = "Rotation Speed"
-statName = "RotationSpeed57"
-statIcon = ExtResource("11_m1bml")
-baseStat = 0.9
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_7rigy"]
-resource_name = "ScrapCost57"
-script = ExtResource("9_f703s")
-statFriendlyName = "Scrap Cost"
-statName = "ScrapCost57"
-statIcon = ExtResource("12_5mid7")
-baseStat = 0.0
-roundingMode = 6
-
-[sub_resource type="Resource" id="Resource_qih6r"]
-resource_name = "ScrapSalvageModifier57"
-script = ExtResource("9_f703s")
-statFriendlyName = "Scrap Salvage Modifier"
-statName = "ScrapSalvageModifier57"
-statIcon = ExtResource("12_5mid7")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_rmo2r"]
-resource_name = "ScrapSellModifier57"
-script = ExtResource("9_f703s")
-statFriendlyName = "Scrap Sell Modifier"
-statName = "ScrapSellModifier57"
-statIcon = ExtResource("12_5mid7")
-baseStat = 0.666667
-roundingMode = 0
-
-[sub_resource type="Resource" id="Resource_tx8gt"]
-resource_name = "Weight57"
-script = ExtResource("9_f703s")
-statFriendlyName = "Weight"
-statName = "Weight57"
-statIcon = ExtResource("13_4n7kk")
-baseStat = 23.0
-roundingMode = 0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_kynhc"]
 
 [node name="Robot_TestVolley" type="Node3D" node_paths=PackedStringArray("bodyPiece", "bodySocket", "treads", "body")]
 visible = false
 script = ExtResource("1_fhm5l")
-bodyPiece = NodePath("Body/Meshes/Socket/Piece_BodyCube")
+bodyPiece = NodePath("")
 bodySocket = NodePath("Body/Meshes/Socket")
 robotNameInternal = "TestVolley"
 robotName = "Test Volley"
@@ -342,31 +116,11 @@ transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
 
 [node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("occupant", "hostRobot", "selectorRayExceptions") instance=ExtResource("7_0drid")]
 transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
-occupant = NodePath("Piece_BodyCube")
+occupant = NodePath("")
 hostRobot = NodePath("../../..")
 collisionScale = 0.55
 selectorRayExceptions = [NodePath("../..")]
 dontUsePieceForRobotHost = true
-
-[node name="Piece_BodyCube" parent="Body/Meshes/Socket" node_paths=PackedStringArray("hurtboxCollisionHolder", "hostRobot", "hostSocket") instance=ExtResource("5_0drid")]
-passiveAbilities = Array[ExtResource("7_r24ui")]([SubResource("Resource_gon2w"), SubResource("Resource_cr3q1")])
-hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
-hostRobot = NodePath("../../../..")
-hostSocket = NodePath("..")
-assignedToSocket = true
-statCollection = Dictionary[String, ExtResource("9_f703s")]({
-"ContactCooldown57": SubResource("Resource_1msyv"),
-"Damage57": SubResource("Resource_ldurw"),
-"Kickback57": SubResource("Resource_q4y4h"),
-"Knockback57": SubResource("Resource_g8eiy"),
-"PassiveCooldown57": SubResource("Resource_jjjef"),
-"PassiveEnergyDraw57": SubResource("Resource_7deh5"),
-"RotationSpeed57": SubResource("Resource_rk4m2"),
-"ScrapCost57": SubResource("Resource_7rigy"),
-"ScrapSalvageModifier57": SubResource("Resource_qih6r"),
-"ScrapSellModifier57": SubResource("Resource_rmo2r"),
-"Weight57": SubResource("Resource_tx8gt")
-})
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
 shape = SubResource("SphereShape3D_kynhc")

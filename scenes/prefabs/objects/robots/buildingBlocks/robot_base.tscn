@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://c2nsjhwipqr1m"]
+[gd_scene load_steps=7 format=3 uid="uid://c2nsjhwipqr1m"]
 
 [ext_resource type="Script" uid="uid://cjbf8lwy20s0y" path="res://scripts/objects/robots/buildingBlocks/robot.gd" id="1_u0mtq"]
 [ext_resource type="Script" uid="uid://cd3dvyejdjvlg" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="2_703oh"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="3_5nrmj"]
-[ext_resource type="PackedScene" uid="uid://88se3nfd8vrt" path="res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn" id="4_wrtu7"]
 [ext_resource type="PackedScene" uid="uid://b4adm8wxo7ym0" path="res://scenes/prefabs/objects/robots/buildingBlocks/treads.tscn" id="5_kynhc"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
@@ -15,7 +14,7 @@ bounce = 0.3
 [node name="Robot" type="Node3D" node_paths=PackedStringArray("meshes", "bodyPiece", "bodySocket", "body")]
 script = ExtResource("1_u0mtq")
 meshes = NodePath("Body/Meshes")
-bodyPiece = NodePath("Body/Meshes/Socket/Piece_BodyCube")
+bodyPiece = NodePath("")
 bodySocket = NodePath("Body/Meshes/Socket")
 body = NodePath("Body")
 
@@ -32,16 +31,11 @@ transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
 
 [node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("occupant", "hostRobot", "selectorRayExceptions") instance=ExtResource("3_5nrmj")]
 transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
-occupant = NodePath("Piece_BodyCube")
+occupant = NodePath("")
 hostRobot = NodePath("../../..")
 collisionScale = 0.55
 selectorRayExceptions = [NodePath("../..")]
 dontUsePieceForRobotHost = true
-
-[node name="Piece_BodyCube" parent="Body/Meshes/Socket" node_paths=PackedStringArray("hostRobot", "hostSocket") instance=ExtResource("4_wrtu7")]
-hostRobot = NodePath("../../../..")
-hostSocket = NodePath("..")
-assignedToSocket = true
 
 [node name="BaseCollision" type="CollisionShape3D" parent="Body"]
 shape = SubResource("SphereShape3D_kynhc")

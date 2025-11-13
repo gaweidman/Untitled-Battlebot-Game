@@ -34,6 +34,23 @@ var assignedPieceOrPart;
 
 var isPassive := false;
 
+func create_copy() -> AbilityManager:
+	construct_description();
+	var newAbility = AbilityManager.new();
+	newAbility.abilityName = abilityName;
+	newAbility.abilityID = GameState.get_unique_ability_id();
+	newAbility.abilityDescription = abilityDescription;
+	newAbility.cooldownStatName = cooldownStatName;
+	newAbility.cooldownTimeBase = cooldownTimeBase;
+	newAbility.disabled = disabled;
+	newAbility.energyCost = energyCost;
+	newAbility.functionNameWhenUsed = functionNameWhenUsed;
+	newAbility.functionWhenUsed = functionWhenUsed;
+	newAbility.statsUsed = statsUsed;
+	newAbility.runType = runType;
+	newAbility.icon = icon;
+	return newAbility;
+
 func assign_robot(robot : Robot, slotNum : int):
 	assignedRobot = robot;
 	Utils.append_unique(assignedSlots, slotNum);
@@ -69,7 +86,8 @@ func register(partOrPiece : Node, _abilityName : String = "Active Ability", _abi
 func assign_references(partOrPiece : Node):
 	if partOrPiece is Piece:
 		assignedPieceOrPart = partOrPiece;
-		print("Why not?")
+		print("ABILITY REGISTRAR: Piece ", partOrPiece, " assigned to Ability ", abilityName,abilityID);
+		assignedPieceOrPart.regen_namedActions();
 
 func construct_description():
 	if ! abilityDescriptionConstructor.is_empty():

@@ -408,13 +408,18 @@ func cooldown_behavior(cooldown : bool = on_cooldown()):
 
 func try_sap_energy(amt:float):
 	var bot = get_host_robot();
+	var result = false;
 	if bot != null:
-		bot.try_sap_energy(amt);
+		result = bot.try_sap_energy(amt);
 		energyDrawCurrent += amt;
-		queue_refresh_incoming_energy();
-		return false;
 	queue_refresh_incoming_energy();
-	return true;
+	#if result:
+		##TextFunc.flyaway(true, global_position + Vector3(0,2,0), "lightgreen");
+		##print_rich("[color=green]ABILITY RUN: ENERGY SAP WORKED")
+	#else:
+		##TextFunc.flyaway(false, global_position + Vector3(0,2,0), "lightred");
+		##print("[color=red]ABILITY RUN: ENERGY SAP BORKED")
+	return result;
 
 func get_outgoing_energy():
 	get_incoming_energy();
@@ -490,7 +495,7 @@ func test_energy_available(energyAmount) -> bool:
 ## Standard checks shared by [method can_use_active] and [method can_use_passive] that must be passed.
 func standard_ability_checks(action : AbilityManager):
 	## Check that the thing is the correct type.
-	if action is not AbilityManager:
+	if not (action is AbilityManager):
 		return false;
 	## Check if the Piece is paused.
 	if is_paused():
@@ -556,6 +561,7 @@ func can_use_passive_any() -> bool:
 
 var namedActions : Dictionary[String,AbilityManager] = {};
 func regen_namedActions():
+	namedActions.clear();
 	for action in activeAbilities:
 		if is_instance_valid(action) and action is AbilityManager:
 			namedActions["A_"+action.abilityName] = action;
@@ -565,8 +571,8 @@ func regen_namedActions():
 func get_named_action(actionName : String) -> AbilityManager:
 	if namedActions.is_empty(): regen_namedActions();
 	var activeTest = "A_"+actionName;
-	var passiveTest = "P_"+actionName;
 	if namedActions.keys().has(activeTest): return namedActions[activeTest];
+	var passiveTest = "P_"+actionName;
 	if namedActions.keys().has(passiveTest): return namedActions[passiveTest];
 	return null;
 func get_named_passive(actionName : String) -> AbilityManager:
@@ -664,6 +670,7 @@ func use_ability(action : AbilityManager) -> bool:
 				get(functionNameWhenUsed).call()
 			else:
 				#print_rich("[b][color=red]ABILITY REFERENCES INVALID FUNCTION NAME: ", functionNameWhenUsed)
+				TextFunc.flyaway(action.abilityName, global_position, "lightred");
 				return false;
 		else:
 			#print("ABILITY ",activeAbility.abilityName," CALLED ITS FUNCTION.")
@@ -671,7 +678,9 @@ func use_ability(action : AbilityManager) -> bool:
 			if _call != null and _call is Callable and is_instance_valid(_call):
 				_call.call();
 		pass;
+		TextFunc.flyaway(action.abilityName, global_position, "lightgreen");
 		return true;
+	TextFunc.flyaway(action.abilityName, global_position, "lightblue");
 	return false;
 
 #################### VISUALS AND TRANSFORM

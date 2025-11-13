@@ -608,8 +608,8 @@ func try_sap_energy(amount):
 	if is_conscious():
 		var energy = get_available_energy();
 		if amount <= energy:
-			energy -= amount;
-			set_stat("Energy", energy);
+			#energy -= amount;
+			set_stat("Energy", energy - amount);
 			return true;
 		else:
 			return false;
