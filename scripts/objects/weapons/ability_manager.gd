@@ -122,7 +122,7 @@ func get_assigned_slots(id : int) -> Array[int]:
 	var array : Array[int] = [];
 	var data = get_ability_data(id);
 	if is_instance_valid(data):
-		array = data.slots
+		array = data.assignedSlots;
 		return data.assignedSlots;
 	return array;
 
