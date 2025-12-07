@@ -63,7 +63,9 @@ func populate_info_part(part:Part):
 	lbl_partName.text = part.partName;
 	rlbl_desc.text = part.partDescription;
 	
+	btn_sellButton.show();
 	btn_moveButton.show();
+	btn_removeButton.show();
 	
 	if part.is_equipped():
 		iconBase.texture = icon_part;
@@ -118,7 +120,9 @@ func populate_info_piece(piece:Piece):
 	lbl_partName.text = piece.pieceName;
 	rlbl_desc.text = piece.pieceDescription;
 	
+	btn_sellButton.show();
 	btn_moveButton.hide();
+	btn_removeButton.show();
 	
 	if piece.is_equipped():
 		if piece.isBody:
@@ -382,7 +386,7 @@ func _physics_process(delta):
 	var removeDisabled = true;
 	var moveDisabled = true;
 	var sellDisabled = true;
-	if GameState.get_in_one_of_given_states([GameBoard.gameState.SHOP, GameBoard.gameState.SHOP_BUILD]):
+	if GameState.get_in_state_of_building() or GameState.get_in_one_of_given_states([GameBoard.gameState.SHOP, GameBoard.gameState.SHOP_BUILD]):
 		if ref_is_piece():
 			if pieceRef.is_removable():
 				removeDisabled = false;

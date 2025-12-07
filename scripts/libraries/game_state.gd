@@ -471,6 +471,7 @@ static var settings := {
 	StringName("EnemyGodMode") : false,
 	
 	StringName("renderShadows") : true,
+	StringName("PieceAccurateCollision") : false,
 }
 
 func set_setting(settingName : StringName, settinginput : Variant):

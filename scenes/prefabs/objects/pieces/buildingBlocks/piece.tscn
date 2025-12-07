@@ -45,6 +45,7 @@ script = ExtResource("5_h3ost")
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
 collision_layer = 8
+monitoring = false
 script = ExtResource("2_wwjov")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]

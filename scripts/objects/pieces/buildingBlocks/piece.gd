@@ -44,7 +44,7 @@ func _physics_process(delta):
 		if ! referencesAssigned:
 			return;
 		if not is_paused():
-			fix_sockets(delta);
+			#fix_sockets(delta);
 			phys_process_collision(delta);
 			phys_process_abilities(delta);
 
@@ -1180,20 +1180,22 @@ func bullet_hit_hitbox(bullet : Bullet):
 var hitboxRescaleTimer := 1;
 func phys_process_collision(delta):
 	if hitboxRescaleTimer <= 0:
-		if has_host(true, true, true):
-			hitboxRescaleTimer = 3;
-			hurtboxCollisionHolder.collision_layer = 8 + 64; #Hurtbox layer and placed layer.
-		else:
-			hurtboxCollisionHolder.collision_layer = 8; #Hurtbox layer and hover layer.
+		hitboxRescaleTimer = 3;
+		hurtboxCollisionHolder.set_collision_layer_value(7, has_host(true, true, true))
+		#if has_host(true, true, true):
+			#hitboxRescaleTimer = 3;
+		#else:
+			#pass;
 
 ##Assign all sockets with this as their host piece.
 func autoassign_child_sockets_to_self():
-	for child in get_all_female_sockets():
+	for child in allSockets:
 		child.hostRobot = hostRobot;
 		child.hostPiece = self;
 
+## @experimental: runs every non-paused frame. Was created to fix sockets every frame. Currently does nothing.
 func fix_sockets(delta):
-	#return;
+	return;
 	if is_inside_tree():
 		#autoassign_child_sockets_to_self();
 		if get_selected():
@@ -1209,10 +1211,9 @@ func fix_sockets(delta):
 
 ##This function assigns socket data and generates all hitboxes. Should only ever be run once at [method _ready()].
 func gather_colliders_and_meshes():
-	get_all_female_sockets();
-	get_all_mesh_init_materials();
-	autoassign_child_sockets_to_self();
-	refresh_and_gather_collision_helpers(need_placement_shapes());
+	get_all_mesh_init_materials(); ## Sets up the initial materials.
+	autoassign_child_sockets_to_self(); ## Assigns all sockets to have this set as their host.
+	refresh_and_gather_collision_helpers(need_placement_shapes()); 
 	print_rich("[color=orange]GATHERING COLLIDERS AND MESHES ON PIECE ", self);
 
 ## Whether this [Piece] needs to have its placement shapes spawned in when [emthod gather_colliders_and_meshes] gets called.
@@ -1529,18 +1530,22 @@ func is_assigned_to_socket():
 
 ## When [code]true[/code], [member allSockets] or [method get_all_female_sockets] will run [method autograb_sockets].
 var regenAllSockets := true;
+## Set to [code]true[/code] if this Piece has no [Socket]s; prevents regenerating [member allSockets] when there's no need to.
 var hasNoSockets := false;
 ## A list of all [Socket] nodes assigned to this Piece.
 var allSockets : Array[Socket] = []:
 	get:
 		if (regenAllSockets or allSockets.is_empty()) and not hasNoSockets:
-			allSockets = autograb_sockets();
-			if allSockets.is_empty():
+			var autograb = autograb_sockets();
+			if autograb.is_empty():
 				hasNoSockets = true;
+			allSockets = autograb;
 		return allSockets;
 
+## Returns the array index of the given socket in [allSockets].
 func get_index_of_socket(inSocket : Socket) -> int:
 	return allSockets.find(inSocket);
+## Gets the [Socket] from [member allSockets] with the given index.
 func get_socket_at_index(socketIndex : int) -> Socket:
 	if socketIndex >= 0 and socketIndex < allSockets.size():
 		return allSockets[socketIndex];
@@ -1607,8 +1612,7 @@ func assign_socket_post(socket:Socket):
 	set_selection_mode(selectionModes.NOT_SELECTED);
 	#print("ASSIGNED TO SOCKET? ")
 
-
-## Removes this piece from its assigned Socket. Essentially removes it from the [Robot], too.
+## Removes this piece from its assigned [Socket]. Essentially removes it from the [Robot], too.
 func remove_from_socket():
 	print("REMOVING FROM SOCKET.")
 	if assignedToSocket and is_instance_valid(hostRobot):
@@ -1625,7 +1629,7 @@ func remove_from_socket():
 func get_specific_female_socket(index):
 	return femaleSocketHolder.get_child(index);
 
-## Calls [method Socket.remove_occupant()] on this Piece's host [Socket], if it has one.
+## Calls [method Socket.remove_occupant] on this Piece's host [Socket], if it has one.
 func disconnect_from_host_socket():
 	regen_host_data();
 	if hasHostSocket:

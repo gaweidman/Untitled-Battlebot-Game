@@ -853,17 +853,19 @@ func reassign_body_collision(needPlacementColliders := false):
 	var colliderIDsInUse = [];
 	for piece in allPieces:
 		await piece.refresh_and_gather_collision_helpers(needPlacementColliders);
-		for hurtbox in piece.get_all_hurtboxes():
-			if not ((hurtbox.copiedByBody) or (hurtbox.get_collider_id() in colliderIDsInUse) or !is_instance_valid(hurtbox.originalHost)):
-				colliderIDsInUse.append(hurtbox.colliderID);
-				var newHurtbox = hurtbox.make_copy();
-				newHurtbox.debug_color = Color("af7fff6b");
-				newHurtbox.position = Vector3(0,0,0);
-				newHurtbox.disabled = false;
-				body.add_child(newHurtbox, true);
-				newHurtbox.owner = body;
-				hurtbox.copiedByBody = true;
-				newHurtbox.copiedByBody = true;
+	
+		if GameState.get_setting("PieceAccurateCollision"):
+			for hurtbox in piece.get_all_hurtboxes():
+				if not ((hurtbox.copiedByBody) or (hurtbox.get_collider_id() in colliderIDsInUse) or !is_instance_valid(hurtbox.originalHost)):
+					colliderIDsInUse.append(hurtbox.colliderID);
+					var newHurtbox = hurtbox.make_copy();
+					newHurtbox.debug_color = Color("af7fff6b");
+					newHurtbox.position = Vector3(0,0,0);
+					newHurtbox.disabled = false;
+					body.add_child(newHurtbox, true);
+					newHurtbox.owner = body;
+					hurtbox.copiedByBody = true;
+					newHurtbox.copiedByBody = true;
 	
 	call_deferred("reinforce_robot_host"); ## Make sure that each piece in the tree, and all of their sockets, register this as their host.
 
