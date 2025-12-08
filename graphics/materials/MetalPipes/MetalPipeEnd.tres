@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://cdv3uh2fb8rfv"]
+
+[ext_resource type="Texture2D" uid="uid://dd6mkn4rjufb1" path="res://graphics/SW_NewMat/Metal Pipes/MetalEndCap/MetalEndCap_BaseColor.png" id="1_qlkoe"]
+[ext_resource type="Texture2D" uid="uid://dvia05abgr4eq" path="res://graphics/SW_NewMat/Metal Pipes/MetalEndCap/MetalEndCap_Metallic.png" id="2_wadd4"]
+[ext_resource type="Texture2D" uid="uid://cutdaorithadu" path="res://graphics/SW_NewMat/Metal Pipes/MetalEndCap/MetalEndCap_Normal.png" id="3_hafmf"]
+[ext_resource type="Texture2D" uid="uid://ck1qflast3frg" path="res://graphics/SW_NewMat/Metal Pipes/MetalEndCap/MetalEndCap_Roughness.png" id="4_3g201"]
+
+[resource]
+albedo_color = Color(0.419004, 0.515506, 0.380608, 1)
+albedo_texture = ExtResource("1_qlkoe")
+metallic = 1.0
+metallic_specular = 0.66
+metallic_texture = ExtResource("2_wadd4")
+roughness_texture = ExtResource("4_3g201")
+emission_enabled = true
+normal_enabled = true
+normal_texture = ExtResource("3_hafmf")

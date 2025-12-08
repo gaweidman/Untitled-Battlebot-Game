@@ -1,3 +1,15 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://w5o7i4b8ov26"]
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://w5o7i4b8ov26"]
+
+[ext_resource type="Texture2D" uid="uid://buyupky51ubxs" path="res://graphics/SW_NewMat/Metal Pipes/MetalTPipe/PipeT_BaseColor.png" id="1_uapgv"]
+[ext_resource type="Texture2D" uid="uid://dbxlk3y524pxv" path="res://graphics/SW_NewMat/Metal Pipes/MetalTPipe/PipeT_Metallic.png" id="2_fdxu8"]
+[ext_resource type="Texture2D" uid="uid://clgsntkg8l4sc" path="res://graphics/SW_NewMat/Metal Pipes/MetalTPipe/PipeT_Normal.png" id="3_t1v1w"]
+[ext_resource type="Texture2D" uid="uid://c51wmmia7i1w6" path="res://graphics/SW_NewMat/Metal Pipes/MetalTPipe/PipeT_Roughness.png" id="4_qnu4a"]
 
 [resource]
+albedo_texture = ExtResource("1_uapgv")
+metallic = 1.0
+metallic_specular = 1.0
+metallic_texture = ExtResource("2_fdxu8")
+roughness_texture = ExtResource("4_qnu4a")
+normal_enabled = true
+normal_texture = ExtResource("3_t1v1w")
