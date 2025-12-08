@@ -126,7 +126,6 @@ ConfirmSavePopup = NodePath("ConfirmSavePopup")
 btn_cancelSave = NodePath("ConfirmSavePopup/CancelSave")
 btn_saveAs = NodePath("ConfirmSavePopup/SaveChangesAs")
 tree_abilities = NodePath("AbilitiesTree")
-metadata/_custom_type_script = "uid://cseoyso26tb6f"
 
 [node name="PiecesTree" type="Tree" parent="RobotMaker"]
 layout_mode = 0
