@@ -2,26 +2,27 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://q3pow8ydigvn"
-path="res://.godot/imported/MetalRightPipe_Normals.png-1b4fb964696cc690c689705abf25b5b8.ctex"
+uid="uid://c8wkj1v4m0vh"
+path.s3tc="res://.godot/imported/Pillar_DiffuseColor.png-45bef1945ab06ce8340a8f3f4d3d0e74.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
-source_file="res://graphics/SW_NewMat/MetalRightPipe/MetalRightPipe_Normals.png"
-dest_files=["res://.godot/imported/MetalRightPipe_Normals.png-1b4fb964696cc690c689705abf25b5b8.ctex"]
+source_file="res://graphics/SW_NewMat/Pillar/Pillar_DiffuseColor.png"
+dest_files=["res://.godot/imported/Pillar_DiffuseColor.png-45bef1945ab06ce8340a8f3f4d3d0e74.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -31,4 +32,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

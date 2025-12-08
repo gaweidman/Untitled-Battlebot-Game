@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" load_steps=4 format=3 uid="uid://b3mrb0jswqbwe"]
+
+[ext_resource type="Texture2D" uid="uid://c8wkj1v4m0vh" path="res://graphics/SW_NewMat/Pillar/Pillar_DiffuseColor.png" id="1_c72vd"]
+[ext_resource type="Texture2D" uid="uid://skdeicl1604s" path="res://graphics/SW_NewMat/Pillar/Pillar_Normals.png" id="2_8h3rc"]
+[ext_resource type="Texture2D" uid="uid://b68mud1ndb1fj" path="res://graphics/SW_NewMat/Pillar/Pillars_Roughness.png" id="2_uvsnd"]
+
+[resource]
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.594884, 0.63583, 0.937836, 1)
+albedo_texture = ExtResource("1_c72vd")
+roughness_texture = ExtResource("2_uvsnd")
+normal_enabled = true
+normal_texture = ExtResource("2_8h3rc")

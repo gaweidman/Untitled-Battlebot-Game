@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://crm5dw06btv55"
-path="res://.godot/imported/MetalRightPipe_BaseColor.png-3f01627f7bac772e0f853453f96a93ab.ctex"
+path="res://.godot/imported/MetalRightPipe_BaseColor.png-c8f64cb6b417b8dbe4940ad4d82cc493.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/SW_NewMat/MetalRightPipe/MetalRightPipe_BaseColor.png"
-dest_files=["res://.godot/imported/MetalRightPipe_BaseColor.png-3f01627f7bac772e0f853453f96a93ab.ctex"]
+source_file="res://graphics/SW_NewMat/Metal Pipes/MetalRightPipe/MetalRightPipe_BaseColor.png"
+dest_files=["res://.godot/imported/MetalRightPipe_BaseColor.png-c8f64cb6b417b8dbe4940ad4d82cc493.ctex"]
 
 [params]
 
