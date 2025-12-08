@@ -57,6 +57,7 @@ abilityDescription = "Bum"
 energyCost = 0.0
 cooldownTimeBase = 0.15
 cooldownStatName = "ContactCooldown"
+energyCostStatName = ""
 runType = 2
 functionNameWhenUsed = &""
 statsUsed = Array[String]([])
