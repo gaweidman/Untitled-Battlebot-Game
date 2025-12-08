@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cucuim3d6clvr"
-path.s3tc="res://.godot/imported/MetalRightPipe_Roughness.png-20f1c3df36518bf46723189de342bf4f.s3tc.ctex"
+uid="uid://buyupky51ubxs"
+path.s3tc="res://.godot/imported/PipeT_BaseColor.png-f5d7a3358869c1e1c515db79bcc6efac.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://graphics/SW_NewMat/Metal Pipes/MetalRightPipe/MetalRightPipe_Roughness.png"
-dest_files=["res://.godot/imported/MetalRightPipe_Roughness.png-20f1c3df36518bf46723189de342bf4f.s3tc.ctex"]
+source_file="res://graphics/SW_NewMat/Metal Pipes/MetalTPipe/PipeT_BaseColor.png"
+dest_files=["res://.godot/imported/PipeT_BaseColor.png-f5d7a3358869c1e1c515db79bcc6efac.s3tc.ctex"]
 
 [params]
 
