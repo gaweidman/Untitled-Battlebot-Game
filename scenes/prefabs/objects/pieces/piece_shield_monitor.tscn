@@ -1,7 +1,8 @@
-[gd_scene load_steps=23 format=3 uid="uid://cwoid37lvtfrd"]
+[gd_scene load_steps=24 format=3 uid="uid://cwoid37lvtfrd"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_v61av"]
 [ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_jcntw"]
+[ext_resource type="Material" uid="uid://g7wmpoctrcux" path="res://graphics/materials/computer_shield.tres" id="8_ccj5p"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="9_s51gn"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="10_5k1f1"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="11_6ru5o"]
@@ -200,6 +201,7 @@ script = ExtResource("13_1047n")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.125, 0)
+material_override = ExtResource("8_ccj5p")
 mesh = ExtResource("14_v61av")
 skeleton = NodePath("../../PieceCollisionBox")
 
