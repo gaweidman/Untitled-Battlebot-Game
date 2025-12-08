@@ -1,5 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://ct2x8pbv4qw0j"]
+[gd_scene load_steps=4 format=3 uid="uid://ct2x8pbv4qw0j"]
 
+[ext_resource type="ArrayMesh" uid="uid://ba7nfkhppxbmj" path="res://graphics/models/obj/arenas/walls/CrateSmall.obj" id="1_ib3y5"]
 [ext_resource type="Material" uid="uid://irow1jek3tyj" path="res://graphics/materials/Crate.tres" id="1_tpxee"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_rld2o"]
@@ -8,6 +9,7 @@ data = PackedVector3Array(-0.7313, 0.1312, 0.5688, -0.7313, -1.0063, 0.5688, -0.
 [node name="CrateSmall" type="MeshInstance3D"]
 transform = Transform3D(0.998174, 0, 0, 0, 0.998174, 0, 0, 0, 0.998174, 0, 1.25, 0)
 material_override = ExtResource("1_tpxee")
+mesh = ExtResource("1_ib3y5")
 metadata/_edit_group_ = true
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." groups=["Obstacle", "Wood"]]
