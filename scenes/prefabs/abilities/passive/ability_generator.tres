@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="AbilityManager" load_steps=7 format=3 uid="uid://bfv01rslcmwqh"]
 
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="1_hybfa"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_syemp"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="1_syemp"]
 [ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/Repair.png" id="2_ow60o"]
 
 [sub_resource type="Resource" id="Resource_ek7pi"]
