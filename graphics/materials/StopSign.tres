@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://dw0hq5ejbkrj"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1d35x"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ns7o4"]
+
+[resource]
+albedo_color = Color(0.410523, 0.0341852, 0.0646504, 1)
+metallic = 1.0
+metallic_specular = 0.66
+metallic_texture = SubResource("NoiseTexture2D_1d35x")
+normal_enabled = true
+normal_scale = 0.3
+normal_texture = SubResource("NoiseTexture2D_ns7o4")

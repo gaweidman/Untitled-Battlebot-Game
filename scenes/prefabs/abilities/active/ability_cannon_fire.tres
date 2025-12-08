@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="AbilityManager" load_steps=7 format=3 uid="uid://4easq571wef0"]
 
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_3lsp2"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="1_3lsp2"]
 [ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/Cannon.png" id="2_0nak7"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_wxo83"]
 
@@ -40,6 +40,7 @@ abilityDescription = ""
 energyCost = 1.0
 cooldownTimeBase = 0.6
 cooldownStatName = "ProjectileFireRate"
+energyCostStatName = ""
 runType = 0
 functionNameWhenUsed = &"fireBullet"
 statsUsed = Array[String](["ProjectileFireRate", "ProjectileSpeed", "Inaccuracy", "ProjectileGravity", "ProjectileLifetime"])

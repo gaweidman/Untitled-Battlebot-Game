@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="AbilityManager" load_steps=8 format=3 uid="uid://lvlt1lrsidrr"]
 
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_pgf2u"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="1_pgf2u"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_sd1et"]
 
 [sub_resource type="Resource" id="Resource_qe5pu"]

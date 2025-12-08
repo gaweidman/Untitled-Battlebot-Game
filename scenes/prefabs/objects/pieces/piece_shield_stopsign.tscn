@@ -1,7 +1,8 @@
-[gd_scene load_steps=23 format=3 uid="uid://chadgiekhahxi"]
+[gd_scene load_steps=24 format=3 uid="uid://chadgiekhahxi"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_fyrc8"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_jkao8"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="2_jkao8"]
+[ext_resource type="Material" uid="uid://dw0hq5ejbkrj" path="res://graphics/materials/StopSign.tres" id="9_3eru1"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="9_roiqu"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="10_dw0v2"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="11_06aj2"]
@@ -201,6 +202,7 @@ script = ExtResource("13_m53re")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.125, 0)
+material_override = ExtResource("9_3eru1")
 mesh = ExtResource("15_jkao8")
 skeleton = NodePath("../../PieceCollisionBox")
 

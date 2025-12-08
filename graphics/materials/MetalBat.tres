@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://cbjqok2ql3cqi"]
+
+[ext_resource type="Texture2D" uid="uid://1a7bg1bc1xig" path="res://graphics/SW_NewMat/MetalBat/MetalBat_Base_color.png" id="1_8j5ny"]
+[ext_resource type="Texture2D" uid="uid://c8ys066v1txeu" path="res://graphics/SW_NewMat/MetalBat/MetalBat_Metallic.png" id="2_g0800"]
+[ext_resource type="Texture2D" uid="uid://dhh15lpqnvs6c" path="res://graphics/SW_NewMat/MetalBat/MetalBat_Normal.png" id="3_thrcc"]
+[ext_resource type="Texture2D" uid="uid://b633kisxmmt7h" path="res://graphics/SW_NewMat/MetalBat/MetalBat_Roughness.png" id="4_m086k"]
+
+[resource]
+albedo_texture = ExtResource("1_8j5ny")
+metallic = 1.0
+metallic_texture = ExtResource("2_g0800")
+roughness_texture = ExtResource("4_m086k")
+normal_enabled = true
+normal_texture = ExtResource("3_thrcc")

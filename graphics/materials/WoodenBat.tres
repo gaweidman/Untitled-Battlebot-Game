@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://ck8kfl73ephk2"]
+
+[ext_resource type="Texture2D" uid="uid://cacm7uf1j8613" path="res://graphics/SW_NewMat/WoodBat_MAT/WoodBat_Base_color.png" id="1_y3soh"]
+[ext_resource type="Texture2D" uid="uid://cy0r3mnciev1s" path="res://graphics/SW_NewMat/WoodBat_MAT/WoodBat_Height.png" id="3_0jn56"]
+[ext_resource type="Texture2D" uid="uid://dd1kyc2c3fv1m" path="res://graphics/SW_NewMat/WoodBat_MAT/WoodBat_Metallic.png" id="4_prulk"]
+[ext_resource type="Texture2D" uid="uid://bt4aj3sjsbr7" path="res://graphics/SW_NewMat/WoodBat_MAT/WoodBat_Roughness.png" id="5_5g05f"]
+
+[resource]
+albedo_texture = ExtResource("1_y3soh")
+metallic = 1.0
+metallic_texture = ExtResource("4_prulk")
+roughness_texture = ExtResource("5_5g05f")
+ao_enabled = true
+heightmap_enabled = true
+heightmap_texture = ExtResource("3_0jn56")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://nvuhiokuvm2y"]
+[gd_scene load_steps=19 format=3 uid="uid://nvuhiokuvm2y"]
 
 [ext_resource type="Script" uid="uid://lqnydwh6c74e" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="1_bn4l8"]
 [ext_resource type="Resource" uid="uid://bws20ksxfdagg" path="res://scenes/prefabs/abilities/passive/swivel_pointer_target.tres" id="3_3gd3v"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="6_vph73"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="8_6fl3f"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="9_psn5c"]
+[ext_resource type="Material" uid="uid://bmyfgrr876ujj" path="res://graphics/materials/newsawblade.tres" id="10_3gd3v"]
 [ext_resource type="ArrayMesh" uid="uid://cfvtjsean8sey" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="10_h2y4f"]
 [ext_resource type="ArrayMesh" uid="uid://cgto2m6qw8n2d" path="res://graphics/models/obj/botparts/SwivelPointer.obj" id="10_noc8o"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="12_cinit"]
@@ -33,7 +34,6 @@ cull_mode = 2
 albedo_texture = ExtResource("9_psn5c")
 
 [node name="Piece_Pointer Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
-visible = false
 script = ExtResource("1_bn4l8")
 swivelNode = NodePath("SwivelTop")
 movingSockets = [NodePath("SwivelTop/Socket")]
@@ -126,6 +126,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
 
 [node name="SwivelBottom" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+material_override = ExtResource("10_3gd3v")
 mesh = ExtResource("10_h2y4f")
 
 [node name="SwivelTop" type="MeshInstance3D" parent="."]
