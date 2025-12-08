@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://g7wmpoctrcux"]
+
+[ext_resource type="Texture2D" uid="uid://b6leq1b38fty2" path="res://graphics/SW_NewMat/Computer/ComputerScreen_Base_color.png" id="1_2qane"]
+[ext_resource type="Texture2D" uid="uid://clugxc5uwvcp0" path="res://graphics/SW_NewMat/Computer/ComputerScreen_Height.png" id="2_iun0y"]
+[ext_resource type="Texture2D" uid="uid://dk6csg3abpthn" path="res://graphics/SW_NewMat/Computer/ComputerScreen_Metallic.png" id="3_q4t4p"]
+[ext_resource type="Texture2D" uid="uid://nwng1y7ybx6n" path="res://graphics/SW_NewMat/Computer/ComputerScreen_Normal_OpenGL.png" id="4_eplek"]
+[ext_resource type="Texture2D" uid="uid://c60hach1ynmv0" path="res://graphics/SW_NewMat/Computer/ComputerScreen_Roughness.png" id="5_vb3ud"]
+
+[resource]
+albedo_texture = ExtResource("1_2qane")
+metallic = 1.0
+metallic_texture = ExtResource("3_q4t4p")
+roughness_texture = ExtResource("5_vb3ud")
+normal_enabled = true
+normal_texture = ExtResource("4_eplek")
+heightmap_enabled = true
+heightmap_texture = ExtResource("2_iun0y")
