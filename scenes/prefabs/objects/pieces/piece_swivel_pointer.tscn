@@ -1,7 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://djgwiuexucnqm"]
+[gd_scene load_steps=18 format=3 uid="uid://nvuhiokuvm2y"]
 
 [ext_resource type="Script" uid="uid://lqnydwh6c74e" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="1_bn4l8"]
-[ext_resource type="Resource" uid="uid://bws20ksxfdagg" path="res://scenes/prefabs/abilities/passive/swivel_pointer_target.tres" id="3_noc8o"]
+[ext_resource type="Resource" uid="uid://bws20ksxfdagg" path="res://scenes/prefabs/abilities/passive/swivel_pointer_target.tres" id="3_3gd3v"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_pqjj1"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_8xo3d"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="5_pqjj1"]
@@ -38,9 +38,10 @@ script = ExtResource("1_bn4l8")
 swivelNode = NodePath("SwivelTop")
 movingSockets = [NodePath("SwivelTop/Socket")]
 pieceName = &"Pointer Swivel"
-weightBase = 1.25
-passiveAbilities = Array[ExtResource("3_pqjj1")]([ExtResource("3_noc8o")])
+weightBase = 1.5
 force_visibility = true
+scrapCostBase = 20
+passiveAbilities = Array[ExtResource("3_pqjj1")]([ExtResource("3_3gd3v")])
 meshesHolder = NodePath("Meshes")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
@@ -59,12 +60,13 @@ editor_description = "Put all female sockets in this box. Make sure they align w
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
 collision_layer = 16
-collision_mask = 8
+collision_mask = 513
 script = ExtResource("5_pqjj1")
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
 collision_layer = 8
+collision_mask = 0
 script = ExtResource("5_8xo3d")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]

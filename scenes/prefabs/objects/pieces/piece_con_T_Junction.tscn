@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bmmagsxjkf6hx"]
+[gd_scene load_steps=23 format=3 uid="uid://chi2adlhly5pm"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_8tbom"]
 [ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_uwv47"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_xtkwn"]
 [ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="8_ysdpo"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="9_u5pnx"]
+[ext_resource type="ArrayMesh" uid="uid://c5ex7keixe1ff" path="res://graphics/models/obj/botparts/Bot_TPipe.obj" id="15_ysdpo"]
 
 [sub_resource type="Resource" id="Resource_ujwhk"]
 script = ExtResource("2_uwv47")
@@ -53,14 +54,6 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("4_nl45e")
 
-[sub_resource type="BoxMesh" id="BoxMesh_e8cpi"]
-size = Vector3(1.5, 0.34, 0.5)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_6jl12"]
-top_radius = 0.15
-bottom_radius = 0.15
-height = 0.25
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_ubwoj"]
 size = Vector2(0.25, 0.25)
 
@@ -80,15 +73,17 @@ albedo_texture = ExtResource("4_nl45e")
 [sub_resource type="BoxShape3D" id="BoxShape3D_u5m20"]
 size = Vector3(1.5, 0.5, 0.5)
 
-[node name="Piece_T-Junction" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_T-Junction" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_8tbom")
 pieceName = &"T-Junction"
 descriptionConstructor = Array[ExtResource("2_uwv47")]([SubResource("Resource_ujwhk"), SubResource("Resource_agd5d"), SubResource("Resource_7qnf5")])
-weightBase = 2.5
-hurtboxAlwaysEnabled = true
+pieceDescription = "[color=ffffffff]Serves no purpose other than to provide [color=ffffffff]structure [color=ffffffff]to your robot."
+weightBase = 4.5
 force_visibility = true
+scrapCostBase = 15
 meshesHolder = NodePath("Meshes")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
@@ -163,11 +158,14 @@ hostPiece = NodePath("../..")
 
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
+collision_layer = 16
+collision_mask = 513
 script = ExtResource("6_ssuhc")
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
 collision_layer = 8
+collision_mask = 0
 script = ExtResource("7_xtkwn")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
@@ -177,13 +175,8 @@ script = ExtResource("8_ysdpo")
 [node name="Meshes" type="Node3D" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.328666, 0)
-mesh = SubResource("BoxMesh_e8cpi")
-skeleton = NodePath("../../PieceCollisionBox")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)
-mesh = SubResource("CylinderMesh_6jl12")
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.25, 0)
+mesh = ExtResource("15_ysdpo")
 skeleton = NodePath("../../PieceCollisionBox")
 
 [node name="MaleSocket" type="Node3D" parent="Meshes"]

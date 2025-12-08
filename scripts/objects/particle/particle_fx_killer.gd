@@ -24,9 +24,12 @@ func emit():
 
 func _process(delta):
 	if is_instance_valid(nodeToFollow):
-		if nodeToFollow.is_visible_in_tree():
-			global_position = nodeToFollow.global_position + posOffset;
-			rotation = nodeToFollow.rotation;
+		if nodeToFollow.is_inside_tree():
+			if nodeToFollow.is_visible_in_tree():
+				global_position = nodeToFollow.global_position + posOffset;
+				rotation = nodeToFollow.rotation;
+		else:
+			start_free();
 	
 	if checkTimer > 0:
 		checkTimer -= delta;
@@ -50,3 +53,10 @@ func check_emitting():
 
 func start_free():
 	dying = true;
+
+## Changes which layer mask the particles appear on.
+func set_visibility_layer(num:int):
+	for child in get_children():
+		if child is GPUParticles3D:
+			child.layers = 0;
+			child.set_layer_mask_value(num, true);

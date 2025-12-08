@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://gjhbvv8a7he3"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hin37"]
+load_path = "res://.godot/imported/cooldownIconStriped.png-71ac35bc0d02227fb89de9439860e66e.s3tc.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_l6vea"]
+load_path = "res://.godot/imported/cooldownIconStriped.png-71ac35bc0d02227fb89de9439860e66e.s3tc.ctex"
+
+[resource]
+transparency = 1
+albedo_texture = SubResource("CompressedTexture2D_hin37")
+emission_enabled = true
+emission_texture = SubResource("CompressedTexture2D_l6vea")
+texture_filter = 0
+billboard_mode = 1

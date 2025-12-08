@@ -1,0 +1,29 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://efu6ui8s436p"]
+
+[sub_resource type="Gradient" id="Gradient_jasp7"]
+offsets = PackedFloat32Array(0, 0.188525, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.92623, 0.92623, 0.92623, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_g120p"]
+gradient = SubResource("Gradient_jasp7")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7c3bm"]
+
+[sub_resource type="Gradient" id="Gradient_hvoiw"]
+offsets = PackedFloat32Array(0.0737705, 0.45082, 0.836066, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.39823, 0.39823, 0.39823, 1, 0.823009, 0.823009, 0.823009, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_sdppb"]
+gradient = SubResource("Gradient_hvoiw")
+
+[resource]
+albedo_color = Color(0.317617, 0.0778651, 0.0307767, 1)
+albedo_texture = SubResource("GradientTexture1D_g120p")
+metallic_specular = 0.0
+roughness_texture = SubResource("GradientTexture1D_sdppb")
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_7c3bm")
+rim_enabled = true
+rim = 0.55
+rim_tint = 0.72
+ao_enabled = true

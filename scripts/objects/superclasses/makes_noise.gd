@@ -4,7 +4,7 @@ extends Node3D;
 var PLAYER_PARENT;
 @export var AudioSourceType: Sound.AudioSrc;
 
-# Called when the node enters the scene tree for the first time.
+## Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	return
 	PLAYER_PARENT = %_AudioStreamPlayers;
@@ -51,9 +51,9 @@ func play_sound(soundID, audioplayer = null):
 						break;
 						
 		if !audioplayer:
-			assert("tried to play sound on nonexistent channel");
+			assert(false, "tried to play sound on nonexistent channel");
 		else:
-			var audioStream = Sound.pick_sound(soundID);
+			var audioStream = SND.pick_sound(soundID);
 			audioplayer.set_stream(audioStream);
 			audioplayer.play();
 

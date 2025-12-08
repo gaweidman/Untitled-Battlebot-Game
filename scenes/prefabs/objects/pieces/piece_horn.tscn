@@ -29,23 +29,24 @@ cull_mode = 2
 albedo_texture = ExtResource("7_x1ea0")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_jdn6p"]
-radius = 0.375
+radius = 0.212165
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ayq0k"]
 radius = 0.25
 height = 0.75
 
-[node name="Piece_Horn" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Horn" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_jdn6p")
 pieceName = &"Horn"
 pieceDescription = "Seems like someone tore this off some hunting trophy and stuck a plug inside the base.\\nIt sure is pointy!"
 weightBase = 1.75
 force_visibility = true
+scrapCostBase = 17
 damageBase = 1.75
-knockbackBase = 20.0
 damageTypes = Array[int]([1])
 meshesHolder = NodePath("Meshes")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
@@ -63,12 +64,13 @@ editor_description = "Put all female sockets in this box. Make sure they align w
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
 collision_layer = 16
-collision_mask = 8
+collision_mask = 513
 script = ExtResource("5_m0ax8")
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
 collision_layer = 8
+collision_mask = 0
 script = ExtResource("5_mvd27")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]

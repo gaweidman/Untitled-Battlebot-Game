@@ -7,14 +7,16 @@ var originalHost : Piece;
 var originalBox : PieceCollisionBox = self;
 var originalOffset : Vector3;
 var originalRotation : Vector3;
-var copied : = false;
-var copiedShapecast : = false;
+var copied : = false; ## If false, this box is able to be copied.
+var copiedShapecast : = false; ## Set via [method make_shapecast].
 var copiedByBody : = false; ##Set by the Robot when it's copied for the body.
 @export var identifier : StringName;
 @export var isPlacementBox := true; ##This collider is for placement validation.
 @export var isHurtbox:= true; ##This collider is for detecting incoming attacks and impacts.
 @export var isHitbox:= false;  ##This collider is for dishing out attacks.
+@export var shapecastPositionFix := true; ## When set to true, the game will move the position of shapecast children on spawn to "Vector2(0,0,0)". This fixes some boxes... but breaks others. Yippie.
 var isOriginal = true;
+var lastGlobalPosition : Vector3;
 
 var copies : Array[PieceCollisionBox] = [];
 var shapecasts : Array[ShapeCast3D] = [];
@@ -35,7 +37,7 @@ func make_copy() -> PieceCollisionBox:
 	copies.append(newBox);
 	return newBox;
 
-func make_shapecast():
+func make_shapecast(applyShapecastPositionFix := true):
 	if copiedShapecast == true: return shapecasts[0]
 	var shapeCastNew = ShapeCast3D.new();
 	shapecasts.append(shapeCastNew);
@@ -44,10 +46,11 @@ func make_shapecast():
 	add_child(shapeCastNew)
 	
 	var posNew = position;
-	posNew = Vector3(0,0,0);
+	if applyShapecastPositionFix:
+		posNew = Vector3(0,0,0);
 	shapeCastNew.set("position", posNew);
 	shapeCastNew.set("scale", scale * 0.95);
-	shapeCastNew.set("rotation", rotation);
+	shapeCastNew.set("global_rotation", global_rotation);
 	shapeCastNew.set("shape", shape);
 	shapeCastNew.set("target_position", Vector3(0,0,0));	
 	shapeCastNew.collide_with_areas = true;
@@ -78,10 +81,12 @@ func erase_all_shapecasts():
 
 func reset():
 	erase_all_shapecasts();
-	erase_all_copies();
-	copied = false;
-	copiedByBody = false;
 	copiedShapecast = false;
+	
+	erase_all_copies();
+	copiedByBody = false;
+	
+	copied = false;
 
 func fix_positions_of_copies():
 	for copy in copies:
@@ -100,3 +105,30 @@ func get_collider_id():
 
 func get_piece() -> Piece:
 	return originalHost;
+
+var speedOfMovement : float;
+var angleOfMovement : float;
+var vector3OfMovement : Vector3;
+var vector2OfMovement : Vector2;
+func _physics_process(delta: float) -> void:
+	vector3OfMovement = global_position - lastGlobalPosition;
+	vector2OfMovement = Vector2(vector3OfMovement.x, vector3OfMovement.z);
+	
+	speedOfMovement = vector3OfMovement.length();
+	
+	angleOfMovement = vector2OfMovement.angle();
+	
+	lastGlobalPosition = global_position;
+
+## Compares the XY velocity lengths of this box and another one, then returns a multiplier for damage/knockback. Factor is what the difference of differences is multiplied against for the multiplier.
+func compared_projected_position(otherBox : PieceCollisionBox, factor := 1.0) -> float:
+	var otherSpeed = otherBox.speedOfMovement;
+	var speedDif = speedOfMovement - otherBox.speedOfMovement;
+	
+	var posDif = global_position.distance_to(otherBox.global_position) ## Get the length between this box and the other one.
+	var posDifProjected = (global_position + vector3OfMovement).distance_to((otherBox.global_position + otherBox.vector3OfMovement)) ## Get the position difference between this box and the other one given that they move at the same velocity next frame.
+	var posDifDif = posDif - posDifProjected; ## Get the difference bwetween current distance and projected distance.
+	
+	#var movingTowards = posDifDif < 0; ## If posDifDif < 0, then we're projected to be moving towards the other box.
+	
+	return maxf(0.0, posDifDif / factor)

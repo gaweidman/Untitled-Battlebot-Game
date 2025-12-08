@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bfklqklhxtb2w"]
+[gd_scene load_steps=16 format=3 uid="uid://mccgt6wqvufk"]
 
 [ext_resource type="Script" uid="uid://bxkvldgxyfk6p" path="res://scripts/objects/pieces/piece_swivel.gd" id="1_3tbmm"]
 [ext_resource type="ArrayMesh" uid="uid://cfvtjsean8sey" path="res://graphics/models/obj/botparts/SwivelBottom.obj" id="2_f1afw"]
@@ -30,13 +30,14 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("9_bk6my")
 
-[node name="Piece_Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+[node name="Piece_Swivel" type="Node3D" node_paths=PackedStringArray("swivelNode", "meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 visible = false
 script = ExtResource("1_3tbmm")
 swivelNode = NodePath("SwivelTop")
-movingSockets = [NodePath("SwivelTop/Socket")]
 pieceName = &"Swivel"
+weightBase = 1.25
 force_visibility = true
+scrapCostBase = 13
 meshesHolder = NodePath("Meshes")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
@@ -55,12 +56,13 @@ editor_description = "Put all female sockets in this box. Make sure they align w
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
 collision_layer = 16
-collision_mask = 8
+collision_mask = 513
 script = ExtResource("5_bso77")
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
 collision_layer = 8
+collision_mask = 0
 script = ExtResource("5_qbujc")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]

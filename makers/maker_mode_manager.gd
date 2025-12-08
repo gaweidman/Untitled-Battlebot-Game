@@ -9,6 +9,7 @@ enum mode {
 	PART,
 	LEVEL,
 }
+var curMode : mode;
 
 func _ready():
 	change_mode(0);
@@ -34,7 +35,17 @@ func _ready():
 	mode.LEVEL : "Now Making: Levels",
 }
 
+func _process(delta: float) -> void:
+	if ! awaitingBackToGame and !GameState.screenTransition.is_on_right():
+		GameState.call_deferred("make_screen_transition_leave");
+	elif awaitingBackToGame:
+		GameState.ping_screen_transition();
+
+func get_mode_key_name() -> String:
+	return str("EDITOR: ", mode.keys()[curMode])
+
 func change_mode(newMode : mode):
+	curMode = newMode;
 	for modeNode in modeNodes.values():
 		if is_instance_valid(modeNode):
 			if modeNode.visible:
@@ -80,9 +91,10 @@ func enable_camera():
 func disable_camera():
 	makerCamera.disable();
 
-
+var awaitingBackToGame := false;
 func _on_back_to_game_pressed():
 	GameState.reset_to_main_menu();
+	awaitingBackToGame = true;
 	pass # Replace with function body.
 
 

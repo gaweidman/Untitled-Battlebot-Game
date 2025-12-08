@@ -7,11 +7,19 @@ class_name TransitionCanvas
 @export var loadingGear : TextureRect;
 @export var logo : TextureRect;
 @export var lbl_companyName : Label;
+@export var modulator : CanvasModulate;
+
+var dbg_hidden := false;
+var dbg_prof := false;
+@export var debug_canvas : CanvasLayer;
+@export var lbl_profiler : RichTextLabel;
+@export var margin_profiler : MarginContainer;
 
 
 func initialize():
 	initialize_logo();
-	transition.bring_to_center(true, true);	
+	transition.bring_to_center(true, true);
+	layer = 5;
 
 func initialize_logo():
 	logoTime = true;
@@ -33,27 +41,47 @@ var textSequenceFlip := false;
 var textSequenceStep = 0 ##STEP THRU TEXT
 
 func _process(delta):
-	if logoTime:
-		lbl_companyName.visible = true;
-		time -= delta;
-		if time < 0:
+	dbg_hidden = GameState.get_setting("HiddenScreenTransitions");
+	
+	dbg_prof = GameState.get_setting("ProfilerLabelsVisible");
+	if dbg_prof:
+		debug_canvas.visible = true;
+		if is_instance_valid(lbl_profiler):
+			var profLabel = GameState.get_profiler_label();
+			lbl_profiler.text = str(profLabel);
+	else:
+		debug_canvas.hide();
+	
+	if ! GameState.get_in_one_of_given_states([GameBoard.gameState.MAKER]):
+		show();
+		if dbg_hidden:
+			modulator.color.a = 0.15;
+		else:
+			modulator.color.a = 1;
+		
+		if logoTime:
+			lbl_companyName.visible = true;
+			time -= delta;
+			if time < 0:
+				if ! transition.is_on_center():
+					logoTime = false;
+				else:
+					textSequenceStep += 1;
+					if textSequenceFlip:
+						textSequenceFlip = false;
+					else:
+						textSequenceFlip = true;
+					draw_logo_text();
+		else:
+			lbl_companyName.modulate.a = max(lbl_companyName.modulate.a- delta * 20, 0.0);
+			if lbl_companyName.modulate.a == 0:
+				lbl_companyName.hide();
+		
+		if checkingForLeaveSplash:
 			if ! transition.is_on_center():
 				logoTime = false;
-			else:
-				textSequenceStep += 1;
-				if textSequenceFlip:
-					textSequenceFlip = false;
-				else:
-					textSequenceFlip = true;
-				draw_logo_text();
 	else:
-		lbl_companyName.modulate.a = max(lbl_companyName.modulate.a- delta * 20, 0.0);
-		if lbl_companyName.modulate.a == 0:
-			lbl_companyName.hide();
-	
-	if checkingForLeaveSplash:
-		if ! transition.is_on_center():
-			logoTime = false;
+		hide();
 
 const LOGO_STRING = "METAL CHIMERA\n\nPRESENTING"
 

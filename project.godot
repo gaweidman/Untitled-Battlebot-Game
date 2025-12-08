@@ -25,7 +25,10 @@ AI="*res://scripts/libraries/ai.gd"
 RaycastSystem="*res://scripts/libraries/raycast_system.gd"
 TextFunc="*res://scripts/libraries/text_func.gd"
 Utils="*res://scripts/libraries/utils.gd"
-SpawnerUtils="*res://scripts/libraries/spawner_utils.gd"
+AbilityDistributor="*res://scripts/libraries/ability_distributor.gd"
+ScrapManager="*res://scripts/libraries/scrap_manager.gd"
+StatHolderManager="*res://stat_holder_manager.gd"
+InputManager="*res://scripts/libraries/input_manager.gd"
 
 [debug]
 
@@ -61,6 +64,7 @@ Driveable=""
 Piece="This object is a Piece and will interfere with placement."
 Obstacle="Modular wall bits."
 Wood=""
+Glass=""
 
 [importer_defaults]
 
@@ -212,9 +216,46 @@ StashSelected={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194312,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
+dbg_ToggleScreenTransitions={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194334,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+dbg_RestartGame={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194335,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+dbg_ToggleProfiler={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":96,"key_label":0,"unicode":96,"location":0,"echo":false,"script":null)
+]
+}
+dbg_ClearProfiler={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":true,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":96,"key_label":0,"unicode":126,"location":0,"echo":false,"script":null)
+]
+}
+dbg_SpawnEnemy={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194437,"key_label":0,"unicode":43,"location":0,"echo":false,"script":null)
+]
+}
+dbg_DealPlayerDamage={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194435,"key_label":0,"unicode":45,"location":0,"echo":false,"script":null)
+]
+}
+MoveModeSelected={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":77,"key_label":0,"unicode":109,"location":0,"echo":false,"script":null)
+]
+}
 
 [layer_names]
 
+3d_render/layer_1="Main"
+3d_render/layer_2="Shop Rotisserie"
 3d_physics/layer_1="Robot bodies"
 3d_physics/layer_2="AI Node Setup"
 3d_physics/layer_3="Placement Ray"
@@ -226,6 +267,7 @@ StashSelected={
 3d_physics/layer_9="Aiming Helper"
 3d_physics/layer_10="Bullet"
 3d_physics/layer_11="Arena floors"
+3d_physics/layer_12="Layer 12"
 
 [physics]
 

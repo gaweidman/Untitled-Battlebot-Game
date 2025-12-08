@@ -4,8 +4,8 @@
 [ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_52v1y"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_mjslu"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_f406y"]
-[ext_resource type="Resource" uid="uid://4easq571wef0" path="res://scenes/prefabs/abilities/ability_cannon_fire.tres" id="4_f406y"]
-[ext_resource type="Resource" uid="uid://beks5dpxmrcok" path="res://scenes/prefabs/abilities/passive/ability_piece_cannon_refreshBullets.tres" id="5_shgbd"]
+[ext_resource type="Resource" uid="uid://4easq571wef0" path="res://scenes/prefabs/abilities/active/ability_cannon_fire.tres" id="4_d7xnu"]
+[ext_resource type="Resource" uid="uid://beks5dpxmrcok" path="res://scenes/prefabs/abilities/passive/ability_piece_cannon_refreshBullets.tres" id="5_3twrs"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="6_f406y"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_rjpgo"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="8_o54vu"]
@@ -63,22 +63,28 @@ size = Vector3(1, 0.5, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_shgbd"]
 size = Vector3(0.5, 0.5, 1.5)
 
-[node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("firingOffsetNode", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder") groups=["Piece"]]
+[node name="Piece_Cannon" type="Node3D" node_paths=PackedStringArray("firingOffsetNode", "meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_f406y")
+magazineRefreshRate = 0.45
+fireRate = 0.25
 firingOffsetNode = NodePath("Meshes/MeshInstance3D/FiringOffset")
 pieceName = &"Cannon"
 descriptionConstructor = Array[ExtResource("2_52v1y")]([SubResource("Resource_861xr"), SubResource("Resource_f406y"), SubResource("Resource_shgbd")])
+pieceDescription = "[color=ffffffff]Shoots [color=ffffffff]projectiles[color=ffffffff]."
 weightBase = 10.0
-activeAbilities = Array[ExtResource("3_f406y")]([ExtResource("4_f406y")])
-passiveAbilities = Array[ExtResource("3_f406y")]([ExtResource("5_shgbd")])
 force_visibility = true
+scrapCostBase = 25
+activeAbilities = Array[ExtResource("3_f406y")]([ExtResource("4_d7xnu")])
+passiveAbilities = Array[ExtResource("3_f406y")]([ExtResource("5_3twrs")])
 damageBase = 1.0
 knockbackBase = 250.0
 kickbackBase = 250.0
 damageTypes = Array[int]([1])
+meshesHolder = NodePath("Meshes")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
+femaleSocketHolder = NodePath("FemaleSockets")
 engineSlots = {
 Vector2i(1, 2): null,
 Vector2i(1, 3): null,
@@ -100,12 +106,13 @@ hostPiece = NodePath("../..")
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
 collision_layer = 16
-collision_mask = 8
+collision_mask = 513
 script = ExtResource("6_f406y")
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
 editor_description = "Leave this node empty. "
 collision_layer = 8
+collision_mask = 0
 script = ExtResource("7_rjpgo")
 
 [node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
@@ -162,8 +169,10 @@ surface_material_override/0 = SubResource("StandardMaterial3D_ts5ym")
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0.25, 0)
 mesh = ExtResource("9_861xr")
 
-[node name="FiringOffset" type="Node3D" parent="Meshes/MeshInstance3D"]
-transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0.25)
+[node name="FiringOffset" type="RayCast3D" parent="Meshes/MeshInstance3D"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0.3125)
+enabled = false
+target_position = Vector3(0, 0, 1)
 
 [node name="PieceCollisionBox" parent="." instance=ExtResource("10_861xr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)

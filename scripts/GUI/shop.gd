@@ -36,7 +36,7 @@ func reset_shop():
 	close_up_shop();
 
 func set_item_pool_waves(inWave:int):
-	print_rich("[b]Setting item pool for wave ", inWave)
+	#print_rich("[b]Setting item pool for wave ", inWave)
 	var changed = false;
 	if inWave == -1:
 		clear_shop_spawn_list();
@@ -187,6 +187,7 @@ func update_health_button():
 		TextFunc.set_text_color($HealButton/TextHolder/Price, "scrap");
 	else:
 		TextFunc.set_text_color($HealButton/TextHolder/Price, "unaffordable");
+
 func get_heal_amount():
 	return (healAmountBase * healAmountModifier) * player._get_combat_handler().get_max_health();
 func get_heal_price():
@@ -297,7 +298,7 @@ func calculate_part_pool():
 			pool.append(scene);
 			weight -= 1;
 	partPoolCalculated = pool;
-	print_rich("[color=yellow]",translated_part_pool());
+	#print_rich("[color=yellow]",translated_part_pool());
 
 func translated_part_pool():
 	var poolDict = {}

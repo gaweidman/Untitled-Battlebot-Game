@@ -1,0 +1,276 @@
+[gd_scene load_steps=26 format=3 uid="uid://ct44puu0abpe2"]
+
+[ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_tme01"]
+[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_uq5th"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="11_nqqni"]
+[ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="13_5ebib"]
+[ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="14_i5akq"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="15_uaocc"]
+[ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="16_3o7r4"]
+[ext_resource type="ArrayMesh" uid="uid://c0lqmqc7dthl3" path="res://graphics/models/obj/botparts/Hammer.obj" id="16_7l0lh"]
+[ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="17_y7bpy"]
+[ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="21_gpmkk"]
+
+[sub_resource type="Resource" id="Resource_ujwhk"]
+script = ExtResource("2_uq5th")
+string = "Serves no purpose other than to provide "
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_agd5d"]
+script = ExtResource("2_uq5th")
+string = "structure"
+color = 3
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="Resource" id="Resource_7qnf5"]
+script = ExtResource("2_uq5th")
+string = "to your robot."
+color = 1
+newline = false
+endingSpace = false
+startingSpace = true
+metadata/_custom_type_script = "uid://cybmjhuctmfaw"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tme01"]
+size = Vector3(2.25, 1, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_g4w8c"]
+size = Vector2(0.25, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sqnxc"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("16_3o7r4")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_kphb4"]
+size = Vector2(0.1, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t8ht0"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("17_y7bpy")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ubwoj"]
+size = Vector2(0.25, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s0cu2"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("16_3o7r4")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_k8cvo"]
+size = Vector2(0.1, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ts5ym"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("17_y7bpy")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uq5th"]
+size = Vector3(1, 0.5, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hlyjc"]
+size = Vector3(0.5, 0.5, 2)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nq1ik"]
+radius = 0.75
+height = 3.25
+
+[node name="Piece_The Hammer" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
+script = ExtResource("1_tme01")
+pieceName = &"The Hammer"
+descriptionConstructor = Array[ExtResource("2_uq5th")]([SubResource("Resource_ujwhk"), SubResource("Resource_agd5d"), SubResource("Resource_7qnf5")])
+pieceDescription = "[color=ffffffff]Serves no purpose other than to provide [color=ffffffff]structure [color=ffffffff]to your robot."
+defenseMultipliers = Dictionary[int, float]({
+0: 0.5
+})
+weightBase = 30.0
+force_visibility = true
+scrapCostBase = 55
+damageBase = 1.0
+knockbackBase = 100.0
+damageTypes = Array[int]([0])
+contactCooldown = 0.25
+contactDamageComparedVelocitiesBias = 0.8
+meshesHolder = NodePath("Meshes")
+hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
+femaleSocketHolder = NodePath("FemaleSockets")
+assignedToSocket = true
+engineSlots = {
+Vector2i(0, 0): null,
+Vector2i(0, 1): null,
+Vector2i(1, 0): null,
+Vector2i(1, 1): null,
+Vector2i(2, 0): null,
+Vector2i(2, 1): null,
+Vector2i(2, 2): null,
+Vector2i(2, 3): null,
+Vector2i(2, 4): null,
+Vector2i(3, 0): null,
+Vector2i(3, 1): null,
+Vector2i(4, 0): null,
+Vector2i(4, 1): null
+}
+filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_bumper_T.tscn"
+
+[node name="PieceCollisionBox3" parent="." instance=ExtResource("21_gpmkk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 2.9375)
+shape = SubResource("BoxShape3D_tme01")
+identifier = &"HeadHurtbox"
+shapecastPositionFix = false
+
+[node name="MaleSocket" type="Node3D" parent="."]
+editor_description = "This is purely here as a visual representation of where this thing plugs in. 
+!! Do not move or modify (Unless you have good reason, of course) !!"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00963242, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MaleSocket"]
+transform = Transform3D(1, 0, 0, 0, -1, -1.50996e-07, 0, 1.50996e-07, -1, 0, 0, 0)
+mesh = SubResource("PlaneMesh_g4w8c")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_sqnxc")
+metadata/_edit_lock_ = true
+
+[node name="Prong1" type="Node3D" parent="MaleSocket"]
+transform = Transform3D(1, 0, 0, 0, -1, -1.50996e-07, 0, 1.50996e-07, -1, 0, 0, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="MaleSocket/Prong1"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
+mesh = SubResource("PlaneMesh_kphb4")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
+metadata/_edit_lock_ = true
+
+[node name="Prong2" type="Node3D" parent="MaleSocket"]
+transform = Transform3D(-0.5, -7.57103e-08, -0.866025, 0, -1, 8.74228e-08, -0.866025, 4.37114e-08, 0.5, 0, 0, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="MaleSocket/Prong2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
+mesh = SubResource("PlaneMesh_kphb4")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
+metadata/_edit_lock_ = true
+
+[node name="Prong3" type="Node3D" parent="MaleSocket"]
+transform = Transform3D(-0.5, 7.57103e-08, 0.866025, 0, -1, 8.74228e-08, 0.866025, 4.37114e-08, 0.5, 0, 0, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="MaleSocket/Prong3"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
+mesh = SubResource("PlaneMesh_kphb4")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
+metadata/_edit_lock_ = true
+
+[node name="FemaleSockets" type="Node3D" parent="."]
+editor_description = "Put all female sockets in this box. Make sure they align with the grid!"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.01328e-05, -0.0045355, 0.000500202)
+
+[node name="Socket" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("11_nqqni")]
+transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, -8.74228e-08, 1, 1.06581e-14, 3.82137e-15, 1.06581e-14, -1, 0, 0.5, 1.74623e-10)
+hostPiece = NodePath("../..")
+
+[node name="Socket2" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("11_nqqni")]
+transform = Transform3D(4.37114e-08, -6.83673e-15, 1, 1, 4.37114e-08, -4.37114e-08, -4.37114e-08, 1, 8.74742e-15, 0, 0.25, 3.5)
+hostPiece = NodePath("../..")
+
+[node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
+editor_description = "Leave this node empty. "
+collision_layer = 16
+collision_mask = 513
+script = ExtResource("13_5ebib")
+
+[node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]
+editor_description = "Leave this node empty. "
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("14_i5akq")
+
+[node name="PlacementShapes [Leave empty]" type="Node3D" parent="."]
+editor_description = "Leave this node empty. "
+script = ExtResource("15_uaocc")
+
+[node name="Meshes" type="Node3D" parent="."]
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.25, 0)
+mesh = ExtResource("16_7l0lh")
+skeleton = NodePath("")
+
+[node name="MaleSocket" type="Node3D" parent="Meshes"]
+editor_description = "This is purely here as a visual representation of where this thing plugs in. 
+!! Do not move or modify (Unless you have good reason, of course) !!"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00963242, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes/MaleSocket"]
+transform = Transform3D(1, 0, 0, 0, -1, -1.50996e-07, 0, 1.50996e-07, -1, 0, 0, 0)
+mesh = SubResource("PlaneMesh_ubwoj")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_s0cu2")
+metadata/_edit_lock_ = true
+
+[node name="Prong1" type="Node3D" parent="Meshes/MaleSocket"]
+transform = Transform3D(1, 0, 0, 0, -1, -1.50996e-07, 0, 1.50996e-07, -1, 0, 0, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes/MaleSocket/Prong1"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
+mesh = SubResource("PlaneMesh_k8cvo")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_ts5ym")
+
+[node name="Prong2" type="Node3D" parent="Meshes/MaleSocket"]
+transform = Transform3D(-0.5, -7.57103e-08, -0.866025, 0, -1, 8.74228e-08, -0.866025, 4.37114e-08, 0.5, 0, 0, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes/MaleSocket/Prong2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
+mesh = SubResource("PlaneMesh_k8cvo")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_ts5ym")
+
+[node name="Prong3" type="Node3D" parent="Meshes/MaleSocket"]
+transform = Transform3D(-0.5, 7.57103e-08, 0.866025, 0, -1, 8.74228e-08, 0.866025, 4.37114e-08, 0.5, 0, 0, 0)
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes/MaleSocket/Prong3"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
+mesh = SubResource("PlaneMesh_k8cvo")
+skeleton = NodePath("../../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_ts5ym")
+
+[node name="PieceCollisionBox" parent="." instance=ExtResource("21_gpmkk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("BoxShape3D_uq5th")
+identifier = &"Handle"
+shapecastPositionFix = false
+
+[node name="PieceCollisionBox2" parent="." instance=ExtResource("21_gpmkk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 1.5)
+shape = SubResource("BoxShape3D_hlyjc")
+identifier = &"Rod"
+shapecastPositionFix = false
+
+[node name="PieceCollisionBox4" parent="." instance=ExtResource("21_gpmkk")]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0.25, 2.75)
+shape = SubResource("CapsuleShape3D_nq1ik")
+identifier = &"Hammerhead"
+isPlacementBox = false
+isHurtbox = false
+isHitbox = true
+shapecastPositionFix = false
+
+[connection signal="body_shape_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_body_shape_entered"]

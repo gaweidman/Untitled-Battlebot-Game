@@ -1,5 +1,6 @@
+
 @icon ("res://graphics/images/class_icons/socket.png")
-extends Node3D
+extends Area3D
 
 class_name Socket
 ##This object hosts [Piece]s.
@@ -12,24 +13,46 @@ var preview : Piece;
 var previewPlaceable := false;
 @onready var selectorRay = $SelectorRay;
 @export var collisionSphere : CollisionShape3D;
-@export var collisionScale := 0.45;
+@export var collisionScale := 0.45; ## how big the collision to mouse-pick this socket is.
 @export var selectorRayExceptions : Array[CollisionObject3D]= [];
 
 @export var dontUsePieceForRobotHost := false;
+var initialRotation : Vector3;
+
+@export var shopRotisserie := false;
+@export var shopStall : ShopStall = null;
+var rotisserieSpeed := 0.0;
+var rotisserieSpeedTarget := 0.0;
+@export var mesh_face : MeshInstance3D;
+@export var mesh_selector : MeshInstance3D;
 
 ##Needs functions to ping its host.
 ##If occupant is null, it is assumed to be empty and able to be plugged in.
 
 func _ready():
-	if invisibleInGame:
-		$FemaleConnector.hide();
-	if is_instance_valid(hostPiece):
-		hostPiece.register_socket(self);
-	else:
-		#queue_free();
-		pass;
-	collisionSphere.shape = collisionSphere.shape.duplicate();
-	collisionSphere.shape.radius = collisionScale;
+	if ! Engine.is_editor_hint():
+		if invisibleInGame:
+			$FemaleConnector.hide();
+		#if is_instance_valid(hostPiece):
+			#hostPiece.register_socket(self);
+		#else:
+			#pass;
+		collisionSphere.shape = collisionSphere.shape.duplicate();
+		collisionSphere.shape.radius = collisionScale;
+		initialRotation = rotation;
+		
+		call_deferred("prep_monitoring");
+		
+		Hooks.add_enum(self, Hooks.hookNames.OnChangeGameState, "Socket", 
+		func(oldState : GameBoard.gameState, newState : GameBoard.gameState):
+			call_deferred("prep_monitoring")
+		, 4)
+
+func prep_monitoring():
+	var inCorrectState = GameState.get_in_state_of_building();
+	monitoring = inCorrectState;
+	input_ray_pickable = inCorrectState;
+	$CollisionShape3D.disabled = !inCorrectState;
 
 ####################### SETUP LOAD
 
@@ -42,19 +65,22 @@ func load_startup_data(data, robot : Robot):
 		rotation = rot;
 	var occupantData = data["occupant"];
 	if occupantData != null and not occupantData is String:
-		print("OCCUPANT DATA: ", occupantData)
+		#print("OCCUPANT DATA: ", occupantData)
 		var occupantPath = occupantData.keys()[0]
 		#print("OCCUPANT PATH: ", occupantPath)
 		var occupantDataForwarded = occupantData[occupantPath];
 		#print("OCCUPANT DATA TO FORWARD: ", occupantDataForwarded)
 		var result = add_occupant_from_scene_path(occupantPath);
 		if result != null:
-			print(result);
+			#print(result);
 			result.load_startup_data(occupantDataForwarded, robot);
+	if get_occupant() == null:
+		reset_rotation();
 
 
 ########################
 
+## Adds an [member occupant] from a filepath. 
 func add_occupant_from_scene_path(scenePath : String):
 	if FileAccess.file_exists(scenePath):
 		var newPieceScene = load(scenePath);
@@ -67,32 +93,39 @@ func add_occupant_from_scene_path(scenePath : String):
 				return newPiece;
 	return null;
 
+## Removes the current [member occupant]. Optionally [param delete]s it.
 func remove_occupant(delete := false):
-	if delete and is_instance_valid(occupant): occupant.queue_free();
-	if is_instance_valid(occupant): remove_child(occupant);
+	if is_instance_valid(occupant): 
+		remove_child(occupant);
+		if delete: 
+			occupant.destroy(false);
 	occupant = null;
 	pass
 
 ##Sets the given piece as a child of this [Socket], and sets its [member Robot.hostPiece] and [member Robot.hostRobot] as this [Socket]'s hosts.
 func add_occupant(newPiece : Piece, manual := false):
 	if is_instance_valid(newPiece):
+		GameState.profiler_ping_create("Piece added to socket as occupant")
 		occupant = newPiece;
 		#print("SETTING AS OCCUPANT!")
-		if is_instance_valid(occupant.get_parent()):
-			occupant.reparent(self, false);
+		if is_instance_valid(newPiece.get_parent()):
+			newPiece.reparent(self, false);
 		else:
-			add_child(occupant);
+			add_child(newPiece);
 		
-		occupant.hostPiece = hostPiece;
-		occupant.hostSocket = self;
+		newPiece.hostPiece = hostPiece;
+		newPiece.hostSocket = self;
 		
 		if ! manual:
-			occupant.hostRobot = get_robot();
+			newPiece.hostRobot = get_robot();
 		else:
-			occupant.hostRobot = get_host_robot_unsafe();
-			occupant.assign_socket_post(self);
+			newPiece.hostRobot = get_host_robot_unsafe();
+			newPiece.assign_socket_post(self);
+		
+		newPiece.assignedToSocket = true;
 		$Selector.hide();
 
+## Gets the amount of energy flowing through this socket from its host into its occupant.
 func get_energy_transmitted():
 	if hostPiece != null:
 		return hostPiece.get_outgoing_energy();
@@ -107,7 +140,7 @@ func is_available():
 	if dontUsePieceForRobotHost:
 		available = occupant == null and is_valid() and get_preview_placeable();
 	else:
-		available = occupant == null and is_valid() and get_preview_placeable() and (get_host_piece() != null) and (get_host_piece().is_assigned());
+		available = occupant == null and is_valid() and get_preview_placeable() and (get_host_piece() != null) and (get_host_piece().assignedToSocket);
 	#print(available)
 	return available;
 
@@ -117,7 +150,7 @@ func is_valid():
 	if dontUsePieceForRobotHost:
 		valid = is_instance_valid(get_robot());
 	else:
-		valid = is_instance_valid(get_robot()) and get_host_piece() != null and get_host_piece().is_assigned();
+		valid = is_instance_valid(get_robot()) and get_host_piece() != null and hostPiece.assignedToSocket;
 	#print(valid)
 	return valid;
 
@@ -126,8 +159,11 @@ func set_host_piece(piece : Piece):
 func get_host_piece() -> Piece:
 	return hostPiece;
 
-func set_host_robot(robot: Robot):
-	hostRobot = robot;
+func set_host_robot(_robot: Robot, depth := -1):
+	depth += 1;
+	hostRobot = _robot;
+	if occupant != null:
+		occupant.set_host_recursive(_robot, hostPiece, depth);
 
 func get_robot(forcePieceToGiveHostRobot := false) -> Robot:
 	if (!dontUsePieceForRobotHost) and (get_host_piece() == null): return null;
@@ -165,21 +201,51 @@ func set_socket_rotation(newRotDeg := currentRotationDeg):
 
 func reset_rotation():
 	currentRotationDeg = 0.0;
-	rotation.y = 0.0;
+	rotation = initialRotation;
 
 var hovering = false;
 var selected = false;
 var selectionCheckLoop = 3;
 
 func _process(delta):
+	var hostPieceGet = get_host_piece();
+	var hostPieceInShop:= false;
+	if is_instance_valid(hostPieceGet):
+		hostPieceInShop = hostPieceGet.inShop;
+	if shopRotisserie or hostPieceInShop:
+		mesh_face.set_layer_mask_value(1, false)
+		mesh_face.set_layer_mask_value(2, true)
+	else:
+		mesh_face.set_layer_mask_value(1, true)
+		mesh_face.set_layer_mask_value(2, false)
+	
+	if shopRotisserie:
+		if is_instance_valid(shopStall):
+			match shopStall.curState:
+				shopStall.doorState.NONE:
+					rotisserieSpeedTarget = 0.0;
+				shopStall.doorState.OPEN:
+					rotisserieSpeedTarget = 80.0 if shopStall.mousingOverPreview else 50.0;
+				shopStall.doorState.CLOSED:
+					rotisserieSpeedTarget = 0.0 if shopStall.doors_actually_closed() else 15.0;
+					if shopStall.doors_actually_closed():
+						rotisserieSpeed = 0.0;
+						rotation.y = 0;
+				shopStall.doorState.FROZEN:
+					rotisserieSpeedTarget = 30.0;
+		rotisserieSpeed = move_toward(rotisserieSpeed, rotisserieSpeedTarget, delta * 100);
+		rotate_y(deg_to_rad(delta * rotisserieSpeed));
+		
+		pass;
+	if Engine.is_editor_hint(): return;
 	selectionCheckLoop -= 1;
 	if selectionCheckLoop <= 0:
 		valid = is_valid();
 		selectionCheckLoop = 3;
 		if hoverResetFrameCounter <= 0:
 			#print_rich("MAN")
-			if hovering:
-				print_rich("MAN")	
+			#if hovering:
+				#print_rich("MAN")
 			hover(false);
 		#
 		#var vp = get_viewport()
@@ -230,7 +296,8 @@ func _process(delta):
 	
 
 func _physics_process(delta):
-	calc_preview_placeable();
+	if ! Engine.is_editor_hint():
+		calc_preview_placeable();
 
 var hoverResetFrameCounter := 0;
 
@@ -274,7 +341,8 @@ func show_preview_of_pipette():
 			preview.rotation = Vector3(0,0,0);
 			preview.hostSocket = self;
 			preview.hurtboxCollisionHolder.set_collision_mask_value(8, true);
-			preview.isPreview = true;
+			preview.set_preview(true);
+			request_placement_shapes();
 	return preview;
 
 func calc_preview_placeable():
@@ -292,6 +360,7 @@ func get_preview_placeable():
 
 func get_preview_or_null():
 	if is_instance_valid(preview) and preview is Piece:
+		preview.set_preview(true);
 		return preview;
 	return null;
 
@@ -317,7 +386,9 @@ func set_occupant_as_preview(): ##TODO: This.
 	pass
 
 func get_occupant() -> Piece:
-	if is_instance_valid(occupant):
+	if is_instance_valid(occupant) and ! occupant.is_queued_for_deletion():
+		if ! occupant.assignedToSocket:
+			add_occupant(occupant, true)
 		return occupant;
 	return null;
 
@@ -327,6 +398,18 @@ func get_occupant_or_child() -> Piece:
 		if child is Piece:
 			return child;
 	return null;
+
+## Force any child pieces that aren't a preview to be added to this.
+func set_child_as_occupant():
+	if occupant == null and preview == null:
+		for child in get_children():
+			if child is Piece:
+				add_occupant(child, true);
+				
+
+func request_placement_shapes():
+	if is_instance_valid(hostRobot):
+		hostRobot.propagate_placement_shapes(true);
 
 func hover_from_camera(cam) -> Piece:
 	selectionCheckLoop = 4;
@@ -346,7 +429,7 @@ var weightLoad = -1.0;
 func get_weight_load(forceRegenerate := false):
 	if weightLoad < 0 or forceRegenerate:
 		return get_weight_starting_from_occupant();
-	return weightLoad;
+	return max(-1, weightLoad);
 
 ## Recalculates weightLoad.
 func get_weight_starting_from_occupant():

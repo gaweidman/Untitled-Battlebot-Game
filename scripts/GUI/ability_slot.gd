@@ -1,7 +1,7 @@
 @icon ("res://graphics/images/class_icons/abilitySlot.png")
 extends Control
 class_name AbilitySlot
-## The visual representation on the [GameHUD] for each of the player's currently equipped Active Abilities ([member Robot.active_abilities]).
+## The visual representation on the [GameHUD] for each of the player's currently equipped Active Abilities ([member Robot.active_abilities]).[br]Holds the [AbilityData] for that ability and displays it with furvor.
 
 enum modes {
 	NONE,
@@ -13,6 +13,7 @@ var curMode : modes = modes.NONE;
 @export var nextSlot : AbilitySlot;
 @export var manager : AbilitySlotManager;
 @export var lbl_name : Label;
+@export var lbl_thingname : Label;
 @export var lbl_energy : Label;
 @export var bar_cooldown : HealthBar;
 @export var bar_energy : HealthBar;
@@ -33,14 +34,40 @@ var curMode : modes = modes.NONE;
 @export var btn_selectReference : Button;
 @export var bg_icon : NinePatchRect;
 const bgIconBaseY := 77.0;
+var regenControlChildren := true;
+var allControlChildren : Array[Control] = []:
+	get:
+		if allControlChildren.is_empty() or regenControlChildren:
+			var ret : Array[Control] = []
+			for child in Utils.get_all_children("Ability slot tooltip update",self, self):
+				if child is Control:
+					ret.append(child);
+			allControlChildren = ret;
+		return allControlChildren;
 
 var index : int;
-var referencedAbility : AbilityManager;
+var referencedAbility : AbilityData;
+var inputActionString : String:
+	get:
+		return "Fire" + str(index);
+var inputKeysString : String:
+	get:
+		return InputManager.get_action_string(inputActionString);
 
 func _ready():
 	focus_next = get_path_to(nextSlot);
 	focus_previous = get_path_to(prevSlot);
 	clear_assignment();
+
+func set_index(in_index):
+	index = in_index;
+	update_base_tooltips();
+
+func update_base_tooltips():
+	var tooltip = str(inputKeysString,"\n","\n"if !is_instance_valid(referencedAbility) or !is_instance_valid(referencedAbility.assignedPieceOrPart) else lbl_thingname.text + "\n","Ability Slot Empty" if referencedAbility == null else referencedAbility.manager.abilityName)
+	tooltip_text = tooltip;
+	for child in allControlChildren:
+		child.tooltip_text = tooltip;
 
 func _process(delta):
 	
@@ -62,34 +89,47 @@ func _process(delta):
 			curMode = modes.NONE;
 			pass;
 	
-	
+	#print(inputKeysString)
+
 func _on_assign_pressed():
 	manager.button_pressed.emit(self);
 	pass # Replace with function body.
 
 
-func assign_ability(ability : AbilityManager):
-	if ! (ability != referencedAbility):
+func assign_ability(ability : AbilityData):
+	if (ability == referencedAbility):
 		return;
-	if is_instance_valid(ability):
-		print("Ability assigned!")
+	if ! is_instance_valid(ability) or ! is_instance_valid(ability.assignedPieceOrPart):
+		return;
+	if is_instance_valid(ability) and ability is AbilityData:
+		#print("Ability assigned!")
 		referencedAbility = ability;
+		set_deferred("referencedAbility", ability);
+		
+		var mgr = ability.get_manager()
 		
 		## Change the icon data.
-		spr_icon.texture = ability.icon;
+		spr_icon.texture = mgr.icon;
 		
-		TextFunc.set_text_color(lbl_name, "white");
-		lbl_name.text = ability.abilityName;
+		
+		lbl_name.text = mgr.abilityName;
+		if ability.assignedPieceOrPart is Piece:
+			lbl_thingname.text = ability.assignedPieceOrPart.pieceName;
+			TextFunc.set_text_color(lbl_thingname, "lightred");
+		if ability.assignedPieceOrPart is Part:
+			lbl_thingname.text = ability.assignedPieceOrPart.partName;
+			TextFunc.set_text_color(lbl_thingname, "lightgreen");
 		
 		btn_selectReference.disabled = false;
 		
 		update_ability(ability);
 	else:
+		#print("Ability cleared.")
 		clear_assignment();
 	pass;
 
 var counter := 0.;
-func update_ability(ability : AbilityManager):
+func update_ability(ability : AbilityData):
 	counter += 1;
 	if counter > 200:
 		counter = 0;
@@ -103,6 +143,7 @@ func update_ability(ability : AbilityManager):
 	
 	## Icon and the button.
 	var ref = referencedAbility.get_assigned_piece_or_part();
+	var mgr = referencedAbility.get_manager();
 	var iconBG = "res://graphics/images/HUD/screenGFX/screenBG.png";
 	if is_instance_valid(ref):
 		if ref is Piece:
@@ -138,6 +179,7 @@ func update_ability(ability : AbilityManager):
 	
 	var usable = data.usable;
 	blinky_usable.visible = usable;
+	TextFunc.set_text_color(lbl_name, "white" if usable else "scrap");
 	
 	## Miscellaneous text.
 	var miscTextDat = "";
@@ -175,8 +217,10 @@ func update_ability(ability : AbilityManager):
 	#lbl_cooldownSlash.text = "/";
 
 func clear_assignment():
+	regenControlChildren = true;
 	referencedAbility = null;
 	lbl_name.text = "Ability Slot Empty";
+	lbl_thingname.text = "";
 	TextFunc.set_text_color(lbl_name, "lightred");
 	bar_energy.set_health(0, 0);
 	blinky_energy.visible = false;

@@ -60,7 +60,7 @@
 [ext_resource type="Texture2D" uid="uid://dyfx0k6ohqmpe" path="res://graphics/images/HUD/shop/buy_selected.png" id="41_o11jw"]
 [ext_resource type="Texture2D" uid="uid://ccklnmdcymtig" path="res://graphics/images/HUD/shop/heal_unselected.png" id="43_vok4d"]
 [ext_resource type="Texture2D" uid="uid://g2oapmprsygp" path="res://graphics/images/HUD/shop/heal_selected.png" id="44_4wvq4"]
-[ext_resource type="Script" uid="uid://56vk7o0gmt7p" path="res://scripts/GUI/shop_button.gd" id="45_4wvq4"]
+[ext_resource type="Script" uid="uid://56vk7o0gmt7p" path="res://scripts/GUI/manual_button.gd" id="45_4wvq4"]
 [ext_resource type="Texture2D" uid="uid://b7r4txn23e8xc" path="res://graphics/images/HUD/shop/shop_door.png" id="46_xopod"]
 [ext_resource type="FontFile" uid="uid://s3k2ji7jxshs" path="res://graphics/images/HUD/8-segment.png" id="47_08lav"]
 [ext_resource type="Texture2D" uid="uid://6qqfwg274ig8" path="res://graphics/images/HUD/shop/reroll_unselected.png" id="47_mh0ri"]
@@ -79,7 +79,7 @@
 [ext_resource type="Texture2D" uid="uid://c17tsbqn3orah" path="res://graphics/images/HUD/partAssign_disabled.png" id="62_ltg8k"]
 [ext_resource type="Shader" uid="uid://b3jc31ntkxnwh" path="res://graphics/shaders/wavyButton.gdshader" id="68_kpcco"]
 [ext_resource type="Texture2D" uid="uid://ckkqo4l53j7nc" path="res://graphics/images/HUD/HudEdge.png" id="69_dbqh0"]
-[ext_resource type="Script" uid="uid://c2wmqa0s4f06n" path="res://scripts/GUI/lbl_hp_refresh.gd" id="73_xxsjn"]
+[ext_resource type="Script" uid="uid://c2wmqa0s4f06n" path="res://graphics/images/HUD/healthbar/lbl_hp_refresh.gd" id="73_xxsjn"]
 [ext_resource type="Texture2D" uid="uid://cr16um277it7e" path="res://graphics/images/HUD/blinkies/timer_blinky_off.png" id="76_vgsgu"]
 [ext_resource type="Texture2D" uid="uid://p4kd71ihg6eg" path="res://graphics/images/HUD/inventoryTab/open_unselected.png" id="78_gfej7"]
 [ext_resource type="AudioStream" uid="uid://b7fnytfbwjn5a" path="res://sounds/Movement_Start.ogg" id="78_gyjhe"]
@@ -838,8 +838,8 @@ offset_right = -302.0
 offset_bottom = -310.0
 stretch = true
 script = ExtResource("14_ticrt")
-emptyBar = NodePath("SubViewport/BarHolder/Empty")
 width = 164.0
+emptyBar = NodePath("SubViewport/BarHolder/Empty")
 
 [node name="SubViewport" type="SubViewport" parent="Inventory/InventoryControls/BackingTexture/HealthBar"]
 transparent_bg = true
@@ -881,8 +881,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
 anchor_bottom = 1.0
+offset_left = 164.0
 offset_top = -72.0
-offset_right = 204.0
+offset_right = 368.0
 grow_horizontal = 2
 grow_vertical = 0
 texture = ExtResource("13_rvrkp")
@@ -924,9 +925,8 @@ offset_right = 506.0
 offset_bottom = -310.0
 stretch = true
 script = ExtResource("14_ticrt")
-fromRight = false
-emptyBar = NodePath("SubViewport/BarHolder/Empty")
 width = 164.0
+emptyBar = NodePath("SubViewport/BarHolder/Empty")
 
 [node name="SubViewport" type="SubViewport" parent="Inventory/InventoryControls/BackingTexture/EnergyBar"]
 transparent_bg = true
@@ -968,8 +968,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
 anchor_bottom = 1.0
+offset_left = 164.0
 offset_top = -72.0
-offset_right = 204.0
+offset_right = 368.0
 grow_horizontal = 2
 grow_vertical = 0
 texture = ExtResource("18_tkm3v")
@@ -1636,6 +1637,7 @@ text = "HEAL
 horizontal_alignment = 1
 
 [node name="ShopDoor" type="TextureRect" parent="Inventory/InventoryControls/BackingTexture/Shop"]
+visible = false
 z_index = 7
 layout_mode = 0
 offset_right = 40.0

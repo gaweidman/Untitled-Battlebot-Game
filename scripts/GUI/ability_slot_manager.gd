@@ -1,4 +1,4 @@
-@icon ("res://graphics/images/class_icons/abilitySlot.png")
+@icon ("res://graphics/images/class_icons/abilitySlotManager.png")
 extends Control
 
 class_name AbilitySlotManager
@@ -24,13 +24,15 @@ func _process(delta):
 	
 	for slot in allSlots:
 		slot.manager = self;
-		slot.index = allSlots.find(slot);
+		
+		slot.set_index(allSlots.find(slot));
 	
 	if is_instance_valid(currentRobot):
 		## Assign abilities based on the contents of the robot's active_abilities dictionary.
 		for index in currentRobot.active_abilities.keys():
 			var ability = currentRobot.active_abilities[index];
 			var slotAtIndex = allSlots[index];
+			
 			slotAtIndex.assign_ability(ability);
 		
 		## If there's something in the pipette, activate assignment mode.
@@ -50,6 +52,6 @@ func _process(delta):
 func _on_button_pressed(slot):
 	if is_instance_valid(currentRobot):
 		var ability = currentRobot.get_ability_pipette();
-		if is_instance_valid(ability) and ability is AbilityManager:
+		if is_instance_valid(ability) and ability is AbilityData:
 			currentRobot.assign_ability_to_slot(slot.index, ability);
 	pass # Replace with function body.

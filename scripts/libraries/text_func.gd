@@ -1,24 +1,5 @@
+@tool
 extends Node
-
-
-func format_stat(num:float, decimals:int=2, addSpaces := true, addZeroes := false) -> String:
-	var s = str(int(num))
-	var sLength = s.length();
-	var targetLength = sLength + decimals + 1; ## The amount of numbers without the decimals, then the amount of decimals, then the literal decimal "." .
-	if decimals <= 0:
-		return str(int(round_to_dec(num, 0)));
-	else:
-		s = str(round_to_dec(num, decimals))
-		if addZeroes:
-			while s.length() < targetLength:
-				s += "0";
-		elif addSpaces:
-			while s.length() < targetLength:
-				s += " ";
-		return s;
-
-func round_to_dec(num, digit):
-	return round(num * pow(10.0, digit)) / pow(10.0, digit)
 
 # Colors for text.
 enum textColorsEnum {
@@ -34,7 +15,8 @@ enum textColorsEnum {
 	red,
 	unaffordable,
 	inaffordable,
-	outline
+	outline,
+	magenta,
 }
 const textColors = {
 	"white" : Color("ffffff"),
@@ -50,6 +32,7 @@ const textColors = {
 	"unaffordable" : Color("ff0000"),
 	"inaffordable" : Color("ff0000"),
 	"outline" : Color("240e0e"),
+	"magenta" : Color("bd2064"),
 }
 
 ## Recolors a Label or RichTextLabel or TextEdit or anythign else of the sort with [method Label.theme_override_colors/font_color].
@@ -65,9 +48,9 @@ func set_text_color(node, _color):
 func get_color(_color) -> Color:
 	if _color is textColorsEnum: ##Get the string from the enum name.
 		_color = textColorsEnum.keys()[_color];
-	if _color is Color:
+	elif _color is Color:
 		return _color;
-	if _color is String:
+	elif _color is String:
 		var newCol := Color(textColors["white"]);
 		if _color in textColors:
 			newCol = Color(textColors[_color]);
@@ -76,43 +59,178 @@ func get_color(_color) -> Color:
 		return newCol;
 	return Color.WHITE;
 
-## Returns a string to be used for stats.
-func format_stat_num(_inNum, decimals : int = 2) -> String:
-	var factor = 10^decimals;
-	var inNum = (floor(_inNum*factor))/factor
+## Runs [method TextFunc.get_color] to get a [Color] value, then gets the hex string from that via [method TextFunc.get_color_hex_string_from_rgba].
+func get_color_hex_string(_color):
+	var calculatedColor = get_color(_color);
+	return get_color_hex_string_from_rgba(calculatedColor.r, calculatedColor.g, calculatedColor.b, calculatedColor.a);
+
+## Runs [method TextFunc.get_color_hex_string_from_rgba] on a float or integer val=ue for the R,G, and B.
+func get_grey_hex_string(rgb, a=255):
+	return get_color_hex_string_from_rgba(rgb, rgb, rgb, a);
+
+## Converts [param r], [param g], [param b], and [param a] into color numbers using [method Utils.convert_num_to_rgba_int], then gives the hex code string from that.
+func get_color_hex_string_from_rgba(r, g, b, a) -> String:
+	var red_value = Utils.convert_num_to_rgba_int(r);
+	var green_value = Utils.convert_num_to_rgba_int(g);
+	var blue_value = Utils.convert_num_to_rgba_int(b);
+	var alpha_value = Utils.convert_num_to_rgba_int(a);
+	
+	var hex_r = "%02x" % red_value
+	var hex_g = "%02x" % green_value
+	var hex_b = "%02x" % blue_value
+	var hex_a = "%02x" % alpha_value
+
+	var hex_color_code = "#" + hex_r + hex_g + hex_b + hex_a
+	
+	return hex_color_code;
+
+## Returns a string to be used for stats. Shortens decimal places down to the desired amount. If there is a decimal, adds spaces or zeroes to the end while the resulting string is lower than the desired length. If no decimals, the number is truncated to an int before being converted to a string via [method round_to_dec].
+func format_stat(num:float, decimal_places:int=2, addSpaces := true, addZeroes := false) -> String:
+	var s = str(int(num))
+	var sLength = s.length();
+	if decimal_places <= 0:
+		return str(int(round_to_dec(num, 0)));
+	else:
+		var targetLength = sLength + decimal_places + 1; ## The amount of numbers without the decimals, then the amount of decimal_places, then the literal decimal "." .
+		s = str(round_to_dec(num, decimal_places))
+		if addZeroes:
+			while s.length() < targetLength:
+				s += "0";
+		elif addSpaces:
+			while s.length() < targetLength:
+				s += " ";
+		return s;
+
+## Returns a string to be used for StatIcons. Adds a space character to the start if the number is below 10.
+func format_stat_num(num, decimal_places : int = 2, character := " ") -> String:
+	var factor = 10^decimal_places;
+	var inNum = (floor(num*factor))/factor
 	
 	var outString = ""
 	if inNum >= 10:
 		outString = str(inNum);
 	else:
-		outString = " " + str(inNum);
+		outString = character + str(inNum);
 	
 	if outString.length() < 5:
 		outString += "0";
 	return outString;
 
-func format_time(_time:float):
-	var minutes = 0;
-	var seconds = floori(_time)
-	while seconds > 60:
-		seconds -= 60;
-		minutes += 1;
-	minutes = min(99,minutes);
-	seconds = min(60,max(0,seconds));
-	var minuteString = "00"
-	if minutes < 10 && minutes > 0:
-		minuteString = "0" + str(minutes)
-	elif minutes >= 10:
-		minuteString = str(minutes)
-	
-	var secondString = "00"
-	if seconds < 10 && seconds > 0:
-		secondString = "0" + str(seconds)
-	elif seconds >= 10:
-		secondString = str(seconds)
-	
-	return minuteString + ":" + secondString;
+## Returns a number rounded to the desired amount of [param decimal_places].
+func round_to_dec(num, decimal_places):
+	return round(num * pow(10.0, decimal_places)) / pow(10.0, decimal_places)
 
+## Returns the decimal cut off from the given [float] [param num], run through [method round_to_dec] to get the desired amount of decimal places.[br][br]
+## EX: [codeblock]
+## get_decimal(1.002467, 3) ## Returns 0.002
+## get_decimal(55.4767, 2) ## Returns 0.48
+## [/codeblock]
+func get_decimal(num, decimal_places) -> float:
+	var numToCut = round_to_dec(num, decimal_places);
+	var knifeNum = floor(num);
+	return numToCut - knifeNum;
+
+## Returns the string for the decimal of a number, with or without the starting 0.[br]Returns an empty string if [param decimal_places] is set to 0[br][br]
+## EX. [codeblock]
+## get_decimal_string(1.002467, 3, true) ## Returns "0.002"
+## get_decimal_string(55.4767, 2, false) ## Returns ".48"
+## get_decimal_string(55.1, 0, false) ## Returns ""
+## [/codeblock]
+func get_decimal_string(num, decimal_places, includeZero := true) -> String:
+	if decimal_places == 0:
+		return "";
+	var ret = str(get_decimal(num, decimal_places));
+	if includeZero:
+		return ret;
+	else:
+		return ret.trim_prefix("0");
+
+## Formats time in a minutes:seconds format and returns the string, or seconds only if [param max_minutes] is 0. Minutes can't exceed [param max_minutes] if > 0.[br]
+## Hours can be displayed only if [param max_minutes] and [param max_hours] are both > 0. If [param max_hours] > 0, [param max_minutes] is [u]ignored[/u] and will instead do the same while loop seconds does to convert to minutes.[br]If [param max_hours] < 0, hours have no limit.[br][br]
+## if [param max_minutes] <= 0, only then will [param max_seconds] will be applied, and provide a ceiling for the seconds count (99 by default).[br]If [param max_seconds] is 0, but there are minutes allowed, then only minutes get returned.[br][br]
+## EX:[codeblock]
+## format_time(0.1); ## Returns "00:00"
+## format_time(25); ## Returns "00:25"
+## format_time(81, 2); ## Returns "01:21.00"
+## format_time(100.248456, 2, 99); ## Returns "00:01:40.25"
+## format_time(360000.248456, 0, -1); ## Returns "100:00:00"
+## [/codeblock]
+func format_time(_timeInSeconds:float, decimal_places := 0, max_hours := 0, max_minutes := 99, max_seconds := 99):
+	var hours = 0;
+	var minutes = 0;
+	var seconds = floori(_timeInSeconds);
+	var decimalString = get_decimal_string(_timeInSeconds, decimal_places, false); ## Get the decimal string here. Doesn't matter for the rest of calculation since seconds is an integer.
+	
+	
+	var hourString = ""
+	var minuteString = ""
+	var secondString = ""
+	
+	var hasHours = max_hours != 0;
+	var hasMinutes = max_minutes != 0;
+	var hasSeconds = max_seconds != 0;
+	
+	
+	if hasHours:
+		max_minutes = 60; ## If there are hours, minutes must be clamped to 60.
+	
+	if hasMinutes:
+		max_seconds = 60; ## If there are minutes, seconds must be clamped to 60.
+	else:
+		hasHours = false; ## If there are no minutes, there cannot be any hours.
+
+	
+	## Count up potential minutes and hours from the given seconds.
+	if hasMinutes or hasHours: ## Clamp seconds to a range of 60 if hours or minutes are present.
+		while seconds >= 60:
+			seconds -= 60;
+			minutes += 1;
+	if hasHours: ## Clamp minutes to a range of 60 if hours are present.
+		while minutes >= 60:
+			minutes -= 60;
+			hours += 1;
+	
+	## Clamp all seconds, minutes, and hours to their maximums.
+	## Construct the strings.
+	if hasHours:
+		hourString = add_char_before_int_string_up_to_max_number_length(hours, max_hours);
+	if hasMinutes:
+		minuteString = add_char_before_int_string_up_to_max_number_length(minutes, max_minutes);
+	if hasSeconds:
+		secondString = add_char_before_int_string_up_to_max_number_length(seconds, max_seconds);
+	
+	var ret = add_char_between_strings([hourString, minuteString, secondString]) + decimalString;
+	return ret;
+
+## Clamps the [int] input, then returns a string with (default) 0s placed before the given value if its string length is less than the maximum number input.[br]
+## If [param maximum] is a negative number, this will return [code]str(num)[/code] instead.
+func add_char_before_int_string_up_to_max_number_length(num : int, maximum : int, prefixChar := "0", minimum := 0) -> String:
+	if maximum < 0:
+		return str(num);
+	num = clamp(num, minimum, maximum);
+	if num == maximum:
+		return str(num);
+	var numString = str(num);
+	var max_numString = str(maximum);
+	var lenDif = max_numString.length() - numString.length();
+	while lenDif > 0:
+		numString = prefixChar + numString;
+		lenDif -= 1;
+	return numString;
+
+## Adds the [param mid_char] (default ":") between each string provided in the [Array] [param strings].[br]
+## IF a char is empty ("") then it does not add the character.
+func add_char_between_strings(strings : Array[String], mid_char := ":") -> String:
+	var s = ""
+	var count = 0
+	for char in strings:
+		s += char;
+		count += 1
+		if count < strings.size() and !char.is_empty():
+			s += mid_char;
+	return s;
+
+## Spawns a text [Flyaway] at the given location with the given text and color.
 func flyaway(textToDisplay, globalPosition : Vector3, color, color_outline := textColors["outline"]):
 	var brd = GameState.get_game_board();
 	if is_instance_valid(brd):

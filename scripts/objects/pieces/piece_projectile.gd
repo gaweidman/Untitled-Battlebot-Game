@@ -13,6 +13,9 @@ var magazineCount := 0;
 ##The base speed to launch fired projectiles.
 @export var launchSpeed := 30.0;
 @export var fireRate := 0.5;
+@export var postFireFrameFreeze := 0; ## How many frames, after firing the weapon, the ammo generator should pause.
+##Calculated.
+@export var postFireTimeFreeze := 0.0; ## How many seconds, after firing the weapon, the ammo generator should pause.
 ##Calculated.
 var firingAngle := Vector3.BACK;
 
@@ -30,7 +33,7 @@ var fireRateTimer := 0.0;
 func get_bullet_gravity():
 	return get_stat("ProjectileGravity");
 
-@export var firingOffsetNode : Node3D;
+@export var firingOffsetNode : RayCast3D;
 var firingOffset : Vector3;
 
 @export_subgroup("Firing FX")
@@ -47,11 +50,14 @@ func phys_process_timers(delta):
 	## If the magazine is full, stop adding new ones.
 	if get_available_bullets() == get_magazine_max():
 		var factory = get_named_passive("Bullet Factory");
-		factory.add_freeze_frames(1);
+		factory.add_freeze_frames(statHolderID, 1);
 	
 	super(delta);
 	
-	leakTimer -= delta;
+	if ! is_frozen():
+		leakTimer -= delta;
+		if leakTimer > -999 and leakTimer < 0:
+			leak_timer_timeout();
 
 func assign_references():
 	super();
@@ -68,13 +74,13 @@ func assign_references():
 
 func stat_registry():
 	super();
-	register_stat("MagazineSize", magazineMaxBase, statIconMagazine, null, null, StatTracker.roundingModes.Floori);
-	register_stat("MagazineRefreshRate", magazineRefreshRate, statIconCooldown);
-	register_stat("ProjectileSpeed", launchSpeed, statIconCooldown);
-	register_stat("ProjectileLifetime", bulletLifetime, statIconCooldown);
-	register_stat("ProjectileGravity", bulletGravity, statIconWeight);
-	register_stat("ProjectileFireRate", fireRate, statIconCooldown);
-	register_stat("Inaccuracy", bulletLifetime, statIconWeight);
+	register_stat("MagazineSize", magazineMaxBase, StatHolderManager.statIconMagazine, StatHolderManager.statTags.Weaponry, StatHolderManager.displayModes.ALWAYS, StatHolderManager.roundingModes.Floori);
+	register_stat("MagazineRefreshRate", magazineRefreshRate, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Weaponry);
+	register_stat("ProjectileSpeed", launchSpeed, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Weaponry);
+	register_stat("ProjectileLifetime", bulletLifetime, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Weaponry);
+	register_stat("ProjectileGravity", bulletGravity, StatHolderManager.statIconWeight, StatHolderManager.statTags.Weaponry);
+	register_stat("ProjectileFireRate", fireRate, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Weaponry);
+	register_stat("Inaccuracy", bulletLifetime, StatHolderManager.statIconWeight, StatHolderManager.statTags.Weaponry);
 
 func get_magazine_max() -> int:
 	return get_stat("MagazineSize");
@@ -118,12 +124,15 @@ func get_firing_offset():
 func get_firing_direction() -> Vector3:
 	#return Vector3.ZERO;
 	
+	var firingOffsetPos = firingOffsetNode.global_position;
+	var firingOffsetTargetPos = firingOffsetNode.to_global(firingOffsetNode.target_position);
+	firingAngle = firingOffsetTargetPos - firingOffsetPos;
 	
-	firingAngle = Vector3(0,0,1);
-	firingAngle += inaccuracy * Vector3(randf_range(-1,1),randf_range(0,0),randf_range(-1,1));
-	firingAngle = firingAngle.rotated(Vector3(1,0,0), global_rotation.x)
-	firingAngle = firingAngle.rotated(Vector3(0,1,0), global_rotation.y)
-	firingAngle = firingAngle.rotated(Vector3(0,0,1), global_rotation.z)
+	#firingAngle = Vector3(0,0,1);
+	#firingAngle += inaccuracy * Vector3(randf_range(-1,1),randf_range(0,0),randf_range(-1,1));
+	#firingAngle = firingAngle.rotated(Vector3(1,0,0), global_rotation.x)
+	#firingAngle = firingAngle.rotated(Vector3(0,1,0), global_rotation.y)
+	#firingAngle = firingAngle.rotated(Vector3(0,0,1), global_rotation.z)
 	#Hooks.OnFireProjectile(self, bullet); ##TODO: Hooks implementation
 	firingAngle = firingAngle.normalized();
 	return firingAngle;
@@ -171,6 +180,7 @@ func get_available_bullets():
 	return availableBullets;
 
 func fireBullet():
+	if ! hasHostRobot: return;
 	#print("pew");
 	
 	var bullet : Bullet;
@@ -183,21 +193,24 @@ func fireBullet():
 		## Calculates firingAngle.
 		firingAngle = get_firing_direction();
 		
-		var bot = get_host_robot();
 		var pos = get_firing_offset();
 		#prints("Firing offset",get_firing_offset())
-		bullet.fire_from_robot(bot, self, pos, get_damage_data(), firingAngle, launchSpeed, bulletLifetime, get_bullet_gravity());
+		bullet.fire_from_robot(hostRobot, self, pos, get_damage_data(), firingAngle, launchSpeed, bulletLifetime, get_bullet_gravity());
 		SND.play_sound_at(firingSoundString, pos, GameState.get_game_board(), firingSoundVolumeAdjust, randf_range(firingSoundPitchAdjust * 1.15, firingSoundPitchAdjust * 0.85))
 		availableBullets -= 1;
 		
 		var factory = get_named_passive("Bullet Factory");
-		factory.add_freeze_time(get_stat("ProjectileFireRate") + get_physics_process_delta_time());
+		factory.add_freeze_time(statHolderID, get_stat("ProjectileFireRate") + get_physics_process_delta_time());
+		
+		factory.add_freeze_frames(statHolderID, postFireFrameFreeze);
+		factory.add_freeze_time(statHolderID, postFireTimeFreeze);
 		
 		initiate_kickback(firingAngle + global_position);
 	else:
 		for bullt in magazine:
-			print(bullt)
-		print("Invalid bullet")
+			#print(bullt)
+			pass;
+		#print("Invalid bullet")
 		#print(magazine)
 	leak_timer_start();
 	pass
@@ -252,7 +265,7 @@ func _exit_tree():
 
 ## RANGE RAY STUFF
 
-## Moves the range ray in accordance with 
+## Moves the range ray in accordance with the speed of the bullets being fired, the gun's angle, and the bullet lifetime.
 func calc_range():
 	if !is_instance_valid(rangeRay):
 		assign_references();

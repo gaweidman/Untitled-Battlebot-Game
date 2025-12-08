@@ -1,16 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://bxgdeod5i34vi"]
+[gd_scene load_steps=6 format=3 uid="uid://bxgdeod5i34vi"]
 
 [ext_resource type="Script" uid="uid://bjouvmo7dd7j3" path="res://scripts/GUI/transition_canvas.gd" id="1_e8jfm"]
 [ext_resource type="PackedScene" uid="uid://cs2mrdrvsoacs" path="res://scenes/prefabs/objects/gui/screen_transition.tscn" id="2_mgg5e"]
 [ext_resource type="FontFile" uid="uid://doo4kfsytv2c1" path="res://graphics/font/ScrapFives.ttf" id="3_nploq"]
+[ext_resource type="Theme" uid="uid://tcelcj32ux4o" path="res://graphics/images/HUD/digital_button.tres" id="4_igr6p"]
+[ext_resource type="Script" uid="uid://tirnq6avowmy" path="res://scripts/GUI/mouse_avoider_margin_container.gd" id="4_omfy2"]
 
-[node name="TransitionCanvas" type="CanvasLayer" node_paths=PackedStringArray("transition", "loadingGear", "logo", "lbl_companyName")]
+[node name="TransitionCanvas" type="CanvasLayer" node_paths=PackedStringArray("transition", "loadingGear", "logo", "lbl_companyName", "modulator", "debug_canvas", "lbl_profiler", "margin_profiler")]
 layer = 5
 script = ExtResource("1_e8jfm")
 transition = NodePath("ScreenTransition")
 loadingGear = NodePath("LoadingGear")
 logo = NodePath("LoadingGear")
 lbl_companyName = NodePath("Label")
+modulator = NodePath("CanvasModulate")
+debug_canvas = NodePath("Debug")
+lbl_profiler = NodePath("Debug/MarginContainer/DbgLabel")
+margin_profiler = NodePath("Debug/MarginContainer")
 
 [node name="ScreenTransition" parent="." instance=ExtResource("2_mgg5e")]
 z_index = 0
@@ -46,3 +52,53 @@ theme_override_font_sizes/font_size = 25
 text = "> METAL CHIMERA_
 > 
 > PRESENTING"
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+
+[node name="Debug" type="CanvasLayer" parent="."]
+layer = 12
+
+[node name="MarginContainer" type="MarginContainer" parent="Debug" node_paths=PackedStringArray("thingsToMove")]
+layout_direction = 2
+offset_right = 1920.0
+offset_bottom = 94.0
+size_flags_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+script = ExtResource("4_omfy2")
+thingsToMove = [NodePath("DbgLabel"), NodePath("DbgLabel/Button")]
+
+[node name="DbgLabel" type="RichTextLabel" parent="Debug/MarginContainer"]
+texture_filter = 1
+clip_contents = false
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 1
+theme = ExtResource("4_igr6p")
+theme_override_constants/line_separation = 3
+theme_override_fonts/normal_font = ExtResource("3_nploq")
+theme_override_font_sizes/normal_font_size = 5
+bbcode_enabled = true
+text = "TIME: timeCounter
+FPS: profilerFPS
+BANK A: profilerBankA
+BANK B: profilerBankB
+BANK C: profilerBankC"
+fit_content = true
+
+[node name="Button" type="Button" parent="Debug/MarginContainer/DbgLabel"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+tooltip_text = "Press me to make me move to the other corner."
+
+[connection signal="pressed" from="Debug/MarginContainer/DbgLabel/Button" to="Debug/MarginContainer" method="switch_sides"]

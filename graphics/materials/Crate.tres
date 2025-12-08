@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://irow1jek3tyj"]
+
+[ext_resource type="Texture2D" uid="uid://4edoasfnh4ub" path="res://graphics/SW_NewMat/Crate/CrateBig_BaseColor.png" id="1_58wb4"]
+[ext_resource type="Texture2D" uid="uid://b6xglucald0ud" path="res://graphics/SW_NewMat/Crate/CrateBig_Displacement.png" id="2_wq0qa"]
+[ext_resource type="Texture2D" uid="uid://dqbhyaultqkr1" path="res://graphics/SW_NewMat/Crate/CrateBig_Metallic.png" id="3_wcv5v"]
+[ext_resource type="Texture2D" uid="uid://dxamksnyr55vp" path="res://graphics/SW_NewMat/Crate/CrateBig_Normal.png" id="4_qyu2s"]
+[ext_resource type="Texture2D" uid="uid://ce3d60gafn04x" path="res://graphics/SW_NewMat/Crate/CrateBig_Roughness.png" id="5_fhuug"]
+
+[resource]
+albedo_texture = ExtResource("1_58wb4")
+metallic_specular = 0.53
+metallic_texture = ExtResource("3_wcv5v")
+roughness = 0.0
+roughness_texture = ExtResource("5_fhuug")
+normal_enabled = true
+normal_texture = ExtResource("4_qyu2s")
+heightmap_enabled = true
+heightmap_texture = ExtResource("2_wq0qa")
