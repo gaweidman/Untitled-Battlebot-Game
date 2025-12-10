@@ -1,15 +1,17 @@
-[gd_scene load_steps=32 format=3 uid="uid://cvc4cfvjo15e0"]
+[gd_scene load_steps=34 format=3 uid="uid://cvc4cfvjo15e0"]
 
 [ext_resource type="Script" uid="uid://lqnydwh6c74e" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="1_3q8ax"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_481hu"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="3_bfu4x"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="3_bfu4x"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="5_0ojr0"]
 [ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="5_soava"]
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="5_uuld8"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="6_r26v0"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="6_uuld8"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="7_3vnpp"]
+[ext_resource type="Material" uid="uid://bmyfgrr876ujj" path="res://graphics/materials/newsawblade.tres" id="11_fcxei"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="11_tsg7n"]
+[ext_resource type="Material" uid="uid://g7wmpoctrcux" path="res://graphics/materials/computer_shield.tres" id="13_tsg7n"]
 [ext_resource type="ArrayMesh" uid="uid://bnajrltu8pmd4" path="res://graphics/models/obj/botparts/BotBody.obj" id="19_71vlh"]
 [ext_resource type="ArrayMesh" uid="uid://cgto2m6qw8n2d" path="res://graphics/models/obj/botparts/SwivelPointer.obj" id="20_dbjw2"]
 
@@ -163,7 +165,6 @@ size = Vector3(0.5, 0.5, 0.5)
 radius = 0.75
 
 [node name="Piece_BodyCube" type="Node3D" node_paths=PackedStringArray("swivelNode", "movingSockets", "meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
-visible = false
 script = ExtResource("1_3q8ax")
 swivelNode = NodePath("Meshes/SwivelTop")
 movingSockets = [NodePath("Meshes/SwivelTop/Socket")]
@@ -291,11 +292,13 @@ surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+material_override = ExtResource("11_fcxei")
 mesh = ExtResource("19_71vlh")
 skeleton = NodePath("../../PieceCollisionBox_Body")
 
 [node name="SwivelTop" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+material_override = ExtResource("13_tsg7n")
 mesh = ExtResource("20_dbjw2")
 skeleton = NodePath("../..")
 

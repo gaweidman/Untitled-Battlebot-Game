@@ -1,7 +1,7 @@
-[gd_scene load_steps=23 format=3 uid="uid://chi2adlhly5pm"]
+[gd_scene load_steps=24 format=3 uid="uid://chi2adlhly5pm"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_8tbom"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_uwv47"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="2_uwv47"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="3_uq2w3"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="4_nl45e"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="5_o6g7c"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_xtkwn"]
 [ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="8_ysdpo"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="9_u5pnx"]
+[ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="9_uq2w3"]
 [ext_resource type="ArrayMesh" uid="uid://c5ex7keixe1ff" path="res://graphics/models/obj/botparts/Bot_TPipe.obj" id="15_ysdpo"]
 
 [sub_resource type="Resource" id="Resource_ujwhk"]
@@ -176,6 +177,7 @@ script = ExtResource("8_ysdpo")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.25, 0)
+material_override = ExtResource("9_uq2w3")
 mesh = ExtResource("15_ysdpo")
 skeleton = NodePath("../../PieceCollisionBox")
 

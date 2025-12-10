@@ -1,8 +1,9 @@
-[gd_scene load_steps=20 format=3 uid="uid://v70bfm2qm4jp"]
+[gd_scene load_steps=21 format=3 uid="uid://v70bfm2qm4jp"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_3dyfc"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_2g4e8"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="2_2g4e8"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="9_ipfiw"]
+[ext_resource type="Material" uid="uid://bmyfgrr876ujj" path="res://graphics/materials/newsawblade.tres" id="9_ju1g7"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="10_vwa7a"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="11_po113"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="13_hf5qq"]
@@ -61,7 +62,6 @@ size = Vector3(0.5, 0.5, 1.5)
 size = Vector3(0.5, 1, 0.5)
 
 [node name="Piece_Funky Shape" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
-visible = false
 script = ExtResource("1_3dyfc")
 pieceName = &"Funky Shape"
 descriptionConstructor = Array[ExtResource("2_2g4e8")]([SubResource("Resource_ujwhk"), SubResource("Resource_agd5d"), SubResource("Resource_7qnf5")])
@@ -164,6 +164,7 @@ script = ExtResource("15_7ft1g")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(-8.74228e-08, 2, -1.74846e-07, -8.74228e-08, 1.74846e-07, 2, 2, 8.74228e-08, 8.74228e-08, 0, 0.25, 0.5)
+material_override = ExtResource("9_ju1g7")
 mesh = ExtResource("15_4ge2y")
 
 [node name="PieceCollisionBox" parent="." instance=ExtResource("16_f0eqs")]

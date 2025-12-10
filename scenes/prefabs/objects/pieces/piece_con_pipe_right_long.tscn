@@ -1,8 +1,9 @@
-[gd_scene load_steps=24 format=3 uid="uid://bd2cf3y2brbw3"]
+[gd_scene load_steps=25 format=3 uid="uid://bd2cf3y2brbw3"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_c3al8"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_hvibu"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="2_hvibu"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="9_cilmj"]
+[ext_resource type="Material" uid="uid://g7wmpoctrcux" path="res://graphics/materials/computer_shield.tres" id="9_cs5pd"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="10_21am3"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="11_brf0c"]
 [ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="12_sauij"]
@@ -77,7 +78,6 @@ size = Vector3(1, 0.5, 0.5)
 size = Vector3(0.5, 1.5, 0.5)
 
 [node name="Piece_Long Corner Pipe" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
-visible = false
 script = ExtResource("1_c3al8")
 pieceName = &"Long Corner Pipe"
 descriptionConstructor = Array[ExtResource("2_hvibu")]([SubResource("Resource_ujwhk"), SubResource("Resource_agd5d"), SubResource("Resource_7qnf5")])
@@ -173,6 +173,7 @@ script = ExtResource("14_dddnq")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(2, 0, 0, 0, -8.74228e-08, 2, 0, -2, -8.74228e-08, 0, 1.25, 0)
+material_override = ExtResource("9_cs5pd")
 mesh = ExtResource("15_jjlc6")
 skeleton = NodePath("../../PieceCollisionBox")
 

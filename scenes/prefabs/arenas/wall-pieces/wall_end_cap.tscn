@@ -1,5 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://br3672rwu1pca"]
+[gd_scene load_steps=4 format=3 uid="uid://br3672rwu1pca"]
 
+[ext_resource type="Material" uid="uid://cbjqok2ql3cqi" path="res://graphics/materials/MetalBat.tres" id="1_ibvt8"]
 [ext_resource type="ArrayMesh" uid="uid://c8kmil2is57xs" path="res://graphics/models/obj/arenas/walls/Wall_Endcap.obj" id="1_q2dig"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_d2k2l"]
@@ -7,6 +8,7 @@ data = PackedVector3Array(-1.175, 0.8125, 0, -1.3125, 0.5125, 0, -1.175, 0.8125,
 
 [node name="WallEndCap" type="MeshInstance3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+material_override = ExtResource("1_ibvt8")
 mesh = ExtResource("1_q2dig")
 metadata/_edit_group_ = true
 

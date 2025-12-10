@@ -1,7 +1,7 @@
 [gd_scene load_steps=24 format=3 uid="uid://cwoid37lvtfrd"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_v61av"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_jcntw"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="2_jcntw"]
 [ext_resource type="Material" uid="uid://g7wmpoctrcux" path="res://graphics/materials/computer_shield.tres" id="8_ccj5p"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="9_s51gn"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="10_5k1f1"]

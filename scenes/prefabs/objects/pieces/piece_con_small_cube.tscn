@@ -1,7 +1,7 @@
-[gd_scene load_steps=24 format=3 uid="uid://cengelrqvifhb"]
+[gd_scene load_steps=25 format=3 uid="uid://cengelrqvifhb"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_ko8pm"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_f4e8o"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="2_f4e8o"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="3_553bj"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="4_qhkah"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="5_muxqy"]
@@ -75,11 +75,13 @@ transparency = 1
 cull_mode = 2
 albedo_texture = ExtResource("4_qhkah")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ep7l2"]
+albedo_color = Color(0.180005, 0.180005, 0.180005, 1)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_5ola2"]
 size = Vector3(0.5, 0.5, 0.5)
 
 [node name="Piece_Small Cube" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
-visible = false
 script = ExtResource("1_ko8pm")
 pieceName = &"Small Cube"
 descriptionConstructor = Array[ExtResource("2_f4e8o")]([SubResource("Resource_ujwhk"), SubResource("Resource_agd5d"), SubResource("Resource_7qnf5")])
@@ -102,6 +104,7 @@ filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_bumper_T.tscn
 editor_description = "This is purely here as a visual representation of where this thing plugs in. 
 !! Do not move or modify (Unless you have good reason, of course) !!"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00963242, 0)
+visible = false
 metadata/_edit_lock_ = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MaleSocket"]
@@ -236,6 +239,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_ts5ym")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.25, 0)
+material_override = SubResource("StandardMaterial3D_ep7l2")
 mesh = ExtResource("10_e0p40")
 
 [node name="PieceCollisionBox" parent="." instance=ExtResource("11_tdje5")]
