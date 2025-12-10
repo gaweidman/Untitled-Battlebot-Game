@@ -10,12 +10,12 @@ var snd : SND;
 @export var sawbladeDrone : CheckButton;
 
 @export var devCheats : CheckButton;
+@export var cheatsControl : Control;
 @export var moneyCheat : CheckButton;
 @export var invincibleCheat : CheckButton;
 @export var killAllCheat : CheckButton;
 @export var profilerCheat : CheckButton;
 @export var transitionsCheat : CheckButton;
-@export var cheatsControl : Control;
 
 @export var btn_scoreReset : Button;
 @export var lbl_highScores : RichTextLabel;
@@ -60,17 +60,13 @@ func _process(delta):
 	if ! is_instance_valid(snd):
 		snd = SND.get_physical();
 	
-	if cheatsControl.visible == false:
-		if devCheats.button_pressed:
-			cheatsControl.show();
-	else:
-		if devCheats.button_pressed == false:
-			cheatsControl.hide();
+	cheatsControl.visible = devCheats.button_pressed;
 	
-	devCheats.disabled = ! GameState.get_in_one_of_given_states([GameBoard.gameState.OPTIONS]);
-	for cheatButton in devCheats.get_children():
+	devCheats.disabled = GameState.get_in_state_of_play(true);
+	
+	for cheatButton in cheatsControl.get_children():
 		if cheatButton is Button:
-			cheatButton.disabled = devCheats.disabled;
+			cheatButton.disabled = !cheatsControl.visible;
 	
 	if resettingScoresCheck:
 		$Btn_ScoresReset.text = "!!RESET HIGH SCORES!!";

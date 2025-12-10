@@ -20,7 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://cr16um277it7e" path="res://graphics/images/HUD/blinkies/timer_blinky_off.png" id="18_ylxhx"]
 [ext_resource type="Texture2D" uid="uid://bw5pl1p6bmq61" path="res://graphics/images/HUD/blinkies/timer_blinky_on.png" id="19_he02q"]
 [ext_resource type="Texture2D" uid="uid://dggphix4dl3qu" path="res://graphics/images/HUD/screenGFX/screenBG.png" id="20_fefil"]
-[ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/Cannon.png" id="20_he02q"]
+[ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/PartIconCannon.png" id="20_he02q"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jtnig"]
 resource_local_to_scene = true
@@ -165,7 +165,6 @@ width = 46.0
 height = 65.0
 paddingStart = 13.0
 paddingEnd = -2.0
-currentAmt = 58.7
 maskTexture = ExtResource("11_g6gak")
 fullTexture = ExtResource("12_rf4fe")
 emptyTexture = ExtResource("13_x17s8")
@@ -184,9 +183,9 @@ texture = ExtResource("12_rf4fe")
 
 [node name="EmptyHealth" parent="EnergyBar_Case/EnergyBar/SubViewport/BarHolder" index="1"]
 offset_left = 0.0
-offset_top = -29.5854
+offset_top = -25.5838
 offset_right = 0.0
-offset_bottom = -29.5854
+offset_bottom = -25.5838
 texture = ExtResource("13_x17s8")
 
 [node name="Lbl_Health" parent="EnergyBar_Case/EnergyBar/SubViewport/BarHolder" index="2"]

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="AbilityManager" load_steps=7 format=3 uid="uid://bkvnh7cfvtve4"]
 
 [ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_n58rl"]
-[ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/Repair.png" id="2_p0ryi"]
+[ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/PartIconRepair.png" id="2_p0ryi"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_4ym87"]
 
 [sub_resource type="Resource" id="Resource_ek7pi"]
@@ -45,7 +45,7 @@ runType = 1
 functionNameWhenUsed = &""
 statsUsed = Array[String]([])
 icon = ExtResource("2_p0ryi")
-hookName = ""
+aiFireRequirement = 0
 initialized = false
 disabled = false
 functionWhenUsed = Callable()

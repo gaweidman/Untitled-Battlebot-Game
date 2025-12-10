@@ -6,7 +6,7 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lph27"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_8grda"]
-radius = 0.8
+radius = 1.0
 
 [node name="Bullet" type="Node3D" node_paths=PackedStringArray("lifeTimer", "raycast", "shapecast", "collision", "hitbox") groups=["Metal", "Projectile"]]
 script = ExtResource("1_lph27")
@@ -43,6 +43,8 @@ collision_mask = 1537
 debug_shape_custom_color = Color(0, 0.745098, 0, 1)
 debug_shape_thickness = 5
 
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
+[connection signal="area_shape_entered" from="Hitbox" to="." method="_on_hitbox_area_shape_entered"]
 [connection signal="body_entered" from="Hitbox" to="." method="_on_body_entered"]
 [connection signal="body_shape_entered" from="Hitbox" to="." method="_on_body_shape_entered"]
 [connection signal="timeout" from="LifeTimer" to="." method="_on_life_timer_timeout"]

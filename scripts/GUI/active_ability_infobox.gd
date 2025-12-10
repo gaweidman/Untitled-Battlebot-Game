@@ -109,9 +109,10 @@ func populate_stats():
 		child.queue_free();
 	
 	if referencedThing is Piece:
-		##Make a dummy stat.
+		
+		##Make a dummy Energy stat.
 		var energyStat = StatTracker.new();
-		energyStat.statIcon = load("res://graphics/images/HUD/statIcons/energyIconStriped.png");
+		energyStat.statIcon = StatHolderManager.statIconEnergy;
 		energyStat.baseStat  = referencedAbility.get_energy_cost(referencedThing.statHolderID);
 		energyStat.set_stat(referencedAbility.get_energy_cost(referencedThing.statHolderID));
 		if isPassive:
@@ -119,6 +120,15 @@ func populate_stats():
 		else:
 			energyStat.statFriendlyName = "Active Energy Draw";
 		add_stat_icon(energyStat)
+		
+		## Make a dummy cooldown stat.
+		var cooldownStat = StatTracker.new();
+		cooldownStat.statIcon = StatHolderManager.statIconCooldown;
+		cooldownStat.textColor = StatHolderManager.get_stat_color_from_image(StatHolderManager.statIconCooldown);
+		cooldownStat.baseStat = referencedAbility.get_cooldown_start_time(referencedThing.statHolderID, 1.0);
+		cooldownStat.set_stat(referencedAbility.get_cooldown_start_time(referencedThing.statHolderID, 1.0));
+		cooldownStat.statFriendlyName = "Ability Cooldown";
+		add_stat_icon(cooldownStat);
 		
 		for statName in statsUsed:
 			var stat = referencedThing.get_stat_resource(statName);

@@ -98,6 +98,7 @@ func freeze(doFreeze := (not is_frozen()), force := false):
 ## Convenience function to specifically unfreeze.
 func unfreeze(force := false):
 	freeze(false, force);
+
 ##Returns true if the game is paused or if the bot is frozen.
 func is_frozen() -> bool: return frozen or is_paused();
 var freezeQueued := false;

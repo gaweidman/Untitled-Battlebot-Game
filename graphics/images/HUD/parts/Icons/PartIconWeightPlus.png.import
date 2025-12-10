@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0ha035m170v"
-path="res://.godot/imported/Sawblade.png-7519d0b2fc2a5fda729198281d4996a4.ctex"
+uid="uid://bc471o04vaxtq"
+path="res://.godot/imported/PartIconWeightPlus.png-4e460ed619f320b468801647652494a4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/parts/Icons/Sawblade.png"
-dest_files=["res://.godot/imported/Sawblade.png-7519d0b2fc2a5fda729198281d4996a4.ctex"]
+source_file="res://graphics/images/HUD/parts/Icons/PartIconWeightPlus.png"
+dest_files=["res://.godot/imported/PartIconWeightPlus.png-4e460ed619f320b468801647652494a4.ctex"]
 
 [params]
 

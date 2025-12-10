@@ -95,7 +95,9 @@ func _physics_process(delta):
 	if not is_frozen():
 		collision.disabled = collisionDisableFrames > 0;
 		raycast.enabled = collisionDisableFrames == 0;
+		
 		shapecast.enabled = false;
+		
 		if collisionDisableFrames > 0:
 			collisionDisableFrames -= 1;
 		
@@ -163,6 +165,7 @@ func fire_from_robot(_attacker : Robot, _launcher : Piece ,_initPosition : Vecto
 	if ! is_instance_valid(attacker): 
 		die();
 		return;
+	add_collision_disable_frames(1);
 	speed = _fireSpeed;
 	dir = _direction;
 	verticalVelocity = 0.0;
@@ -262,7 +265,8 @@ func _on_life_timer_timeout():
 	pass # Replace with function body.
 
 func _on_body_entered(body):
-	shot_something(body);
+	if not leaking:
+		shot_something(body);
 	pass # Replace with function body.
 
 func _on_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
@@ -283,6 +287,31 @@ func _on_body_shape_entered(body_rid, body, body_shape_index, local_shape_index)
 		shot_something(body);
 	pass # Replace with function body.
 
+func _on_hitbox_area_entered(area):
+	pass # Replace with function body.
+
+func _on_hitbox_area_shape_entered(area_rid, area, area_shape_index, local_shape_index):
+	if not leaking:
+		if area is HurtboxHolder and area.get_parent() != get_attacker():
+			#print("tis a robot. from ", name)
+			var other_shape_owner = area.shape_find_owner(area_shape_index)
+			var other_shape_node = area.shape_owner_get_owner(other_shape_owner)
+			if other_shape_node is not PieceCollisionBox: return;
+			
+			var local_shape_owner = hitbox.shape_find_owner(local_shape_index)
+			var local_shape_node = hitbox.shape_owner_get_owner(local_shape_owner)
+			#if local_shape_node is not PieceCollisionBox: return;
+			
+			var otherPiece : Piece = other_shape_node.get_piece();
+			#print("Other Piece in hitbox collision: ", otherPiece)
+			if ! is_instance_valid(otherPiece): return;
+			#print("Bullet damage commencing:")
+			shot_something(area);
+		else:
+			if area.get_parent() is Bullet:
+				shot_something(area);
+	pass # Replace with function body.
+
 ## Fired after either [member hitbox] or [member raycast] have sensed that they've hit something. Sets up damage to the potential target, plays particles, then dies.
 func shot_something(inbody):
 	if leaking: return;
@@ -292,7 +321,7 @@ func shot_something(inbody):
 	var validTarget = false;
 	var parent = inbody.get_parent();
 	
-	if inbody in casterExceptions:
+	if casterExceptions.has(inbody):
 		return;
 	#if parent == attacker:
 		#return;
@@ -322,6 +351,8 @@ func shot_something(inbody):
 			validTarget = true;
 	elif inbody is StaticBody3D:
 		validTarget = true;
+	elif inbody is Area3D and parent is Bullet:
+		validTarget = true;
 		#parent.call_deferred("take_knockback",(dir + Vector3(0,0.01,0)) * knockbackMult);
 		#print("should be taking knockback....")
 	#print("Shot ded by ",inbody, " named: ", inbody.name)
@@ -335,6 +366,8 @@ func shot_something(inbody):
 	#prints("BULLET INBODY: ", inbody)
 	#prints(self, inbody)
 	#prints(fired, lifeTimer, lifeDeltaTimer)
+	
+	#if not validTarget: return;
 	
 	SND.play_collision_sound(self, inbody, get_current_position(), 0.85, 1.5);
 	ParticleFX.play("Sparks", GameState.get_game_board(), get_current_position(), 0.5);
@@ -371,6 +404,7 @@ func set_attacker(atkr):
 	
 	newExceptions.append(hitbox);
 	
+	
 	set_caster_exceptions_and_collision_flags(newExceptions);
 
 const layerFlags : Dictionary[int, bool] = {
@@ -399,16 +433,33 @@ func set_caster_exceptions_and_collision_flags(exceptions : Array[CollisionObjec
 		shapecast.add_exception(exception);
 	
 	if ! collisionSet:
-		collisionSet = true;
 		hitbox.collision_layer = 0;
 		hitbox.collision_mask = 0;
 		raycast.collision_mask = 0;
 		shapecast.collision_mask = 0;
+		
+		raycast.collide_with_areas = true;
+		shapecast.collide_with_areas = true;
+		
 		for flagNum in maskFlags:
-			var flagValue = maskFlags[flagNum]
+			var flagValue = maskFlags[flagNum];
 			hitbox.set_collision_mask_value(flagNum, flagValue);
 			raycast.set_collision_mask_value(flagNum, flagValue);
 			shapecast.set_collision_mask_value(flagNum, flagValue);
+		for flagNum in layerFlags:
+			var flagValue = layerFlags[flagNum];
+			hitbox.set_collision_layer_value(flagNum, flagValue);
+		
+		if not hitbox.is_connected("area_entered", _on_hitbox_area_entered):
+			hitbox.connect("area_entered", _on_hitbox_area_entered);
+		if not hitbox.is_connected("area_shape_entered", _on_hitbox_area_shape_entered):
+			hitbox.connect("area_shape_entered", _on_hitbox_area_shape_entered);
+		if not hitbox.is_connected("body_entered", _on_body_entered):
+			hitbox.connect("body_entered", _on_body_entered);
+		if not hitbox.is_connected("body_shape_entered", _on_body_shape_entered):
+			hitbox.connect("body_shape_entered", _on_body_shape_entered);
+		
+		collisionSet = true;
 
 func add_collision_disable_frames(amt:=1):
 	collisionDisableFrames += amt;

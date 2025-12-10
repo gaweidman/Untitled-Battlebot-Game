@@ -1,0 +1,21 @@
+[gd_scene load_steps=10 format=3 uid="uid://dqocjyivv13y3"]
+
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_2rbb4"]
+[ext_resource type="Script" uid="uid://cix6hul23tkax" path="res://scripts/GUI/parts/playerParts/part_fan.gd" id="2_lok2l"]
+[ext_resource type="Texture2D" uid="uid://d0ha035m170v" path="res://graphics/images/HUD/parts/Icons/PartIconSawblade.png" id="3_cbl38"]
+[ext_resource type="Script" uid="uid://dd18vlcrmsx15" path="res://scripts/GUI/part_modifier.gd" id="4_1dal3"]
+[ext_resource type="Resource" uid="uid://l7bfj8e8xdxs" path="res://scenes/prefabs/stat_modifiers/fan_part_left.tres" id="5_enqri"]
+[ext_resource type="Resource" uid="uid://0lvkpg7igeu8" path="res://scenes/prefabs/stat_modifiers/fan_part_right.tres" id="6_ujw8p"]
+[ext_resource type="Resource" uid="uid://bcp8r6y76rjr5" path="res://scenes/prefabs/stat_modifiers/fan_part_up.tres" id="7_f36tp"]
+[ext_resource type="Resource" uid="uid://bics1ypwcsjrh" path="res://scenes/prefabs/stat_modifiers/fan_part_down.tres" id="8_p0mpd"]
+[ext_resource type="Resource" uid="uid://bqdihnpm1mrb8" path="res://scenes/prefabs/stat_modifiers/fan_piece.tres" id="9_v33qq"]
+
+[node name="PartFan" groups=["Fan"] instance=ExtResource("1_2rbb4")]
+script = ExtResource("2_lok2l")
+partName = "Fan"
+partDescription = "Blasts some nice cool air around.
+
+[color=f2ec6b]Passive: Adjacent [b]Active[/b] parts have 5% reduced Energy cost for each space adjacent to this part that is empty or another Fan."
+partIcon = ExtResource("3_cbl38")
+effectPriority = 1
+outgoingModifiers = Array[ExtResource("4_1dal3")]([ExtResource("5_enqri"), ExtResource("6_ujw8p"), ExtResource("7_f36tp"), ExtResource("8_p0mpd"), ExtResource("9_v33qq")])

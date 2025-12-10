@@ -419,6 +419,7 @@ static func play_purchase_sound(inVolume := 1.0):
 
 static func play_collision_sound(collider1: Node3D, collider2: Node3D, inGlobalPositionOffset:=Vector3.ZERO, inVolume := 1.0, inPitch := 1.0):
 	if not (is_instance_valid(collider1) and is_instance_valid(collider2)): return null;
+	if not (collider1.is_inside_tree()) and (collider2.is_inside_tree()): return null;
 	var sound = get_proper_collision_sound(collider1, collider2);
 	var playPos = ((collider1.global_position + collider2.global_position) / 2) + inGlobalPositionOffset;
 	if collider1 is StaticBody3D:

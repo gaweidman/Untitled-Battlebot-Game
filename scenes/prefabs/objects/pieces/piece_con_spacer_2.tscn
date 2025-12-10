@@ -1,7 +1,7 @@
 [gd_scene load_steps=24 format=3 uid="uid://cfnronjbv6vp2"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_p12ab"]
-[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="2_sjtfl"]
+[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_sjtfl"]
 [ext_resource type="Material" uid="uid://oh5qlldaucpj" path="res://graphics/materials/Cone.tres" id="9_1lpxe"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="9_ec814"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="10_0xsa8"]
@@ -81,7 +81,7 @@ radius = 0.25
 
 [node name="Piece_Spacer" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_p12ab")
-pieceName = &"Spacer"
+pieceName = &"Spacer 2"
 descriptionConstructor = Array[ExtResource("2_sjtfl")]([SubResource("Resource_ujwhk"), SubResource("Resource_agd5d"), SubResource("Resource_7qnf5")])
 pieceDescription = "[color=ffffffff]Serves no purpose other than to provide [color=ffffffff]structure [color=ffffffff]to your robot."
 weightBase = 2.5
@@ -92,7 +92,6 @@ hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
-assignedToSocket = true
 engineSlots = {
 Vector2i(2, 2): null,
 Vector2i(2, 3): null
@@ -156,7 +155,7 @@ hostPiece = NodePath("../..")
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
 collision_layer = 16
-collision_mask = 585
+collision_mask = 513
 script = ExtResource("12_pjpo6")
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]

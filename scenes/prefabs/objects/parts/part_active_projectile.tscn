@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://clsvb0b2mydc7" path="res://scenes/prefabs/objects/bullets/bullet.tscn" id="3_eppgx"]
 [ext_resource type="ArrayMesh" uid="uid://brv02nw813pa6" path="res://graphics/models/extracted/cannonMapped.res" id="4_yi3ku"]
 [ext_resource type="Material" uid="uid://bjpw8orsijmuk" path="res://graphics/materials/models/weapons/cannon.tres" id="5_vi2dv"]
-[ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/Cannon.png" id="6_1065k"]
+[ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/PartIconCannon.png" id="6_1065k"]
 [ext_resource type="Texture2D" uid="uid://cnweg8sm2hb81" path="res://graphics/images/HUD/parts/partBase_ranged.png" id="6_dfc4u"]
 
 [node name="PartActiveProjectile" node_paths=PackedStringArray("rangeRay") instance=ExtResource("1_63hqi")]

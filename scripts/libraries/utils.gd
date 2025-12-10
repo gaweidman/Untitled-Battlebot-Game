@@ -217,3 +217,9 @@ func is_equal_approx_vector3(inVecA : Vector3, inVecB : Vector3) -> bool:
 ## Returns whether W, X, Y and Z of the two input [Vector4]s are roughly equal to the others'.
 func is_equal_approx_vector4(inVecA : Vector4, inVecB : Vector4) -> bool:
 	return is_equal_approx(inVecA.w, inVecB.w) and is_equal_approx(inVecA.x, inVecB.x) and is_equal_approx(inVecA.y, inVecB.y) and is_equal_approx(inVecA.z, inVecB.z);
+
+## Sets the given [bool] [param property] on the given node to [code]true[/code], then calls [method set_deferred] to set it back to [member false] while in idle time.
+func set_bool_true_until_idle_time(node_ref:Node, property_name:StringName):
+	if node_ref.get(property_name) != null:
+		node_ref.set(property_name, true);
+		node_ref.set_deferred(property_name, false);

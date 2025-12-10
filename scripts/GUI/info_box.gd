@@ -386,19 +386,22 @@ func _physics_process(delta):
 	var removeDisabled = true;
 	var moveDisabled = true;
 	var sellDisabled = true;
-	if GameState.get_in_state_of_building() or GameState.get_in_one_of_given_states([GameBoard.gameState.SHOP, GameBoard.gameState.SHOP_BUILD]):
+	
+	var inStateOfBuilding =  GameState.get_in_state_of_building()
+	var shoppingOrBuilding = inStateOfBuilding or GameState.get_in_one_of_given_states([GameBoard.gameState.SHOP, GameBoard.gameState.SHOP_BUILD])
+	if shoppingOrBuilding:
 		if ref_is_piece():
-			if pieceRef.is_removable():
-				removeDisabled = false;
-			if pieceRef.is_sellable():
-				sellDisabled = false;
-			if pieceRef.is_buyable():
+			if inStateOfBuilding:
+				if pieceRef.is_removable():
+					removeDisabled = false;
+			if pieceRef.is_sellable() or pieceRef.is_buyable():
 				sellDisabled = false;
 		elif ref_is_part():
 			if partRef.is_moveable():
 				moveDisabled = false;
-			if partRef.is_equipped():
-				removeDisabled = false;
+			if inStateOfBuilding:
+				if partRef.is_equipped():
+					removeDisabled = false;
 			sellDisabled = false;
 		elif ref_is_robot():
 			pass;

@@ -27,3 +27,13 @@ func _ready():
 	for maskNum in maskFlags:
 		var maskVal = maskFlags[maskNum];
 		set_collision_mask_value(maskNum, maskVal);
+
+var disabled : bool = false;
+## Disables/enables all the collision boxes attached to this, assuming [param foo] doesn't match [member disabled].
+func disable(foo:bool):
+	if foo != disabled:
+		disabled = foo;
+		for collider in get_children():
+			if collider is PieceCollisionBox:
+				collider.disabled = disabled;
+		pass;

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djtwrqsxxebll"
-path="res://.godot/imported/Gear.png-8356d1f9cec7278cd3603b4b69ea5306.ctex"
+uid="uid://cuxqk37vovh52"
+path="res://.godot/imported/PartIconWeightMinus.png-031c71cf1858e46b85a159b011e634c3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/parts/Icons/Gear.png"
-dest_files=["res://.godot/imported/Gear.png-8356d1f9cec7278cd3603b4b69ea5306.ctex"]
+source_file="res://graphics/images/HUD/parts/Icons/PartIconWeightMinus.png"
+dest_files=["res://.godot/imported/PartIconWeightMinus.png-031c71cf1858e46b85a159b011e634c3.ctex"]
 
 [params]
 

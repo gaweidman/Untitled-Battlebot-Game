@@ -59,6 +59,9 @@ func should_be_displayed(statIDCheck := statID) -> bool:
 			StatHolderManager.displayModes.IF_MODIFIED:
 				return ! is_equal_approx(get_stat(), baseStat);
 				pass;
+			StatHolderManager.displayModes.IF_MODIFIED_NOT_999:
+				return ! is_equal_approx(get_stat(), baseStat) and ! is_equal_approx(get_stat(), 999.0);
+				pass;
 	return false;
 
 ## This [StatTracker]'s get function called by [method get_stat].

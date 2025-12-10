@@ -194,9 +194,15 @@ func sort_pieces_by_distance_from_core(pieceA : Piece, pieceB : Piece):
 		return pieceA.statHolderID < pieceB.statHolderID;
 	return pieceA.depthFromCore < pieceB.depthFromCore;
 
+## @experimental: There's simply not enough time to implement this, so it'll have to come as a later TODO.[br]
+## A list of ALL equipped [Piece]s and [Part]s organized by priority.[br]
+## That is to say, [Pieces] are organized by depth from the core (via sort_pieces_by_distance_from_core) then Parts are organized by modifier priority.
+var listOfPiecesAndParts : Array[Node] = [];
+
+
 ################## SAVING/LOADING
 
-##Stores the data required to load this robot from an editor save. Stored as the data [method bodySocket] needs to initialize the chain reaction.
+## Stores the data required to load this robot from an editor save. Stored as the data [method bodySocket] needs to initialize the chain reaction.
 @export var startupGenerator : Dictionary = { "rotation": 0.0, "occupant" : { "res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn": { "sockets": { 0: { "occupant": "null", "rotation": 0.0 }, 1: { "occupant": "null", "rotation": 3.14159 }, 2: { "occupant": "null", "rotation": -2.25163 }, 3: { "occupant": "null", "rotation": -2.25158 }, 4: { "occupant": "null", "rotation": 0.0 } } } }
 };
 
@@ -636,6 +642,8 @@ func take_damage(damage:float):
 		#print("Health after taking", damage, "damage:", health)
 		set_stat("Health", health);
 		#print("Health was subtracted. Nothing prevented it. ", get_health())
+		if get_health() <= 0:
+			die();
 
 func heal(health:float):
 	take_damage(-health);
@@ -1005,9 +1013,9 @@ func move_and_rotate_towards_movement_vector(delta : float):
 			body.linear_velocity.x *= speedReductionWhileNoInput;
 			body.linear_velocity.z *= speedReductionWhileNoInput;
 	
-	GameState.profiler_time_msec_start("robot phys_process_motion 7: Body speed clamp")
-	clamp_speed();
-	GameState.profiler_time_msec_end("robot phys_process_motion 7: Body speed clamp")
+	#GameState.profiler_time_msec_start("robot phys_process_motion 7: Body speed clamp")
+	#clamp_speed();
+	#GameState.profiler_time_msec_end("robot phys_process_motion 7: Body speed clamp")
 
 
 func update_treads_rotation(delta : float):
@@ -1092,7 +1100,7 @@ func _on_collision(collider: PhysicsBody3D, thisComponent: PhysicsBody3D = body)
 	if collider.is_in_group("Driveable"):
 		jolt_coyote_timer();
 
-## Makes sure the bot's speed doesn't go over its max speed.
+## @deprecated: Makes sure the bot's speed doesn't go over its max speed. Don't use this, it happens every frame now.
 func clamp_speed():
 	body.clamp_speed()
 	return;
@@ -1624,6 +1632,12 @@ func part_move_mode_enable(part:Part, foo:bool):
 		pass;
 	queue_update_engine_button_gfx();
 	pass;
+
+## Toggles move mode for the currently selected Part.
+func selected_part_move_mode_toggle():
+	if get_selected_part() != null:
+		var moveModeEnabled = selectedPart.robot_is_in_move_mode_with_me();
+		selectedPart.robot_move_mode(!moveModeEnabled);
 
 func clear_move_mode_pipette():
 	if is_instance_valid(partMovementPipette):

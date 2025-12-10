@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://bug72a38gynxq"]
+
+[ext_resource type="Texture2D" uid="uid://byy1etnx41gky" path="res://graphics/images/models/arenas/arena1/CementTile_basecolor.png" id="1_anumj"]
+[ext_resource type="Texture2D" uid="uid://80xr64wfv02s" path="res://graphics/images/models/arenas/arena1/CementTile_metallic.png" id="2_buc0y"]
+[ext_resource type="Texture2D" uid="uid://cdxl53qrbub47" path="res://graphics/images/models/arenas/arena1/CementTile_normal.png" id="3_i8tyb"]
+[ext_resource type="Texture2D" uid="uid://bqjt2prlqbjjl" path="res://graphics/images/models/arenas/arena1/CementTile_roughness.png" id="4_nj801"]
+
+[resource]
+albedo_texture = ExtResource("1_anumj")
+metallic = 1.0
+metallic_texture = ExtResource("2_buc0y")
+roughness_texture = ExtResource("4_nj801")
+normal_enabled = true
+normal_scale = -1.75
+normal_texture = ExtResource("3_i8tyb")
+uv1_scale = Vector3(24, 24, 24)

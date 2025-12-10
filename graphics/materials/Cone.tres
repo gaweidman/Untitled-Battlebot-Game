@@ -10,7 +10,7 @@ fill_to = Vector2(0.5, 0.166667)
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_5ptqo"]
 
 [resource]
-albedo_color = Color(0.841875, 0.437976, 0.221408, 1)
+albedo_color = Color(0.589084, 0.559545, 0.534059, 1)
 roughness = 0.0
 roughness_texture = SubResource("NoiseTexture2D_5ptqo")
 normal_enabled = true

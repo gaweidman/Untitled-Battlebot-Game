@@ -10,7 +10,7 @@ var backUtility = preload("res://graphics/images/HUD/activeTab/screenUtility.png
 var backMelee = preload("res://graphics/images/HUD/activeTab/screenMelee.png");
 var backRanged = preload("res://graphics/images/HUD/activeTab/screenRanged.png");
 
-var iconBlank = preload("res://graphics/images/HUD/parts/Icons/Empty.png");
+var iconBlank = preload("res://graphics/images/HUD/parts/Icons/PartIconEmpty.png");
 
 var targetY := 265.0;
 

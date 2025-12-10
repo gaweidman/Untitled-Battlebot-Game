@@ -7,7 +7,12 @@ class_name Robot_Enemy
 var frontRay : RayCast3D;
 var playerRay : RayCast3D;
 var directionRay : RayCast3D;
+@export_subgroup("Salvage Pricing")
+@export var salvagePrice := 1; ## How much money the player earns from killing this, ON TOP OF the salvage price of each piece.
+@export var salvagePriceMultiplier := 2./5.; ## Multiplied by the salvage value of each piece, plus [member salvagePrice].
+@export var salvagePricePieceChange := 2./3.; ## The rough chance that each piece gives its salvage value on death.
 
+@export_subgroup("AI Properties")
 var frontRayCollision = null;## Collider gathered in [method update_front_ray_result]. Set to null if invalid.
 var frontRayColType : rayColTypes = rayColTypes.NONE; ## Collider type in [enum rayColTypes] gathered in [method update_front_ray_result] based on [member frontRayCollision]. 
 var frontRayNormal = Vector3(0,0,0).normalized();## Collision normal gathered in [method update_front_ray_result]. Set to null if invalid.
@@ -15,26 +20,427 @@ var frontDirection := Vector2(0,1).normalized();## The front of the robot, deter
 @export var frontRayDistance = 5.0; ## How long the front collision ray should be.
 var frontRayDistanceToPoint = 0.0; ## Calculated in [method update_front_ray_result]. how far away from colliding the bot is directly in front of it.
 @export var chasesPlayerInReverse := false; ##@experimental: When set to true, this bot will go into reverse when the player is behind them.
-@export var playerChaseDistance := 30.;
+@export var playerChaseDistance := 30.; ## The distance from the player this enemy needs to be for this robot to notice them.
+@export var playerKiteDistance := 15.; ## The distance form the player this enemy needs to be before they can start to kite.
+@export var playerStrafeDistance := 9.; ## The distance from the player this enemy needs to be before they can start to strafe or idle.
+@export var playerCloseDistance := 7.; ## The distance from the player this enemy needs to be before they are considered "too close".
+@export var kitingAngle := 80.0; ## The angle at which the bot will kite or strafe towards, if it has that behavior.
+var kitingDir = 80.0; ## The current strafe/kite angle.
 ## Used by pointer swivels. They will try to point to this global position when on an enemy.
 var pointerTarget := Vector3(0,0,0);
+var pointerTargetAngleOffsetStorage := 0.0;
 var playerWallDodgeVector : Vector2;
 var playerWallDodgeAngle : float;
-@export var salvagePrice := 1; ## How much money the player earns from killing this, ON TOP OF the salvage price of each piece.
-@export var salvagePriceMultiplier := 2./5.; ## Multiplied by the salvage value of each piece, plus [member salvagePrice].
-@export var salvagePricePieceChange := 2./3.; ## The rough chance that each piece gives its salvage value on death.
+
+var homePosition := Vector3.ZERO;
+var regenLenToHome := false;
+var currentLenToHome : float = -1.:
+	get:
+		if regenLenToHome or currentLenToHome < 0:
+			currentLenToHome = (homePosition - get_global_body_position()).length();
+		return currentLenToHome;
+@export var homeRetreatDistance := 20.; ## The distance away from this robot's spawn position it's allowed to stray from, if it has the trait [enum traits.RETREATS_TO_HOME].
+
+@export_range(0.1, 100., 0.0001, "or_greater") var timeBetweenCharges_min := 5.0; ## The minimum amount of time between charges, for use if it has the trait [enum traits.CHARGES_PERIODICALLY].
+@export_range(0.1, 100., 0.0001, "or_greater") var timeBetweenCharges_max := 7.0; ## The maximum amount of time between charges, for use if it has the trait [enum traits.CHARGES_PERIODICALLY].
+var chargeStartTimer := timeBetweenCharges_max;
+@export var chargeTime := 5.0; ## The amount of time a charge can last before it auto-expires, if it has the trait [enum traits.CHARGES_PERIODICALLY].
+var chargeRunTimer := -1.;
+var canCharge :bool:
+	get:
+		return is_zero_approx(chargeStartTimer) and is_zero_approx(chargeRunTimer);
+var isCharging :bool:
+	get:
+		return chargeRunTimer > 0;
+var chargeVector :=Vector2.ZERO;
+func tick_charging_cooldowns(delta):
+	if chargeRunTimer > 0:
+		chargeRunTimer -= delta;
+	else:
+		if chargeStartTimer > 0:
+			chargeStartTimer -= delta;
+func try_start_charge():
+	if canCharge:
+		chargeRunTimer = chargeTime;
+		chargeStartTimer = randf_range(timeBetweenCharges_min, timeBetweenCharges_max);
+		chargeVector = get_basic_player_chase_vector();
+		return true;
+	return false;
+
+func on_collision_with_robot_body():
+	chargeRunTimer = -1;
+	reverse_kiting();
+
+
+@export var cowardiceHealthPercent: float = 0.40; ## The percentage of health the bot needs to be below before it will start to run away, if it has the trait [enum traits.HEALTH_COWARD].
+## [code]true[/code] if current health is below [member cowardiceHealthPercent].
+var healthCowardTime : bool:
+	get:
+		return (get_stat("Health") / get_stat("HealthMax")) <= cowardiceHealthPercent;
+
+## Switches the direction of the kiting.
+func reverse_kiting():
+	kitingDir *= -1;
+
+## @experimental: A list of traits that make up an enemy's decision-making.
+enum traits {
+	CHASES, ## The bot will attempt to chase the player relentlessly.
+	CHASE_IN_REVERSE, ## Requires [enum traits CHASES].[br]The bot will attempt to chase you with its treads put into reverse.
+	CHASE_AVOIDS_WALLS, ## Requires [enum traits CHASES].[br]If the bot has this trait, it will attempt to avoid walls using its raycast each frame while it chases you. 
+	RUNS_WHEN_CLOSE, ## The bot will attempt to run away from the player when they get close, based on [member playerCloseDistance]. 
+	PLAYS_KEEPAWAY, ## When the player is below [member playerStrafeDistance], this bot will stand. Good paired with [enum traits.RUNS_WHEN_CLOSE].
+	WANDERS_WHEN_IDLE, ## When the player is not in chase range, the bot will wander.
+	STRAFES, ## When the bot is within [member playerStrafeDistance] from the player, they will attempt to strafe until they bonk into a wall.
+	KITES, ## When the bot is within [member playerKiteDistance] from the player, they will attempt to kite until they bonk into a wall.
+	CIRCLES_WHEN_CLOSE, ## When the bot is within [member playerCloseDistance] from the player, they will attempt to kite until they bonk into a wall.
+	RANDOMLY_CHANGES_KITING_DIRECTION, ## The bot will switch its kiting direction at a ~30% chance each frame.
+	COOLDOWN_COWARD, ## The bot will try to run away from the player if one of its active abilities are on cooldown. It will run until it is outside of [member playerStrafeDistance].
+	HEALTH_COWARD, ## The bot will try to run away from the player it is below half health. It will run until it is outside of [member playerKiteDistance].
+	SMART_AIMING, ## The position this robot will try to aim at will be the player's position + velocity.
+	SMART_CHASING, ## The position this robot will try to chase will be the player's position + velocity.
+	STAND_WHEN_CLOSE, ## The robot will stop moving if the player is within [member playerCloseDistance].
+	CHARGES_PERIODICALLY, ## The robot will start charging the player on a cycle. The charge will end when the body collides with another [Robot] or the charging cooldown ends. The charge will start if the player is within strafing distance ([member playerStrafeDistance])
+	RETREATS_TO_HOME, ## The robot will try to move towards its initial spawning location ([member homePosition]) if it gets beyond [member homeRetreatDistance] away from it.
+	POINTER_SWIVEL_ROTATES_TOWARD_FRONT, ## The bot rotates its pointer swivels towards its current movement vector.
+	POINTER_SWIVEL_ROTATES_CLOCKWISE, ## The bot rotates its pointer swivels clockwise.
+	POINTER_SWIVEL_ROTATES_COUNTERCLOCKWISE, ## The bot rotates its pointer swivels counter-clockwise.
+	POINTER_SWIVEL_ROTATES_WITH_KITING_DIRECTION, ## The bot rotates its pointer swivels in a direction tied to its current kiting angle.
+	POINTER_SWIVEL_ROTATES_TO_AIM_AT_PLAYER, ## The bot rotates its pointer swivels towards the player. If active with any other pointer swivel related trais, the others will come into effect when the player is out of range.
+}
+## @experimental: The different movement states the robot can be in.
+enum behaviors {
+	CHASE, ## The bot is moving towards the player.
+	RUN, ## The bot is running away from the player, tactically.
+	COWARDICE, ## The bot is running away from the player, like a coward.
+	CHARGE, ## The bot is charging towards the player.
+	STRAFE, ## The bot is strafing or kiting around the player.
+	STAND, ## The bot is being ordered not to move.
+	WANDER, ## The bot is not in range and is moving.
+	IDLE, ## The bot is not being moved.
+	STUN, ## The bot cannot move.
+	FREEZE, ## The bot REALLY cannot move.
+	RETREAT_TO_HOME, ## The bot is retreating to its home.
+}
+## @experimental: The priority each state in [enum behaviors] gets.[br]The higher the number, the greater the priority; the highest priority behavior in a frame will be the one chosen.[br]If two states have equal priority, then it will choose randomly between the two. 
+const behavioral_priority : Dictionary[behaviors, int]= {
+	behaviors.IDLE : 0,
+	behaviors.WANDER : 1, 
+	behaviors.CHASE : 5,
+	behaviors.STRAFE : 10,
+	behaviors.STAND : 15,
+	behaviors.RUN : 15,
+	behaviors.CHARGE : 25,
+	behaviors.COWARDICE : 35,
+	behaviors.RETREAT_TO_HOME : 40,
+	behaviors.STUN : 998,
+	behaviors.FREEZE : 999,
+}
+## @experimental: The AI traits this robot gets, from [enum traits]. If this is empty, the bot will not move.
+@export var myTraits : Array[traits] = [traits.CHASES, traits.WANDERS_WHEN_IDLE]
+## @experimental: The current behavior the robot is in this frame.
+var actionThisFrame : behaviors = behaviors.IDLE;
+
+func has_trait(behavioralTrait : traits) -> bool:
+	return behavioralTrait in myTraits;
+
+## Based on the bot's current traits, 
+func get_movement_vector(_rotatedByCamera := false):
+	var delta = get_physics_process_delta_time();
+	
+	var currentBehaviors : Array[behaviors] = [behaviors.IDLE];
+	inputtingMovementThisFrame = false;
+	
+	if is_frozen():
+		try_add_behavior_state(currentBehaviors, behaviors.FREEZE);
+	elif is_asleep():
+		try_add_behavior_state(currentBehaviors, behaviors.STUN);
+	else:
+		## Wander instead of idle.
+		if has_trait(traits.WANDERS_WHEN_IDLE):
+			try_add_behavior_state(currentBehaviors, behaviors.WANDER)
+		
+		regenLenToPlayer = true;
+		regenLenToHome = true;
+		
+		## Retreat to home.
+		if has_trait(traits.RETREATS_TO_HOME):
+			regenLenToHome = true;
+			if currentLenToHome > homeRetreatDistance:
+				try_add_behavior_state(currentBehaviors, behaviors.RETREAT_TO_HOME);
+		
+		## Deal with any cowardice.
+		if has_trait(traits.COOLDOWN_COWARD):
+			if anyActivesOnCooldown:
+				try_add_behavior_state(currentBehaviors, behaviors.COWARDICE);
+		if has_trait(traits.HEALTH_COWARD):
+			if healthCowardTime:
+				try_add_behavior_state(currentBehaviors, behaviors.COWARDICE);
+		
+		## States that can only happen when the player is in chasing distance.
+		if player_in_range(playerChaseDistance):
+			if has_trait(traits.CHASES):
+				try_add_behavior_state(currentBehaviors, behaviors.CHASE);
+			
+			## Tick charging cooldowns if the player is at all in range.
+			if has_trait(traits.CHARGES_PERIODICALLY):
+				tick_charging_cooldowns(delta);
+			
+			if player_in_range(playerKiteDistance):
+				if has_trait(traits.KITES):
+					try_add_behavior_state(currentBehaviors, behaviors.STRAFE);
+			if player_in_range(playerStrafeDistance):
+				## Start a charge if you can.
+				if has_trait(traits.CHARGES_PERIODICALLY):
+					if try_start_charge():
+						try_add_behavior_state(currentBehaviors, behaviors.CHARGE);
+				if has_trait(traits.STRAFES):
+					try_add_behavior_state(currentBehaviors, behaviors.STRAFE);
+				if has_trait(traits.PLAYS_KEEPAWAY):
+					try_add_behavior_state(currentBehaviors, behaviors.STAND);
+			if player_in_range(playerCloseDistance):
+				if has_trait(traits.CIRCLES_WHEN_CLOSE):
+					try_add_behavior_state(currentBehaviors, behaviors.RUN);
+				if has_trait(traits.RUNS_WHEN_CLOSE):
+					try_add_behavior_state(currentBehaviors, behaviors.RUN);
+				if has_trait(traits.STAND_WHEN_CLOSE):
+					try_add_behavior_state(currentBehaviors, behaviors.STRAFE);
+	
+	actionThisFrame = currentBehaviors.pick_random();
+	
+	var fireAbilities = false;
+	
+	match actionThisFrame:
+		behaviors.WANDER :
+			inputtingMovementThisFrame = true;
+			
+			movementVector = get_wandering_movement();
+			pass;
+		behaviors.IDLE :
+			movementVector = Vector2.ZERO;
+			
+			fireAbilities = true;
+			pass;
+		behaviors.CHASE :
+			inputtingMovementThisFrame = true;
+			
+			if has_trait(traits.CHASE_IN_REVERSE):
+				if player_is_behind():
+					put_in_reverse();
+			
+			movementVector = get_basic_player_chase_vector();
+			fireAbilities = true;
+			
+			if has_trait(traits.CHASE_AVOIDS_WALLS):
+				movementVector = movementVector.rotated(playerWallDodgeAngle)
+			
+			pass;
+		behaviors.STRAFE :
+			inputtingMovementThisFrame = true;
+			
+			if has_trait(traits.CHASE_IN_REVERSE):
+				if player_is_behind():
+					put_in_reverse();
+			
+			movementVector = get_basic_player_chase_vector();
+			
+			movementVector = movementVector.rotated(deg_to_rad(kitingDir));
+			
+			fireAbilities = true;
+			pass;
+		behaviors.STAND :
+			movementVector = Vector2.ZERO;
+			fireAbilities = true;
+			pass;
+		behaviors.RUN :
+			inputtingMovementThisFrame = true;
+			
+			if has_trait(traits.CHASE_IN_REVERSE):
+				if player_is_behind():
+					put_in_reverse();
+			
+			movementVector = get_basic_player_chase_vector(true, false);
+			
+			fireAbilities = true;
+			pass;
+		behaviors.CHARGE :
+			inputtingMovementThisFrame = true;
+			
+			movementVector = chargeVector;
+			
+			fireAbilities = true;
+			pass;
+		behaviors.COWARDICE :
+			inputtingMovementThisFrame = true;
+			
+			movementVector = get_basic_player_chase_vector(true);
+			
+			fireAbilities = true;
+			pass;
+		behaviors.RETREAT_TO_HOME :
+			inputtingMovementThisFrame = true;
+			
+			movementVector = get_home_retreat_vector();
+			
+			fireAbilities = true;
+			pass;
+		behaviors.STUN :
+			movementVector = Vector2.ZERO;
+			pass;
+		behaviors.FREEZE :
+			movementVector = Vector2.ZERO;
+			pass;
+		_ :
+			movementVector = Vector2.ZERO;
+			pass;
+	
+	if fireAbilities:
+		## Fire active abilities after all this.
+		try_fire_actives();
+	
+	if is_inputting_movement():
+		movementVectorRotation = movementVector.angle();
+	
+	if has_trait(traits.POINTER_SWIVEL_ROTATES_CLOCKWISE) or has_trait(traits.POINTER_SWIVEL_ROTATES_COUNTERCLOCKWISE) or has_trait(traits.POINTER_SWIVEL_ROTATES_WITH_KITING_DIRECTION):
+		var angleToRot = pointerTargetAngleOffsetStorage;
+		
+		if targetPointerWasSetManually:
+			pointerTargetAngleOffsetStorage = 0;
+			pointerTarget = Vector3(0.,0.,1.);
+			targetPointerWasSetManually = false;
+		
+		if has_trait(traits.POINTER_SWIVEL_ROTATES_CLOCKWISE):
+			angleToRot += deg_to_rad(5. * delta)
+		if has_trait(traits.POINTER_SWIVEL_ROTATES_COUNTERCLOCKWISE):
+			angleToRot += deg_to_rad(-5. * delta)
+		if has_trait(traits.POINTER_SWIVEL_ROTATES_WITH_KITING_DIRECTION):
+			angleToRot += deg_to_rad(5. * delta)
+			if kitingDir < 0:
+				angleToRot *= -1;
+		
+		pointerTargetAngleOffsetStorage = angleToRot;
+		
+		
+		pointerTarget = pointerTarget.rotated(Vector3.UP, angleToRot)
+		
+		#print(pointerTarget)
+	
+	## Moving the target pointer.
+	if is_inputting_movement():
+		if has_trait(traits.POINTER_SWIVEL_ROTATES_TOWARD_FRONT):
+			set_pointer_to_look_at_movement_vector(movementVector);
+			targetPointerWasSetManually = true;
+	elif player_in_range(playerChaseDistance):
+		if has_trait(traits.POINTER_SWIVEL_ROTATES_TO_AIM_AT_PLAYER):
+			set_pointer_to_look_at_player();
+			targetPointerWasSetManually = true;
+	
+	return movementVector.normalized();
+
+func try_add_behavior_state(currentBehaviors:Array[behaviors], behavioralState : behaviors):
+	if currentBehaviors.has(behavioralState):
+		return currentBehaviors;
+	if currentBehaviors.is_empty():
+		currentBehaviors.append(behavioralState);
+		return currentBehaviors;
+	var currentPriority = behavioral_priority[currentBehaviors.front()]
+	var newPriority = behavioral_priority[behavioralState]
+	if newPriority < currentPriority:
+		return currentBehaviors;
+	elif newPriority == currentPriority:
+		currentBehaviors.append(behavioralState);
+		return currentBehaviors;
+	elif newPriority > currentPriority:
+		currentBehaviors.clear();
+		currentBehaviors.append(behavioralState);
+		return currentBehaviors;
+
+
+var targetPointerWasSetManually := true;
+
+## @experimental: The requirements an [AbilityManager] needs to meet for it to be fired this frame.
+enum active_ability_fire_requirements {
+	BASIC, ## The ability will attempt to fire whenever it is not on cooldown.
+	PLAYER_IN_CHASE_RANGE, ## The player must be inside [member playerChaseDistance].
+	PLAYER_IN_KITING_RANGE, ## The player must be inside [member playerKiteDistance].
+	PLAYER_IN_STRAFING_RANGE, ## The player must be inside [member playerStrafeDistance].
+	PLAYER_IN_CLOSE_RANGE, ## The player must be inside [member playerCloseDistance].
+	PLAYER_OUTSIDE_CHASE_RANGE, ## The player must be outside [member playerChaseDistance].
+	PLAYER_IN_PROJECTILE_RANGE, ## The [Piece] this is from must be a [Piece_Projectile], and must return true with [method Piece_Projectile.player_in_range]. If it is not a [Piece_Projectile], this acts like [enum active_ability_fire_requirements.BASIC].
+	WHEN_CHARGING, ## Only fires when the enemy is charging (as per [member isCharging]). 
+	
+	PROJECTILE_NEARBY, ## The ability will fire if a [Bullet] is nearby.
+	PLAYER_OR_PROJECTILE_NEARBY, ## The ability will fire if the player is inside [member playerCloseDistance] or there is a [Bullet] nearby.
+}
+
+var anyActivesOnCooldown := false;
+func try_fire_actives():
+	if ! is_conscious(): return false;
+	
+	anyActivesOnCooldown = false;
+	
+	for abilityIndex in active_abilities:
+		var ability = active_abilities[abilityIndex]
+		if ability != null:
+			if ability is AbilityData:
+				if ability.is_on_cooldown():
+					anyActivesOnCooldown = true;
+				else:
+					var host = ability.assignedPieceOrPart;
+					var canUse = false;
+					var manager = ability.manager;
+					if host is Piece:
+						canUse = host.can_use_ability(manager);
+					if host is Part:
+						canUse = host.can_use_ability(manager);
+					
+					if canUse:
+						var fireMe = false;
+						match manager.aiFireRequirement:
+							active_ability_fire_requirements.BASIC:
+								fireMe = true;
+							active_ability_fire_requirements.PLAYER_IN_CHASE_RANGE:
+								fireMe = player_in_range(playerChaseDistance);
+							active_ability_fire_requirements.PLAYER_IN_KITING_RANGE:
+								fireMe = player_in_range(playerKiteDistance);
+							active_ability_fire_requirements.PLAYER_IN_STRAFING_RANGE:
+								fireMe = player_in_range(playerStrafeDistance);
+							active_ability_fire_requirements.PLAYER_IN_CLOSE_RANGE:
+								fireMe = player_in_range(playerCloseDistance);
+							active_ability_fire_requirements.PLAYER_OUTSIDE_CHASE_RANGE:
+								fireMe = !player_in_range(playerChaseDistance);
+							active_ability_fire_requirements.PLAYER_IN_PROJECTILE_RANGE:
+								if host is Piece_Projectile:
+									fireMe = host.player_in_range();
+								else:
+									fireMe = true;
+							active_ability_fire_requirements.WHEN_CHARGING:
+								fireMe = isCharging;
+							_:
+								fireMe = true;
+						
+						if fireMe:
+							fire_active(abilityIndex);
+
+######## STARTUP STUFF
 
 func _ready():
 	super();
+	
 
 func stat_registry():
 	super();
 
 func die():
 	if ! aliveLastFrame: return false;
-	if lastAttacker is Robot_Player:
-		ScrapManager.add_scrap(get_salvage_price(), "Kill");
+	if is_instance_valid(lastAttacker):
+		if lastAttacker is Robot_Player:
+			ScrapManager.add_scrap(get_salvage_price(), "Kill");
 	super();
+
+func live():
+	super();
+	homePosition = get_global_body_position();
+
 
 func get_salvage_price():
 	var priceTally = salvagePrice;
@@ -120,6 +526,11 @@ func phys_process_timers(delta):
 				randomizedFactor = 1.0;
 			else:
 				randomizedFactor = -1.0;
+	
+			## Switch the kiting direction.
+			if has_trait(traits.RANDOMLY_CHANGES_KITING_DIRECTION):
+				if randf() < 0.3:
+					reverse_kiting();
 
 func get_wandering_movement() -> Vector2:
 	return randomizedVector;
@@ -133,13 +544,6 @@ func phys_process_detection(delta):
 	playerWallDodgeAngle = rotation_to_dodge_walls_and_move_towards_player();
 
 func phys_process_motion(delta):
-	#return;
-	if not is_frozen():
-		GameState.profiler_time_msec_start("Checking if player is behind")
-		if chasesPlayerInReverse:
-			if player_is_behind():
-				put_in_reverse();
-		GameState.profiler_time_msec_end("Checking if player is behind")
 	super(delta);
 
 var playerInRaySight := false; ## Updated in [method update_if_ray_colliding_with_player]. True if [member playerRay] was colliding with the player that frame.
@@ -249,16 +653,21 @@ func get_angle_to_player_from_front(inDegrees := false) -> float:
 func player_is_behind():
 	return get_angle_to_player_from_front(false) > PI/2;
 
-func get_basic_player_chase_vector(reverse := false):
-	var plyOffset = GameState.get_player_pos_offset(body.global_position);
-	var length = GameState.get_len_to_player(body.global_position);
+func get_basic_player_chase_vector(reverse := false, addVelocity := has_trait(traits.SMART_CHASING)):
+	var plyOffset = GameState.get_player_pos_offset(body.global_position, addVelocity);
+	#var length = GameState.get_len_to_player(body.global_position);
 	var vectorOut = Vector2(-plyOffset.x, -plyOffset.z);
 	if reverse:
 		vectorOut = vectorOut.rotated(PI);
 	return vectorOut;
 
-func set_pointer_to_look_at_player(angleOffset := 0.0):
-	var plyOffset = GameState.get_player_pos_offset(body.global_position);
+func get_home_retreat_vector():
+	var homeOffset = homePosition - body.global_position;
+	var vectorOut = Vector2(-homeOffset.x, -homeOffset.z);
+	return vectorOut;
+
+func set_pointer_to_look_at_player(angleOffset := 0.0, addVelocity := has_trait(traits.SMART_AIMING)):
+	var plyOffset = GameState.get_player_pos_offset(body.global_position, addVelocity);
 	pointerTarget = plyOffset;
 	pointerTarget.z *= -1;
 	pointerTarget = pointerTarget.rotated(Vector3.UP, -PI/2)
@@ -338,8 +747,16 @@ func rotation_to_dodge_walls_and_move_towards_player(invector : Vector2 = get_ba
 	else: 
 		return firstAmt;
 
+## The current length to the player.
+var currentLenToPlayer : float = -1:
+	get:
+		if regenLenToPlayer or currentLenToPlayer < 0:
+			regenLenToPlayer = false;
+			currentLenToPlayer = GameState.get_len_to_player(body.global_position);
+		return currentLenToPlayer;
+var regenLenToPlayer := true;
 func player_in_range(distanceOverride := playerChaseDistance):
-	return GameState.get_len_to_player(body.global_position) <= distanceOverride;
+	return currentLenToPlayer <= distanceOverride;
 
 enum rayColTypes {
 	FLOOR,

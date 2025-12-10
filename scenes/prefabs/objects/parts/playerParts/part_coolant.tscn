@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=4 uid="uid://cnst7r5ribkwg"]
 
 [ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_3rlh4"]
-[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/Energy.png" id="2_eofa5"]
+[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/PartIconEnergy.png" id="2_eofa5"]
 
 [node name="PartPassive" instance=ExtResource("1_3rlh4")]
 bonusEnergyRegen = 0.2

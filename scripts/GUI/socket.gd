@@ -331,10 +331,15 @@ func show_preview_of_pipette():
 		#print(bot.pipettePiecePath)
 		var pipetteInstance = bot.pipettePieceInstance;
 		if is_instance_valid(pipetteInstance):
+			if is_instance_valid(get_parent()):
+				if get_parent() == pipetteInstance:
+					pipetteInstance.remove_child(self);
+			
 			selectorRay.add_exception(pipetteInstance.hitboxCollisionHolder);
 			if ! is_instance_valid(pipetteInstance.get_parent()):
 				add_child(pipetteInstance);
 			else:
+				pipetteInstance.get_parent().remove_child(pipetteInstance);
 				pipetteInstance.reparent(self);
 			preview = pipetteInstance;
 			preview.position = Vector3(0,0,0);

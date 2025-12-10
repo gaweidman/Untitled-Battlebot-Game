@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_loga7"]
 [ext_resource type="Script" uid="uid://dpbjoioc4tbcm" path="res://scripts/GUI/parts/playerParts/part_turtleCoil.gd" id="2_uawyq"]
-[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/Energy.png" id="3_uawyq"]
+[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/PartIconEnergy.png" id="3_uawyq"]
 
 [node name="PartTurtleCoil" instance=ExtResource("1_loga7")]
 script = ExtResource("2_uawyq")

@@ -29,14 +29,13 @@ func _ready():
 func fix_collision():
 	collision_layer = 0;
 	collision_mask = 0;
+	
 	for layerNum in layerFlags:
 		var layerVal = layerFlags[layerNum];
 		set_collision_layer_value(layerNum, layerVal);
 	for maskNum in maskFlags:
 		var maskVal = maskFlags[maskNum];
 		set_collision_mask_value(maskNum, maskVal);
-	
-	#print(collision_mask)
 	
 	targetRotation = global_rotation.y;
 	currentRotation = global_rotation.y;
@@ -50,39 +49,56 @@ func update_target_rotation(inRotPoint, rotationSpeed):
 		lastRotation = currentRotation;
 		rotationSpeed = clamp(rotationSpeed, 0.0, 1.0);
 		currentRotation = lerp_angle(currentRotation, targetRotation, rotationSpeed);
-		_integrate_forces("Rotation");
+		#_integrate_forces("Rotation");
 
+## @deprecated
 func clamp_speed():
 	_integrate_forces("Speed Clamp");
 
 func _integrate_forces(state):
+	if get_robot().is_frozen(): return;
+	
 	GameState.profiler_time_msec_start("robot phys_process_motion 8: Body integrate forces")
-	match state:
-		"Rotation":
-			rotation.y = currentRotation;
-		"Speed Clamp":
-			var current_velocity = Utils.vec3_to_vec2(linear_velocity);
-			var current_speed = current_velocity.length();
-			
-			if current_speed > maxSpeed:
-				var y = linear_velocity.y;
-				var cvFIxd = current_velocity.normalized() * maxSpeed;
-				linear_velocity.x = lerp(linear_velocity.x, cvFIxd.x, 0.85);
-				linear_velocity.z = lerp(linear_velocity.z, cvFIxd.y, 0.85);
-			#print(global_position.y);
-			if ! isOnGround:
-				var force = max(1.0, (global_position.y / 2) + 0.5)	
-				gravity_scale = max(1.0, force);
-				Utils.print_if_true(str("force: ",gravity_scale),get_robot() is Robot_Player)
-				linear_velocity.y = min(linear_velocity.y - force, linear_velocity.y)
-			else:
-				gravity_scale = 1.0;
-			#print(constant_force.y)
-		_:
-			pass;
-	#print("Applying current rotation:",currentRotation)
+	
+	rotation.y = currentRotation;
+	
+	var current_velocity = Utils.vec3_to_vec2(linear_velocity);
+	var current_speed = current_velocity.length();
+	
+	if current_speed > maxSpeed:
+		var y = linear_velocity.y;
+		var cvFIxd = current_velocity.normalized() * maxSpeed;
+		linear_velocity.x = lerp(linear_velocity.x, cvFIxd.x, 0.85);
+		linear_velocity.z = lerp(linear_velocity.z, cvFIxd.y, 0.85);
+	
+	if ! isOnGround:
+		var force = max(1.0, (global_position.y / 2) + 0.5)
+		gravity_scale = max(1.0, force);
+		Utils.print_if_true(str("force: ",gravity_scale),get_robot() is Robot_Player)
+		linear_velocity.y = min(linear_velocity.y - force, linear_velocity.y)
+	else:
+		gravity_scale = 1.0;
+	
 	basis = basis.orthonormalized();
 	GameState.profiler_time_msec_end("robot phys_process_motion 8: Body integrate forces")
 
 func get_robot() -> Robot:
 	return get_parent();
+
+## Sets up this to be able to bonk into other things.
+func signal_setup(robotBodyCollidedCallable : Callable):
+	if not is_connected("body_entered", _on_body_entered):
+		connect("body_entered", _on_body_entered);
+	if not is_connected("collided_with_robot_body", robotBodyCollidedCallable):
+		connect("collided_with_robot_body", robotBodyCollidedCallable);
+
+## Emitted when this [RobotBody] collides with another one.
+signal collided_with_robot_body(body:RobotBody)
+## 
+func _on_body_entered(body):
+	if body is RobotBody:
+		collided_with_robot_body.emit(body);
+	pass # Replace with function body.
+
+func _physics_process(delta):
+	call_deferred("_integrate_forces",null);
