@@ -25,7 +25,6 @@ cull_mode = 2
 albedo_texture = ExtResource("5_s5jac")
 
 [node name="Piece" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
-visible = false
 script = ExtResource("1_rh04g")
 meshesHolder = NodePath("Meshes")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")

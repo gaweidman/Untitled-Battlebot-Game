@@ -1,7 +1,7 @@
-[gd_scene load_steps=23 format=3 uid="uid://cj7wtreacnxtm"]
+[gd_scene load_steps=24 format=3 uid="uid://cj7wtreacnxtm"]
 
 [ext_resource type="Script" uid="uid://blmbkcjl8udq2" path="res://scripts/objects/pieces/piece_projectile.gd" id="1_f406y"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_52v1y"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="2_52v1y"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="2_mjslu"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_f406y"]
 [ext_resource type="Resource" uid="uid://4easq571wef0" path="res://scenes/prefabs/abilities/active/ability_cannon_fire.tres" id="4_d7xnu"]
@@ -10,9 +10,10 @@
 [ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="7_rjpgo"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="8_o54vu"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="9_2dtav"]
-[ext_resource type="ArrayMesh" uid="uid://bxol2x25bhxpg" path="res://graphics/models/obj/botparts/cannon.res" id="9_861xr"]
+[ext_resource type="ArrayMesh" uid="uid://cx2rf1b03otvo" path="res://graphics/models/obj/botparts/cannon.res" id="9_861xr"]
 [ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="9_d7xnu"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="10_861xr"]
+[ext_resource type="Material" uid="uid://byypqaapcf25c" path="res://graphics/materials/Sawblade.tres" id="12_3twrs"]
 
 [sub_resource type="Resource" id="Resource_861xr"]
 script = ExtResource("2_52v1y")
@@ -167,6 +168,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_ts5ym")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0.25, 0)
+material_override = ExtResource("12_3twrs")
 mesh = ExtResource("9_861xr")
 
 [node name="FiringOffset" type="RayCast3D" parent="Meshes/MeshInstance3D"]

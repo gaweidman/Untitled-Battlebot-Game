@@ -1,16 +1,15 @@
-[gd_scene load_steps=25 format=3]
+[gd_scene load_steps=24 format=3 uid="uid://dwqx6ajkepwdv"]
 
-[ext_resource type="Script" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_wwnek"]
+[ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_wwnek"]
 [ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="2_vq6ya"]
-[ext_resource type="Script" path="res://scripts/GUI/socket.gd" id="6_l18ma"]
-[ext_resource type="Texture2D" path="res://graphics/images/models/sockets/socketM.png" id="9_kqxmf"]
-[ext_resource type="Texture2D" path="res://graphics/images/models/sockets/prong.png" id="10_xqfn3"]
-[ext_resource type="Script" path="res://scripts/objects/pieces/buildingBlocks/collisionBox.gd" id="11_g3f8g"]
-[ext_resource type="PackedScene" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="11_p55u6"]
-[ext_resource type="Script" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="13_45f64"]
-[ext_resource type="Script" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="14_umqd5"]
-[ext_resource type="Script" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="15_fj8ki"]
-[ext_resource type="PackedScene" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="16_avq55"]
+[ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="9_kqxmf"]
+[ext_resource type="Material" uid="uid://g7wmpoctrcux" path="res://graphics/materials/computer_shield.tres" id="9_v4fe0"]
+[ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="10_xqfn3"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="11_p55u6"]
+[ext_resource type="Script" uid="uid://dikbphvd0xff7" path="res://scripts/objects/pieces/buildingBlocks/hitbox_shapes.gd" id="13_45f64"]
+[ext_resource type="Script" uid="uid://bkwxna02gqgqu" path="res://scripts/objects/pieces/buildingBlocks/hurtbox_shapes.gd" id="14_umqd5"]
+[ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="15_fj8ki"]
+[ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="16_avq55"]
 
 [sub_resource type="Resource" id="Resource_ujwhk"]
 script = ExtResource("2_vq6ya")
@@ -80,8 +79,7 @@ albedo_texture = ExtResource("10_xqfn3")
 height = 0.5
 radius = 0.25
 
-[node name="Piece_Small Spacer" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "hostSocket", "femaleSocketHolder") groups=["Piece"]]
-visible = false
+[node name="Piece_Small Spacer" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_wwnek")
 pieceName = &"Small Spacer"
 descriptionConstructor = Array[ExtResource("2_vq6ya")]([SubResource("Resource_ujwhk"), SubResource("Resource_agd5d"), SubResource("Resource_7qnf5")])
@@ -93,7 +91,6 @@ meshesHolder = NodePath("Meshes")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
-hostSocket = NodePath("..")
 femaleSocketHolder = NodePath("FemaleSockets")
 assignedToSocket = true
 engineSlots = {
@@ -152,17 +149,9 @@ metadata/_edit_lock_ = true
 editor_description = "Put all female sockets in this box. Make sure they align with the grid!"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.01328e-05, -0.0045355, 0.000500202)
 
-[node name="Socket" type="Area3D" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece", "collisionSphere", "mesh_face", "mesh_selector") instance=ExtResource("11_p55u6")]
+[node name="Socket" parent="FemaleSockets" node_paths=PackedStringArray("hostPiece") instance=ExtResource("11_p55u6")]
 transform = Transform3D(-1, -8.74228e-08, -3.82137e-15, -8.74228e-08, 1, 1.06581e-14, 3.82137e-15, 1.06581e-14, -1, 0, 0.5, 1.74623e-10)
-collision_layer = 32
-collision_mask = 0
-monitorable = false
-priority = 1
-script = ExtResource("6_l18ma")
 hostPiece = NodePath("../..")
-collisionSphere = NodePath("CollisionShape3D")
-mesh_face = NodePath("FemaleConnector/ConnectorPlane")
-mesh_selector = NodePath("Selector")
 
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
@@ -184,6 +173,7 @@ script = ExtResource("15_fj8ki")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+material_override = ExtResource("9_v4fe0")
 mesh = SubResource("CylinderMesh_o5psd")
 skeleton = NodePath("../../PieceCollisionBox")
 
@@ -230,13 +220,9 @@ mesh = SubResource("PlaneMesh_k8cvo")
 skeleton = NodePath("../../../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_ts5ym")
 
-[node name="PieceCollisionBox" type="CollisionShape3D" parent="." instance=ExtResource("16_avq55")]
-editor_description = "A handy dandy box for all your collision needs.
-Edit 'thisColliderType' to have it be copied in as a Hitbox, Hurtbox, Placement check, or a mixture of them."
+[node name="PieceCollisionBox" parent="." instance=ExtResource("16_avq55")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("CylinderShape3D_8kl8r")
-disabled = true
 debug_color = Color(0, 0.6, 0.701961, 0.419608)
-script = ExtResource("11_g3f8g")
 
 [connection signal="body_shape_entered" from="HitboxShapes [Leave empty]" to="." method="_on_hitbox_body_shape_entered"]

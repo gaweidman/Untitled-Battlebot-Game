@@ -1,6 +1,6 @@
 [gd_scene load_steps=20 format=3 uid="uid://bvbnk32yrg0yy"]
 
-[ext_resource type="Script" uid="uid://c6qwiyf4mcvpt" path="res://scripts/objects/pieces/piece_bumper.gd" id="1_pky5t"]
+[ext_resource type="Script" path="res://scripts/objects/pieces/piece_bumper.gd" id="1_pky5t"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_qe5pu"]
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="2_rahga"]
 [ext_resource type="Resource" uid="uid://lvlt1lrsidrr" path="res://scenes/prefabs/abilities/passive/ability_piece_bumper_bump.tres" id="3_pky5t"]

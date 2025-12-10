@@ -1,6 +1,6 @@
 [gd_scene load_steps=19 format=3 uid="uid://chtmgvcvkdr05"]
 
-[ext_resource type="Shader" path="res://graphics/materials/particle shaders/CurrencyParticle.tres" id="1_jsg3y"]
+[ext_resource type="Shader" uid="uid://bb808afni1luo" path="res://graphics/materials/particle shaders/CurrencyParticle.tres" id="1_jsg3y"]
 [ext_resource type="Texture2D" uid="uid://dusxqb2l7n2d7" path="res://graphics/images/particle PNGs/Gearforbattlebot.png" id="2_wo1b8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t570e"]

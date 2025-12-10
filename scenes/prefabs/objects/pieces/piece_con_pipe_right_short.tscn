@@ -1,7 +1,8 @@
-[gd_scene load_steps=24 format=3 uid="uid://cv3f4whpqll15"]
+[gd_scene load_steps=25 format=3 uid="uid://cv3f4whpqll15"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_ss4kq"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_xeo6b"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="2_xeo6b"]
+[ext_resource type="Material" uid="uid://bmyfgrr876ujj" path="res://graphics/materials/newsawblade.tres" id="9_1qmqk"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="9_dbd2q"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="10_tdu0q"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="11_waodq"]
@@ -170,6 +171,7 @@ script = ExtResource("15_072rv")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(2, 0, 0, 0, -8.74228e-08, 2, 0, -2, -8.74228e-08, 0, 0.75, 0)
+material_override = ExtResource("9_1qmqk")
 mesh = ExtResource("15_qd2qe")
 skeleton = NodePath("")
 

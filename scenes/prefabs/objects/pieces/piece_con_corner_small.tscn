@@ -1,7 +1,7 @@
 [gd_scene load_steps=24 format=3 uid="uid://ncefpt3mve7g"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_gkj2a"]
-[ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="2_oeyd6"]
+[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="2_oeyd6"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="9_1jjqw"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="10_k8o3m"]
 [ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="11_pd87j"]
@@ -220,7 +220,6 @@ metadata/_edit_lock_ = true
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.075, 0.075)
 mesh = SubResource("PlaneMesh_k8cvo")
 skeleton = NodePath("../../../..")
-surface_material_override/0 = SubResource("StandardMaterial3D_ts5ym")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="Meshes"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.25, 0)

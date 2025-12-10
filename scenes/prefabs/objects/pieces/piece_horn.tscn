@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://b4lxeohowt1xt"]
+[gd_scene load_steps=17 format=3 uid="uid://b4lxeohowt1xt"]
 
 [ext_resource type="Script" uid="uid://sgpk4fry4yvo" path="res://scripts/objects/pieces/buildingBlocks/piece.gd" id="1_jdn6p"]
 [ext_resource type="Script" uid="uid://rbm6p8ggs13f" path="res://scripts/objects/pieces/buildingBlocks/placement_shapes.gd" id="4_ayq0k"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dckvl43g2kjvx" path="res://scenes/prefabs/objects/pieces/buildingBlocks/piece_collision_box.tscn" id="6_jxej0"]
 [ext_resource type="Texture2D" uid="uid://c3ddwskowvvoi" path="res://graphics/images/models/sockets/socketM.png" id="6_kwevx"]
 [ext_resource type="Texture2D" uid="uid://cobiyocwh7d3p" path="res://graphics/images/models/sockets/prong.png" id="7_x1ea0"]
+[ext_resource type="Material" uid="uid://bmyfgrr876ujj" path="res://graphics/materials/newsawblade.tres" id="8_jxej0"]
 [ext_resource type="ArrayMesh" uid="uid://bf88vnnia1xac" path="res://graphics/models/obj/botparts/Horn.obj" id="9_jxej0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_l000f"]
@@ -131,6 +132,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_t8ht0")
 
 [node name="Horn" type="MeshInstance3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+material_override = ExtResource("8_jxej0")
 mesh = ExtResource("9_jxej0")
 
 [node name="PieceCollisionBox2" parent="." instance=ExtResource("6_jxej0")]
