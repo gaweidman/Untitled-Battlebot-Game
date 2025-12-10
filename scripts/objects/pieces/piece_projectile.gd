@@ -29,7 +29,7 @@ var firingAngle := Vector3.BACK;
 var fireRateTimer := 0.0;
 
 ##How much acceleration on the Y axis projectiles shot by this recieve.
-@export var bulletGravity := -0.0987;
+@export var bulletGravity := -0.2;
 func get_bullet_gravity():
 	return get_stat("ProjectileGravity");
 
@@ -65,7 +65,7 @@ func assign_references():
 		var newRay = RayCast3D.new();
 		newRay.add_exception(hurtboxCollisionHolder);
 		newRay.exclude_parent = true;
-		newRay.collision_mask = 64 + 1; ##Hurtboxes and robots.
+		newRay.collision_mask = 8 + 64 + 1 + 1024; ##Hurtboxes and robot bodies and floors.
 		#newRay.add_exception(hurtboxCollisionHolder);
 		rangeRay = newRay;
 		add_child(newRay);
@@ -264,7 +264,9 @@ func _exit_tree():
 	pass;
 
 ## RANGE RAY STUFF
-
+## The effective range of this cannon, calculated during [method calc_range].[br]
+## Will be 0 if this gun can't fire.
+var calculatedRangeLength := 0.0;
 ## Moves the range ray in accordance with the speed of the bullets being fired, the gun's angle, and the bullet lifetime.
 func calc_range():
 	if !is_instance_valid(rangeRay):
@@ -275,9 +277,14 @@ func calc_range():
 			rangeRay.show();
 			var delta = get_physics_process_delta_time();
 			var length = get_stat("ProjectileLifetime") * delta * get_stat("ProjectileSpeed") * 60;
+			
+			calculatedRangeLength = length;
+			
 			rangeRay.target_position.z = length;
 			rangeRay.global_position = get_firing_offset();
 		else:
+			calculatedRangeLength = 0.0;
+			
 			rangeRay.hide();
 			rangeRay.enabled = false;
 
@@ -285,3 +292,14 @@ func get_closest_thing_in_line_of_fire():
 	if rangeRay.is_colliding():
 		return rangeRay.get_collider();
 	return null;
+
+func player_in_range():
+	var potentialCollider = get_closest_thing_in_line_of_fire();
+	if potentialCollider != null:
+		if potentialCollider is HurtboxHolder:
+			var piece = potentialCollider.get_piece();
+			if piece.equippedByPlayer:
+				return true;
+		if potentialCollider is Robot_Player:
+			return true;
+	return false;

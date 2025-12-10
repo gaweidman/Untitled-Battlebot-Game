@@ -1,0 +1,20 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://dcmcyf1k3hx8k"]
+
+[ext_resource type="Texture2D" uid="uid://dmyj60pw1qucj" path="res://graphics/images/models/arenas/arena2/MetalWall_basecolor.png" id="1_xetyf"]
+[ext_resource type="Texture2D" uid="uid://cawc3ipjrmes1" path="res://graphics/images/models/arenas/arena2/MetalWall_anisotropylevel.png" id="2_bpurh"]
+[ext_resource type="Texture2D" uid="uid://bhy3tc74xc362" path="res://graphics/images/models/arenas/arena2/MetalWall_metallic.png" id="3_3p2mn"]
+[ext_resource type="Texture2D" uid="uid://dvpb6ccdpf1bo" path="res://graphics/images/models/arenas/arena2/MetalWall_normal.png" id="4_lwkpn"]
+[ext_resource type="Texture2D" uid="uid://dipw1a4bvoy65" path="res://graphics/images/models/arenas/arena2/MetalWall_roughness.png" id="5_b2tii"]
+
+[resource]
+albedo_texture = ExtResource("1_xetyf")
+metallic = 1.0
+metallic_texture = ExtResource("3_3p2mn")
+roughness_texture = ExtResource("5_b2tii")
+emission_enabled = true
+normal_enabled = true
+normal_scale = -1.0
+normal_texture = ExtResource("4_lwkpn")
+anisotropy_enabled = true
+anisotropy_flowmap = ExtResource("2_bpurh")
+uv1_scale = Vector3(10, 10, 10)

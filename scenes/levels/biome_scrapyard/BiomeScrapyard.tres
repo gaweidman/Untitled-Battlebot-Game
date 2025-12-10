@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BiomeData" load_steps=3 format=3 uid="uid://btfjm2prb2ckl"]
+
+[ext_resource type="PackedScene" uid="uid://cacpmbuy5ck50" path="res://scenes/levels/biome_workshop/arena_workshop/workshop.tscn" id="1_bcblq"]
+[ext_resource type="Script" uid="uid://be0y0dj5fa4n7" path="res://scenes/prefabs/arenas/biome_data.gd" id="2_dntes"]
+
+[resource]
+script = ExtResource("2_dntes")
+biomeName = "ArenaBiome"
+arenaScenes = Dictionary[String, PackedScene]({
+"Base": ExtResource("1_bcblq")
+})
+metadata/_custom_type_script = "uid://be0y0dj5fa4n7"

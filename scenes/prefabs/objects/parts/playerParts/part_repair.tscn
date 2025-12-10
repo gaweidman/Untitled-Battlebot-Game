@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://n5li36gn6xf7" path="res://scenes/prefabs/objects/parts/part_active.tscn" id="1_4undw"]
 [ext_resource type="Script" uid="uid://bf6yjetut8g0u" path="res://scripts/GUI/parts/playerParts/part_repair.gd" id="2_ik4vn"]
-[ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/Repair.png" id="3_ik4vn"]
+[ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/PartIconRepair.png" id="3_ik4vn"]
 
 [node name="PartRepair" instance=ExtResource("1_4undw")]
 script = ExtResource("2_ik4vn")

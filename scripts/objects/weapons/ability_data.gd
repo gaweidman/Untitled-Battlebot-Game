@@ -133,3 +133,6 @@ func is_running_cooldowns() -> bool:
 	elif assignedPieceOrPart is Part:
 		pass;
 	return false;
+
+func is_on_cooldown():
+	return cooldownTimer > 0 or freezeFrames > 0 or freezeTime > 0;

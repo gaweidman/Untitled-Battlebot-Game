@@ -27,7 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://t5h4p3r8oscs" path="res://graphics/images/HUD/activeTab/screenRanged.png" id="14_3ki25"]
 [ext_resource type="Texture2D" uid="uid://2lfl5febi3py" path="res://graphics/images/HUD/Health_FullOverlay.png" id="14_eakln"]
 [ext_resource type="Script" uid="uid://bfml2ah2jiuo4" path="res://scripts/GUI/health_bar.gd" id="14_ticrt"]
-[ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/Cannon.png" id="15_maiqi"]
+[ext_resource type="Texture2D" uid="uid://bg8rjtbi4nuw" path="res://graphics/images/HUD/parts/Icons/PartIconCannon.png" id="15_maiqi"]
 [ext_resource type="Texture2D" uid="uid://du4swb4g8x0x2" path="res://graphics/images/HUD/activeTab/mouse3.png" id="16_fh32w"]
 [ext_resource type="Texture2D" uid="uid://db7xxix2ub0ai" path="res://graphics/images/HUD/Energy_FullOverlay.png" id="17_1ks4x"]
 [ext_resource type="Texture2D" uid="uid://c1wx7qpxonisn" path="res://graphics/images/HUD/activeTab/mouse2.png" id="17_58nj6"]

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_urt7v"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_h4am3"]
-[ext_resource type="Texture2D" uid="uid://6dla8kdo4d2f" path="res://graphics/images/HUD/parts/Icons/piston.png" id="2_uwnlf"]
+[ext_resource type="Texture2D" uid="uid://6dla8kdo4d2f" path="res://graphics/images/HUD/parts/Icons/PartIconPiston.png" id="2_uwnlf"]
 
 [sub_resource type="Resource" id="Resource_dhbo1"]
 script = ExtResource("1_urt7v")
@@ -22,11 +22,12 @@ abilityDescription = "No Description Found."
 energyCost = 2.5
 cooldownTimeBase = 6.0
 cooldownStatName = ""
+energyCostStatName = ""
 runType = 0
 functionNameWhenUsed = &"blastoff"
 statsUsed = Array[String](["Kickback"])
 icon = ExtResource("2_uwnlf")
-hookName = ""
+aiFireRequirement = 0
 initialized = false
 disabled = false
 functionWhenUsed = Callable()

@@ -54,7 +54,6 @@ scrapCostBase = 10
 passiveAbilities = Array[ExtResource("2_qe5pu")]([ExtResource("3_pky5t")])
 knockbackBase = 600.0
 kickbackBase = 300.0
-contactCooldown = 0.15
 meshesHolder = NodePath("Meshes")
 hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")

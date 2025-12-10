@@ -214,6 +214,13 @@ func get_player_position():
 		return bdy.global_position;
 	return Vector3(0,0,0);
 
+func get_player_velocity():
+	var bdy = get_player_body();
+	
+	if is_instance_valid(bdy):
+		return bdy.linear_velocity;
+	return Vector3(0,0,0);
+
 func get_player_selected_or_pipette():
 	var ply = get_player()
 	
@@ -267,8 +274,10 @@ func get_camera_pointer() -> Node3D:
 		return board.get_camera_pointer();
 	return null;
 
-func get_player_pos_offset(inGlobalPosition: Vector3):
+func get_player_pos_offset(inGlobalPosition: Vector3, addPlayerVelocity := false):
 	var pos = get_player_position();
+	if addPlayerVelocity:
+		pos += get_player_velocity();
 	return pos - inGlobalPosition;
 
 func get_len_to_player(inGlobalPosition: Vector3):

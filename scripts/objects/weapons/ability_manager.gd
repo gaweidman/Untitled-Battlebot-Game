@@ -18,7 +18,7 @@ class_name AbilityManager
 @export var functionNameWhenUsed : StringName;
 @export var statsUsed : Array[String] = []; ## Any stats from the host piece you want to be displayed in this ability's inspector box.
 @export var icon : Texture2D;
-@export var hookName : String; ## If you want this ability to be called
+@export var aiFireRequirement : Robot_Enemy.active_ability_fire_requirements = Robot_Enemy.active_ability_fire_requirements.BASIC; ## If an enemy is using this, this is the requirement for this ability to be fired.
 @export_subgroup("Internal bits")
 @export var initialized := false;
 @export var disabled := false;
@@ -278,14 +278,20 @@ func get_cooldown_start_time(id : int, multiplier):
 					if get_assigned_piece_or_part(id).has_stat(cooldownStatName):
 						cooldownTimeBase = get_assigned_piece_or_part(id).get_stat(cooldownStatName);
 	return cooldownTimeBase * multiplier;
-func queue_cooldown(id : int, multiplier):
+func queue_cooldown(id : int, multiplier, override = null):
 	var data = get_ability_data(id);
 	if is_instance_valid(data):
+		if override != null:
+			data.set_deferred("cooldownTimer", override)
+			return;
 		data.set_deferred("cooldownTimer", get_cooldown_start_time(id, multiplier))
-func set_cooldown(id : int, multiplier):
+func set_cooldown(id : int, multiplier, override = null):
 	var data = get_ability_data(id);
 	if is_instance_valid(data):
 		if cooldownTimeBase > 0:
+			if override != null:
+				data.set("cooldownTimer", override)
+				return;
 			data.set("cooldownTimer", get_cooldown_start_time(id, multiplier))
 func get_cooldown(id : int)->float:
 	var data = get_ability_data(id);

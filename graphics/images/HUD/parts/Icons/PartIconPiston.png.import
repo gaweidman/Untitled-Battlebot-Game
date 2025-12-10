@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pns2yf0c5ogx"
-path="res://.godot/imported/Empty.png-dc7cf379c193b3753aa60b978918ac7f.ctex"
+uid="uid://6dla8kdo4d2f"
+path="res://.godot/imported/PartIconPiston.png-b062faccff0fc06a428ce959b688db31.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/parts/Icons/Empty.png"
-dest_files=["res://.godot/imported/Empty.png-dc7cf379c193b3753aa60b978918ac7f.ctex"]
+source_file="res://graphics/images/HUD/parts/Icons/PartIconPiston.png"
+dest_files=["res://.godot/imported/PartIconPiston.png-b062faccff0fc06a428ce959b688db31.ctex"]
 
 [params]
 

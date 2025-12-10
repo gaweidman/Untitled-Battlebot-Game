@@ -315,15 +315,15 @@ func set_item_pool_waves(inWave:int):
 			match inWave:
 				0:
 					##passives
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn", 2);
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_generator.tscn", 1);
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_magnet.tscn", 1);
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/part_RoundBell.tscn", 2);
+					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_generator.tscn", 1);
+					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_magnet.tscn", 1);
 					##passives with adjacenty bonuses
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_fan.tscn", 2);
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/part_fan.tscn", 2);
 					##Batteries
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/part_jank_battery.tscn", 2);
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x1.tscn", 3);
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x2.tscn", 2);
+					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/part_jank_battery.tscn", 2);
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/batteries/battery_1x1.tscn", 3);
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/batteries/battery_1x2.tscn", 2);
 					##melee
 					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sawblade.tscn", 1);
 					##ranged
@@ -337,13 +337,13 @@ func set_item_pool_waves(inWave:int):
 					##Pieces
 					
 					##Passives
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/scrapthirsty.tscn");
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/scrapthirsty.tscn");
 					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/turtle_coil.tscn");
 					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_coolant.tscn");
 					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_scrap_plating.tscn", 1);
 					##Batteries
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_1x3.tscn", 1);
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/battery_2x3.tscn", 1);
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/batteries/battery_1x3.tscn", 1);
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/batteries/battery_2x3.tscn", 1);
 					##Ranged
 					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 1);
 					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_sniper.tscn", 1);
@@ -401,13 +401,14 @@ func set_item_pool_waves(inWave:int):
 		poolTypes.TEST:
 			match inWave:
 				0:
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_RoundBell.tscn");
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/part_helium_tank_1.tscn");
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/part_RoundBell.tscn");
 					add_part_to_spawn_list("res://scenes/prefabs/objects/pieces/piece_con_spacer_0.tscn");
 					#add_part_to_spawn_list("res://scenes/prefabs/objects/pieces/piece_cannon_peashooter.tscn");
 					#add_part_to_spawn_list("res://scenes/prefabs/objects/pieces/piece_con_pipe_right_long.tscn");
 					#add_part_to_spawn_list("res://scenes/prefabs/objects/pieces/piece_dvd_launcher.tscn");
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_generator.tscn");
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/scrapthirsty.tscn");
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/part_generator.tscn");
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/scrapthirsty.tscn");
 					changed = true;
 	if changed: 
 		calculate_part_pool();

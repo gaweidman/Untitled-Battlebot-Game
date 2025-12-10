@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c2s10d6olfdwc"
-path="res://.godot/imported/Energy.png-f2e4e8b28ab3b8707504288678bedfc1.ctex"
+uid="uid://c620xtfuapa4c"
+path="res://.godot/imported/PartIconBalloon.png-bd6f56ce7a3c7758d4295a51e4ce8ba6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/parts/Icons/Energy.png"
-dest_files=["res://.godot/imported/Energy.png-f2e4e8b28ab3b8707504288678bedfc1.ctex"]
+source_file="res://graphics/images/HUD/parts/Icons/PartIconBalloon.png"
+dest_files=["res://.godot/imported/PartIconBalloon.png-bd6f56ce7a3c7758d4295a51e4ce8ba6.ctex"]
 
 [params]
 

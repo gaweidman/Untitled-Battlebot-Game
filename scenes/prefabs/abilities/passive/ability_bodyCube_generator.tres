@@ -1,14 +1,8 @@
 [gd_resource type="Resource" script_class="AbilityManager" load_steps=7 format=3 uid="uid://bfv01rslcmwqh"]
 
-<<<<<<< HEAD:scenes/prefabs/abilities/passive/ability_generator.tres
-[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="1_hybfa"]
-[ext_resource type="Script" path="res://scripts/libraries/richTextConstructor.gd" id="1_syemp"]
-[ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/Repair.png" id="2_ow60o"]
-=======
 [ext_resource type="Script" uid="uid://cybmjhuctmfaw" path="res://scripts/libraries/richTextConstructor.gd" id="1_uiokv"]
-[ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/Repair.png" id="2_nresr"]
+[ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/PartIconRepair.png" id="2_nresr"]
 [ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_5tp4p"]
->>>>>>> b6f6c99578200f684a2fbd976ea977d516794055:scenes/prefabs/abilities/passive/ability_bodyCube_generator.tres
 
 [sub_resource type="Resource" id="Resource_ek7pi"]
 script = ExtResource("1_uiokv")
@@ -51,7 +45,7 @@ runType = 0
 functionNameWhenUsed = &""
 statsUsed = Array[String](["PassiveEnergyRegeneration"])
 icon = ExtResource("2_nresr")
-hookName = ""
+aiFireRequirement = 0
 initialized = false
 disabled = false
 functionWhenUsed = Callable()

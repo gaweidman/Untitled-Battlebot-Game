@@ -1,0 +1,22 @@
+[gd_scene load_steps=6 format=3 uid="uid://bq3lmn4qya03q"]
+
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_j64ri"]
+[ext_resource type="Script" uid="uid://c1qlkdqvp0fxh" path="res://scripts/GUI/parts/playerParts/scrapthirsty.gd" id="2_lhd5k"]
+[ext_resource type="Texture2D" uid="uid://d0ha035m170v" path="res://graphics/images/HUD/parts/Icons/PartIconSawblade.png" id="3_eywhw"]
+[ext_resource type="Script" uid="uid://dd18vlcrmsx15" path="res://scripts/GUI/part_modifier.gd" id="4_48hea"]
+[ext_resource type="Resource" uid="uid://cw1n6mva4oewm" path="res://scenes/prefabs/stat_modifiers/scrapthirsty_health_down.tres" id="5_ahjc8"]
+
+[node name="Scrapthirsty" instance=ExtResource("1_j64ri")]
+script = ExtResource("2_lhd5k")
+dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 1)])
+scrapCostBase = 19
+myPartRarity = 2
+poolWeight = 2
+partName = "Scrapthirsty"
+partDescription = "[color=f2ec6b]Passive: Lose 0.5 max HP. When an enemy is defeated, gain 0.035 HP for each scrap you earn from the kill."
+partIcon = ExtResource("3_eywhw")
+partIconOffset = Vector2(1, 1)
+invSprite = null
+screwSprite = null
+effectPriority = -1
+outgoingModifiers = Array[ExtResource("4_48hea")]([ExtResource("5_ahjc8")])

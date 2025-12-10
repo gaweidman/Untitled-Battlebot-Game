@@ -116,3 +116,4 @@ func disable_textEdits():
 
 var filepathPrefixPieces = "res://scenes/prefabs/objects/pieces/"
 var filepathPrefixRobots = "res://scenes/prefabs/objects/robots/"
+var filepathPrefixParts = "res://scenes/prefabs/objects/parts/"

@@ -1,0 +1,13 @@
+[gd_scene load_steps=5 format=3 uid="uid://duhuvco461rms"]
+
+[ext_resource type="PackedScene" uid="uid://dl72cklqtx2gj" path="res://scenes/prefabs/objects/parts/part.tscn" id="1_qs4hn"]
+[ext_resource type="Texture2D" uid="uid://c620xtfuapa4c" path="res://graphics/images/HUD/parts/Icons/PartIconBalloon.png" id="2_c60pr"]
+[ext_resource type="Script" uid="uid://dd18vlcrmsx15" path="res://scripts/GUI/part_modifier.gd" id="3_6ejdl"]
+[ext_resource type="Resource" uid="uid://cxtrk0k217byy" path="res://scenes/prefabs/stat_modifiers/helium_tank_1.tres" id="4_1rtwk"]
+
+[node name="PartHeliumTank" instance=ExtResource("1_qs4hn")]
+myPartType = 2
+partName = "Helium Bubble"
+partDescription = "Reduces the weight of the Piece this is on by 2.5."
+partIcon = ExtResource("2_c60pr")
+outgoingModifiers = Array[ExtResource("3_6ejdl")]([ExtResource("4_1rtwk")])

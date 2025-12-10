@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://n5li36gn6xf7" path="res://scenes/prefabs/objects/parts/part_active.tscn" id="1_mffcx"]
 [ext_resource type="Script" uid="uid://vmx82fm5lc8t" path="res://scripts/GUI/parts/playerParts/part_dash.gd" id="2_py1gj"]
-[ext_resource type="Texture2D" uid="uid://6dla8kdo4d2f" path="res://graphics/images/HUD/parts/Icons/piston.png" id="3_py1gj"]
+[ext_resource type="Texture2D" uid="uid://6dla8kdo4d2f" path="res://graphics/images/HUD/parts/Icons/PartIconPiston.png" id="3_py1gj"]
 
 [node name="PartDash" instance=ExtResource("1_mffcx")]
 script = ExtResource("2_py1gj")

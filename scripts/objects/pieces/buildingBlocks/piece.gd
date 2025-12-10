@@ -52,16 +52,18 @@ func _process(delta):
 	process_draw(delta);
 
 func stat_registry():
-	## Stats regarding energy cost.
-	register_stat("PassiveEnergyDrawMultiplier", energyDrawPassiveMultiplier, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery, StatHolderManager.displayModes.ABOVE_ZERO_NOT_999);
-	register_stat("PassiveEnergyRegeneration", energyGenerationPassiveBaseOverride, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery, StatHolderManager.displayModes.NOT_ZERO_ABSOLUTE_VALUE);
-	register_stat("PassiveCooldownMultiplier", passiveCooldownTimeMultiplier, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Clock);
-	register_stat("ContactCooldown", contactCooldown, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Clock);
+	## Stats regarding energy cost..
+	if passiveAbilitiesDistributed.size() > 0:
+		register_stat("PassiveEnergyDrawMultiplier", energyDrawPassiveMultiplier, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery, StatHolderManager.displayModes.NOT_ONE);
+		register_stat("PassiveEnergyRegeneration", -energyGenerationPassiveBaseOverride, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery, StatHolderManager.displayModes.NOT_ZERO_ABSOLUTE_VALUE);
+		register_stat("PassiveCooldownMultiplier", passiveCooldownTimeMultiplier, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Clock, StatHolderManager.displayModes.NOT_ONE);
 	
 	## Stats that only matter if the thing has abilities.
 	if activeAbilitiesDistributed.size() > 0:
-		register_stat("ActiveEnergyDrawMultiplier", energyDrawActiveMultiplier, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery);
-		register_stat("ActiveCooldownMultiplier", activeCooldownTimeMultiplier, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Clock);
+		register_stat("ActiveEnergyDrawMultiplier", energyDrawActiveMultiplier, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery, StatHolderManager.displayModes.NOT_ONE);
+		register_stat("ActiveCooldownMultiplier", activeCooldownTimeMultiplier, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Clock, StatHolderManager.displayModes.NOT_ONE);
+	
+	register_stat("ContactCooldown", contactCooldown, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Clock);
 	
 	## Stats regarding Scrap Cost.
 	register_stat("ScrapCost", scrapCostBase, StatHolderManager.statIconScrap, StatHolderManager.statTags.Worth, StatHolderManager.displayModes.ALWAYS, StatHolderManager.roundingModes.Ceili);
@@ -164,7 +166,18 @@ func destroy(removeFromSocket := true):
 ##[/codeblock]
 func create_startup_data():
 	var engineDict = {};
-	##TODO: Part data goes here
+	regeneratePartList = true;
+	## Loop over all Parts in the engine and put their scene path in the dict.
+	for part in listOfParts:
+		if part != null:
+			if is_instance_valid(part):
+				if ! part.is_queued_for_deletion():
+					if part is Part:
+						var partScenePath = part.scene_file_path;
+						assert(FileAccess.file_exists(partScenePath), "File %s is not a valid part path"%partScenePath)
+						if FileAccess.file_exists(partScenePath):
+							engineDict[partScenePath] = part.create_startup_data();
+	
 	var socketDict = {};
 	for socket:Socket in get_all_female_sockets():
 		var index = get_index_of_socket(socket);
@@ -191,7 +204,7 @@ func create_startup_data():
 				disabled.append(ability.abilityName);
 	
 	var data = {
-			#"engine" : engineDict,
+			"engine" : engineDict,
 			"sockets" : socketDict,
 			"abilityAssignments" : abilityDict,
 			"disabledAbilities" : disabled,
@@ -211,8 +224,9 @@ func load_startup_data(data, robot : Robot):
 		if is_instance_valid(socket):
 			socket.load_startup_data(socketData, robot);
 	
+	var dataKeys = data.keys()
 	
-	if data.keys().has("abilityAssignments"):
+	if dataKeys.has("abilityAssignments"):
 		for abilityName in data["abilityAssignments"].keys():
 			var abilitySlots = data["abilityAssignments"][abilityName];
 			var ability = get_named_action(abilityName);
@@ -221,11 +235,22 @@ func load_startup_data(data, robot : Robot):
 					robot.assign_ability_to_slot(slotNum, ability.get_ability_data(statHolderID));
 	
 	## An array of names that are disabled abilities.
-	if data.keys().has("disabledAbilities"):
+	if dataKeys.has("disabledAbilities"):
 		for abilityName in data["disabledAbilities"]:
 			var ability = get_named_action(abilityName);
 			if is_instance_valid(ability):
 				ability.disable(statHolderID, true);
+	
+	if dataKeys.has("engine"):
+		for partPath in data["engine"]:
+			assert(FileAccess.file_exists(partPath))
+			if FileAccess.file_exists(partPath):
+				var partData = data["engine"][partPath]
+				var invPosition = partData["inventoryPosition"];
+				
+				var part = engine_add_part_from_scene(invPosition.x, invPosition.y, partPath);
+				if part != null:
+					part.load_startup_data(partData, robot);
 	pass;
 
 ######################## TIMERS
@@ -460,7 +485,7 @@ var passiveAbilitiesDistributed : Array[AbilityManager] = [];
 @export var energyDrawActiveMultiplier := 1.0; ##power drawn when you use any this piece's active abilities, given that it has any.
 @export var energyDrawActiveBaseOverride : float = 999;
 @export var energyDrawPassiveBaseOverride : float = 999;
-@export var energyGenerationPassiveBaseOverride : float = 0.0;
+@export var energyGenerationPassiveBaseOverride : float = 0.0; ## This should be put in as a POSITIVE number.
 var energyDrawCurrent := 0.0; ##Recalculated and updated each frame.
 
 var incomingPower := 0.0;
@@ -495,6 +520,9 @@ func set_all_cooldowns():
 func set_cooldown_for_ability(action : AbilityManager):
 	if is_instance_valid(action):
 		if action.isPassive:
+			if action.runType == AbilityManager.runTypes.OnContactDamage:
+				action.queue_cooldown(statHolderID, 1.0, get_stat("ContactCooldown"));
+				return
 			action.queue_cooldown(statHolderID, get_stat("PassiveCooldownMultiplier"));
 		else:
 			action.queue_cooldown(statHolderID, get_stat("ActiveCooldownMultiplier"));
@@ -528,13 +556,26 @@ func on_cooldown_named_action(actionName : String) -> bool:
 func on_cooldown():
 	return on_cooldown_active_any() or on_cooldown_passive_any();
 
+var onContactCooldownCheck := false;
+## Whether we're on cooldown for contact for the frame.
+var onContactCooldown := false:
+	get:
+		if !onContactCooldownCheck:
+			onContactCooldown = on_contact_cooldown();
+		return onContactCooldown;
+
 func on_contact_cooldown():
+	Utils.set_bool_true_until_idle_time(self, "onContactCooldownCheck");
+	
 	for ability in get_all_abilities():
 		if is_instance_valid(ability) and ability is AbilityManager:
 			if ability.runType == AbilityManager.runTypes.OnContactDamage:
 				if ability.on_cooldown(statHolderID):
+					onContactCooldown = true;
 					return true;
+	onContactCooldown = false;
 	return false;
+
 func is_running_cooldowns():
 	if equippedByRobot:
 		return hostRobot.is_running_cooldowns();
@@ -551,13 +592,12 @@ func phys_process_abilities(delta):
 
 ##Fires every physics frame when the Piece's passive or active abilities are on cooldown, via [method on_cooldown].
 func cooldown_behavior(cooldown : bool = on_cooldown()):
-	if on_contact_cooldown():
+	if onContactCooldown:
 		if disableHitboxesWhileOnCooldown:
-			hitboxCollisionHolder.scale = Vector3(0.00001,0.00001,0.00001);
+			hitboxCollisionHolder.disable(true);
 	else:
 		if disableHitboxesWhileOnCooldown:
-			hitboxCollisionHolder.scale = Vector3.ONE;
-		
+			hitboxCollisionHolder.disable(false);
 	pass;
 
 func try_sap_energy(amt:float):
@@ -778,6 +818,7 @@ func use_contact_passives():
 			if passiveAbility.runType == AbilityManager.runTypes.OnContactDamage:
 				passiveNamesUsed.append(passiveAbility.abilityName);
 				use_passive(passiveAbility);
+	onContactCooldownCheck = false;##Reset the cooldown check.
 func use_passive(passiveAbility:AbilityManager):
 	if can_use_passive(passiveAbility):
 		use_ability(passiveAbility);
@@ -1000,10 +1041,14 @@ func get_all_meshes() -> Array[MeshInstance3D]:
 @export var kickbackBase := 0.0;
 @export var damageTypes : Array[DamageData.damageTypes] = [];
 @export var disableHitboxesWhileOnCooldown := true;
-@export var contactCooldown := 0.0;
+@export var contactCooldown := 0.15;
 ## When true, damage run through [method contact_damage] will be averaged with a compared-velocity multiplier provided by the [PieceCollisionBox]es.[br]
 ## In practice, this makes contact damage deal more damage depending on how fast this piece is going compared to the target.[br][br]For example, a charging [Robot_Pokey] will be dealing much less damage with its Horn pieces when you're both goig the same speed, but will absolutely skewer you if you're running towards it.
-@export var contactDamageBasedOnComparedVelocities := true; 
+@export var contactDamageBasedOnComparedVelocities := true:
+	get:
+		if is_zero_approx(contactDamageComparedVelocitiesBias):
+			return false;
+		return contactDamageBasedOnComparedVelocities;
 ## A [float] scale from 1 to 0.[br]When 1, velocity will have bias.[br]When 0, base damage will have bias.[br]Does nothing if [member contactDamageBasedOnComparedVelocities] is [code]false[/code].
 @export_range(0.0, 1.0, 0.05) var contactDamageComparedVelocitiesBias := 1.0; 
 var damageModifier := 1.0; ##This variable can be used to modify damage on the fly without needing to go thru set/get stat.
@@ -1081,13 +1126,13 @@ func get_kickback_damage_data(targetPosition := global_position, _damageAmount :
 func contact_damage(otherPiece : Piece, otherPieceCollider : PieceCollisionBox, thisPieceCollider : PieceCollisionBox):
 	#print (self, otherPiece)
 	#print("COntactdamage function.")
-	if otherPiece != self and otherPiece.is_inside_tree() and is_inside_tree():
+	if otherPiece != self and otherPiece.is_inside_tree() and is_inside_tree() and otherPiece.hasHostRobot and hasHostRobot and otherPiece.hostRobot != hostRobot:
 		#print("Target was not self.")
 		##Handle damaging the opposition.
 		var DD = get_damage_data();
 		var contactDamage = get_contact_damage(thisPieceCollider, otherPieceCollider);
 		DD.damageAmount = contactDamage;
-		var otherPieceGlobalPos = otherPiece.global_position
+		var otherPieceGlobalPos = otherPiece.global_position;
 		#DD.damageDirection = KB;
 		otherPiece.hurtbox_collision_from_piece(self, DD);
 		
@@ -1134,23 +1179,24 @@ func modify_incoming_damage_data(damageData : DamageData) -> DamageData:
 ## Fires when a Hitbox hits another robot. The prelude to [method contact_damage].
 func _on_hitbox_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
 	#print("please.")
-	if not on_contact_cooldown() and hasHostRobot:
-		if body is RobotBody and body.get_parent() != hostRobot:
-			#print("tis a robot. from ", pieceName)
-			var other_shape_owner = body.shape_find_owner(body_shape_index)
-			var other_shape_node = body.shape_owner_get_owner(other_shape_owner)
-			if other_shape_node is not PieceCollisionBox: return;
-			
-			var local_shape_owner = hitboxCollisionHolder.shape_find_owner(local_shape_index)
-			var local_shape_node =  hitboxCollisionHolder.shape_owner_get_owner(local_shape_owner)
-			if local_shape_node is not PieceCollisionBox: return;
-			
-			var otherPiece : Piece = other_shape_node.get_piece();
-			#print("Other Piece in hitbox collision: ", otherPiece)
-			if ! is_instance_valid(otherPiece): return;
-			if is_instance_valid(otherPiece) and is_instance_valid(other_shape_node) and is_instance_valid(local_shape_node):
-				#print("Contact damage commencing:")
-				contact_damage(otherPiece, other_shape_node, local_shape_node)
+	if not onContactCooldown and hasHostRobot:
+		if body is RobotBody:
+			if body.get_robot() != hostRobot:
+				#print("tis a robot. from ", pieceName)
+				var other_shape_owner = body.shape_find_owner(body_shape_index)
+				var other_shape_node = body.shape_owner_get_owner(other_shape_owner)
+				if other_shape_node is not PieceCollisionBox: return;
+				
+				var local_shape_owner = hitboxCollisionHolder.shape_find_owner(local_shape_index)
+				var local_shape_node =  hitboxCollisionHolder.shape_owner_get_owner(local_shape_owner)
+				if local_shape_node is not PieceCollisionBox: return;
+				
+				var otherPiece : Piece = other_shape_node.get_piece();
+				#print("Other Piece in hitbox collision: ", otherPiece)
+				if ! is_instance_valid(otherPiece): return;
+				if is_instance_valid(other_shape_node) and is_instance_valid(local_shape_node):
+					#print("Contact damage commencing:")
+					contact_damage(otherPiece, other_shape_node, local_shape_node)
 	pass # Replace with function body.
 
 ## Fires when an area hits this Piece's Hitboxes. Mostly used for reflecting Bullets.
@@ -1158,6 +1204,25 @@ func _on_hitbox_shapes_area_entered(area_rid, area, area_shape_index, local_shap
 	var parent = area.get_parent();
 	if parent is Bullet:
 		bullet_hit_hitbox(parent);
+	
+	if not onContactCooldown and hasHostRobot:
+		if area is HurtboxHolder:
+			
+			var other_shape_owner = area.shape_find_owner(area_shape_index)
+			var other_shape_node = area.shape_owner_get_owner(other_shape_owner)
+			if other_shape_node is not PieceCollisionBox: return;
+			
+				
+			var local_shape_owner = hitboxCollisionHolder.shape_find_owner(local_shape_index)
+			var local_shape_node =  hitboxCollisionHolder.shape_owner_get_owner(local_shape_owner)
+			if local_shape_node is not PieceCollisionBox: return;
+			
+			var otherPiece = area.get_piece();
+			
+			if ! is_instance_valid(otherPiece): return;
+			if is_instance_valid(other_shape_node) and is_instance_valid(local_shape_node):
+				#print("Contact damage commencing:")
+				contact_damage(otherPiece, other_shape_node, local_shape_node)
 	pass # Replace with function body.
 
 ## Fires when a bulelt hits this robot's HITBOX.
@@ -1298,10 +1363,10 @@ func refresh_and_gather_collision_helpers(alsoDoShapecasts := false):
 	regenAllHurtboxes = true;
 	
 	##Un-disable hitboxes.
-	if hurtboxAlwaysEnabled:
+	if hitboxAlwaysEnabled:
 		disable_hitbox(false);
 	if hurtboxAlwaysEnabled:
-		disable_hitbox(false);
+		disable_hurtbox(false);
 	
 	pass;
 
@@ -2158,21 +2223,22 @@ func engine_set_slot_at(x: int, y: int, part: Part):
 		var index = Vector2i(x, y);
 		engineSlots[index] = part;
 
-func add_part_from_scene(x: int, y:int, _partScene:String, activeSlot = null):
-	if engine_is_slot_free(x,y, null):
+func engine_add_part_from_scene(x: int, y:int, _partScene:String, activeSlot = null):
+	if engine_is_slot_free(x,y, null) and FileAccess.file_exists(_partScene):
 		var partScene = load(_partScene);
 		var part = partScene.instantiate();
 		if part is PartActive && activeSlot is int && activeSlot != null:
 			add_child(part);
 			engine_add_part(part, Vector2i(x,y), false);
 			part.set_equipped(true);
-			return
+			return part;
 		else:
 			print("Adding ", part.name)
 			add_child(part);
 			engine_add_part(part, Vector2i(x,y), false);
-			return
+			return part;
 		part.queue_free();
+	return null;
 
 
 ##This is in here for parts like Repair to look at; Returns a fixed 0 here, but the player's version ([InventoryPlayer]) returns a different value based on the shop.

@@ -1350,7 +1350,7 @@ layout_mode = 0
 offset_left = 2.0
 offset_top = 42.0
 offset_right = 531.0
-offset_bottom = 575.0
+offset_bottom = 609.0
 bbcode_enabled = true
 text = "[u]SELECTING PIECES:[/u]
 - Click on its button in the Stash (Middle-left)
@@ -1363,6 +1363,8 @@ text = "[u]SELECTING PIECES:[/u]
    - The Piece will be GREEN if it can be placed
    - The Piece will be RED if it cannot be placed
    - Hit [Left-Click] to place if it is GREEN
+   - Hit [E] to rotate it 90* Clockwise
+   - Hit [Q] to rotate it 90* Counter-Clockwise
 
 [u]PLACING/MOVING PARTS[/u]
 - Select the Part you want to place from the Stash or by pressing on it with your cursor
@@ -1373,6 +1375,7 @@ text = "[u]SELECTING PIECES:[/u]
 [u]REMOVING PIECES AND PARTS:[/u]
 - Select the piece you want to remove
 - Press [Delete] or press the \"Stash\" button on the Inspector"
+fit_content = true
 
 [node name="MainMenu" type="Control" parent="HUDCanvas/HUD Viewport/SubViewport/HUD"]
 visible = false
@@ -1713,7 +1716,7 @@ patch_margin_right = 12
 patch_margin_bottom = 12
 metadata/_edit_use_anchors_ = true
 
-[node name="Options" type="Control" parent="HUDCanvas/HUD Viewport/SubViewport/HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master", "invShooting", "sawbladeDrone", "devCheats", "moneyCheat", "invincibleCheat", "killAllCheat", "cheatsControl", "btn_scoreReset", "lbl_highScores", "renderShadows")]
+[node name="Options" type="Control" parent="HUDCanvas/HUD Viewport/SubViewport/HUD" node_paths=PackedStringArray("box_music", "box_UI", "box_world", "box_master", "invShooting", "sawbladeDrone", "devCheats", "cheatsControl", "moneyCheat", "invincibleCheat", "killAllCheat", "btn_scoreReset", "lbl_highScores", "renderShadows")]
 z_index = 3
 layout_mode = 1
 anchor_left = -0.333333
@@ -1730,10 +1733,10 @@ box_master = NodePath("MasterVolume")
 invShooting = NodePath("InvShooting")
 sawbladeDrone = NodePath("sawbladeDrone")
 devCheats = NodePath("DevCheats")
+cheatsControl = NodePath("DevCheats/Cheats")
 moneyCheat = NodePath("DevCheats/Cheats/moneys")
 invincibleCheat = NodePath("DevCheats/Cheats/godmode")
 killAllCheat = NodePath("DevCheats/Cheats/killall")
-cheatsControl = NodePath("DevCheats/Cheats")
 btn_scoreReset = NodePath("Btn_ScoresReset")
 lbl_highScores = NodePath("Btn_ScoresReset/HighScores")
 renderShadows = NodePath("renderShadows")

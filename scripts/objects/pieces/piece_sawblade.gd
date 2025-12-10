@@ -107,10 +107,12 @@ func cooldown_behavior(_onCooldown : bool = on_cooldown()):
 		#return;
 	if on_cooldown_named_action("Whirl"):
 		set_cooldown_for_ability(get_named_action("Spin"));
-		hitboxCollisionHolder.scale.lerp(Vector3.ONE * bladeScaleOffset, get_physics_process_delta_time() * 12)
+		if ! Utils.is_equal_approx_vector3(hitboxCollisionHolder.scale, Vector3.ONE * bladeScaleOffset):
+			hitboxCollisionHolder.scale.lerp(Vector3.ONE * bladeScaleOffset, get_physics_process_delta_time() * 12)
 		return;
 	if on_cooldown_named_action("Spin"):
-		hitboxCollisionHolder.scale.lerp(Vector3.ONE * 0.5, get_physics_process_delta_time() * 12)
+		if ! Utils.is_equal_approx_vector3(hitboxCollisionHolder.scale, Vector3.ONE * 0.5):
+			hitboxCollisionHolder.scale.lerp(Vector3.ONE * 0.5, get_physics_process_delta_time() * 12)
 		return;
 	pass;
 

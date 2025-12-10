@@ -150,7 +150,7 @@ func get_parts():
 func get_robots():
 	tree_robot.clear();
 	var child = tree_robot.create_item();
-	child.set_text(0, "Robots");
+	child.set_text(0, "Robots (Click to create a new enemy)");
 	child.set_metadata(0, generate_new_robot());
 	
 	var prefix = manager.filepathPrefixRobots
@@ -165,12 +165,13 @@ func get_robots():
 				print("Found directory: " + file_name)
 			else:
 				print("Found file: " + file_name)
-				
-				var fullName = prefix + file_name
-				print(fullName)
-				if FileAccess.file_exists(fullName):
-					var loadedFile = load(fullName);
-					add_to_tree(tree_robot, file_name, loadedFile, fullName);
+				if file_name.ends_with(".tscn"):
+					var fullName = prefix + file_name
+					print(fullName)
+					
+					if FileAccess.file_exists(fullName):
+						var loadedFile = load(fullName);
+						add_to_tree(tree_robot, file_name, loadedFile, fullName);
 			file_name = dir.get_next()
 			
 	else:
@@ -179,7 +180,7 @@ func get_robots():
 func generate_new_robot():
 	var newData = {
 		"node" : manager.newRobotRef,
-		"filepath" : "res://scenes/prefabs/objects/robots/buildingBlocks/robot_base.tscn",
+		"filepath" : "res://scenes/prefabs/objects/robots/buildingBlocks/robot_base_enemy.tscn",
 	}
 	return newData;
 

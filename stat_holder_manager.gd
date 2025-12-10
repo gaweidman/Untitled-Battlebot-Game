@@ -1,6 +1,6 @@
 @icon("res://graphics/images/class_icons/statHolderManager.png")
 extends Node
-## The global node keeping track of all [StatHolder3D] and (TODO)[StatHolder2D] nodes.
+## The global node keeping track of all [StatHolder3D] and (TODO)[StatHolder2D] nodes, and which holds several  enums used by [StatTracker] resources.
 
 var all_stat_holders : Dictionary[int, Node] = {}
 
@@ -98,6 +98,7 @@ enum displayModes {
 	IF_MODIFIED, ## Displayed if the stat is currently different from its [member baseStat].
 	NOT_999, ## Displayed if the stat is not the specific value of 999.
 	ABOVE_ZERO_NOT_999, ## Displayed if the stat is not the specific value of 999.
+	IF_MODIFIED_NOT_999, ## Displayed if the stat is currently different from its [member baseStat] and is not the specific value of 999.
 	ALWAYS_DIVIDE_BY_100, ## Displayed always, but divides the displayed amount by 100. 
 	NOT_ZERO_ABSOLUTE_VALUE, ## Displayed if the stat does not currently equal 0.0. Runs it through [code]abs()[/code] when displayed.
 }

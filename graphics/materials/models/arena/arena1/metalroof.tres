@@ -1,0 +1,19 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://bsdjk3uiapo7w"]
+
+[ext_resource type="Texture2D" uid="uid://dfru1io8ekxaj" path="res://graphics/images/models/arenas/arena1/MetalRoof_basecolor.png" id="1_lmnp1"]
+[ext_resource type="Texture2D" uid="uid://ced8umbpjf0uq" path="res://graphics/images/models/arenas/arena1/MetalRoof_anisotropylevel.png" id="2_qpaet"]
+[ext_resource type="Texture2D" uid="uid://bsgpq7i1ekhyl" path="res://graphics/images/models/arenas/arena1/MetalRoof_metallic.png" id="3_kjfu8"]
+[ext_resource type="Texture2D" uid="uid://i8mb8pmmk5me" path="res://graphics/images/models/arenas/arena1/MetalRoof_normal.png" id="4_ijq2y"]
+
+[resource]
+albedo_texture = ExtResource("1_lmnp1")
+metallic = 1.0
+metallic_texture = ExtResource("3_kjfu8")
+roughness = 0.73
+normal_enabled = true
+normal_scale = -1.5
+normal_texture = ExtResource("4_ijq2y")
+ao_enabled = true
+ao_texture = ExtResource("2_qpaet")
+ao_texture_channel = 4
+uv1_scale = Vector3(16, 16, 16)

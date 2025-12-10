@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://jod6d7tqu6cj"
-path="res://.godot/imported/Repair.png-0b7427a26568a2e2403cc6433717f8a2.ctex"
+path="res://.godot/imported/PartIconRepair.png-abb539f2633d819760211d7a2085bca1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/images/HUD/parts/Icons/Repair.png"
-dest_files=["res://.godot/imported/Repair.png-0b7427a26568a2e2403cc6433717f8a2.ctex"]
+source_file="res://graphics/images/HUD/parts/Icons/PartIconRepair.png"
+dest_files=["res://.godot/imported/PartIconRepair.png-abb539f2633d819760211d7a2085bca1.ctex"]
 
 [params]
 

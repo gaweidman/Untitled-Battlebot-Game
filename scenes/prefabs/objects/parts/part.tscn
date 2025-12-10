@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://dl72cklqtx2gj"]
 
 [ext_resource type="Script" uid="uid://cpbysvdkuo81x" path="res://scripts/GUI/parts/part.gd" id="1_aqhpi"]
-[ext_resource type="Texture2D" uid="uid://djtwrqsxxebll" path="res://graphics/images/HUD/parts/Icons/Gear.png" id="2_6haxk"]
+[ext_resource type="Texture2D" uid="uid://djtwrqsxxebll" path="res://graphics/images/HUD/parts/Icons/PartIconGear.png" id="2_6haxk"]
 [ext_resource type="Texture2D" uid="uid://bd37bf08k5pqu" path="res://graphics/images/HUD/parts/partBase_passive.png" id="2_7gik6"]
 [ext_resource type="Script" uid="uid://bbw0ohklpa26f" path="res://scripts/button_holder.gd" id="3_u3hhk"]
 [ext_resource type="PackedScene" uid="uid://drt3u15k4mjxe" path="res://scenes/prefabs/objects/parts/part_button.tscn" id="4_tfv4d"]

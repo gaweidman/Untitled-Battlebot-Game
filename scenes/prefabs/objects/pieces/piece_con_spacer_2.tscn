@@ -81,7 +81,7 @@ radius = 0.25
 
 [node name="Piece_Spacer" type="Node3D" node_paths=PackedStringArray("meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "femaleSocketHolder") groups=["Piece"]]
 script = ExtResource("1_p12ab")
-pieceName = &"Spacer"
+pieceName = &"Spacer 2"
 descriptionConstructor = Array[ExtResource("2_sjtfl")]([SubResource("Resource_ujwhk"), SubResource("Resource_agd5d"), SubResource("Resource_7qnf5")])
 pieceDescription = "[color=ffffffff]Serves no purpose other than to provide [color=ffffffff]structure [color=ffffffff]to your robot."
 weightBase = 2.5
@@ -92,7 +92,6 @@ hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
 hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
 placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
 femaleSocketHolder = NodePath("FemaleSockets")
-assignedToSocket = true
 engineSlots = {
 Vector2i(2, 2): null,
 Vector2i(2, 3): null
@@ -156,7 +155,7 @@ hostPiece = NodePath("../..")
 [node name="HitboxShapes [Leave empty]" type="Area3D" parent="."]
 editor_description = "Leave this node empty. "
 collision_layer = 16
-collision_mask = 585
+collision_mask = 513
 script = ExtResource("12_pjpo6")
 
 [node name="HurtboxShapes [Leave empty]" type="Area3D" parent="." groups=["Piece"]]

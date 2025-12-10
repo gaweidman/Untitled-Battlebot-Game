@@ -1,0 +1,14 @@
+[gd_scene load_steps=5 format=3 uid="uid://c46y6uogir6wx"]
+
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_u528e"]
+[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/PartIconEnergy.png" id="2_x6vnj"]
+[ext_resource type="Script" uid="uid://dd18vlcrmsx15" path="res://scripts/GUI/part_modifier.gd" id="3_3gt8w"]
+[ext_resource type="Resource" uid="uid://bgereytt6x3k3" path="res://scenes/prefabs/stat_modifiers/battery_watch.tres" id="4_8w4dj"]
+
+[node name="Battery_1x1" instance=ExtResource("1_u528e")]
+bonusEnergy = 0.5
+scrapCostBase = 6
+partName = "Watch Battery"
+partDescription = "[color=f2ec6b]Passive: increases max Energy by 0.5."
+partIcon = ExtResource("2_x6vnj")
+outgoingModifiers = Array[ExtResource("3_3gt8w")]([ExtResource("4_8w4dj")])

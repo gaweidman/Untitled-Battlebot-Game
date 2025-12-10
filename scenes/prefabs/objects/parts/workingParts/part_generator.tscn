@@ -1,15 +1,16 @@
 [gd_scene load_steps=5 format=4 uid="uid://bejovobcsa58g"]
 
-[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_ewp8c"]
-[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="2_ewp8c"]
-[ext_resource type="Resource" uid="uid://bkvnh7cfvtve4" path="res://scenes/prefabs/abilities/passive/ability_part_generator_1.tres" id="3_d6b4x"]
-[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/Energy.png" id="3_t0ohx"]
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_saqm5"]
+[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/PartIconEnergy.png" id="2_1koyr"]
+[ext_resource type="Script" uid="uid://crpa3dbgxwyeg" path="res://scripts/objects/weapons/ability_manager.gd" id="3_8btel"]
+[ext_resource type="Resource" uid="uid://bkvnh7cfvtve4" path="res://scenes/prefabs/abilities/passive/ability_part_generator_1.tres" id="4_uwnno"]
 
-[node name="PartGenerator" instance=ExtResource("1_ewp8c")]
+[node name="PartGenerator" instance=ExtResource("1_saqm5")]
 partName = "Generator"
 partDescription = "No description given."
-partIcon = ExtResource("3_t0ohx")
-passiveAbilities = Array[ExtResource("2_ewp8c")]([ExtResource("3_d6b4x")])
+partIcon = ExtResource("2_1koyr")
+passiveAbilities = Array[ExtResource("3_8btel")]([ExtResource("4_uwnno")])
+energyGenerationPassiveBaseOverride = 0.5
 
 [node name="Tilemaps" parent="TextureBase" index="0"]
 mouse_filter = 0

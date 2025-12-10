@@ -30,11 +30,32 @@ func update_stat_num():
 		var statText = TextFunc.format_stat(stat.get_stat_for_display(), 2, false)
 		lbl_amt.text = statText;
 		
-		var tooltipText = stat.statFriendlyName.capitalize() + str("\n",statText);
-		tooltipText += "\nModifier: %s"%stat.bonusAdd if stat.bonusAdd > 0 else ""
-		tooltipText += "\nFlat mult: %s"%stat.bonusMult_Flat if stat.bonusMult_Flat > 0 else ""
-		tooltipText += "\nTimes mult: %s"%stat.bonusMult_Mult if stat.bonusMult_Mult != 1.0 else ""
-		tooltipText += str("\n",stat.statModifiers);
+		var tooltipText = stat.statFriendlyName.capitalize() + str("\nCurrent value: ",statText);
+		tooltipText += "\nAdditive Modifier: %s"%stat.bonusAdd if stat.bonusAdd != 0 else ""
+		tooltipText += "\nFlat Mult Modifier: %s"%stat.bonusMult_Flat if stat.bonusMult_Flat > 0 else ""
+		tooltipText += "\nTimes Mult Modifier: %s"%stat.bonusMult_Mult if stat.bonusMult_Mult != 1.0 else ""
+		if stat.statModifiers.size() > 0:
+			tooltipText += "\n\n_Modifiers_";
+			for mod in stat.statModifiers:
+				if mod.enabled:
+					var modName = mod.modName;
+					if is_instance_valid(mod.get_owner()):
+						if mod.owner is Part:
+							modName = mod.owner.partName;
+					var modAdd = mod.valueAdd;
+					tooltipText += "\n%s:"%[modName];
+					if modAdd != 0:
+						if modAdd > 0:
+							tooltipText += "\n    +"
+						elif modAdd < 0:
+							tooltipText += "\n    -"
+						tooltipText += str(abs(modAdd)," ");
+					var modMult = mod.valueFlatMult;
+					if modMult != 0:
+						tooltipText += str("\n    +",modMult," mult ");
+					var modTimesMult = mod.valueTimesMult;
+					if ! is_equal_approx(modTimesMult, 1.0):
+						tooltipText += str("\n    x",modTimesMult," mult ");
 		tooltip_text = tooltipText;
 
 func mouse_entered():

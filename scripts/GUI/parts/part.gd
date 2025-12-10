@@ -51,7 +51,7 @@ var selected := false;
 
 @export var dimensions : Array[Vector2i];
 @export_subgroup("Shop")
-var contactCooldown := 0.25; ## If this Part has an ability that applies when the Piece it's on deals contact damage, then this is how long that should run.
+var contactCooldown := 0.15; ## If this Part has an ability that applies when the Piece it's on deals contact damage, then this is how long that should run.
 @export var scrapCostBase : int;
 var scrapSellModifier := 1.0; ## @deprecated
 var scrapSellModifierBase := (2.0/3.0);
@@ -107,15 +107,17 @@ func _ready():
 
 func stat_registry():
 	## Stats regarding energy cost.
-	register_stat("PassiveEnergyDrawMultiplier", energyDrawPassiveMultiplier, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery, StatHolderManager.displayModes.ABOVE_ZERO_NOT_999);
-	register_stat("PassiveEnergyRegeneration", energyGenerationPassiveBaseOverride, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery, StatHolderManager.displayModes.NOT_ZERO_ABSOLUTE_VALUE);
-	register_stat("PassiveCooldownMultiplier", passiveCooldownTimeMultiplier, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Clock);
+	if passiveAbilitiesDistributed.size() > 0:
+		register_stat("PassiveEnergyDrawMultiplier", energyDrawPassiveMultiplier, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery, StatHolderManager.displayModes.NOT_ONE);
+		register_stat("PassiveEnergyRegeneration", -energyGenerationPassiveBaseOverride, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery, StatHolderManager.displayModes.NOT_ZERO_ABSOLUTE_VALUE);
+		register_stat("PassiveCooldownMultiplier", passiveCooldownTimeMultiplier, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Clock, StatHolderManager.displayModes.NOT_ONE);
+	
 	register_stat("ContactCooldown", contactCooldown, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Clock);
 	
 	## Stats that only matter if the thing has abilities.
 	if activeAbilitiesDistributed.size() > 0:
-		register_stat("ActiveEnergyDrawMultiplier", energyDrawActiveMultiplier, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery);
-		register_stat("ActiveCooldownMultiplier", activeCooldownTimeMultiplier, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Clock);
+		register_stat("ActiveEnergyDrawMultiplier", energyDrawActiveMultiplier, StatHolderManager.statIconEnergy, StatHolderManager.statTags.Battery, StatHolderManager.displayModes.NOT_ONE);
+		register_stat("ActiveCooldownMultiplier", activeCooldownTimeMultiplier, StatHolderManager.statIconCooldown, StatHolderManager.statTags.Clock, StatHolderManager.displayModes.NOT_ONE);
 	
 	#Stats regardig Scrap Cost.
 	register_stat("ScrapCost", scrapCostBase, StatHolderManager.statIconScrap, StatHolderManager.statTags.Worth, StatHolderManager.displayModes.ALWAYS, StatHolderManager.roundingModes.Ceili);
@@ -138,6 +140,46 @@ func inventory_vanity_setup():
 	tilemaps.call_deferred("set_pattern", dimensions, myPartType, myPartRarity)
 	#tilemaps.set_pattern();
 	textureBase.show();
+
+
+func create_startup_data():
+	## Abilities. If an ability has been assigned to a slot and is not passive, add its name and assigned engineSlots to the data.
+	var abilityDict := {}
+	var disabled := []
+	for ability in get_all_abilities():
+		if ! ability.isPassive:
+			var slots = ability.get_assigned_slots(statHolderID);
+			if ! slots.is_empty():
+				abilityDict[ability.abilityName] = slots;
+		else:
+			if ability.is_disabled(statHolderID):
+				disabled.append(ability.abilityName);
+	
+	var dict = {
+			"inventoryPosition" : invPosition,
+			"abilityAssignments" : abilityDict,
+			"disabledAbilities" : disabled,
+		}
+	
+	return dict;
+
+func load_startup_data(data, robot : Robot):
+	if data.keys().has("abilityAssignments"):
+		for abilityName in data["abilityAssignments"].keys():
+			var abilitySlots = data["abilityAssignments"][abilityName];
+			var ability = get_named_action(abilityName);
+			if is_instance_valid(ability):
+				for slotNum in abilitySlots:
+					robot.assign_ability_to_slot(slotNum, ability.get_ability_data(statHolderID));
+	
+	## An array of names that are disabled abilities.
+	if data.keys().has("disabledAbilities"):
+		for abilityName in data["disabledAbilities"]:
+			var ability = get_named_action(abilityName);
+			if is_instance_valid(ability):
+				ability.disable(statHolderID, true);
+	pass;
+
 
 ##Adds the buttons that let you click the part and move it around and stuff. Should theoretically only ever run if placed into the inventory of the player.
 func _populate_buttons():
@@ -357,7 +399,7 @@ func robot_is_in_move_mode_with_me() -> bool:
 	return false;
 
 func is_moveable() -> bool:
-	return inPlayerInventory and !is_instance_valid(hostShopStall);
+	return inPlayerInventory and GameState.get_in_state_of_building() and !is_instance_valid(hostShopStall);
 
 func destroy():
 	select(false);
@@ -735,7 +777,7 @@ var passiveAbilitiesDistributed : Array[AbilityManager] = [];
 @export var energyDrawActiveMultiplier := 1.0; ##power drawn when you use any this piece's active abilities, given that it has any.
 @export var energyDrawActiveBaseOverride : float = 999;
 @export var energyDrawPassiveBaseOverride : float = 999;
-@export var energyGenerationPassiveBaseOverride : float = 0.0;
+@export var energyGenerationPassiveBaseOverride : float = 0.0; ## This should be put in as a POSITIVE number if you want it to regenerate energy.
 var energyDrawCurrent := 0.0; ##Recalculated and updated each frame.
 
 var incomingPower := 0.0;
@@ -770,6 +812,9 @@ func set_all_cooldowns():
 func set_cooldown_for_ability(action : AbilityManager):
 	if is_instance_valid(action):
 		if action.isPassive:
+			if action.runType == AbilityManager.runTypes.OnContactDamage:
+				action.queue_cooldown(statHolderID, 1.0, get_stat("ContactCooldown"));
+				return
 			action.queue_cooldown(statHolderID, get_stat("PassiveCooldownMultiplier"));
 		else:
 			action.queue_cooldown(statHolderID, get_stat("ActiveCooldownMultiplier"));
@@ -803,12 +848,21 @@ func on_cooldown_named_action(actionName : String) -> bool:
 func on_cooldown():
 	return on_cooldown_active_any() or on_cooldown_passive_any();
 
+var onContactCooldownCheck := false;
+## Whether we're on cooldown for contact for the frame.
+var onContactCooldown := false:
+	get:
+		if !onContactCooldownCheck:
+			onContactCooldown = on_contact_cooldown();
+		return onContactCooldown;
 func on_contact_cooldown():
 	for ability in get_all_abilities():
 		if is_instance_valid(ability) and ability is AbilityManager:
 			if ability.runType == AbilityManager.runTypes.OnContactDamage:
 				if ability.on_cooldown(statHolderID):
+					onContactCooldown = true;
 					return true;
+	onContactCooldown = false;
 	return false;
 func is_running_cooldowns():
 	if equippedByRobot:
@@ -1045,6 +1099,7 @@ func use_contact_passives():
 			if passiveAbility.runType == AbilityManager.runTypes.OnContactDamage:
 				passiveNamesUsed.append(passiveAbility.abilityName);
 				use_passive(passiveAbility);
+	onContactCooldownCheck = false;##Reset the cooldown check.
 func use_passive(passiveAbility:AbilityManager):
 	if can_use_passive(passiveAbility):
 		use_ability(passiveAbility);

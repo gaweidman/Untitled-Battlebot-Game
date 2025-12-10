@@ -1,19 +1,20 @@
-[gd_scene load_steps=4 format=4 uid="uid://867u7o4qmoqi"]
+[gd_scene load_steps=5 format=4 uid="uid://syqcc5ife041"]
 
-[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_rp50b"]
-[ext_resource type="Script" uid="uid://js45n1x68k38" path="res://scripts/GUI/parts/playerParts/part_RoundBell.gd" id="2_d2mvq"]
-[ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/Repair.png" id="3_d2mvq"]
+[ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_7kk2q"]
+[ext_resource type="Texture2D" uid="uid://c2s10d6olfdwc" path="res://graphics/images/HUD/parts/Icons/PartIconEnergy.png" id="2_oso85"]
+[ext_resource type="Script" uid="uid://dd18vlcrmsx15" path="res://scripts/GUI/part_modifier.gd" id="3_p5ejl"]
+[ext_resource type="Resource" uid="uid://djwc0n2yx7y54" path="res://scenes/prefabs/stat_modifiers/battery_D.tres" id="4_yvmr6"]
 
-[node name="PartRoundBell" instance=ExtResource("1_rp50b")]
-script = ExtResource("2_d2mvq")
-healAmount = 0.25
-dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0)])
-scrapCostBase = 9
-partName = "Round Bell"
-partDescription = "[color=ffffff]Rings in when the [color=f2ec6b]round [color=ffffff]is called.
-
-[color=f2ec6b]Passive: Heals you for 0.25 HP at the end of each round."
-partIcon = ExtResource("3_d2mvq")
+[node name="Battery_2x3" instance=ExtResource("1_7kk2q")]
+bonusEnergy = 4.5
+dimensions = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(0, 2), Vector2i(1, 2)])
+scrapCostBase = 20
+myPartRarity = 1
+partName = "D Battery"
+partDescription = "[color=f2ec6b]Passive: increases max Energy by 4.5."
+partIcon = ExtResource("2_oso85")
+partIconOffset = Vector2(0.5, 1)
+outgoingModifiers = Array[ExtResource("3_p5ejl")]([ExtResource("4_yvmr6")])
 
 [node name="Tilemaps" parent="TextureBase" index="0"]
 mouse_filter = 0

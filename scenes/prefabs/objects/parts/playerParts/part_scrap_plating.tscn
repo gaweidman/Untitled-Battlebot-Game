@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://1hqkn5f2wd4v" path="res://scenes/prefabs/objects/parts/part_passive.tscn" id="1_47ohu"]
 [ext_resource type="Script" uid="uid://br0rk8re4ei5d" path="res://scripts/GUI/parts/playerParts/part_scrap_plating.gd" id="2_1e002"]
-[ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/Repair.png" id="3_1e002"]
+[ext_resource type="Texture2D" uid="uid://jod6d7tqu6cj" path="res://graphics/images/HUD/parts/Icons/PartIconRepair.png" id="3_1e002"]
 
 [node name="PartPassive" instance=ExtResource("1_47ohu")]
 script = ExtResource("2_1e002")

@@ -897,8 +897,8 @@ func set_enemy_spawn_waves(inWave:int):
 		changed = true;
 	if inWave == 1:
 		#add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/robots/robot_test_volley.tscn"), 4)
-		#add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/robots/robot_test.tscn"), 4)
-		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/robots/robot_pokey.tscn"), 4)
+		add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/robots/robot_test_enemy.tscn"), 4)
+		#add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/robots/robot_pokey.tscn"), 4)
 		#add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_ranger.tscn"), 2)
 		#add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_flash.tscn"), 4)
 		#add_enemy_to_spawn_list(load("res://scenes/prefabs/objects/npcs/enemy_thruster.tscn"), 8)
