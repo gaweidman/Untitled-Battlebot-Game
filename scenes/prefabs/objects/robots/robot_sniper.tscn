@@ -1,0 +1,199 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/robots/buildingBlocks/robot.gd" id="1_8u4es"]
+[ext_resource type="Script" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="2_j60so"]
+[ext_resource type="PackedScene" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="3_awl1c"]
+[ext_resource type="Script" path="res://scripts/GUI/socket.gd" id="4_48ba1"]
+[ext_resource type="PackedScene" path="res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn" id="5_elmtm"]
+[ext_resource type="Script" path="res://scripts/objects/pieces/piece_swivel_pointer.gd" id="6_ura4v"]
+[ext_resource type="Script" path="res://scripts/objects/weapons/ability_manager.gd" id="7_eqxhl"]
+[ext_resource type="Resource" path="res://scenes/prefabs/abilities/passive/ability_bodyCube_generator.tres" id="8_0nmox"]
+[ext_resource type="Resource" path="res://scenes/prefabs/abilities/passive/swivel_pointer_target.tres" id="9_l73ya"]
+[ext_resource type="PackedScene" path="res://scenes/prefabs/objects/robots/buildingBlocks/treads.tscn" id="10_lel16"]
+[ext_resource type="Script" path="res://scripts/objects/player/underbellyColliders.gd" id="11_vv8l0"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
+friction = 200.0
+bounce = 0.3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_4a4i5"]
+
+[node name="Robot_Base" type="Node3D" node_paths=PackedStringArray("meshes", "bodyPiece", "bodySocket", "treads")]
+visible = false
+script = ExtResource("1_8u4es")
+meshes = NodePath("Body/Meshes")
+bodyPiece = NodePath("Body/Meshes/Socket/Piece_BodyCube")
+bodySocket = NodePath("Body/Meshes/Socket")
+treads = NodePath("Treads")
+startupGenerator = {
+&"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn": {
+"abilityAssignments": {},
+"disabledAbilities": [],
+"sockets": {
+0: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_shield_monitor.tscn": {
+"abilityAssignments": {},
+"disabledAbilities": [],
+"sockets": {}
+}
+},
+"rotation": Vector3(-1.5708, -3.14159, 0)
+},
+1: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_horn.tscn": {
+"abilityAssignments": {},
+"disabledAbilities": [],
+"sockets": {}
+}
+},
+"rotation": Vector3(1.5708, 3.14159, 0)
+},
+2: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_cannon_peashooter.tscn": {
+"abilityAssignments": {
+"Fire": Array[int]([1])
+},
+"disabledAbilities": [],
+"sockets": {
+0: {
+"occupant": "null",
+"rotation": Vector3(0, 0, 0)
+}
+}
+}
+},
+"rotation": Vector3(0.000687459, 0.000329359, 1.56995)
+},
+3: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_cannon_peashooter.tscn": {
+"abilityAssignments": {
+"Fire": Array[int]([2])
+},
+"disabledAbilities": [],
+"sockets": {
+0: {
+"occupant": "null",
+"rotation": Vector3(0, 0, 0)
+}
+}
+}
+},
+"rotation": Vector3(0.000687591, 0.00032915, -1.57164)
+},
+4: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_cannon_sniper.tscn": {
+"abilityAssignments": {
+"Fire": Array[int]([0])
+},
+"disabledAbilities": [],
+"sockets": {
+0: {
+"occupant": "null",
+"rotation": Vector3(0, 0, 0)
+}
+}
+}
+},
+"rotation": Vector3(0, 0, 0)
+}
+}
+}
+},
+&"rotation": Vector3(0, 0, 0)
+}
+filepathForThisEntity = "res://scenes/prefabs/objects/robots/robot_sniper.tscn"
+
+[node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Driveable", "Metal"]]
+collision_mask = 1025
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 117.5
+physics_material_override = SubResource("PhysicsMaterial_f0k1s")
+gravity_scale = 0.0
+freeze = true
+script = ExtResource("2_j60so")
+
+[node name="Meshes" type="Node3D" parent="Body"]
+transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
+
+[node name="Socket" type="Area3D" parent="Body/Meshes" node_paths=PackedStringArray("occupant", "hostRobot", "collisionSphere", "selectorRayExceptions", "mesh_face", "mesh_selector") instance=ExtResource("3_awl1c")]
+transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
+collision_layer = 32
+collision_mask = 0
+monitorable = false
+priority = 1
+script = ExtResource("4_48ba1")
+occupant = NodePath("Piece_BodyCube")
+hostRobot = NodePath("../../..")
+collisionSphere = NodePath("CollisionShape3D")
+collisionScale = 0.55
+selectorRayExceptions = [NodePath("../..")]
+dontUsePieceForRobotHost = true
+mesh_face = NodePath("FemaleConnector/ConnectorPlane")
+mesh_selector = NodePath("Selector")
+
+[node name="Piece_BodyCube" type="Node3D" parent="Body/Meshes/Socket" node_paths=PackedStringArray("swivelNode", "meshesHolder", "hitboxCollisionHolder", "hurtboxCollisionHolder", "placementCollisionHolder", "hostSocket", "hostRobot", "femaleSocketHolder") groups=["Piece"] instance=ExtResource("5_elmtm")]
+script = ExtResource("6_ura4v")
+swivelNode = NodePath("Meshes/SwivelTop")
+pieceName = &"BodyCube"
+pieceDescription = ""
+weightBase = 23.0
+force_visibility = true
+isBody = true
+scrapCostBase = 50
+passiveAbilities = Array[ExtResource("7_eqxhl")]([ExtResource("8_0nmox"), ExtResource("9_l73ya")])
+energyGenerationPassiveBaseOverride = -1.65
+meshesHolder = NodePath("Meshes")
+hitboxCollisionHolder = NodePath("HitboxShapes [Leave empty]")
+hurtboxCollisionHolder = NodePath("HurtboxShapes [Leave empty]")
+placementCollisionHolder = NodePath("PlacementShapes [Leave empty]")
+hostSocket = NodePath("..")
+hostRobot = NodePath("../../../..")
+femaleSocketHolder = NodePath("FemaleSockets")
+assignedToSocket = true
+engineSlots = {
+Vector2i(0, 1): null,
+Vector2i(0, 2): null,
+Vector2i(0, 3): null,
+Vector2i(1, 0): null,
+Vector2i(1, 1): null,
+Vector2i(1, 2): null,
+Vector2i(1, 3): null,
+Vector2i(1, 4): null,
+Vector2i(2, 0): null,
+Vector2i(2, 1): null,
+Vector2i(2, 2): null,
+Vector2i(2, 3): null,
+Vector2i(2, 4): null,
+Vector2i(3, 0): null,
+Vector2i(3, 1): null,
+Vector2i(3, 2): null,
+Vector2i(3, 3): null,
+Vector2i(3, 4): null,
+Vector2i(4, 1): null,
+Vector2i(4, 2): null,
+Vector2i(4, 3): null
+}
+filepathForThisEntity = "res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn"
+
+[node name="BaseCollision" type="CollisionShape3D" parent="Body"]
+shape = SubResource("SphereShape3D_4a4i5")
+
+[node name="Treads" type="Node3D" parent="." node_paths=PackedStringArray("underbellyCollider", "rightTread", "leftTread", "mesh_leftTread", "mesh_rightTread", "pivot_left", "pivot_right") instance=ExtResource("10_lel16")]
+script = ExtResource("11_vv8l0")
+underbellyCollider = NodePath("Axle/FloorCheck")
+rightTread = NodePath("RightTreadPivot/TreadRight/TreadR")
+leftTread = NodePath("LeftTreadPivot/TreadLeft/TreadL")
+mesh_leftTread = NodePath("LeftTreadPivot/TreadLeft")
+mesh_rightTread = NodePath("RightTreadPivot/TreadRight")
+pivot_left = NodePath("LeftTreadPivot")
+pivot_right = NodePath("RightTreadPivot")
+
+[connection signal="health_or_energy_changed" from="." to="." method="_on_health_or_energy_changed"]
