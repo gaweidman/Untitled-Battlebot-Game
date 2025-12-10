@@ -637,7 +637,7 @@ patch_margin_bottom = 12
 metadata/_edit_use_anchors_ = true
 metadata/_tab_index = 2
 
-[node name="HUD" type="Control" parent="HUDCanvas/HUD Viewport/SubViewport" node_paths=PackedStringArray("MainMenuLogo", "gameHud")]
+[node name="HUD" type="Control" parent="HUDCanvas/HUD Viewport/SubViewport" node_paths=PackedStringArray("MainMenuLogo", "gameHud", "btn_editor")]
 unique_name_in_owner = true
 z_index = 2
 texture_filter = 1
@@ -655,6 +655,7 @@ theme = ExtResource("9_mlcvp")
 script = ExtResource("18_wbopo")
 MainMenuLogo = NodePath("MainMenu/LogoSmall")
 gameHud = NodePath("GameHud")
+btn_editor = NodePath("MainMenu/Btn_Editor")
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 

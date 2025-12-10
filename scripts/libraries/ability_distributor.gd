@@ -141,7 +141,8 @@ func get_passives():
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
 		while file_name != "":
-			
+			if file_name.ends_with(".remap"):
+				file_name = file_name.replace(".remap", "")
 			if dir.current_is_dir():
 				print("Found directory: " + file_name)
 			else:
@@ -171,7 +172,8 @@ func get_actives():
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
 		while file_name != "":
-			
+			if file_name.ends_with(".remap"):
+				file_name = file_name.replace(".remap", "")
 			if dir.current_is_dir():
 				print("Found directory: " + file_name)
 			else:
@@ -180,11 +182,14 @@ func get_actives():
 				var fullName = prefix + file_name
 				print(fullName)
 				if FileAccess.file_exists(fullName):
+					print("Ability file exists")
 					var loadedFile = load(fullName);
 					if loadedFile is AbilityManager:
 						var abilityName = loadedFile.abilityNameInternal;
 						loadedFile.construct_description();
 						activeAbilities[abilityName] = loadedFile;
+				else:
+					print("Ability file does not exist?")
 			file_name = dir.get_next()
 	else:
 		print("An error occurred when trying to access the path.")

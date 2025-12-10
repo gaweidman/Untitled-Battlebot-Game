@@ -13,17 +13,18 @@ var pauseOptionsUp := false;
 
 var baseSize = Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height") )
 var currentSize : Vector2;
+@export var btn_editor : Button;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$PauseBG.modulate.a = 0.0;
 	if OS.is_debug_build():
-		$MainMenu/Btn_Editor.show();
+		btn_editor.show();
 		pass;
 	else:
-		$MainMenu/Btn_Editor.hide();
-		$MainMenu/Btn_Editor.disabled = true;
-		$MainMenu/Btn_Editor.queue_free();
+		btn_editor.hide();
+		btn_editor.disabled = true;
+		btn_editor.queue_free();
 		pass;
 	pass; # Replace with function body.
 

@@ -38,13 +38,17 @@ gdscript/warnings/unused_variable=0
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/mode=3
 window/size/initial_position_type=0
 window/size/initial_position=Vector2i(1920, 1080)
-window/size/initial_screen=2
 window/size/extend_to_title=true
 window/stretch/mode="viewport"
 mouse_cursor/custom_image="uid://bmk70eg7k8pre"
 mouse_cursor/custom_image_hotspot=Vector2(8, 8)
+
+[editor]
+
+export/convert_text_resources_to_binary=false
 
 [global_group]
 
