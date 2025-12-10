@@ -97,10 +97,10 @@ func get_random_variant(exclusions := []):
 		all.erase(entry);
 	if all.is_empty():
 		return "Empty";
-	var keys = all.keys();
+	var keys = all.keys().duplicate();
 	keys.shuffle(); ##TODO: Seeded outcomes?
 	prints("STATE: why", keys);
-	return keys.pop_front();
+	return keys.pick_random();
 
 
 

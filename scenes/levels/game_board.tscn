@@ -1,4 +1,4 @@
-[gd_scene load_steps=93 format=4 uid="uid://cno0jw8hq6h1i"]
+[gd_scene load_steps=95 format=4 uid="uid://cno0jw8hq6h1i"]
 
 [ext_resource type="Script" uid="uid://b8hseesj7vrc" path="res://scripts/game_board.gd" id="1_mlcvp"]
 [ext_resource type="Material" uid="uid://c6b1ums81prw8" path="res://graphics/materials/models/arena/arena_floor.tres" id="2_4jixe"]
@@ -9,6 +9,8 @@
 [ext_resource type="Material" uid="uid://b5uawxeiq0ye3" path="res://graphics/materials/models/arena/arena_wall.tres" id="4_jhciq"]
 [ext_resource type="Resource" uid="uid://c1a3pu1v7mn42" path="res://scenes/levels/biome_old/BiomeOld.tres" id="4_x5k24"]
 [ext_resource type="ArrayMesh" uid="uid://b4ai185oa1w42" path="res://graphics/models/extracted/arena_wall.res" id="5_4jixe"]
+[ext_resource type="Resource" uid="uid://btfjm2prb2ckl" path="res://scenes/levels/biome_scrapyard/BiomeScrapyard.tres" id="5_8h06u"]
+[ext_resource type="Resource" uid="uid://cotfhktaqtiqx" path="res://scenes/levels/biome_sewers/BiomeSewer.tres" id="6_6hfal"]
 [ext_resource type="Script" uid="uid://blg2b81fynoh3" path="res://scripts/objects/camera_game.gd" id="7_4upc1"]
 [ext_resource type="PackedScene" uid="uid://cg27jtv73p32u" path="res://scenes/prefabs/objects/damage_cube.tscn" id="8_hfgcm"]
 [ext_resource type="Script" uid="uid://b785xtd1vjjb1" path="res://scripts/GUI/shop_manager.gd" id="8_ndayd"]
@@ -172,6 +174,8 @@ followerCamera = NodePath("CameraCanvas/CameraViewport/SubViewport/FollowerCam")
 backupCamPointer = NodePath("BackupCamPointer")
 biomes = Dictionary[String, ExtResource("2_8hspa")]({
 "Old": ExtResource("4_x5k24"),
+"Scrapyard": ExtResource("5_8h06u"),
+"Sewers": ExtResource("6_6hfal"),
 "Workshop": ExtResource("2_k23rv")
 })
 currentBiome = ExtResource("2_k23rv")
@@ -399,6 +403,7 @@ offset_left = 1075.0
 offset_top = 678.0
 offset_right = 1561.0
 offset_bottom = 956.0
+myPool = 0
 
 [node name="HealButton" type="Button" parent="ShopCanvas_SHOP/SHOP/ShopStationsStepParent/ShopStations"]
 z_index = 1

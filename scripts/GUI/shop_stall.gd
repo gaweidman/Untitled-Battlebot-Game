@@ -329,7 +329,7 @@ func doors_actually_closed() -> bool:
 ## Destroys whatever is being shown for sale.
 func destroy_contents(ignoreFrozen := false):
 	var destroyme = false;
-	if ! ignoreFrozen:
+	if ignoreFrozen:
 		destroyme = true;
 	else:
 		if ! is_frozen():

@@ -318,8 +318,7 @@ func set_item_pool_waves(inWave:int):
 					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/part_RoundBell.tscn", 2);
 					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_generator.tscn", 1);
 					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_impact_magnet.tscn", 1);
-					##passives with adjacenty bonuses
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/part_fan.tscn", 2);
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/part_helium_tank_1.tscn", 1);
 					##Batteries
 					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/batteries/part_jank_battery.tscn", 2);
 					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/batteries/battery_1x1.tscn", 3);
@@ -334,15 +333,19 @@ func set_item_pool_waves(inWave:int):
 						#none yet lol
 					changed = true;
 				3:
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/part_generator.tscn");
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/batteries/battery_1x3.tscn", 1);
+					##passives with adjacenty bonuses
+					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/part_fan.tscn", 2);
+				5:
 					##Pieces
 					
 					##Passives
 					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/scrapthirsty.tscn");
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/turtle_coil.tscn");
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_coolant.tscn");
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_scrap_plating.tscn", 1);
+					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/turtle_coil.tscn");
+					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_coolant.tscn");
+					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_scrap_plating.tscn", 1);
 					##Batteries
-					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/batteries/battery_1x3.tscn", 1);
 					add_part_to_spawn_list("res://scenes/prefabs/objects/parts/workingParts/batteries/battery_2x3.tscn", 1);
 					##Ranged
 					#add_part_to_spawn_list("res://scenes/prefabs/objects/parts/playerParts/part_peashooter.tscn", 1);

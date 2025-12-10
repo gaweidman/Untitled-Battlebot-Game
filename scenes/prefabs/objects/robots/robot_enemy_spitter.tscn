@@ -1,0 +1,140 @@
+[gd_scene load_steps=8 format=3 uid="uid://dpdq10nptscqp"]
+
+[ext_resource type="Script" uid="uid://dq8kjvfkllb2w" path="res://scripts/objects/robots/buildingBlocks/robot_enemy.gd" id="1_o253x"]
+[ext_resource type="Script" uid="uid://cd3dvyejdjvlg" path="res://scripts/objects/robots/buildingBlocks/body.gd" id="2_5nf1d"]
+[ext_resource type="PackedScene" uid="uid://dosh155duu70e" path="res://scenes/prefabs/objects/pieces/buildingBlocks/socket.tscn" id="3_nd5p5"]
+[ext_resource type="PackedScene" uid="uid://ynu1nnwpk1qi" path="res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn" id="5_28ytl"]
+[ext_resource type="PackedScene" uid="uid://b4adm8wxo7ym0" path="res://scenes/prefabs/objects/robots/buildingBlocks/treads.tscn" id="10_e7wks"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f0k1s"]
+friction = 200.0
+bounce = 0.3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_kynhc"]
+radius = 0.875
+
+[node name="Robot_Enemy" type="Node3D" node_paths=PackedStringArray("bodyPiece", "bodySocket", "treads")]
+visible = false
+script = ExtResource("1_o253x")
+myTraits = Array[int]([0, 5, 3, 13, 9, 6, 21])
+bodyPiece = NodePath("Body/Meshes/Socket/Piece_BodyCube")
+bodySocket = NodePath("Body/Meshes/Socket")
+robotNameInternal = "Enemy"
+robotName = "Basic Enemy"
+treads = NodePath("Treads")
+startupGenerator = {
+&"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_bodyCube.tscn": {
+"abilityAssignments": {},
+"disabledAbilities": [],
+"engine": {},
+"sockets": {
+0: {
+"occupant": "null",
+"rotation": Vector3(1.5708, 0, 0)
+},
+1: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_shield_stopsign.tscn": {
+"abilityAssignments": {},
+"disabledAbilities": [],
+"engine": {},
+"sockets": {
+0: {
+"occupant": "null",
+"rotation": Vector3(4.37114e-08, 1.5708, 1.5708)
+}
+}
+}
+},
+"rotation": Vector3(-1.5708, 8.74228e-08, 0)
+},
+2: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_rocket.tscn": {
+"abilityAssignments": {
+"Blastoff": Array[int]([1])
+},
+"disabledAbilities": [],
+"engine": {},
+"sockets": {
+0: {
+"occupant": "null",
+"rotation": Vector3(0, 0, -1.5708)
+},
+1: {
+"occupant": "null",
+"rotation": Vector3(0, 0, 1.5708)
+},
+2: {
+"occupant": "null",
+"rotation": Vector3(0, 0, 0)
+}
+}
+}
+},
+"rotation": Vector3(0.000687284, 0.000329359, 1.56995)
+},
+3: {
+"occupant": "null",
+"rotation": Vector3(1.5697, -2.25158, 2.46048)
+},
+4: {
+"occupant": {
+"res://scenes/prefabs/objects/pieces/piece_cannon_peashooter.tscn": {
+"abilityAssignments": {
+"Fire": Array[int]([0])
+},
+"disabledAbilities": [],
+"engine": {},
+"sockets": {
+0: {
+"occupant": "null",
+"rotation": Vector3(0, 0, 0)
+}
+}
+}
+},
+"rotation": Vector3(0, 0, 0)
+}
+}
+}
+},
+&"rotation": Vector3(0, 0, 0)
+}
+filepathForThisEntity = "res://scenes/prefabs/objects/robots/robot_enemy_spitter.tscn"
+
+[node name="Body" type="RigidBody3D" parent="." groups=["Combatant", "Driveable", "Metal"]]
+collision_mask = 1025
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 88.0
+physics_material_override = SubResource("PhysicsMaterial_f0k1s")
+gravity_scale = 0.0
+freeze = true
+script = ExtResource("2_5nf1d")
+
+[node name="Meshes" type="Node3D" parent="Body"]
+transform = Transform3D(0.321359, 0, 0, 0, 0.321359, 0, 0, 0, 0.321359, 0, 0, 0)
+
+[node name="Socket" parent="Body/Meshes" node_paths=PackedStringArray("occupant", "hostRobot", "selectorRayExceptions") instance=ExtResource("3_nd5p5")]
+transform = Transform3D(3.11178, 0, 0, 0, 3.11178, 0, 0, 0, 3.11178, 0, 0, 0)
+occupant = NodePath("Piece_BodyCube")
+hostRobot = NodePath("../../..")
+collisionScale = 0.55
+selectorRayExceptions = [NodePath("../..")]
+dontUsePieceForRobotHost = true
+
+[node name="Piece_BodyCube" parent="Body/Meshes/Socket" node_paths=PackedStringArray("hostSocket", "hostRobot") instance=ExtResource("5_28ytl")]
+hostSocket = NodePath("..")
+hostRobot = NodePath("../../../..")
+assignedToSocket = true
+
+[node name="BaseCollision" type="CollisionShape3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+shape = SubResource("SphereShape3D_kynhc")
+
+[node name="Treads" parent="." instance=ExtResource("10_e7wks")]
+
+[connection signal="health_or_energy_changed" from="." to="." method="_on_health_or_energy_changed"]

@@ -217,6 +217,8 @@ func get_movement_vector(_rotatedByCamera := false):
 			pass;
 		behaviors.IDLE :
 			movementVector = Vector2.ZERO;
+			
+			fireAbilities = true;
 			pass;
 		behaviors.CHASE :
 			inputtingMovementThisFrame = true;
@@ -430,8 +432,9 @@ func stat_registry():
 
 func die():
 	if ! aliveLastFrame: return false;
-	if lastAttacker is Robot_Player:
-		ScrapManager.add_scrap(get_salvage_price(), "Kill");
+	if is_instance_valid(lastAttacker):
+		if lastAttacker is Robot_Player:
+			ScrapManager.add_scrap(get_salvage_price(), "Kill");
 	super();
 
 func live():
